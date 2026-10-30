@@ -84,6 +84,7 @@ test("Workspace saves announce through the shared overlay and refresh failures r
     "../services": Object.fromEntries(["changeDependency", "changeTaskState", "createTask", "getProject", "getTasks", "updateTask"].map((name) => [name, async () => {}])),
     "../DependencyForm/DependencyForm": { default: Empty }, "../LabelList/LabelList": { default: Empty },
     "../Modal/Modal": { default: Empty }, "../TaskForm/TaskForm": { default: Empty }, "../TaskList/TaskList": { default: (props) => { list = props; return null; } },
+    "../TaskGantt/TaskGanttEntry": { default: Empty },
     "../TaskBoard/TaskBoard": { default: Empty },
     "../../../hooks/useToast": { useToast: () => ({ addToast(value) { notifications.push(value); } }) },
     "../TaskList/TaskGroupingControl": { default: Empty },

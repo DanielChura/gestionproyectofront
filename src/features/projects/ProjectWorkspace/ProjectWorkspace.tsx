@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { Link, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import { errorText } from "../../auth/api";
 import {
   changeDependency,
@@ -30,6 +30,7 @@ import Modal from "../Modal/Modal";
 import TaskDetailDialog from "../TaskDetail/TaskDetailDialog";
 import { useTaskDetailNavigation } from "../TaskDetail/useTaskDetail";
 import TaskBoard from "../TaskBoard/TaskBoard";
+import TaskGanttEntry from "../TaskGantt/TaskGanttEntry";
 import TaskForm from "../TaskForm/TaskForm";
 import TaskGroupingControl from "../TaskList/TaskGroupingControl";
 import TaskList from "../TaskList/TaskList";
@@ -465,16 +466,13 @@ function ProjectWorkspaceContent({
         </section>
       )}
 
-      {view === "gantt" && (
-        <section className="px-6 py-10" aria-label="Gantt">
-          <h2 className="text-lg">Gantt</h2>
-          <p className="text-sm text-neutral-600">
-            Esta vista está pendiente de implementación. Puedes gestionar las
-            tareas en Lista.
-          </p>
-          <Link to="?vista=lista">Volver a Lista</Link>
-        </section>
-      )}
+      {view === "gantt" && <TaskGanttEntry
+        tasks={tasks}
+        loading={loading}
+        error={error}
+        onRetry={() => setReload((value) => value + 1)}
+        onOpenTask={(taskId) => taskDetail.openTaskDetail({ projectId, taskId })}
+      />}
 
       {action && !activeAction && (
         <p

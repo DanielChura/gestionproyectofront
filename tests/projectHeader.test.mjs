@@ -177,6 +177,7 @@ test("empty List renders configured states through Workspace without extra state
     "../TaskDetail/TaskDetailDialog": { default: Empty },
     "../TaskDetail/useTaskDetail": { useTaskDetailNavigation: () => ({ target: null, openTaskDetail() {}, closeTaskDetail() {} }) },
     "../TaskList/TaskList": { default: TaskList },
+    "../TaskGantt/TaskGanttEntry": { default: Empty },
     "../TaskBoard/TaskBoard": { default: () => null },
     "../../../hooks/useToast": { useToast: () => ({ addToast() {} }) },
     "../TaskList/TaskGroupingControl": { default: () => React.createElement("button", { "aria-label": "Agrupar por: Estado" }) },

@@ -1,0 +1,50 @@
+.gm-task-gantt {
+  block-size: clamp(24rem, 62vh, 48rem);
+  min-inline-size: 56rem;
+}
+
+.gm-task-gantt .wx-willow-theme {
+  block-size: 100%;
+  --wx-font-family: "Inter", sans-serif;
+  --wx-font-size: 12px;
+  --wx-font-size-sm: 12px;
+  --wx-font-weight: 400;
+  --wx-font-weight-md: 500;
+  --wx-background: var(--color-white);
+  --wx-background-alt: var(--color-neutral-50);
+  --wx-background-hover: var(--color-neutral-100);
+  --wx-color-font: var(--color-neutral-800);
+  --wx-color-font-alt: var(--color-neutral-600);
+  --wx-color-primary: var(--color-sky-700);
+  --wx-border: 1px solid var(--color-neutral-200);
+  --wx-gantt-border: 1px solid #e5e5e5;
+  --wx-gantt-border-color: var(--color-neutral-200);
+  --wx-gantt-task-color: var(--color-sky-700);
+  --wx-gantt-bar-font: 400 12px "Inter", sans-serif;
+  --wx-gantt-bar-shadow: none;
+}
+
+.dark .gm-task-gantt .wx-willow-theme {
+  --wx-background: var(--color-neutral-900);
+  --wx-background-alt: var(--color-neutral-900);
+  --wx-background-hover: var(--color-neutral-800);
+  --wx-color-font: var(--color-neutral-200);
+  --wx-color-font-alt: var(--color-neutral-300);
+  --wx-color-primary: var(--color-sky-400);
+  --wx-border: 1px solid var(--color-neutral-700);
+  --wx-gantt-border: 1px solid #404040;
+  --wx-gantt-border-color: var(--color-neutral-700);
+  --wx-gantt-task-color: var(--color-sky-700);
+}
+
+.gm-task-gantt *,
+.gm-task-gantt *::before,
+.gm-task-gantt *::after {
+  box-shadow: none;
+  transition: none;
+}
+
+.gm-task-gantt .wx-bar.gm-open-ended,
+.gm-task-gantt .wx-toggle-icon {
+  display: none;
+}
