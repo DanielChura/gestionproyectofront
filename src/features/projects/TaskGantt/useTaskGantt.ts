@@ -10,7 +10,7 @@ import type { GanttScale } from "./ganttViewport";
 import { projectToday } from "../TaskList/taskGrouping";
 import { taskAssignees } from "../taskAssignees";
 
-export function useTaskGantt({ tasks, project }: TaskGanttProps) {
+export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: (event: object) => boolean, onAttach?: (api: IApi | null) => void) {
   const [filters, setFilters] = useState<GanttFilters>({ ...emptyGanttFilters });
   const [collapsed, setCollapsed] = useState<Set<number>>(() => new Set());
   const [selection, setSelection] = useState<number[]>([]);
@@ -38,8 +38,9 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps) {
     cleanup.current?.();
     cleanup.current = null;
     widget.current = api;
-    if (api) cleanup.current = bindGanttReadOnly(api);
-  }, []);
+    onAttach?.(api);
+    if (api) cleanup.current = bindGanttReadOnly(api, allowPreview);
+  }, [allowPreview, onAttach]);
   const toggleBranch = useCallback((id: number, expanded: boolean) => {
     void widget.current?.exec("open-task", { id, mode: expanded });
   }, []);

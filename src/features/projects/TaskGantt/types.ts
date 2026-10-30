@@ -26,4 +26,7 @@ export interface GanttRow {
   gmCreatedAt: string;
   gmResponsible: string;
   gmContext?: boolean;
+  gmEditable?: boolean;
+  gmCalendarPending?: boolean;
+  gmPaint?: string;
 }

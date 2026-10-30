@@ -75,11 +75,17 @@ export function createTaskSync(projectId: number, epoch: number) {
     const operation = updateTask(projectId, taskId, payload).then((saved) => {
       guard(ticket);
       return confirm(saved, Object.keys(payload));
-    }).finally(() => { if (key && pending.get(key)?.operation === operation) pending.delete(key); });
-    if (key) pending.set(key, { fingerprint, operation });
+    }).finally(() => {
+      if (key && pending.get(key)?.operation === operation) {
+        pending.delete(key);
+        if (isCurrent()) publish();
+      }
+    });
+    if (key) { pending.set(key, { fingerprint, operation }); publish(); }
     return operation;
   }
   return { projectId, epoch, isCurrent, token, guard, read, patch, observe, observeMany, confirm, confirmMany,
+    hasPendingCalendar: (taskId: number) => [...pending.keys()].some((key) => key.startsWith(String(taskId) + ":")),
     current: (task: Task) => reconcileTask(task, tasks.get(task.id) ?? task),
     subscribe: (listener: () => void) => { listeners.add(listener); return () => listeners.delete(listener); },
     getVersion: () => version, getSnapshot: () => snapshot,

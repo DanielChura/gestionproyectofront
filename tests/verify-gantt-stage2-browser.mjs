@@ -280,20 +280,22 @@ try {
     assert.ok(await chart.isVisible());
     return { pointer_selection: true, selection_after_refresh: target, dark: true, mobile_width: 390, scroll_region: true };
   });
-  await check("Atajos y puntero siguen sin mutaciones; recarga conserva la colección íntegra", async () => {
-    await locate(admin.page, data.successor);
-    const bar = admin.page.locator(".gm-task-gantt .wx-bar[data-id='" + data.successor + "']");
+  await check("Atajos y puntero sin permiso siguen sin mutaciones; recarga conserva la colección íntegra", async () => {
+    const readonly = await login("worker");
+    await readonly.page.goto(origin + "/proyectos/" + data.readonly_project + "?vista=gantt");
+    await readonly.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+    const bar = readonly.page.locator(".gm-task-gantt .wx-bar[data-id='" + data.readonly_task + "']");
     await bar.scrollIntoViewIfNeeded();
     const box = await bar.boundingBox();
     assert.ok(box);
-    await admin.page.mouse.move(box.x + 5, box.y + box.height / 2);
-    await admin.page.mouse.down();
-    await admin.page.mouse.move(box.x + 85, box.y + box.height / 2, { steps: 8 });
-    await admin.page.mouse.up();
-    await admin.page.keyboard.press("Delete");
-    await admin.page.keyboard.press("Insert");
-    await admin.page.keyboard.press("Control+c");
-    await admin.page.keyboard.press("Control+v");
+    await readonly.page.mouse.move(box.x + 5, box.y + box.height / 2);
+    await readonly.page.mouse.down();
+    await readonly.page.mouse.move(box.x + 85, box.y + box.height / 2, { steps: 8 });
+    await readonly.page.mouse.up();
+    await readonly.page.keyboard.press("Delete");
+    await readonly.page.keyboard.press("Insert");
+    await readonly.page.keyboard.press("Control+c");
+    await readonly.page.keyboard.press("Control+v");
     await admin.page.reload();
     await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
     assert.equal(await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).locator("option").count(), data.operational_count + 1);

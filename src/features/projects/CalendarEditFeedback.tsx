@@ -3,9 +3,10 @@ import type { useTaskCalendarEdit } from "./useTaskCalendarEdit";
 import { formatTaskDate } from "./TaskList/taskHierarchy";
 
 const button = "cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700";
-export default function CalendarEditFeedback({ editor, onPrepared, busy = false }: { editor: ReturnType<typeof useTaskCalendarEdit>; onPrepared?: () => void; busy?: boolean }) {
+export type CalendarFeedbackModel = Pick<ReturnType<typeof useTaskCalendarEdit>, "problem" | "current" | "consultBusy" | "consultError" | "consult" | "useCurrent">;
+export default function CalendarEditFeedback({ editor, onPrepared, busy = false, focusOnProblem = true }: { editor: CalendarFeedbackModel; onPrepared?: () => void; busy?: boolean; focusOnProblem?: boolean }) {
   const feedback = useRef<HTMLDivElement>(null);
-  useEffect(() => { if (editor.problem) feedback.current?.focus(); }, [editor.problem]);
+  useEffect(() => { if (editor.problem && focusOnProblem) feedback.current?.focus(); }, [editor.problem, focusOnProblem]);
   if (!editor.problem) return null;
   const messages = {
     revision: "El calendario cambió desde que abriste la edición. Tu borrador se conserva.",

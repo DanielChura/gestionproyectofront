@@ -62,3 +62,28 @@
 .gm-task-gantt .wx-toggle-icon {
   display: none;
 }
+
+.gm-task-gantt .gm-gantt-bar {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding-inline: 9px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.gm-task-gantt .gm-gantt-bar[data-calendar-editable] { cursor: grab; }
+.gm-task-gantt .gm-gantt-bar[data-calendar-active] { cursor: grabbing; }
+.gm-task-gantt .wx-bar:has(.gm-gantt-bar[data-calendar-active]) {
+  outline: 1px solid currentColor;
+  outline-offset: 1px;
+}
+
+.gm-task-gantt .gm-gantt-bar-text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gm-task-gantt .gm-gantt-resize { position: absolute; inset-block: 0; padding-inline: 3px; cursor: col-resize; }
+.gm-task-gantt .gm-gantt-resize-start { inset-inline-start: 0; border-inline-start: 2px solid currentColor; }
+.gm-task-gantt .gm-gantt-resize-end { inset-inline-end: 0; border-inline-end: 2px solid currentColor; }
+
+.dark .gm-gantt-feedback [data-general-error] { color: var(--color-neutral-200); }
+.dark .gm-gantt-feedback button { background: var(--color-neutral-900); color: var(--color-neutral-200); border-color: var(--color-neutral-700); }

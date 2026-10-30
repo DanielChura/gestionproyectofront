@@ -118,23 +118,26 @@ try {
     await admin.page.locator("dialog[open]").waitFor({ state: "hidden" });
     return { existing_detail: true, writes: 0 };
   });
-  await check("Ratón teclado doble clic y menú no editan el widget", async () => {
-    const bar = admin.page.locator(".gm-task-gantt .wx-bar[data-id='" + data.one_day + "']");
+  await check("Ratón sin permiso, teclado, doble clic y menú no editan el widget", async () => {
+    const readonly = await login("worker");
+    await readonly.page.goto(origin + "/proyectos/" + data.readonly_project + "?vista=gantt");
+    await readonly.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+    const bar = readonly.page.locator(".gm-task-gantt .wx-bar[data-id='" + data.readonly_task + "']");
     await bar.scrollIntoViewIfNeeded();
     const box = await bar.boundingBox();
     assert.ok(box);
-    await admin.page.mouse.move(box.x + 10, box.y + box.height / 2);
-    await admin.page.mouse.down();
-    await admin.page.mouse.move(box.x + 90, box.y + box.height / 2, { steps: 8 });
-    await admin.page.mouse.up();
+    await readonly.page.mouse.move(box.x + 10, box.y + box.height / 2);
+    await readonly.page.mouse.down();
+    await readonly.page.mouse.move(box.x + 90, box.y + box.height / 2, { steps: 8 });
+    await readonly.page.mouse.up();
     await bar.dblclick();
-    await admin.page.keyboard.press("Delete");
-    await admin.page.keyboard.press("Insert");
-    await admin.page.keyboard.press("Control+c");
-    await admin.page.keyboard.press("Control+v");
+    await readonly.page.keyboard.press("Delete");
+    await readonly.page.keyboard.press("Insert");
+    await readonly.page.keyboard.press("Control+c");
+    await readonly.page.keyboard.press("Control+v");
     await bar.click({ button: "right" });
-    await admin.page.keyboard.press("Escape");
-    assert.equal(await admin.page.locator(".wx-gantt-editor,dialog[open]").count(), 0);
+    await readonly.page.keyboard.press("Escape");
+    assert.equal(await readonly.page.locator(".wx-gantt-editor,dialog[open]").count(), 0);
     assert.equal(network.filter((entry) => entry.path.startsWith("/api/projects/") && entry.method !== "GET").length, 0);
     assert.deepEqual((await request(admin, "projects/" + data.project + "/tasks/")).body, baselineTasks);
     return { pointer_drag: true, keyboard_attempts: 4, internal_editor: false, domain_writes: 0 };

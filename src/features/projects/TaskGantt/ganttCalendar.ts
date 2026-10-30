@@ -60,6 +60,7 @@ export function toGanttRows(tasks: Task[]): GanttRow[] {
       open: true,
       gmStateName: task.state_name,
       gmCreatedAt: task.created_at,
+      gmEditable: task.permissions?.edit ?? false,
       gmResponsible: taskAssignees(task).map((person) => person.name).join(", ") || "Sin persona asignada",
       ...toGanttWindow(task),
     };
