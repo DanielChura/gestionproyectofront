@@ -1,6 +1,7 @@
-import type { Task } from "../types";
+import type { Task, Project } from "../types";
 
 export interface TaskGanttProps {
+  project: Pick<Project, "id" | "start_date" | "end_date" | "task_states">;
   tasks: Task[];
   loading: boolean;
   error: string;
@@ -23,4 +24,6 @@ export interface GanttRow {
   gmDueDate: string | null;
   gmStateName: string;
   gmCreatedAt: string;
+  gmResponsible: string;
+  gmContext?: boolean;
 }

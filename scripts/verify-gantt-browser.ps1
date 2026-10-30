@@ -1,15 +1,15 @@
-param([string]$OutputPath)
+param([string]$OutputPath, [ValidateSet(1, 2)][int]$Stage = 1)
 $ErrorActionPreference = 'Stop'
 $ganttFront = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $ganttBack = (Resolve-Path (Join-Path $ganttFront '../backend')).Path
-if (-not $OutputPath) { $OutputPath = Join-Path $ganttFront ('docs/gantt/evidencias-etapa-1-' + (Get-Date -Format yyyyMMddHHmmss)) }
+if (-not $OutputPath) { $OutputPath = Join-Path $ganttFront (('docs/gantt/evidencias-etapa-' + $Stage + '-') + (Get-Date -Format yyyyMMddHHmmss)) }
 $ganttOutput = [IO.Path]::GetFullPath($OutputPath)
 $ganttTemp = Join-Path ([IO.Path]::GetTempPath()) ('gm-gantt-' + [Guid]::NewGuid().ToString('N'))
 $ganttContainer = $null
 $ganttServer = $null
 $ganttVite = $null
 $ganttPrevious = @{}
-$ganttKeys = @('MYSQL_ROOT_PASSWORD','MYSQL_PWD','GM_TEST_MYSQL_PASSWORD','GM_TEST_MYSQL_PORT','DJANGO_SETTINGS_MODULE','FRONTEND_ORIGIN','VITE_API_BASE_URL','API_PROXY_TARGET','GM_CALENDAR_BROWSER','GM_GANTT_BROWSER','GM_QA_SECRETS_PATH','GM_BROWSER_REPORT_DIR','GM_PLAYWRIGHT_MODULE','PYTHONIOENCODING')
+$ganttKeys = @('MYSQL_ROOT_PASSWORD','MYSQL_PWD','GM_TEST_MYSQL_PASSWORD','GM_TEST_MYSQL_PORT','DJANGO_SETTINGS_MODULE','FRONTEND_ORIGIN','VITE_API_BASE_URL','API_PROXY_TARGET','GM_CALENDAR_BROWSER','GM_GANTT_BROWSER','GM_GANTT_STAGE','GM_QA_SECRETS_PATH','GM_BROWSER_REPORT_DIR','GM_PLAYWRIGHT_MODULE','PYTHONIOENCODING')
 foreach ($key in $ganttKeys) { $ganttPrevious[$key] = [Environment]::GetEnvironmentVariable($key, 'Process') }
 try {
     docker info --format '{{.ServerVersion}}'
@@ -44,6 +44,7 @@ try {
     $env:API_PROXY_TARGET = 'http://127.0.0.1:8819'
     $env:GM_CALENDAR_BROWSER = '1'
     $env:GM_GANTT_BROWSER = '1'
+    $env:GM_GANTT_STAGE = [string]$Stage
     $env:PYTHONIOENCODING = 'utf-8'
     $env:GM_QA_SECRETS_PATH = Join-Path $ganttTemp 'credentials.json'
     $env:GM_BROWSER_REPORT_DIR = $ganttOutput
@@ -64,7 +65,7 @@ try {
     }
     Push-Location $ganttFront
     try {
-        & node.exe tests/verify-gantt-browser.mjs
+        if ($Stage -eq 2) { & node.exe tests/verify-gantt-stage2-browser.mjs } else { & node.exe tests/verify-gantt-browser.mjs }
         if ($LASTEXITCODE -ne 0) { throw 'Falló la comprobación Chrome de Gantt.' }
         Push-Location $ganttBack
         try {

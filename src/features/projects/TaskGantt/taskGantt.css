@@ -1,6 +1,6 @@
 .gm-task-gantt {
   block-size: clamp(24rem, 62vh, 48rem);
-  min-inline-size: 56rem;
+  min-inline-size: 67rem;
 }
 
 .gm-task-gantt .wx-willow-theme {
@@ -20,6 +20,8 @@
   --wx-gantt-border: 1px solid #e5e5e5;
   --wx-gantt-border-color: var(--color-neutral-200);
   --wx-gantt-task-color: var(--color-sky-700);
+  --wx-gantt-select-color: var(--color-neutral-100);
+  --wx-table-select-background: var(--color-neutral-100);
   --wx-gantt-bar-font: 400 12px "Inter", sans-serif;
   --wx-gantt-bar-shadow: none;
 }
@@ -35,6 +37,18 @@
   --wx-gantt-border: 1px solid #404040;
   --wx-gantt-border-color: var(--color-neutral-700);
   --wx-gantt-task-color: var(--color-sky-700);
+  --wx-gantt-select-color: var(--color-neutral-800);
+  --wx-table-select-background: var(--color-neutral-800);
+}
+
+.dark .gm-gantt-controls input {
+  background: var(--color-neutral-900);
+  color: var(--color-neutral-200);
+  border-color: var(--color-neutral-700);
+}
+
+.dark .gm-gantt-controls button {
+  color: var(--color-neutral-200);
 }
 
 .gm-task-gantt *,

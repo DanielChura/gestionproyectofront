@@ -467,6 +467,7 @@ function ProjectWorkspaceContent({
       )}
 
       {view === "gantt" && <TaskGanttEntry
+        project={project}
         tasks={tasks}
         loading={loading}
         error={error}

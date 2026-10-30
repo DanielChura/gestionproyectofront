@@ -1,5 +1,11 @@
 import type { Task } from "../types";
 
+export function taskMatchesSearch(task: Task, search = ""): boolean {
+  const query = search.trim().toLocaleLowerCase("es");
+  return !query || [task.name, task.responsible_name ?? "", ...(task.assignees ?? []).map((person) => person.name), ...task.labels.map((label) => label.name)]
+    .join(" ").toLocaleLowerCase("es").includes(query);
+}
+
 export function taskHierarchy(tasks: Task[], search = "") {
   const byId = new Map(tasks.map((task) => [task.id, task]));
   const children = new Map<number, Task[]>();
@@ -24,11 +30,9 @@ export function taskHierarchy(tasks: Task[], search = "") {
       children.set(task.parent_id, branch);
     } else roots.push(task);
   }
-  const query = search.trim().toLocaleLowerCase("es");
   const visible = new Set<number>();
   for (const task of byId.values()) {
-    if (query && ![task.name, task.responsible_name ?? "", ...(task.assignees ?? []).map((person) => person.name), ...task.labels.map((label) => label.name)]
-      .join(" ").toLocaleLowerCase("es").includes(query)) continue;
+    if (!taskMatchesSearch(task, search)) continue;
     let current: Task | undefined = task;
     while (current && !visible.has(current.id)) {
       visible.add(current.id);
