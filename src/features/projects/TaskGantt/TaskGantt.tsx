@@ -1,9 +1,10 @@
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo } from "react";
 import { Gantt, Willow } from "@svar-ui/react-gantt";
 import type { IColumnConfig } from "@svar-ui/react-gantt";
 import type { GanttRow, TaskGanttProps } from "./types";
 import TaskDateValue from "../TaskForm/TaskDateValue";
 import ChevronDownIcon from "../../../shared/icons/ChevronDownIcon";
+import { useGanttLayout } from "./useGanttLayout";
 import { useTaskGantt } from "./useTaskGantt";
 import TaskGanttActions from "./TaskGanttActions";
 import TaskGanttToolbar from "./TaskGanttToolbar";
@@ -81,36 +82,39 @@ const taskTypes = [{ id: "task", label: "Tarea" }, { id: "gm-open-ended", label:
 
 export default function TaskGantt(props: TaskGanttProps) {
   const { tasks, onOpenTask } = props;
+  const { container, visible, gridWidth, minWidth, toggle } = useGanttLayout();
+  const visibleColumns = useMemo(() => columns.filter(column => column.id === "text" || visible.has(String(column.id))), [visible]);
   const calendar = useGanttCalendar(tasks);
   const { pending, syncRevision } = calendar;
   const controls = useTaskGantt(props, calendar.gesture.allowPreview, calendar.attach);
-  const { viewport, scales, selected, attach, toggleBranch, filtered } = controls;
+  const { viewport, scales, selected, attach, resizeGrid, toggleBranch, filtered } = controls;
   const rows = useMemo(() => controls.rows.map((row) => ({ ...row, gmCalendarPending: pending(row.id), gmPaint: calendar.revision + ":" + calendar.paint + ":" + syncRevision })), [controls.rows, calendar.revision, calendar.paint, pending, syncRevision]);
+  useLayoutEffect(() => { resizeGrid(gridWidth); }, [resizeGrid, gridWidth]);
   useEffect(() => { calendar.gesture.cancel(); }, [calendar.gesture, viewport, controls.filters]);
   useEffect(() => { calendar.gesture.refresh(); }, [calendar.gesture, rows]);
   const actions = useMemo(() => ({ openTask: onOpenTask, toggleBranch, filtered }), [onOpenTask, toggleBranch, filtered]);
   return <GanttCalendarContext.Provider value={calendar.snapshot}><GanttGestureContext.Provider value={calendar.preview?.id ?? null}><TaskActions.Provider value={actions}>
-    <div className="flex items-baseline gap-3 py-3">
+    <div className="sr-only">
       <h2 className="text-sm font-medium text-neutral-800 dark:text-neutral-200">Ventana de tareas</h2>
       <p className="m-0 text-xs text-neutral-600 dark:text-neutral-300">{tasks.some((task) => task.permissions.edit) ? "Arrastre y ajuste de fechas" : "Solo lectura"}</p>
     </div>
-    <TaskGanttToolbar controls={controls} onRefresh={props.onRetry} loading={props.loading} />
+    <TaskGanttToolbar controls={controls} layout={{ visible, toggle }} onRefresh={props.onRetry} loading={props.loading} />
     <TaskGanttActions task={tasks.find((task) => task.id === controls.selectedId)} disabled={props.actionsDisabled} onOpenTask={onOpenTask} onAction={props.onAction} />
-    <p role="status" className="m-0 pb-2 text-xs text-neutral-600 dark:text-neutral-300">
+    <p role="status" className="m-0 py-2 text-xs text-neutral-600 dark:text-neutral-300">
       {controls.projection.matches.size} de {tasks.length} tareas{rows.length > controls.projection.matches.size ? ` · ${rows.length - controls.projection.matches.size} ancestros de contexto` : ""}
-      {calendar.preview ? <span className="font-medium text-sky-800 dark:text-sky-300"> · {calendar.preview.name}: {formatTaskDate(calendar.preview.start_date)} — {formatTaskDate(calendar.preview.due_date)}</span>
+      {calendar.preview ? <span className="gm-gantt-preview font-medium text-sky-800 dark:text-sky-300"> · {calendar.preview.name}: {formatTaskDate(calendar.preview.start_date)} — {formatTaskDate(calendar.preview.due_date)}</span>
         : <> · {calendarDateKey(viewport.start)} — {calendarDateKey(shiftGanttDay(viewport.end, -1))}</>}
     </p>
     {rows.length === 0 && <p role="status" className="py-3 text-xs text-neutral-800 dark:text-neutral-200">No hay tareas que coincidan con los filtros.</p>}
-    {tasks.some((task) => task.due_date === null) && <p className="mb-3 mt-0 text-xs text-neutral-600 dark:text-neutral-300">
+    {tasks.some((task) => task.due_date === null) && <p className="sr-only">
       Las tareas sin fecha límite conservan su inicio en la tabla y no tienen barra temporal.
     </p>}
-    <div className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2" tabIndex={0} role="region" aria-label="Calendario de tareas; tabla y línea de tiempo">
-      <div className="gm-task-gantt" data-calendar-dragging={Boolean(calendar.preview) || undefined} onPointerDownCapture={calendar.onPointerDownCapture}>
+    <div ref={container} className="overscroll-x-contain overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2" tabIndex={0} role="region" aria-label="Calendario de tareas; tabla y línea de tiempo">
+      <div style={{ minWidth }} className="gm-task-gantt" data-calendar-dragging={Boolean(calendar.preview) || undefined} onPointerDownCapture={calendar.onPointerDownCapture}>
         <Willow fonts={false}>
-          <Gantt tasks={rows} taskTypes={taskTypes} links={links} columns={columns} scales={scales} selected={selected}
+          <Gantt tasks={rows} taskTypes={taskTypes} links={links} columns={visibleColumns} scales={scales} selected={selected}
             start={viewport.start} end={viewport.end} autoScale={false} durationUnit="day" lengthUnit="day" inclusiveEnd
-            cellWidth={viewportCellWidth(viewport.scale)} cellHeight={40} scaleHeight={28} gridWidth={840}
+            cellWidth={viewportCellWidth(viewport.scale)} cellHeight={40} scaleHeight={28} gridWidth={gridWidth}
             taskTemplate={TaskGanttBar} readonly ref={attach} onOpenTask={controls.onOpenTask} onSelectTask={controls.onSelectTask} />
         </Willow>
       </div>

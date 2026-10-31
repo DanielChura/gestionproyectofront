@@ -10,8 +10,9 @@ interface Props {
 export default function TaskGanttDependencies({ dependencies, selectedId, visible, onLocate }: Props) {
   const related = dependencies.filter((edge) => edge.predecessor.id === selectedId || edge.successor.id === selectedId);
   const shown = related.filter((edge) => visible.has(edge.predecessor.id) && visible.has(edge.successor.id));
+  if (selectedId === null) return null;
   return <section aria-label="Dependencias de la tarea seleccionada" className="border-t border-neutral-200 py-3 text-xs text-neutral-800 dark:border-neutral-700 dark:text-neutral-200">
-    <h3 className="m-0 text-sm font-medium text-neutral-800 dark:text-neutral-200">Dependencias</h3>
+    <h3 className="m-0 text-xs font-medium text-neutral-800 dark:text-neutral-200">Dependencias</h3>
     {selectedId === null ? <p className="mb-0">Selecciona una tarea para consultar sus predecesoras y sucesoras.</p>
       : <>
         {shown.length === 0 && <p className="mb-0">Sin dependencias visibles para esta tarea.</p>}

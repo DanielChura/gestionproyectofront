@@ -25,7 +25,7 @@ class GanttBoundary extends Component<TaskGanttProps, BoundaryState> {
       }} className="cursor-pointer rounded-lg border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-neutral-700 dark:hover:bg-neutral-800">Reintentar Gantt</button>
     </div>;
     const View = this.state.View;
-    return <Suspense fallback={<p role="status" className="p-5 text-xs text-neutral-600 dark:text-neutral-300">Cargando Gantt…</p>}>
+    return <Suspense fallback={<div role="status" className="grid min-h-96 place-items-center text-xs text-neutral-600 dark:text-neutral-300">Cargando Gantt…</div>}>
       <View {...this.props} />
     </Suspense>;
   }

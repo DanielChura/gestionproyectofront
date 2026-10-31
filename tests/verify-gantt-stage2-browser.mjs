@@ -96,11 +96,13 @@ try {
     const search = admin.page.getByRole("searchbox", { name: "Buscar tareas por nombre, responsable o etiqueta", exact: true });
     await search.fill("Cuarto nivel búsqueda");
     await row(admin.page, data.deep_leaf).waitFor();
+    await admin.page.waitForFunction(() => globalThis.document.querySelectorAll(".gm-task-gantt .wx-row[data-id]").length === 4);
     assert.equal(await admin.page.locator(".gm-task-gantt .wx-row[data-id]").count(), 4);
     await textStatus(admin.page).filter({ hasText: "1 de " + data.operational_count + " tareas" }).waitFor();
     assert.equal(await admin.page.getByRole("button", { name: "Contraer subtareas de Raíz operativa QA", exact: true }).isDisabled(), true);
     await search.fill("Revisión profunda QA");
     await row(admin.page, data.deep_leaf).waitFor();
+    await admin.page.waitForFunction(() => globalThis.document.querySelectorAll(".gm-task-gantt .wx-row[data-id]").length === 4);
     assert.equal(await admin.page.locator(".gm-task-gantt .wx-row[data-id]").count(), 4);
     await admin.page.screenshot({ path: path.join(output, "02_filtro_ancestros.png"), fullPage: true });
     await admin.page.getByRole("button", { name: "Limpiar filtros", exact: true }).click();
@@ -177,7 +179,7 @@ try {
     await admin.page.getByRole("button", { name: "Actualizar Gantt", exact: true }).click();
     await response;
     await admin.page.getByRole("button", { name: "Actualizar Gantt", exact: true }).waitFor({ state: "visible" });
-    await admin.page.waitForFunction(() => ![...globalThis.document.querySelectorAll("button")].find((button) => button.textContent === "Actualizar Gantt")?.disabled);
+    await admin.page.waitForFunction(() => !globalThis.document.querySelector("button[aria-label='Actualizar Gantt']")?.disabled);
     await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).locator("option", { hasText: "Sucesora actualizada QA" }).waitFor({ state: "attached" });
     assert.equal(await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).inputValue(), String(data.branch));
     assert.equal(await textStatus(admin.page).textContent(), visibleRange);
@@ -195,7 +197,7 @@ try {
     const retried = admin.page.waitForResponse((reply) => new URL(reply.url()).pathname === collectionPath && reply.status() === 200);
     await admin.page.getByRole("button", { name: "Reintentar tareas", exact: true }).click();
     await retried;
-    await admin.page.waitForFunction(() => ![...globalThis.document.querySelectorAll("button")].find((button) => button.textContent === "Actualizar Gantt")?.disabled);
+    await admin.page.waitForFunction(() => !globalThis.document.querySelector("button[aria-label='Actualizar Gantt']")?.disabled);
     await admin.page.getByRole("button", { name: "Reintentar tareas", exact: true }).waitFor({ state: "hidden" });
     await admin.page.getByRole("button", { name: "Expandir subtareas de Raíz operativa QA", exact: true }).waitFor();
     return { controlled_snapshot_update: true, scroll_before: before, scroll_after: after, selection: data.branch, collapse_retained: true, retry: true };
@@ -261,7 +263,7 @@ try {
     await row(admin.page, target).locator("time").first().click();
     await admin.page.waitForFunction((id) => globalThis.document.querySelector("select[name='gantt_task']").value === id, target);
     await admin.page.getByRole("button", { name: "Actualizar Gantt", exact: true }).click();
-    await admin.page.waitForFunction(() => ![...globalThis.document.querySelectorAll("button")].find((button) => button.textContent === "Actualizar Gantt")?.disabled);
+    await admin.page.waitForFunction(() => !globalThis.document.querySelector("button[aria-label='Actualizar Gantt']")?.disabled);
     assert.equal(await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).inputValue(), target);
     await admin.page.evaluate(() => globalThis.localStorage.setItem("theme", "dark"));
     await admin.page.reload();

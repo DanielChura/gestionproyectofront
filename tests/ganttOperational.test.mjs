@@ -161,3 +161,19 @@ test("all authorized records remain addressable beyond previous listing limits w
   assert.equal(projection.matches.size, 1200);
   assert.equal(ganttProjection(tasks, filter({ search: "Tarea 1" }), "2026-10-30").matches.has(1), true);
 });
+
+test("public grid resizing preserves hierarchy, calendar and independent states", async () => {
+  const tasks = [task(1), task(2, { parent_id: 1, state_code: "EN_CURSO", state_name: "En curso" })];
+  const store = new DataStore();
+  store.init({ ...config, ...centeredViewport(ganttDay("2026-10-30")), tasks: toGanttRows(tasks), gridWidth: 840 });
+  const window = store.getTask(1).start.getTime();
+  await store.in.exec("resize-grid", { width: 250 });
+  assert.equal(store.getState().gridWidth, 250);
+  assert.equal(store.getTask(1).start.getTime(), window);
+  assert.equal(store.getTask(2).parent, 1);
+  assert.equal(store.getTask(2).gmStateName, "En curso");
+  assert.equal(store.getTask(1).type, "task");
+  await store.in.exec("resize-grid", { width: 840 });
+  assert.equal(store.getState().gridWidth, 840);
+  assert.equal(store.getTask(2).parent, 1);
+});

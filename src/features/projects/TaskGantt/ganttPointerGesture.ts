@@ -85,17 +85,19 @@ export function createGanttPointerGesture(options: Options) {
       const nextLeft = mode === "end" ? left : left + dx;
       const nextWidth = mode === "move" ? width : mode === "start" ? width - dx : width + dx;
       if (nextWidth < width / getDiffer("day")(window.end!, window.start!)) return;
+      const firstPreview = !started;
       if (!started) {
         started = true; blockResidualClick(pointerId);
         document.getSelection()?.removeAllRanges();
         node.addEventListener("lostpointercapture", pointerCancel);
         node.setPointerCapture?.(pointerId);
       }
+      const changed = firstPreview || proposal.start_date !== candidate.start_date || proposal.due_date !== candidate.due_date;
       proposal = candidate;
       lastLeft = nextLeft;
       lastWidth = nextWidth;
       emit(lastLeft, lastWidth);
-      options.preview({ id: base.id, name: base.name, ...proposal });
+      if (changed) options.preview({ id: base.id, name: base.name, ...proposal });
     }
     function move(next: PointerEvent) {
       if (!active || next.pointerId !== pointerId) return;

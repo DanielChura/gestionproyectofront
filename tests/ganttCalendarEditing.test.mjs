@@ -292,3 +292,31 @@ test("pending shared calendar writes remain explicit across a Gantt remount and 
   assert.ok(env.sync.getVersion() > before);
   assert.equal(remount.canStart(base), true);
 });
+
+test("continuous geometric preview publishes only changed calendar days and cancellation immediately clears it", async () => {
+  const h = await pointerHarness();
+  const exec = h.api.exec;
+  let frames = 0;
+  h.api.exec = (action, payload) => { if (action === "drag-task") frames++; return exec(action, payload); };
+  assert.equal(h.down(), true);
+  for (let clientX = 57; clientX <= 65; clientX++) h.dispatch("pointermove", { clientX });
+  assert.equal(frames, 9);
+  assert.equal(h.previews.length, 1);
+  assert.equal(h.previews[0].start_date, h.base.start_date);
+  h.dispatch("pointermove", { clientX: 95 });
+  assert.equal(frames, 10);
+  assert.equal(h.previews.length, 2);
+  assert.equal(h.previews[1].start_date, "2026-10-31");
+  h.dispatch("keydown", { key: "Escape" });
+  assert.equal(h.previews.at(-1), null);
+  assert.equal(h.document.count("pointermove"), 0);
+  assert.equal(h.node.captures.size, 0);
+  assert.equal(h.commits.length, 0);
+  assert.equal(h.down(), true);
+  h.dispatch("pointermove", { clientX: 95 });
+  assert.equal(h.previews.at(-1).start_date, "2026-10-31");
+  h.dispatch("pointerup", { clientX: 95 });
+  assert.equal(h.commits.length, 1);
+  h.gesture.dispose();
+  assert.equal(h.document.count("pointerdown"), 0);
+});

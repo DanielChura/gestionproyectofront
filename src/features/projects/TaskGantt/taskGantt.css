@@ -1,6 +1,6 @@
 .gm-task-gantt {
   block-size: clamp(24rem, 62vh, 48rem);
-  min-inline-size: 67rem;
+  min-inline-size: 42.5rem;
 }
 
 .gm-task-gantt .wx-willow-theme {
@@ -20,10 +20,28 @@
   --wx-gantt-border: 1px solid #e5e5e5;
   --wx-gantt-border-color: var(--color-neutral-200);
   --wx-gantt-task-color: var(--color-sky-700);
+  --wx-gantt-task-font-color: var(--color-white);
+  --wx-gantt-task-border: 1px solid transparent;
+  --wx-gantt-task-border-color: var(--color-sky-900);
+  --wx-gantt-bar-border-radius: 4px;
   --wx-gantt-select-color: var(--color-neutral-100);
   --wx-table-select-background: var(--color-neutral-100);
+  --wx-table-select-focus-background: var(--color-neutral-100);
+  --wx-table-select-border: 1px solid var(--color-neutral-400);
   --wx-gantt-bar-font: 400 12px "Inter", sans-serif;
+  --wx-grid-header-font: 500 12px "Inter", sans-serif;
+  --wx-grid-header-font-color: var(--color-neutral-600);
+  --wx-grid-body-font: 400 12px "Inter", sans-serif;
+  --wx-grid-body-font-color: var(--color-neutral-800);
+  --wx-timescale-font: 500 12px "Inter", sans-serif;
+  --wx-timescale-font-color: var(--color-neutral-600);
+  --wx-timescale-border: 1px solid var(--color-neutral-200);
+  --wx-gantt-holiday-background: var(--color-neutral-50);
+  --wx-gantt-holiday-color: var(--color-neutral-600);
+  --wx-gantt-icon-color: var(--color-neutral-600);
   --wx-gantt-bar-shadow: none;
+  --wx-grid-header-shadow: none;
+  --wx-timescale-shadow: none;
 }
 
 .dark .gm-task-gantt .wx-willow-theme {
@@ -36,18 +54,41 @@
   --wx-border: 1px solid var(--color-neutral-700);
   --wx-gantt-border: 1px solid #404040;
   --wx-gantt-border-color: var(--color-neutral-700);
-  --wx-gantt-task-color: var(--color-sky-700);
+  --wx-gantt-task-color: var(--color-sky-800);
+  --wx-gantt-task-border-color: var(--color-sky-300);
   --wx-gantt-select-color: var(--color-neutral-800);
   --wx-table-select-background: var(--color-neutral-800);
+  --wx-table-select-focus-background: var(--color-neutral-800);
+  --wx-table-select-border: 1px solid var(--color-neutral-500);
+  --wx-grid-header-font-color: var(--color-neutral-300);
+  --wx-grid-body-font-color: var(--color-neutral-200);
+  --wx-timescale-font-color: var(--color-neutral-300);
+  --wx-timescale-border: 1px solid var(--color-neutral-700);
+  --wx-gantt-holiday-background: var(--color-neutral-800);
+  --wx-gantt-holiday-color: var(--color-neutral-300);
+  --wx-gantt-icon-color: var(--color-neutral-300);
 }
 
-.dark .gm-gantt-controls input {
+.gm-gantt-controls input { border-color: transparent; }
+
+.gm-gantt-controls input:hover,
+.gm-gantt-controls input:focus,
+.gm-gantt-controls .gm-gantt-control:focus,
+.gm-gantt-controls .gm-gantt-control[aria-expanded="true"] {
+  border-color: var(--color-neutral-400);
+}
+
+.dark .gm-gantt-controls input,
+.dark .gm-gantt-controls select option,
+.dark .gm-gantt-controls [popover] {
   background: var(--color-neutral-900);
   color: var(--color-neutral-200);
-  border-color: var(--color-neutral-700);
 }
 
-.dark .gm-gantt-controls button {
+.dark .gm-gantt-controls [popover] { border-color: var(--color-neutral-700); }
+
+.dark .gm-gantt-controls button,
+.dark .gm-gantt-controls [popover] label {
   color: var(--color-neutral-200);
 }
 
@@ -56,6 +97,19 @@
 .gm-task-gantt *::after {
   box-shadow: none;
   transition: none;
+}
+
+.gm-task-gantt :focus-visible {
+  outline: 2px solid var(--color-sky-700);
+  outline-offset: -2px;
+}
+
+.dark .gm-task-gantt :focus-visible {
+  outline-color: var(--color-sky-300);
+}
+
+.dark .gm-task-gantt [data-before-creation] {
+  color: var(--color-red-300);
 }
 
 .gm-task-gantt .wx-bar.gm-open-ended,
@@ -81,9 +135,11 @@
 }
 
 .gm-task-gantt .gm-gantt-bar-text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.gm-task-gantt .gm-gantt-resize { position: absolute; inset-block: 0; padding-inline: 3px; cursor: col-resize; }
+.gm-task-gantt .gm-gantt-resize { position: absolute; inset-block: 0; padding-inline: 3px; cursor: col-resize; opacity: 0; }
+.gm-task-gantt .gm-gantt-bar:hover .gm-gantt-resize,
+.gm-task-gantt .gm-gantt-bar[data-calendar-active] .gm-gantt-resize { opacity: 1; }
 .gm-task-gantt .gm-gantt-resize-start { inset-inline-start: 0; border-inline-start: 2px solid currentColor; }
 .gm-task-gantt .gm-gantt-resize-end { inset-inline-end: 0; border-inline-end: 2px solid currentColor; }
 
 .dark .gm-gantt-feedback [data-general-error] { color: var(--color-neutral-200); }
-.dark .gm-gantt-feedback button { background: var(--color-neutral-900); color: var(--color-neutral-200); border-color: var(--color-neutral-700); }
+.dark .gm-gantt-feedback button { color: var(--color-neutral-200); }

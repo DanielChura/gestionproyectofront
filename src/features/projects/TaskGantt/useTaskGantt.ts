@@ -41,6 +41,7 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
     onAttach?.(api);
     if (api) cleanup.current = bindGanttReadOnly(api, allowPreview);
   }, [allowPreview, onAttach]);
+  const resizeGrid = useCallback((width: number) => { void widget.current?.exec("resize-grid", { width }); }, []);
   const toggleBranch = useCallback((id: number, expanded: boolean) => {
     void widget.current?.exec("open-task", { id, mode: expanded });
   }, []);
@@ -104,6 +105,6 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
     })();
     return () => { current = false; };
   }, [destination, viewport, rows]);
-  return { rows, viewport, scales, selected, selectedId: selected.at(-1) ?? null, attach, toggleBranch, onOpenTask, onSelectTask,
+  return { rows, viewport, scales, selected, selectedId: selected.at(-1) ?? null, attach, resizeGrid, toggleBranch, onOpenTask, onSelectTask,
     filters, setFilters, filtered, projection, dependencies, people, states, locate, changeScale, goToday, page, fitProject };
 }
