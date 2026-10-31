@@ -1,4 +1,4 @@
-param([string]$OutputPath, [ValidateSet(1, 2, 3, 4, 5)][int]$Stage = 1, [switch]$ChecksOnly)
+param([string]$OutputPath, [ValidateSet(1, 2, 3, 4, 5, 6)][int]$Stage = 1, [switch]$ChecksOnly)
 $ErrorActionPreference = 'Stop'
 $ganttFront = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $ganttBack = (Resolve-Path (Join-Path $ganttFront '../backend')).Path
@@ -65,7 +65,7 @@ try {
     }
     Push-Location $ganttFront
     try {
-        if ($Stage -eq 5) { $ganttArguments = @(); if ($ChecksOnly) { $ganttArguments += "--checks-only" }; & node.exe tests/verify-gantt-stage5-browser.mjs @ganttArguments } elseif ($Stage -eq 4) { & node.exe tests/verify-gantt-stage4-browser.mjs } elseif ($Stage -eq 3) { & node.exe tests/verify-gantt-stage3-browser.mjs } elseif ($Stage -eq 2) { & node.exe tests/verify-gantt-stage2-browser.mjs } else { & node.exe tests/verify-gantt-browser.mjs }
+        if ($Stage -eq 6) { & node.exe tests/verify-gantt-stage6-browser.mjs } elseif ($Stage -eq 5) { $ganttArguments = @(); if ($ChecksOnly) { $ganttArguments += "--checks-only" }; & node.exe tests/verify-gantt-stage5-browser.mjs @ganttArguments } elseif ($Stage -eq 4) { & node.exe tests/verify-gantt-stage4-browser.mjs } elseif ($Stage -eq 3) { & node.exe tests/verify-gantt-stage3-browser.mjs } elseif ($Stage -eq 2) { & node.exe tests/verify-gantt-stage2-browser.mjs } else { & node.exe tests/verify-gantt-browser.mjs }
         if ($LASTEXITCODE -ne 0) { throw 'Falló la comprobación Chrome de Gantt.' }
         Push-Location $ganttBack
         try {
