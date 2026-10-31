@@ -12,12 +12,13 @@ import "./taskDetail.css";
 
 export interface TaskDetailProps {
   version?: number;
+  initialSection?: "relations";
   target: TaskIdentity; project: Project; catalogs: ProjectCatalogs;
   onEdit?: (task: Task) => void;
   onUpdated: (task: Task) => void; onNavigate: (target: TaskIdentity) => void; onClose: () => void;
 }
 
-function DetailContent({ target, project, catalogs, onUpdated, onNavigate, onClose, onEdit, onBusy, activityVisible, onActivityToggle, version }: TaskDetailProps & { onBusy: (busy: boolean) => void; activityVisible: boolean; onActivityToggle: () => void }) {
+function DetailContent({ target, project, catalogs, onUpdated, onNavigate, onClose, onEdit, onBusy, activityVisible, onActivityToggle, version, initialSection }: TaskDetailProps & { onBusy: (busy: boolean) => void; activityVisible: boolean; onActivityToggle: () => void }) {
   const model = useTaskDetail(target, onUpdated, version);
   const [quickBusy, setQuickBusy] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
@@ -60,8 +61,8 @@ function DetailContent({ target, project, catalogs, onUpdated, onNavigate, onClo
             error={model.children.error} retry={() => { void model.children.refresh(); }} onNavigate={navigate}
             onCreated={(saved) => { void model.accept(saved); }} onBusyChange={setQuickBusy}
             moreBusy={model.children.moreBusy} loadMore={model.children.loadMore} />
-          <TaskRelations target={target} task={task} page={model.relations.value} loading={model.relations.loading} error={model.relations.error}
-            retry={() => { void model.relations.refresh(); }} moreBusy={model.relations.moreBusy} loadMore={model.relations.loadMore}
+          <TaskRelations focusOnOpen={initialSection === "relations"} target={target} task={task} page={model.relations.value} loading={model.relations.loading} error={model.relations.error}
+            retry={() => { void model.retryRelations(); }} moreBusy={model.relations.moreBusy} loadMore={model.relations.loadMore}
             onChanged={model.relationsChanged} onNavigate={navigate} />
         </>}
       </div>

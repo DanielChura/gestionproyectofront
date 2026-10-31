@@ -2,17 +2,26 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { RelationKind, TaskIdentity, TaskRelation } from "../types";
 import { changeDependency, createTaskRelation, removeTaskRelation, searchRelatedTasks } from "../services";
 import { errorText } from "../../auth/api";
+import { useTaskSync } from "../useTaskSync";
 import { useTaskPage } from "./useTaskDetail";
 
 export function useRelationMutation(target: TaskIdentity, onChanged: (otherId: number) => Promise<void>) {
   const [busy, setBusy] = useState(false), [error, setError] = useState("");
-  const pending = useRef(false);
+  const sync = useTaskSync();
+  const pending = useRef(false), alive = useRef(false);
+  useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
   async function mutate(action: () => Promise<void>, otherId: number) {
-    if (pending.current) return false;
+    if (pending.current || !alive.current || !sync.isCurrent()) return false;
+    const ticket = sync.token();
+    const valid = () => alive.current && sync.isCurrent() && sync.token() === ticket;
     pending.current = true; setBusy(true); setError("");
-    try { await action(); await onChanged(otherId); return true; }
-    catch (failure) { setError(errorText(failure)); return false; }
-    finally { pending.current = false; setBusy(false); }
+    try {
+      await action();
+      if (!valid()) return false;
+      await onChanged(otherId);
+      return valid();
+    } catch (failure) { if (valid()) setError(errorText(failure)); return false; }
+    finally { pending.current = false; if (alive.current) setBusy(false); }
   }
   function link(kind: RelationKind, otherId: number, name: string) {
     return mutate(() => kind === "custom" ? createTaskRelation(target, otherId, name.trim())

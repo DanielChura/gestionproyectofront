@@ -48,14 +48,23 @@ function RelationChooser({ target, task, mutation, close }: { target: TaskIdenti
   </div>;
 }
 
-export default function TaskRelations({ target, task, page, loading, error, retry, moreBusy, loadMore, onChanged, onNavigate }: {
+export default function TaskRelations({ target, task, page, loading, error, retry, moreBusy, loadMore, onChanged, onNavigate, focusOnOpen = false }: {
+  focusOnOpen?: boolean;
   target: TaskIdentity; task: Task; page: TaskPage<TaskRelation> | null; loading: boolean; error: string; retry: () => void;
   moreBusy: boolean; loadMore: () => Promise<void>; onChanged: (otherId: number) => Promise<void>; onNavigate: (target: TaskIdentity) => void;
 }) {
+  const section = useRef<HTMLElement>(null), focused = useRef(false);
+  useEffect(() => {
+    if (focusOnOpen && !loading && !focused.current) {
+      focused.current = true;
+      section.current?.scrollIntoView({ block: "nearest" });
+      section.current?.focus({ preventScroll: true });
+    }
+  }, [focusOnOpen, loading]);
   const [removing, setRemoving] = useState<string | null>(null);
   const mutation = useRelationMutation(target, onChanged);
   const id = useId();
-  return <section aria-label="Relaciones" className="mt-6 min-w-0">
+  return <section ref={section} tabIndex={focusOnOpen ? -1 : undefined} aria-label="Relaciones" className="mt-6 min-w-0 focus-visible:outline-2 focus-visible:outline-offset-2">
     <TaskProperty appearance="detail" id={id} cell icon={RelationIcon} label="Relacionar elementos o añadir dependencias" value="" disabled={!task.permissions.relations}
       content={<span className="flex min-w-0 max-w-full! items-center gap-2 rounded-lg bg-neutral-100 px-3 py-2 text-sm text-neutral-800"><RelationIcon className="size-4" /><span className="truncate">Relacionar elementos o añadir dependencias</span></span>}>
       {(close) => <RelationChooser target={target} task={task} mutation={mutation} close={close} />}

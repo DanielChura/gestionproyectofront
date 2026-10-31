@@ -5,8 +5,10 @@ import { useTaskSync } from "../useTaskSync";
 import type { TaskPatchPayload, Task, TaskIdentity, TaskStatePayload, TaskPage } from "../types";
 
 export function useTaskDetailNavigation() {
-  const [target, setTarget] = useState<TaskIdentity | null>(null);
-  return { target, openTaskDetail: setTarget, closeTaskDetail: () => setTarget(null) };
+  const [selection, setSelection] = useState<{ target: TaskIdentity; section?: "relations" } | null>(null);
+  return { target: selection?.target ?? null, initialSection: selection?.section,
+    openTaskDetail: (target: TaskIdentity, section?: "relations") => setSelection({ target, section }),
+    closeTaskDetail: () => setSelection(null) };
 }
 
 export function useTaskResource<T>(load: () => Promise<T>) {
@@ -64,6 +66,8 @@ export function useTaskDetail(target: TaskIdentity, onUpdated: (task: Task) => v
   useSyncExternalStore(sync.subscribe, sync.getVersion, sync.getVersion);
   const identity = useMemo(() => ({ projectId, taskId, version }), [projectId, taskId, version]);
   const activeIdentity = useRef(identity);
+  const reconciliation = useRef<{ identity: typeof identity; pending: Set<number>; busy: boolean } | null>(null);
+  const [relationFailure, setRelationFailure] = useState<{ identity: typeof identity; error: string } | null>(null);
   useEffect(() => { activeIdentity.current = identity; }, [identity]);
   const detail = useTaskResource(useCallback(async () => {
     const result = await sync.read(() => getTaskDetail(identity));
@@ -96,20 +100,32 @@ export function useTaskDetail(target: TaskIdentity, onUpdated: (task: Task) => v
       if (mounted.current) setBusy(false);
     }
   }
-  async function relationsChanged(otherTaskId: number) {
+  async function relationsChanged(otherTaskId?: number) {
+    if (!mounted.current || activeIdentity.current !== identity || !sync.isCurrent()) return;
+    if (reconciliation.current?.identity !== identity) reconciliation.current = { identity, pending: new Set(), busy: false };
+    const current = reconciliation.current;
+    if (otherTaskId !== undefined) current.pending.add(otherTaskId);
+    if (current.busy) return;
+    current.busy = true;
+    const affected = [taskId, ...current.pending].filter((id, index, ids) => ids.indexOf(id) === index);
     void relations.refresh(); void activity.refresh();
     try {
-      const saved = await sync.read(() => Promise.all([taskId, otherTaskId].map((id) => getTaskDetail({ projectId, taskId: id }))));
+      const saved = await sync.read(() => Promise.all(affected.map((id) => getTaskDetail({ projectId, taskId: id }))));
       if (!mounted.current || activeIdentity.current !== identity || !sync.isCurrent()) return;
-      for (const result of saved) onUpdated(sync.observe(result.task));
+      for (const task of sync.confirmMany(saved.map((result) => result.task))) onUpdated(task);
       detail.setValue(saved[0]);
+      setRelationFailure(null);
+      for (const id of affected) current.pending.delete(id);
     } catch (failure) {
-      if (mounted.current && activeIdentity.current === identity) detail.setError(`El vínculo se guardó. No se pudo actualizar la tarea: ${errorText(failure)}`);
-    }
+      if (mounted.current && activeIdentity.current === identity && sync.isCurrent())
+        setRelationFailure({ identity, error: "El vínculo se guardó. No se pudieron actualizar las tareas afectadas: " + errorText(failure) });
+    } finally { current.busy = false; }
   }
   return { detail: { ...detail, value: detail.value ? { task: sync.current(detail.value.task), parent: detail.value.parent ? sync.current(detail.value.parent) : null } : null },
     children: { ...children, value: children.value ? { ...children.value, items: children.value.items.map(sync.current) } : null },
-    activity, relations, busy, accept, relationsChanged,
+    activity, relations: { ...relations, error: relationFailure?.identity === identity ? relationFailure.error : relations.error },
+    retryRelations: () => reconciliation.current?.identity === identity && reconciliation.current.pending.size ? relationsChanged() : relations.refresh(),
+    busy, accept, relationsChanged,
     onPatch: (task: Task, data: TaskPatchPayload) => mutate(task, data),
     onState: (task: Task, data: TaskStatePayload) => mutate(task, data) };
 }

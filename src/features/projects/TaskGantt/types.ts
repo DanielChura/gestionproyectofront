@@ -1,4 +1,5 @@
-import type { Task, Project } from "../types";
+import type { ReactNode } from "react";
+import type { Task, Project, TaskActionKind } from "../types";
 
 export interface TaskGanttProps {
   project: Pick<Project, "id" | "start_date" | "end_date" | "task_states">;
@@ -6,7 +7,10 @@ export interface TaskGanttProps {
   loading: boolean;
   error: string;
   onRetry: () => void;
-  onOpenTask: (taskId: number) => void;
+  onOpenTask: (taskId: number, section?: "relations") => void;
+  onAction?: (kind: TaskActionKind, taskId: number) => void;
+  createAction?: ReactNode;
+  actionsDisabled?: boolean;
 }
 
 export interface GanttRow {

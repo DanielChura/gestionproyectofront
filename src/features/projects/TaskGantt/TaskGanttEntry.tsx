@@ -33,6 +33,7 @@ class GanttBoundary extends Component<TaskGanttProps, BoundaryState> {
 
 export default function TaskGanttEntry(props: TaskGanttProps) {
   return <section aria-label="Gantt" className="flex min-h-0 min-w-0 flex-1 flex-col">
+    {props.createAction && <div className="flex justify-end py-2">{props.createAction}</div>}
     {props.loading && <p role="status" className="py-2 text-xs text-neutral-600 dark:text-neutral-300">Actualizando tareas…</p>}
     {props.error && <div role="alert" className="flex flex-wrap items-center gap-2 py-2 text-xs text-red-700 dark:text-red-300">
       <span>No se pudieron actualizar las tareas. {props.error}</span>

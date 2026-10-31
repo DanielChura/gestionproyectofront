@@ -107,6 +107,7 @@ function ProjectWorkspaceContent({
     const version = collectionVersion.current;
     const items = sync.observeMany(await sync.read(() => getTasks(projectId)));
     if (mounted.current && version === collectionVersion.current) setTasks((current) => reconcileTasks(current, items, true));
+    return items;
   }, [projectId, sync]);
 
   useEffect(() => {
@@ -301,6 +302,7 @@ function ProjectWorkspaceContent({
           project={currentProject}
           catalogs={catalogs}
           initialState={action.stateCode}
+          onCheckCreation={loadTasks}
           onSubmit={save}
           onConfigured={configured}
           onClose={() => setAction(null)}
@@ -332,6 +334,7 @@ function ProjectWorkspaceContent({
             catalogs={catalogs}
             key={`child:${activeTask.id}`}
             parent={activeTask}
+          onCheckCreation={loadTasks}
             onSubmit={save}
             onConfigured={configured}
             onClose={() => setAction(null)}
@@ -472,7 +475,10 @@ function ProjectWorkspaceContent({
         loading={loading}
         error={error}
         onRetry={() => setReload((value) => value + 1)}
-        onOpenTask={(taskId) => taskDetail.openTaskDetail({ projectId, taskId })}
+        createAction={primaryAction}
+        actionsDisabled={busy || catalogLoading || Boolean(catalogError)}
+        onAction={openTaskAction}
+        onOpenTask={(taskId, section) => taskDetail.openTaskDetail({ projectId, taskId }, section)}
       />}
 
       {action && !activeAction && (
@@ -498,6 +504,7 @@ function ProjectWorkspaceContent({
           project={project}
           catalogs={catalogs}
           target={taskDetail.target}
+          initialSection={taskDetail.initialSection}
           onUpdated={acceptTask}
           onEdit={(task) => {
             const current = sync.current(task);

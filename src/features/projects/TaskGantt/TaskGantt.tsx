@@ -5,6 +5,7 @@ import type { GanttRow, TaskGanttProps } from "./types";
 import TaskDateValue from "../TaskForm/TaskDateValue";
 import ChevronDownIcon from "../../../shared/icons/ChevronDownIcon";
 import { useTaskGantt } from "./useTaskGantt";
+import TaskGanttActions from "./TaskGanttActions";
 import TaskGanttToolbar from "./TaskGanttToolbar";
 import TaskGanttDependencies from "./TaskGanttDependencies";
 import { shiftGanttDay, viewportCellWidth } from "./ganttViewport";
@@ -94,6 +95,7 @@ export default function TaskGantt(props: TaskGanttProps) {
       <p className="m-0 text-xs text-neutral-600 dark:text-neutral-300">{tasks.some((task) => task.permissions.edit) ? "Arrastre y ajuste de fechas" : "Solo lectura"}</p>
     </div>
     <TaskGanttToolbar controls={controls} onRefresh={props.onRetry} loading={props.loading} />
+    <TaskGanttActions task={tasks.find((task) => task.id === controls.selectedId)} disabled={props.actionsDisabled} onOpenTask={onOpenTask} onAction={props.onAction} />
     <p role="status" className="m-0 pb-2 text-xs text-neutral-600 dark:text-neutral-300">
       {controls.projection.matches.size} de {tasks.length} tareas{rows.length > controls.projection.matches.size ? ` · ${rows.length - controls.projection.matches.size} ancestros de contexto` : ""}
       {calendar.preview ? <span className="font-medium text-sky-800 dark:text-sky-300"> · {calendar.preview.name}: {formatTaskDate(calendar.preview.start_date)} — {formatTaskDate(calendar.preview.due_date)}</span>

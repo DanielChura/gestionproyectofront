@@ -2,7 +2,7 @@ import type { FormEvent } from "react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { errorText } from "../../auth/api";
 import CalendarEditFeedback from "../CalendarEditFeedback";
-import { useTaskCalendarEdit } from "../useTaskCalendarEdit";
+import { calendarProblem, useTaskCalendarEdit } from "../useTaskCalendarEdit";
 import LabelList from "../LabelList/LabelList";
 import TaskStatusConfiguration from "../TaskStatusConfiguration/TaskStatusConfiguration";
 import type { FieldErrors } from "../formErrors";
@@ -57,6 +57,7 @@ interface TaskFormProps {
   onSubmit: (data: TaskFormPayload) => Promise<void>;
   onConfigured: (configuration: ProjectTaskConfiguration) => void;
   onClose: () => void;
+  onCheckCreation?: () => Promise<unknown>;
 }
 
 const taskFields: Record<string, string> = {
@@ -84,6 +85,7 @@ export default function TaskForm({
   onSubmit,
   onConfigured,
   onClose,
+  onCheckCreation,
 }: TaskFormProps) {
   const calendarEdit = useTaskCalendarEdit(task);
   const [name, setName] = useState(task?.name ?? "");
@@ -103,11 +105,13 @@ export default function TaskForm({
   const [reason, setReason] = useState("");
   const [configuring, setConfiguring] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [uncertainCreation, setUncertainCreation] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [error, setError] = useState("");
 
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const form = useRef<HTMLFormElement>(null);
-  const pendingFocus = useRef(false);
+  const pendingFocus = useRef(false), submitting = useRef(false);
   const canAssign =
     project.permissions.manage && (!task || task.permissions.assign);
   const canConfigure =
@@ -144,7 +148,7 @@ export default function TaskForm({
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (busy) return;
+    if (submitting.current || uncertainCreation) return;
     pendingFocus.current = true;
     setError("");
     const invalid: FieldErrors = {};
@@ -174,6 +178,7 @@ export default function TaskForm({
       setFieldErrors(invalid);
       return;
     }
+    submitting.current = true;
     setBusy(true);
     setError("");
     setFieldErrors({});
@@ -197,10 +202,13 @@ export default function TaskForm({
           }));
       if (task) onClose();
     } catch (failure) {
+      const uncertain = !task && calendarProblem(failure) === "ambiguous";
+      if (uncertain) setUncertainCreation(true);
       const fields = apiFieldErrors(failure, taskFields);
       setFieldErrors(fields);
-      setError(Object.keys(fields).length ? "" : errorText(failure));
+      setError(uncertain ? "No se pudo confirmar la creación. Conserva este borrador y consulta las tareas antes de volver a crear; no se repetirá el envío." : Object.keys(fields).length ? "" : errorText(failure));
     } finally {
+      submitting.current = false;
       setBusy(false);
     }
   }
@@ -380,6 +388,12 @@ export default function TaskForm({
               {error}
             </p>
           )}
+          {uncertainCreation && onCheckCreation && <button type="button" disabled={checking} className={styles.cancel} onClick={() => {
+            setChecking(true);
+            void onCheckCreation().then(() => setError("Lista actualizada. Cierra este formulario para comprobar si la tarea se creó antes de iniciar otra creación."))
+              .catch((failure: unknown) => setError("No se pudo consultar la lista: " + errorText(failure) + ". La creación sigue sin confirmarse."))
+              .finally(() => setChecking(false));
+          }}>{checking ? "Consultando…" : "Consultar tareas creadas"}</button>}
           <div className={styles.footerRow}>
             <p className={styles.metadata}>
               {task
@@ -398,7 +412,7 @@ export default function TaskForm({
               <button
                 type="submit"
                 className="min-h-10 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
-                disabled={busy || calendarEdit.blocked}
+                disabled={busy || calendarEdit.blocked || uncertainCreation}
               >
                 {busy
                   ? "Guardando…"

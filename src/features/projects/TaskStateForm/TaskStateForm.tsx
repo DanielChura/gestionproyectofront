@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { errorText } from "../../auth/api";
 import type { ProjectTaskState, Task, TaskStatePayload } from "../types";
@@ -16,15 +16,18 @@ interface TaskStateFormProps {
 export default function TaskStateForm({ task, states, onSubmit, initialState = "", fixedTarget = false }: TaskStateFormProps) {
   const [target, setTarget] = useState(initialState);
   const [busy, setBusy] = useState(false);
+  const pending = useRef(false);
   const [error, setError] = useState("");
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (pending.current) return;
+    pending.current = true;
     setBusy(true);
     setError("");
     try { await onSubmit({ state_code: target }); }
     catch (failure) { setError(errorText(failure)); }
-    finally { setBusy(false); }
+    finally { pending.current = false; setBusy(false); }
   }
 
   return (
