@@ -78,7 +78,7 @@ function DashboardPage({
           <div className="min-w-0 p-5 border-b border-neutral-200 lg:border-b-0 lg:border-r">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <h3 className="m-0 text-sm text-neutral-900 font-semibold">
+                <h3 className="m-0 text-sm text-neutral-900 font-">
                   Distribución por estado
                 </h3>
                 <p className="m-0 mt-1 text-xs text-neutral-600">
@@ -127,7 +127,7 @@ function DashboardPage({
           <div className="min-w-0 p-5">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <h3 className="m-0 text-sm text-neutral-900 font-semibold">
+                <h3 className="m-0 text-sm text-neutral-900 font-">
                   Avance general
                 </h3>
                 <p className="m-0 mt-1 text-xs text-neutral-600">
@@ -140,7 +140,7 @@ function DashboardPage({
                 <article className="min-w-0" key={project.id}>
                   <div className="flex items-end justify-between gap-4 mb-2">
                     <div className="min-w-0">
-                      <h4 className="m-0 text-sm text-neutral-900 font-semibold">
+                      <h4 className="m-0 text-sm text-neutral-900 font-">
                         {project.name}
                       </h4>
                       <span className="block mt-0.5 text-xs text-neutral-600">
@@ -172,7 +172,7 @@ function DashboardPage({
             <div className="min-w-0 p-5 border-b border-neutral-200 lg:border-b-0 lg:border-r">
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
-                  <h3 className="m-0 text-sm text-neutral-900 font-semibold">
+                  <h3 className="m-0 text-sm text-neutral-900 font-">
                     Actividades prioritarias
                   </h3>
                   <p className="m-0 mt-1 text-xs text-neutral-600">
@@ -227,7 +227,7 @@ function DashboardPage({
                     {priorityActivities.map((item) => (
                       <tr key={item.id} className="border-t border-neutral-200">
                         <td className="px-3 py-3 max-w-[190px] leading-snug">
-                          <strong className="text-neutral-900 text-xs font-semibold">
+                          <strong className="text-neutral-900 text-xs font-">
                             {item.activity}
                           </strong>
                         </td>
@@ -257,7 +257,7 @@ function DashboardPage({
                 <div>
                   <h3
                     id="workload-heading"
-                    className="m-0 text-sm text-neutral-900 font-semibold"
+                    className="m-0 text-sm text-neutral-900 font-"
                   >
                     Carga por equipo
                   </h3>
@@ -271,7 +271,7 @@ function DashboardPage({
                   <article className="min-w-0" key={team.id}>
                     <div className="flex items-end justify-between gap-4 mb-2">
                       <div className="min-w-0">
-                        <h4 className="m-0 text-sm text-neutral-900 font-semibold">
+                        <h4 className="m-0 text-sm text-neutral-900 font-">
                           {team.name}
                         </h4>
                         <span className="block mt-0.5 text-xs text-neutral-600">

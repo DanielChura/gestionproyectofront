@@ -1,0 +1,44 @@
+import type { IconProps } from "./types";
+
+function ChartDotsIcon({ className, fill }: IconProps) {
+  if (fill) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className={className}
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M18 2a4 4 0 1 1 -3.843 5.114l-6.295 .786a3 3 0 0 1 -.094 .257l6.446 4.431a3 3 0 1 1 -.695 4.099l-3.527 1.058q .008 .127 .008 .255a4 4 0 1 1 -8 0l.005 -.2a4 4 0 0 1 7.366 -1.954l3.64 -1.094l.01 -.102q .023 -.204 .074 -.4l-6.688 -4.6a3 3 0 0 1 -4.407 -2.65l.005 -.176a3 3 0 0 1 5.784 -.931l6.312 -.79a4 4 0 0 1 3.899 -3.103" />
+      </svg>
+    );
+  }
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M3 7a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M14 15a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+      <path d="M3 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+      <path d="M9 17l5 -1.5" />
+      <path d="M6.5 8.5l7.81 5.37" />
+      <path d="M7 7l8 -1" />
+    </svg>
+  );
+}
+
+export default ChartDotsIcon;

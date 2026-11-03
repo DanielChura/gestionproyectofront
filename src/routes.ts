@@ -10,6 +10,7 @@ export const ProjectList = lazy(
 export const ProjectRoute = lazy(
   () => import("./features/projects/ProjectRoute/ProjectRoute"),
 );
+
 export const PublicationsPage = lazy(
   () => import("./features/publications/PublicationsPage"),
 );
@@ -57,6 +58,7 @@ export const appRoutes: AppRoute[] = [
     Component: ProjectRoute,
     requiresAdmin: false,
   },
+
   {
     path: "/cuentas",
     Component: AccountsPage,
@@ -97,3 +99,5 @@ export const appRoutes: AppRoute[] = [
 export function projectPath(projectId: number): string {
   return `/proyectos/${projectId}`;
 }
+
+

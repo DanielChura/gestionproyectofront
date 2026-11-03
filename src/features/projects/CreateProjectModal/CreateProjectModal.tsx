@@ -19,17 +19,18 @@ import TaskStatusConfiguration from "../TaskStatusConfiguration/TaskStatusConfig
 const formStyles = {
   form: "flex min-h-0 flex-col",
   body: "min-h-0 overflow-y-auto overscroll-contain px-6 py-5 max-sm:p-4",
-  fields: "m-0 grid min-w-0 gap-[18px] border-0 p-0",
+  fields: "m-0 grid min-w-0 gap-5 border-0 p-0",
   field: "grid min-w-0 content-start gap-1.5",
   properties: "flex flex-wrap items-start gap-2",
   footer:
-    "shrink-0 border-t border-neutral-200 bg-white px-6 py-3.5 max-sm:px-4",
+    "shrink-0 border-t border-neutral-200 bg-white px-6 py-3.5 max-sm:px-4 dark:border-neutral-800 dark:bg-neutral-900",
   actions: "flex flex-wrap items-center justify-end gap-2",
   secondary:
-    "min-h-10 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 hover:bg-neutral-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700",
-  fieldError:
-    "m-0 text-xs leading-relaxed text-red-700 [overflow-wrap:anywhere]",
-  generalError: "mb-2.5 mt-0 text-[13px] text-red-700 [overflow-wrap:anywhere]",
+    "min-h-10 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 hover:bg-neutral-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800",
+  control:
+    "min-h-10 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 aria-invalid:border-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100",
+  fieldError: "m-0 text-xs leading-relaxed text-red-700 break-words",
+  generalError: "mb-2.5 mt-0 text-sm text-red-700 break-words",
 };
 
 interface CreateProjectModalProps {
@@ -74,8 +75,14 @@ export default function CreateProjectModal({
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [workerError, setWorkerError] = useState("");
-  const [flowOpen, setFlowOpen] = useState(false), [flowName, setFlowName] = useState("Estándar");
-  const teamResult = useProjectTeams(draft.areaIds[0], step === 2 && draft.mode === "assigned" && draft.participantSource === "teams");
+  const [flowOpen, setFlowOpen] = useState(false),
+    [flowName, setFlowName] = useState("Estándar");
+  const teamResult = useProjectTeams(
+    draft.areaIds[0],
+    step === 2 &&
+      draft.mode === "assigned" &&
+      draft.participantSource === "teams",
+  );
   const workerRequest = useRef(0);
   const form = useRef<HTMLFormElement>(null);
   const generalError = useRef<HTMLParagraphElement>(null);
@@ -83,7 +90,12 @@ export default function CreateProjectModal({
   const nameInput = useRef<HTMLInputElement>(null);
 
   const loadWorkers = useCallback(async () => {
-    if (step !== 2 || draft.mode !== "assigned" || draft.participantSource === "teams") return;
+    if (
+      step !== 2 ||
+      draft.mode !== "assigned" ||
+      draft.participantSource === "teams"
+    )
+      return;
     const request = ++workerRequest.current;
     setSearching(true);
     setWorkerError("");
@@ -132,7 +144,9 @@ export default function CreateProjectModal({
       workerIds: changes.areaIds
         ? []
         : (changes.workerIds ?? current.workerIds),
-      teamIds: changes.areaIds ? [] : changes.teamIds ?? current.teamIds ?? [],
+      teamIds: changes.areaIds
+        ? []
+        : (changes.teamIds ?? current.teamIds ?? []),
     }));
     const fields: Record<string, string> = {
       ...projectFields,
@@ -184,8 +198,14 @@ export default function CreateProjectModal({
       setStep(2);
       return;
     }
-    if (draft.mode === "assigned" && (draft.participantSource === "teams" ? !(draft.teamIds?.length) : draft.workerIds.length === 0)) {
-      invalid["project-worker-search"] = "Selecciona al menos un trabajador o equipo elegible.";
+    if (
+      draft.mode === "assigned" &&
+      (draft.participantSource === "teams"
+        ? !draft.teamIds?.length
+        : draft.workerIds.length === 0)
+    ) {
+      invalid["project-worker-search"] =
+        "Selecciona al menos un trabajador o equipo elegible.";
     }
     if (Object.keys(invalid).length > 0) {
       focusRequested.current = true;
@@ -200,10 +220,22 @@ export default function CreateProjectModal({
         end_date: draft.endDate || null,
         area_ids: draft.areaIds,
         mode: draft.mode,
-        worker_ids: draft.mode === "assigned" && draft.participantSource !== "teams" ? draft.workerIds : [],
+        worker_ids:
+          draft.mode === "assigned" && draft.participantSource !== "teams"
+            ? draft.workerIds
+            : [],
         participant_source: draft.participantSource ?? "workers",
-        team_ids: draft.mode === "assigned" && draft.participantSource === "teams" ? draft.teamIds ?? [] : [],
-        ...(draft.initialTaskStates ? { initial_task_states: draft.initialTaskStates.map(({ name, category, color }) => ({ name, category, color })) } : {}),
+        team_ids:
+          draft.mode === "assigned" && draft.participantSource === "teams"
+            ? (draft.teamIds ?? [])
+            : [],
+        ...(draft.initialTaskStates
+          ? {
+              initial_task_states: draft.initialTaskStates.map(
+                ({ name, category, color }) => ({ name, category, color }),
+              ),
+            }
+          : {}),
         worker_contribute: draft.workerContribute,
       });
       onCreated(project);
@@ -228,177 +260,224 @@ export default function CreateProjectModal({
   }
 
   return (
-    <><Modal
-      title={`Crear proyecto · Paso ${step} de 2`}
-      onClose={onClose}
-      busy={busy}
-      projectComposer
-    >
-      <form
-        ref={form}
-        className={`${formStyles.form} [&_label]:text-[13px] [&_label]:[&_input:not([type=radio]):not([type=checkbox])]:min-h-10 [&_input:not([type=radio]):not([type=checkbox])]:w-full [&_input:not([type=radio]):not([type=checkbox])]:rounded-lg [&_input:not([type=radio]):not([type=checkbox])]:border [&_input]:border-neutral-200 [&_input:not([type=radio]):not([type=checkbox])]:px-3 [&_input:not([type=radio]):not([type=checkbox])]:py-2 [&_input]:text-sm [&_textarea]:min-h-[74px] [&_textarea]:w-full [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-neutral-200 [&_textarea]:px-3 [&_textarea]:py-2 [&_textarea]:text-sm [&_select]:w-full [&_select]:min-h-9 [&_select]:rounded-lg [&_select]:border [&_select]:border-neutral-200 [&_select]:px-2 [&_select]:py-1 [&_select]:text-sm [&_[aria-invalid=true]]:border-red-700 [&_:focus-visible]:outline-2 [&_:focus-visible]:outline-offset-2 [&_:focus-visible]:outline-neutral-700`}
-        noValidate
-        aria-busy={busy}
-        onSubmit={submit}
+    <>
+      <Modal
+        title={`Crear proyecto · Paso ${step} de 2`}
+        onClose={onClose}
+        busy={busy}
+        projectComposer
       >
-        <div className={formStyles.body}>
-          <fieldset className={formStyles.fields} disabled={busy}>
-            {step === 1 ? (
-              <>
-                <div className={formStyles.field}>
-                  <label htmlFor="project-name">Nombre *</label>
-                  <input
-                    id="project-name"
-                    name="name"
-                    data-initial-focus
-                    ref={nameInput}
-                    value={draft.name}
-                    maxLength={180}
-                    required
-                    aria-invalid={Boolean(fieldErrors["project-name"])}
-                    aria-describedby={
-                      fieldErrors["project-name"]
-                        ? "project-name-error"
-                        : undefined
-                    }
-                    onChange={(event) =>
-                      updateDraft({ name: event.target.value })
-                    }
-                  />
-                  {fieldErrors["project-name"] && (
-                    <p
-                      id="project-name-error"
-                      className={formStyles.fieldError}
-                      role="alert"
+        <form
+          ref={form}
+          className={formStyles.form}
+          noValidate
+          aria-busy={busy}
+          onSubmit={submit}
+        >
+          <div className={formStyles.body}>
+            <fieldset className={formStyles.fields} disabled={busy}>
+              {step === 1 ? (
+                <>
+                  <div className={formStyles.field}>
+                    <label htmlFor="project-name" className="text-sm ">
+                      Nombre *
+                    </label>
+                    <input
+                      id="project-name"
+                      name="name"
+                      className={formStyles.control}
+                      data-initial-focus
+                      ref={nameInput}
+                      value={draft.name}
+                      maxLength={180}
+                      required
+                      aria-invalid={Boolean(fieldErrors["project-name"])}
+                      aria-describedby={
+                        fieldErrors["project-name"]
+                          ? "project-name-error"
+                          : undefined
+                      }
+                      onChange={(event) =>
+                        updateDraft({ name: event.target.value })
+                      }
+                    />
+                    {fieldErrors["project-name"] && (
+                      <p
+                        id="project-name-error"
+                        className={formStyles.fieldError}
+                        role="alert"
+                      >
+                        {fieldErrors["project-name"]}
+                      </p>
+                    )}
+                  </div>
+                  <div className={formStyles.field}>
+                    <label htmlFor="project-description" className="text-sm ">
+                      Descripción{" "}
+                      <span className="m-0 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+                        (opcional)
+                      </span>
+                    </label>
+                    <textarea
+                      id="project-description"
+                      name="description"
+                      rows={2}
+                      maxLength={10000}
+                      className={`${formStyles.control} min-h-20`}
+                      value={draft.description}
+                      aria-invalid={Boolean(fieldErrors["project-description"])}
+                      aria-describedby={
+                        fieldErrors["project-description"]
+                          ? "project-description-error"
+                          : undefined
+                      }
+                      onChange={(event) =>
+                        updateDraft({ description: event.target.value })
+                      }
+                    />
+                    {fieldErrors["project-description"] && (
+                      <p
+                        id="project-description-error"
+                        className={formStyles.fieldError}
+                        role="alert"
+                      >
+                        {fieldErrors["project-description"]}
+                      </p>
+                    )}
+                  </div>
+                  <div
+                    className={formStyles.properties}
+                    aria-label="Características del proyecto"
+                  >
+                    <AreaSelector
+                      options={catalogs.areas}
+                      selected={draft.areaIds}
+                      error={fieldErrors["project-areas"]}
+                      onChange={(areaIds) => updateDraft({ areaIds })}
+                    />
+                    <ProjectEndDateSelector
+                      value={draft.endDate}
+                      min={catalogs.creation_date}
+                      error={fieldErrors["project-end-date"]}
+                      onChange={(endDate) => updateDraft({ endDate })}
+                    />
+                  </div>
+                  <div
+                    id="project-flow"
+                    tabIndex={-1}
+                    aria-invalid={Boolean(fieldErrors["project-flow"])}
+                    className="flex flex-wrap items-center justify-between gap-2 border-t border-neutral-200 pt-3 text-xs"
+                  >
+                    <div>
+                      <span className="">Flujo de tareas</span>
+                      <p className="m-0 mt-1 text-neutral-600">
+                        {flowName} ·{" "}
+                        {draft.initialTaskStates?.length ??
+                          catalogs.states.length}{" "}
+                        estados
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className="cursor-pointer rounded-lg border border-neutral-200 px-3 py-1.5 text-neutral-700 hover:bg-neutral-50"
+                      onClick={() => setFlowOpen(true)}
                     >
-                      {fieldErrors["project-name"]}
-                    </p>
-                  )}
-                </div>
-                <div className={formStyles.field}>
-                  <label htmlFor="project-description">
-                    Descripción{" "}
-                    <span className="m-0 text-xs leading-relaxed text-neutral-600">
-                      (opcional)
-                    </span>
-                  </label>
-                  <textarea
-                    id="project-description"
-                    name="description"
-                    rows={2}
-                    maxLength={10000}
-                    value={draft.description}
-                    aria-invalid={Boolean(fieldErrors["project-description"])}
-                    aria-describedby={
-                      fieldErrors["project-description"]
-                        ? "project-description-error"
-                        : undefined
-                    }
-                    onChange={(event) =>
-                      updateDraft({ description: event.target.value })
-                    }
-                  />
-                  {fieldErrors["project-description"] && (
-                    <p
-                      id="project-description-error"
-                      className={formStyles.fieldError}
-                      role="alert"
-                    >
-                      {fieldErrors["project-description"]}
-                    </p>
-                  )}
-                </div>
-                <div
-                  className={formStyles.properties}
-                  aria-label="Características del proyecto"
-                >
-                  <AreaSelector
-                    options={catalogs.areas}
-                    selected={draft.areaIds}
-                    error={fieldErrors["project-areas"]}
-                    onChange={(areaIds) => updateDraft({ areaIds })}
-                  />
-                  <ProjectEndDateSelector
-                    value={draft.endDate}
-                    min={catalogs.creation_date}
-                    error={fieldErrors["project-end-date"]}
-                    onChange={(endDate) => updateDraft({ endDate })}
-                  />
-                </div>
-                <div id="project-flow" tabIndex={-1} aria-invalid={Boolean(fieldErrors["project-flow"])} className="flex flex-wrap items-center justify-between gap-2 border-t border-neutral-200 pt-3 text-xs">
-                  <div><span className="font-medium">Flujo de tareas</span><p className="m-0 mt-1 text-neutral-600">{flowName} · {draft.initialTaskStates?.length ?? catalogs.states.length} estados</p></div>
-                  <button type="button" className="cursor-pointer rounded-lg border border-neutral-200 px-3 py-1.5 text-neutral-700 hover:bg-neutral-50" onClick={() => setFlowOpen(true)}>Configurar</button>
-                  {fieldErrors["project-flow"] && <p className="m-0 basis-full text-red-700" role="alert">{fieldErrors["project-flow"]}</p>}
-                </div>
-              </>
-            ) : (
-              <ProjectConfiguration
-                draft={draft}
-                onChange={updateDraft}
-                areaName={
-                  catalogs.areas.find((area) => area.id === draft.areaIds[0])
-                    ?.name ?? ""
-                }
-                fieldErrors={fieldErrors}
-                workerError={workerError}
-                workers={workers}
-                searching={searching}
-                search={search}
-                onSearchChange={setSearch}
-                onSearch={searchWorkers}
-                teams={teamResult.items} teamLoading={teamResult.loading} teamError={teamResult.error} onTeamRetry={teamResult.retry}
-              />
-            )}
-          </fieldset>
-        </div>
-        <footer className={formStyles.footer}>
-          {error && (
-            <p
-              ref={generalError}
-              className={formStyles.generalError}
-              role="alert"
-              tabIndex={-1}
-            >
-              {error}
-            </p>
-          )}
-          <div className={formStyles.actions}>
-            {step === 2 && (
-              <button
-                type="button"
-                className={formStyles.secondary}
-                disabled={busy}
-                onClick={() => {
-                  setError("");
-                  setStep(1);
-                }}
-              >
-                Volver
-              </button>
-            )}
-            <button
-              type="submit"
-              className="min-h-10 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
-              disabled={
-                busy ||
-                catalogs.areas.length === 0 ||
-                (step === 2 && draft.mode === "assigned" && (draft.participantSource === "teams" ? teamResult.loading : searching))
-              }
-            >
-              {busy
-                ? "Creando…"
-                : step === 1
-                  ? "Continuar"
-                  : draft.mode === "available"
-                    ? "Publicar dentro del sistema"
-                    : "Crear con asignados"}
-            </button>
+                      Configurar
+                    </button>
+                    {fieldErrors["project-flow"] && (
+                      <p className="m-0 basis-full text-red-700" role="alert">
+                        {fieldErrors["project-flow"]}
+                      </p>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <ProjectConfiguration
+                  draft={draft}
+                  onChange={updateDraft}
+                  areaName={
+                    catalogs.areas.find((area) => area.id === draft.areaIds[0])
+                      ?.name ?? ""
+                  }
+                  fieldErrors={fieldErrors}
+                  workerError={workerError}
+                  workers={workers}
+                  searching={searching}
+                  search={search}
+                  onSearchChange={setSearch}
+                  onSearch={searchWorkers}
+                  teams={teamResult.items}
+                  teamLoading={teamResult.loading}
+                  teamError={teamResult.error}
+                  onTeamRetry={teamResult.retry}
+                />
+              )}
+            </fieldset>
           </div>
-        </footer>
-      </form>
-    </Modal>
-    {flowOpen && <TaskStatusConfiguration draft={{ states: draft.initialTaskStates ?? catalogs.states, templates: catalogs.task_templates ?? [],
-      onApply: (states, name) => { updateDraft({ initialTaskStates: states }); setFlowName(name); } }} onConfigured={() => undefined} onClose={() => setFlowOpen(false)} />}
+          <footer className={formStyles.footer}>
+            {error && (
+              <p
+                ref={generalError}
+                className={formStyles.generalError}
+                role="alert"
+                tabIndex={-1}
+              >
+                {error}
+              </p>
+            )}
+            <div className={formStyles.actions}>
+              {step === 2 && (
+                <button
+                  type="button"
+                  className={formStyles.secondary}
+                  disabled={busy}
+                  onClick={() => {
+                    setError("");
+                    setStep(1);
+                  }}
+                >
+                  Volver
+                </button>
+              )}
+              <button
+                type="submit"
+                className="min-h-10 rounded-lg bg-neutral-900 px-4 py-2 text-sm  text-white hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
+                disabled={
+                  busy ||
+                  catalogs.areas.length === 0 ||
+                  (step === 2 &&
+                    draft.mode === "assigned" &&
+                    (draft.participantSource === "teams"
+                      ? teamResult.loading
+                      : searching))
+                }
+              >
+                {busy
+                  ? "Creando…"
+                  : step === 1
+                    ? "Continuar"
+                    : draft.mode === "available"
+                      ? "Publicar dentro del sistema"
+                      : "Crear con asignados"}
+              </button>
+            </div>
+          </footer>
+        </form>
+      </Modal>
+      {flowOpen && (
+        <TaskStatusConfiguration
+          draft={{
+            states: draft.initialTaskStates ?? catalogs.states,
+            templates: catalogs.task_templates ?? [],
+            onApply: (states, name) => {
+              updateDraft({ initialTaskStates: states });
+              setFlowName(name);
+            },
+          }}
+          onConfigured={() => undefined}
+          onClose={() => setFlowOpen(false)}
+        />
+      )}
     </>
   );
 }

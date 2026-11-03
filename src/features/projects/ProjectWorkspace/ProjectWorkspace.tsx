@@ -31,6 +31,7 @@ import Modal from "../Modal/Modal";
 import TaskDetailDialog from "../TaskDetail/TaskDetailDialog";
 import { useTaskDetailNavigation } from "../TaskDetail/useTaskDetail";
 import TaskBoard from "../TaskBoard/TaskBoard";
+import ProjectChartsPage from "../ProjectOverview/ProjectOverviewPage";
 import TaskForm from "../TaskForm/TaskForm";
 import TaskGroupingControl from "../TaskList/TaskGroupingControl";
 import TaskList from "../TaskList/TaskList";
@@ -75,10 +76,17 @@ export default function ProjectWorkspace({
   const [refreshError, setRefreshError] = useState("");
   const [configurationVersion, setConfigurationVersion] = useState(0);
   const [filteredCount, setFilteredCount] = useState<number | null>(null);
-  const [groupControls, setGroupControls] = useState<TaskGroupControls | null>(null);
+  const [groupControls, setGroupControls] = useState<TaskGroupControls | null>(
+    null,
+  );
   const collectionVersion = useRef(0);
   const mounted = useRef(false);
-  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const { addToast } = useToast();
   const taskDetail = useTaskDetailNavigation();
   const [searchParams] = useSearchParams();
@@ -101,13 +109,19 @@ export default function ProjectWorkspace({
   const loadTasks = useCallback(async () => {
     const version = collectionVersion.current;
     const items = await getTasks(projectId);
-    if (mounted.current && version === collectionVersion.current) setTasks((current) => reconcileTasks(current, items, true));
+    if (mounted.current && version === collectionVersion.current)
+      setTasks((current) => reconcileTasks(current, items, true));
   }, [projectId]);
 
   useEffect(() => {
     let current = true;
     const collection = collectionVersion;
-    void Promise.resolve().then(() => { if (current) { setLoading(true); setError(""); } });
+    void Promise.resolve().then(() => {
+      if (current) {
+        setLoading(true);
+        setError("");
+      }
+    });
 
     void Promise.all([getProject(projectId), getTasks(projectId)])
       .then(([details, items]) => {
@@ -275,19 +289,41 @@ export default function ProjectWorkspace({
     if (!mounted.current) return;
     collectionVersion.current++;
     const { tasks: confirmed, ...flow } = configuration;
-    setProject((current) => current ? { ...current, task_states: flow } : current);
+    setProject((current) =>
+      current ? { ...current, task_states: flow } : current,
+    );
     if (confirmed) setTasks(confirmed);
     setConfigurationVersion((value) => value + 1);
     setRefreshError("");
-    addToast({ icon: "success", title: "Estados actualizados", message: project?.name ?? "" });
-    if (!confirmed) void loadTasks().catch((failure: unknown) => {
-      if (mounted.current) setRefreshError(`Estados guardados. No se pudo actualizar la lista: ${errorText(failure)}`);
+    addToast({
+      icon: "success",
+      title: "Estados actualizados",
+      message: project?.name ?? "",
     });
+    if (!confirmed)
+      void loadTasks().catch((failure: unknown) => {
+        if (mounted.current)
+          addToast({
+            icon: "error",
+            title: "Lista no actualizada",
+            message: errorText(failure),
+          });
+      });
   }
 
   function actionForm(currentProject: Project): ReactNode {
     if (!action) return null;
-    if (catalogLoading || catalogError) return <p role="status" className="p-5 text-xs text-neutral-600">{catalogError ? "No se pudo cargar el catálogo. Reintenta antes de editar." : "Cargando catálogos…"}</p>;
+    if (catalogLoading || catalogError)
+      return (
+        <p
+          role="status"
+          className="p-5 text-xs text-neutral-600 dark:text-neutral-400"
+        >
+          {catalogError
+            ? "No se pudo cargar el catálogo. Reintenta antes de editar."
+            : "Cargando catálogos…"}
+        </p>
+      );
 
     if (action.kind === "create") {
       return (
@@ -349,9 +385,7 @@ export default function ProjectWorkspace({
     }
   }
 
-  if (!project) return <main id="main-content" className="p-5 text-sm text-neutral-800">
-    {loading ? <p role="status">Cargando proyecto…</p> : <div role="alert"><p>{error || "No se pudo cargar el proyecto."}</p><button type="button" onClick={() => setReload((value) => value + 1)} className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs hover:bg-neutral-100">Reintentar</button></div>}
-  </main>;
+  if (!project) return null;
 
   function openTaskAction(kind: TaskActionKind, taskId: number) {
     if (kind === "detail") taskDetail.openTaskDetail({ projectId, taskId });
@@ -372,7 +406,7 @@ export default function ProjectWorkspace({
       disabled={busy || catalogLoading || Boolean(catalogError)}
       onClick={() => setAction({ kind: "create" })}
       aria-label="Crear nueva tarea"
-      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
+      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
     >
       <span aria-hidden="true">
         <PlusIcon className="size-4" />
@@ -383,7 +417,7 @@ export default function ProjectWorkspace({
 
   return (
     <main
-      className="flex min-h-full flex-col text-neutral-800 md:h-full md:min-h-0"
+      className="flex min-h-full flex-col text-neutral-800 dark:text-neutral-100 md:h-full md:min-h-0"
       id="main-content"
     >
       <ProjectHeader
@@ -394,9 +428,6 @@ export default function ProjectWorkspace({
         filteredCount={view === "lista" ? filteredCount : null}
       />
 
-      {catalogLoading && <p role="status" className="py-2 text-xs text-neutral-600">Cargando catálogos…</p>}
-      {catalogError && <div role="alert" className="flex flex-wrap items-center gap-2 py-2 text-xs text-red-700"><span>No se pudieron cargar los catálogos. {catalogError}</span><button type="button" onClick={onRetryCatalogs} className="cursor-pointer rounded-lg border border-neutral-200 px-3 py-1.5 text-neutral-800 hover:bg-neutral-100">Reintentar catálogos</button></div>}
-      {refreshError && <div role="alert" className="flex items-center gap-2 py-2 text-xs text-red-700"><span>{refreshError}</span><button type="button" className="cursor-pointer underline" onClick={() => { void loadTasks().then(() => setRefreshError("")).catch((failure: unknown) => setRefreshError(errorText(failure))); }}>Actualizar lista</button></div>}
       {project.requirements.length > 0 && (
         <section
           aria-label="Requisitos existentes del proyecto"
@@ -408,25 +439,40 @@ export default function ProjectWorkspace({
 
       {(view === "lista" || view === "tablero") && (
         <section
-          className="flex min-h-0 flex-1 flex-col bg-white"
+          className="flex min-h-0 flex-1 flex-col"
           aria-label={view === "lista" ? "Lista de trabajo" : "Tablero"}
         >
           {view === "lista" && <h2 className="sr-only">Lista de trabajo</h2>}
-          <ProjectToolbar action={primaryAction}>
-            {view === "lista" && <fieldset className="m-0 min-w-0 border-0 p-0">
-              <TaskGroupingControl
-                preferences={preferences}
-                onChange={setPreferences}
-              />
-            </fieldset>}
+          <ProjectToolbar
+            action={
+              <div className="flex items-center gap-2">
+                <TaskSearch value={search} onChange={setSearch} />
+                {primaryAction}
+              </div>
+            }
+          >
+            {view === "lista" && (
+              <fieldset className="m-0 min-w-0 border-0 p-0">
+                <TaskGroupingControl
+                  preferences={preferences}
+                  onChange={setPreferences}
+                />
+              </fieldset>
+            )}
             {project.permissions.manage &&
               project.task_states.can_configure && (
                 <TaskStatusSettingsControl
                   onClick={() => setConfiguringStates(true)}
                 />
               )}
-            {view === "lista" && <TaskGroupExpansionControl expanded={groupControls?.expanded ?? false} disabled={groupControls?.disabled ?? true} controls={groupControls?.controls ?? ""} onToggle={() => groupControls?.toggle()} />}
-            <TaskSearch value={search} onChange={setSearch} />
+            {view === "lista" && (
+              <TaskGroupExpansionControl
+                expanded={groupControls?.expanded ?? false}
+                disabled={groupControls?.disabled ?? true}
+                controls={groupControls?.controls ?? ""}
+                onToggle={() => groupControls?.toggle()}
+              />
+            )}
           </ProjectToolbar>
           {view === "lista" ? (
             <div className="flex min-h-0 min-w-0 flex-1 flex-col">
@@ -436,7 +482,10 @@ export default function ProjectWorkspace({
                 catalogs={catalogs}
                 search={search}
                 preferences={preferences}
-                onMoved={(items) => { collectionVersion.current++; setTasks((current) => reconcileTasks(current, items, true)); }}
+                onMoved={(items) => {
+                  collectionVersion.current++;
+                  setTasks((current) => reconcileTasks(current, items, true));
+                }}
                 onCountChange={setFilteredCount}
                 onGroupControls={setGroupControls}
                 onAction={openTaskAction}
@@ -460,7 +509,7 @@ export default function ProjectWorkspace({
       {view === "gantt" && (
         <section className="px-6 py-10" aria-label="Gantt">
           <h2 className="text-lg">Gantt</h2>
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
             Esta vista está pendiente de implementación. Puedes gestionar las
             tareas en Lista.
           </p>
@@ -468,9 +517,18 @@ export default function ProjectWorkspace({
         </section>
       )}
 
+      {view === "overview" && (
+        <section
+          className="flex min-h-0 flex-1 flex-col"
+          aria-label="Resumen del proyecto"
+        >
+          <ProjectChartsPage />
+        </section>
+      )}
+
       {action && !activeAction && (
         <p
-          className="border border-neutral-200 bg-white px-3 py-2 text-sm"
+          className="border border-neutral-200 dark:border-neutral-800 bg-white px-3 py-2 text-sm"
           role="alert"
         >
           La tarea ya no está disponible. Vuelve a seleccionar una tarea de la

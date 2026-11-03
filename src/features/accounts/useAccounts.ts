@@ -13,6 +13,25 @@ export interface AccountFilters {
   active?: boolean;
 }
 
+async function fetchAllAccounts(): Promise<Account[]> {
+  const accounts: Account[] = [];
+  let cursor: string | null = null;
+  for (let page = 0; page < 100; page += 1) {
+    const query = new URLSearchParams({ page_size: "50" });
+    if (cursor) query.set("cursor", cursor);
+    const data = await apiRequest<any>(`admin/accounts/?${query.toString()}`);
+    const rows = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.results)
+        ? data.results
+        : [];
+    accounts.push(...rows);
+    cursor = Array.isArray(data) ? null : (data?.next_cursor ?? null);
+    if (!cursor) break;
+  }
+  return accounts;
+}
+
 export function useAccounts(filters: AccountFilters = {}) {
   const { search = "", active } = filters;
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -22,12 +41,18 @@ export function useAccounts(filters: AccountFilters = {}) {
 
   const load = useCallback(async () => {
     try {
-      const [accountList, areaList] = await Promise.all([
-        apiRequest<Account[]>("admin/accounts/"),
-        apiRequest<Area[]>("admin/areas/"),
+      const [accountList, areaData] = await Promise.all([
+        fetchAllAccounts(),
+        apiRequest<any>("admin/areas/"),
       ]);
       setAccounts(accountList);
-      setAreas(areaList);
+      setAreas(
+        Array.isArray(areaData)
+          ? areaData
+          : Array.isArray(areaData?.results)
+            ? areaData.results
+            : [],
+      );
     } catch (failure) {
       addToast({
         icon: "error",

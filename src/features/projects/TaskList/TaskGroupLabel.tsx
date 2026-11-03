@@ -11,7 +11,7 @@ export default function TaskGroupLabel({
 }) {
   if (group.stateCode)
     return (
-      <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs font-medium text-white">
+      <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs  text-white">
         <StateIcon
           code={group.stateCode}
           name={group.name}
@@ -35,15 +35,15 @@ export default function TaskGroupLabel({
             key={token.id}
             className={
               mode === "labels"
-                ? "max-w-48 truncate rounded-lg bg-neutral-100 px-2 py-0.5 text-xs text-neutral-800"
-                : "max-w-56 truncate text-xs text-neutral-800"
+                ? "max-w-48 truncate rounded-lg px-2 py-0.5 text-xs text-neutral-800 dark:text-neutral-100"
+                : "max-w-56 truncate text-xs text-neutral-800 dark:text-neutral-100"
             }
           >
             {token.name}
           </span>
         ))}
         {group.tokens.length > 3 && (
-          <span className="text-xs text-neutral-600">
+          <span className="text-xs text-neutral-600 dark:text-neutral-400">
             +{group.tokens.length - 3}
           </span>
         )}
@@ -53,8 +53,8 @@ export default function TaskGroupLabel({
     <span
       className={
         group.key === "due_date:overdue"
-          ? "text-xs text-red-700"
-          : "text-xs text-neutral-800"
+          ? "text-xs text-red-700 dark:text-red-400"
+          : "text-xs text-neutral-800 dark:text-neutral-100"
       }
     >
       {group.name}

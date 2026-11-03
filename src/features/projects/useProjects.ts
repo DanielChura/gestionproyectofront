@@ -11,7 +11,7 @@ export function useProjects() {
   const loadProjects = useCallback(async () => {
     try {
       const data = await getProjects();
-      setProjects(data);
+      setProjects(Array.isArray(data) ? data : []);
     } catch (err) {
       addToast({
         icon: "error",

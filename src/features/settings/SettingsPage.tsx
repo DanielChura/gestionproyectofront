@@ -1,8 +1,11 @@
 import { useState } from "react";
+import type { FormEvent } from "react";
 import { useTheme } from "../../hooks/useTheme";
 import ThemePreview from "./ThemePreview";
 import type { Theme } from "../../hooks/useTheme";
 import { useProfile } from "../profile/ProfileModal/useProfile";
+import { updateSessionProfile } from "../../features/auth/api";
+import { useToast } from "../../hooks/useToast";
 import Avatar from "../../shared/Avatar";
 import UserIcon from "../../shared/icons/UserIcon";
 import AtIcon from "../../shared/icons/AtIcon";
@@ -28,14 +31,55 @@ function SettingsPage() {
     saving,
     addSpecialty,
     dropSpecialty,
+    reload,
   } = useProfile();
 
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstNameTouched, setFirstNameTouched] = useState(false);
+  const [lastNameTouched, setLastNameTouched] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [savingProfile, setSavingProfile] = useState(false);
+  const { addToast } = useToast();
 
-  const currentName = fullName || profile?.name || "";
-  const currentEmail = email || profile?.email || "";
+  const currentFirstName = firstNameTouched
+    ? firstName
+    : ((profile?.name ?? "").split(" ")[0] ?? "");
+  const currentLastName = lastNameTouched
+    ? lastName
+    : (profile?.name ?? "").split(" ").slice(1).join(" ");
+  const currentName =
+    `${currentFirstName} ${currentLastName}`.trim() || (profile?.name ?? "");
+  const currentEmail = emailTouched ? email : (profile?.email ?? "");
+  async function saveProfile(event?: FormEvent) {
+    event?.preventDefault();
+    setSavingProfile(true);
+    try {
+      await updateSessionProfile({
+        first_names: currentFirstName,
+        last_names: currentLastName,
+        email: currentEmail,
+        password: password || undefined,
+      });
+      await reload();
+      setPassword("");
+      addToast({
+        icon: "success",
+        title: "Perfil actualizado",
+        message: "Los cambios se guardaron.",
+      });
+    } catch (failure) {
+      addToast({
+        icon: "error",
+        title: "No se pudo guardar",
+        message: String(failure),
+      });
+    } finally {
+      setSavingProfile(false);
+    }
+  }
 
   const allSpecialties = [...specialties, ...catalog].sort((a, b) =>
     a.name.localeCompare(b.name),
@@ -75,7 +119,7 @@ function SettingsPage() {
             </p>
           </div>
 
-          <div className="md:flex-2 max-w-xl space-y-4">
+          <form className="md:flex-2 max-w-xl space-y-4" onSubmit={saveProfile}>
             <div>
               <div className="flex items-center gap-3">
                 {profile && (
@@ -85,34 +129,60 @@ function SettingsPage() {
                   />
                 )}
               </div>
-              <p className="mt-4 text-xs font-medium text-neutral-800 dark:text-neutral-200">
+              <p className="mt-4 text-xs  text-neutral-800 dark:text-neutral-200">
                 {currentName}
               </p>
             </div>
 
-            <div>
-              <label
-                htmlFor="profile-name"
-                className="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1.5"
-              >
-                Nombre completo
-              </label>
-              <div className="relative flex items-center">
-                <UserIcon className="absolute left-3 size-4 text-neutral-400 dark:text-neutral-500 pointer-events-none" />
-                <input
-                  id="profile-name"
-                  type="text"
-                  value={currentName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-500 pl-9 pr-3 py-1.5 text-xs rounded-lg focus:border-neutral-400 dark:focus:border-neutral-600 focus:outline-none"
-                />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <label
+                  htmlFor="profile-first-name"
+                  className="block text-xs  text-neutral-700 dark:text-neutral-300 mb-1.5"
+                >
+                  Nombre
+                </label>
+                <div className="relative flex items-center">
+                  <UserIcon className="absolute left-3 size-4 text-neutral-400 dark:text-neutral-500 pointer-events-none" />
+                  <input
+                    id="profile-first-name"
+                    type="text"
+                    value={currentFirstName}
+                    onChange={(e) => {
+                      setFirstNameTouched(true);
+                      setFirstName(e.target.value);
+                    }}
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-500 pl-9 pr-3 py-1.5 text-xs rounded-lg focus:border-neutral-400 dark:focus:border-neutral-600 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="profile-last-name"
+                  className="block text-xs  text-neutral-700 dark:text-neutral-300 mb-1.5"
+                >
+                  Apellidos
+                </label>
+                <div className="relative flex items-center">
+                  <UserIcon className="absolute left-3 size-4 text-neutral-400 dark:text-neutral-500 pointer-events-none" />
+                  <input
+                    id="profile-last-name"
+                    type="text"
+                    value={currentLastName}
+                    onChange={(e) => {
+                      setLastNameTouched(true);
+                      setLastName(e.target.value);
+                    }}
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-500 pl-9 pr-3 py-1.5 text-xs rounded-lg focus:border-neutral-400 dark:focus:border-neutral-600 focus:outline-none"
+                  />
+                </div>
               </div>
             </div>
 
             <div>
               <label
                 htmlFor="profile-email"
-                className="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1.5"
+                className="block text-xs  text-neutral-700 dark:text-neutral-300 mb-1.5"
               >
                 Correo electrónico
               </label>
@@ -122,7 +192,10 @@ function SettingsPage() {
                   id="profile-email"
                   type="email"
                   value={currentEmail}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmailTouched(true);
+                    setEmail(e.target.value);
+                  }}
                   className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-500 pl-9 pr-3 py-1.5 text-xs rounded-lg focus:border-neutral-400 dark:focus:border-neutral-600 focus:outline-none"
                 />
               </div>
@@ -131,7 +204,7 @@ function SettingsPage() {
             <div>
               <label
                 htmlFor="profile-password"
-                className="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1.5"
+                className="block text-xs  text-neutral-700 dark:text-neutral-300 mb-1.5"
               >
                 Contraseña
               </label>
@@ -147,7 +220,14 @@ function SettingsPage() {
                 />
               </div>
             </div>
-          </div>
+            <button
+              type="submit"
+              disabled={savingProfile}
+              className="inline-flex cursor-pointer items-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {savingProfile ? "Guardando…" : "Guardar cambios"}
+            </button>
+          </form>
         </section>
 
         {/* Sección: Apariencia */}
@@ -181,7 +261,7 @@ function SettingsPage() {
                       className="w-full aspect-video rounded-lg overflow-hidden"
                     />
                   </button>
-                  <span className="mt-2 text-xs font-medium text-neutral-800 dark:text-neutral-200">
+                  <span className="mt-2 text-xs  text-neutral-800 dark:text-neutral-200">
                     {option.label}
                   </span>
                 </div>

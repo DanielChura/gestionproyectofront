@@ -2,21 +2,13 @@ import { useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import TaskProperty from "../TaskForm/TaskProperty";
 import CalendarIcon from "../../../shared/icons/CalendarIcon";
-import ChevronLeftIcon from "../../../shared/icons/ChevronLeftIcon";
-import ChevronRightIcon from "../../../shared/icons/ChevronRightIcon";
+import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
 import { projectToday } from "../TaskList/taskGrouping";
-const styles = {
-  calendar: "grid gap-2",
-  caption:
-    "m-0 text-xs leading-relaxed text-neutral-600 [&_span]:whitespace-nowrap",
-  heading:
-    "flex items-center justify-between gap-2 [&_strong]:text-[13px] [&_strong]:capitalize [&_button]:grid [&_button]:size-8 [&_button]:place-items-center [&_button]:rounded-lg [&_button]:border [&_button]:border-transparent [&_button]:bg-white [&_button]:p-0 [&_button]:text-neutral-900 [&_button]:cursor-pointer [&_button:hover:enabled]:bg-neutral-100",
-  week: "grid grid-cols-7 gap-0.5 [&>span]:grid [&>span]:min-h-7 [&>span]:place-items-center [&>span]:text-[11px] [&>span]:text-neutral-600",
-  day: "min-h-8 min-w-0 cursor-pointer rounded-lg border border-transparent bg-white p-1 text-[13px] text-neutral-900 tabular-nums aria-[current=date]:underline aria-[current=date]:underline-offset-2 aria-selected:bg-neutral-100 aria-selected:border-neutral-700 aria-selected:hover:enabled:bg-neutral-100 disabled:opacity-45 disabled:cursor-default",
-  outside: "text-neutral-500",
-  actions:
-    "flex items-center justify-between gap-2 border-t border-neutral-200 pt-2 [&_button]:min-h-8 [&_button]:rounded-lg [&_button]:border [&_button]:border-neutral-200 [&_button]:bg-neutral-100 [&_button]:px-2 [&_button]:py-1 [&_button]:text-xs [&_button]:cursor-pointer [&_button:hover:enabled]:bg-neutral-100",
-};
+
+const navButton =
+  "grid size-8 cursor-pointer place-items-center rounded-lg border border-transparent p-0 text-neutral-900 hover:enabled:border-neutral-200 disabled:cursor-default disabled:opacity-45 dark:text-neutral-100 dark:hover:enabled:border-neutral-600";
+const actionButton =
+  "min-h-8 cursor-pointer rounded-lg border border-neutral-200 px-2 py-1 text-xs hover:enabled:border-neutral-300 disabled:cursor-default disabled:opacity-45 dark:border-neutral-700 dark:hover:enabled:border-neutral-500";
 
 interface ProjectEndDateSelectorProps {
   value: string;
@@ -157,7 +149,7 @@ export function Calendar({
 
   return (
     <div
-      className={styles.calendar}
+      className="grid gap-2"
       tabIndex={-1}
       data-panel-focus
       onFocus={(event) => {
@@ -172,22 +164,24 @@ export function Calendar({
         day?.focus({ preventScroll: true });
       }}
     >
-      <p className={styles.caption}>
-        {label} <span>({optional ? "opcional" : "obligatoria"})</span>
+      <p className="m-0 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+        {label} <span className="whitespace-nowrap">({optional ? "opcional" : "obligatoria"})</span>
       </p>
-      <div className={styles.heading}>
+      <div className="flex items-center justify-between gap-2">
         <button
           type="button"
           aria-label="Mes anterior"
+          className={navButton}
           disabled={Boolean(min && previousEnd < min)}
           onClick={() => changeMonth(-1)}
         >
-          <ChevronLeftIcon className="size-4" />
+          <ChevronDownIcon className="size-4 rotate-90" />
         </button>
-        <strong aria-live="polite">{monthName.format(month)}</strong>
+        <strong className="text-xs capitalize text-neutral-800 dark:text-neutral-100" aria-live="polite">{monthName.format(month)}</strong>
         <button
           type="button"
           aria-label="Mes siguiente"
+          className={navButton}
           disabled={Boolean(
             max &&
             dateKey(
@@ -196,7 +190,7 @@ export function Calendar({
           )}
           onClick={() => changeMonth(1)}
         >
-          <ChevronRightIcon className="size-4" />
+          <ChevronDownIcon className="size-4 -rotate-90" />
         </button>
       </div>
       <div
@@ -205,15 +199,15 @@ export function Calendar({
         aria-label={monthName.format(month)}
         onKeyDown={navigate}
       >
-        <div role="row" className={styles.week}>
+        <div role="row" className="grid grid-cols-7 gap-0.5">
           {weekdays.map((day) => (
-            <span key={day} role="columnheader" aria-label={day}>
+            <span key={day} role="columnheader" aria-label={day} className="grid min-h-7 place-items-center text-xs text-neutral-600 dark:text-neutral-400">
               {day.slice(0, 2)}
             </span>
           ))}
         </div>
         {Array.from({ length: 6 }, (_, week) => (
-          <div key={week} role="row" className={styles.week}>
+          <div key={week} role="row" className="grid grid-cols-7 gap-0.5">
             {days.slice(week * 7, week * 7 + 7).map((date) => {
               const key = dateKey(date);
               const disabled = Boolean(
@@ -226,7 +220,7 @@ export function Calendar({
                   key={key}
                   role="gridcell"
                   data-date={key}
-                  className={`${styles.day}${date.getMonth() !== month.getMonth() ? ` ${styles.outside}` : ""}${past ? " bg-neutral-100! text-neutral-600! aria-selected:bg-red-50! aria-selected:text-red-700! aria-selected:border-red-700" : ""}`}
+                  className={`min-h-8 min-w-0 cursor-pointer rounded-lg border border-transparent p-1 text-xs tabular-nums text-neutral-900 hover:enabled:border-neutral-200 aria-selected:border-neutral-700 aria-selected:hover:enabled:border-neutral-400 disabled:cursor-default disabled:opacity-45 dark:text-neutral-100 dark:hover:enabled:border-neutral-700 dark:aria-selected:border-neutral-300${date.getMonth() !== month.getMonth() ? " text-neutral-500" : ""}${past ? " text-neutral-600! aria-selected:text-red-700! aria-selected:border-red-700" : ""}${today === key ? " underline underline-offset-2" : ""}`}
                   aria-label={`${fullDate.format(date)}${past ? " · Fecha anterior a hoy, seleccionable" : ""}`}
                   data-past={past || undefined}
                   aria-selected={value === key}
@@ -256,9 +250,10 @@ export function Calendar({
         ))}
       </div>
       {optional && (
-        <div className={styles.actions}>
+        <div className="flex items-center justify-between gap-2 border-t border-neutral-200 pt-2 dark:border-neutral-700">
           <button
             type="button"
+            className={actionButton}
             disabled={!value}
             onClick={() => {
               onChange("");
@@ -267,7 +262,7 @@ export function Calendar({
           >
             Quitar fecha
           </button>
-          <button type="button" onClick={close}>
+          <button type="button" className={actionButton} onClick={close}>
             Listo
           </button>
         </div>

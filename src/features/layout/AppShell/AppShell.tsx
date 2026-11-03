@@ -21,10 +21,10 @@ export default function AppShell({
   const projectWorkspace = /^\/proyectos\/\d+$/.test(pathname);
 
   return (
-    <div className="flex min-h-screen flex-col bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 md:h-screen md:flex-row">
+    <div className="flex min-h-screen flex-col bg-white text-neutral-900 dark:bg-neutral-950/10 dark:text-neutral-100 md:h-screen md:flex-row">
       <Sidebar user={user} onLogout={onLogout} />
       <div
-        className={`min-w-0 w-full flex-1 bg-white dark:bg-neutral-900 pb-0! p-3 md:p-6 ${
+        className={`min-w-0 w-full flex-1 bg-white dark:bg-neutral-950/50 pb-0! p-3 md:p-6 ${
           projectWorkspace ? "md:overflow-hidden" : "md:overflow-y-auto"
         }`}
       >

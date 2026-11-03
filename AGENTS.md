@@ -32,6 +32,7 @@
 - **Estilo:** SaaS moderno (tipo ClickUp). Alta densidad, utilitario, plano y neutro. Restar antes de añadir.
 - **Sin transiciones:** Prohibido usar `transition-*`. Estados `:hover` y `:focus` son inmediatos.
 - **Ahorro de tokens (DRY):** Heredar estilos desde contenedores (`<thead>`, `<table>`, etc.) en vez de repetirlos en cada hijo.
+- **Sin estilos como constantes:** Prohibido definir objetos/constantes de estilos (`const styles = { ... }`, `const button = "..."`) para clases Tailwind. Usar tokens Tailwind directamente en `className`, simples y legibles, con variantes `dark:` cuando corresponda. Evitar className dinámicos complejos; preferir cadenas estáticas.
 
 ### Tokens Fundamentales
 

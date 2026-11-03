@@ -8,14 +8,13 @@ import CircleDotIcon from "../../../shared/icons/CircleDotIcon";
 import CircleHalfIcon from "../../../shared/icons/CircleHalfIcon";
 import CircleMinusIcon from "../../../shared/icons/CircleMinusIcon";
 import FlagIcon from "../../../shared/icons/FlagIcon";
-import HashIcon from "../../../shared/icons/HashIcon";
+
 import SuccessIcon from "../../../shared/icons/SuccessIcon";
 import UserIcon from "../../../shared/icons/UserIcon";
 import XIcon from "../../../shared/icons/XIcon";
 import { errorText } from "../../auth/api";
 import { Calendar } from "../CreateProjectModal/ProjectEndDateSelector";
-import LabelEditor from "../LabelEditor/LabelEditor";
-import { labelSelection } from "../labelSelection";
+
 import AssigneeSelector from "../ResponsiblePicker/AssigneeSelector";
 import {
   categoryValue,
@@ -31,7 +30,6 @@ import StatusIcon from "../../../shared/icons/StatusIcon";
 import TaskProperty from "../TaskForm/TaskProperty";
 import type {
   EditTaskPayload,
-  Label,
   Project,
   ProjectCatalogs,
   ProjectTaskState,
@@ -40,28 +38,12 @@ import type {
 } from "../types";
 import { formatTaskDate } from "./taskHierarchy";
 
-const styles = {
-  editor:
-    "grid gap-2.5 [&_fieldset]:min-w-0 [&_fieldset]:m-0 [&_fieldset]:p-0 [&_fieldset]:[border:0] [&_textarea]:w-full [&_textarea]:p-2 [&_textarea]:border [&_textarea]:border-neutral-200 [&_textarea]:rounded-lg [&_textarea]:resize-y",
-  options:
-    "max-h-60 overflow-y-auto [&_h3]:mt-3 [&_h3]:mx-1.5 [&_h3]:mb-[5px] [&_h3]:text-neutral-600 [&_h3]:text-[0.75rem] [&_h3]:font-normal",
-  option:
-    "flex items-center gap-2 w-full min-h-9 my-0.5 mx-0 py-[7px] px-2 [border:0] rounded-lg   text-neutral-800 text-left text-[0.8125rem] cursor-pointer aria-pressed:bg-neutral-100 aria-pressed:[@media(pointer:coarse)]:min-h-11",
-  check: "ml-auto",
-  priority:
-    "inline-flex min-w-0 max-w-full items-center gap-1.5 text-neutral-700",
-  editorActions:
-    "flex justify-end gap-2 pt-2.5 border-t border-neutral-200 [&_button]:min-h-[34px] [&_button]:py-1.5 [&_button]:px-3 [&_button]:text-[0.8125rem] [&_button]:rounded-lg [&_button]:cursor-pointer [&_button:not(.primary-button)]:  [&_button:not(.primary-button)]:text-neutral-800 [&_button:not(.primary-button)]:border [&_button:not(.primary-button)]:border-neutral-200",
-  error: "m-0 text-red-700 text-[0.75rem] [overflow-wrap:anywhere]",
-};
-
 type Field =
   | "state_code"
   | "priority"
   | "responsible_id"
   | "start_date"
-  | "due_date"
-  | "labels";
+  | "due_date";
 export interface TaskChanges {
   onPatch: (task: Task, data: Partial<EditTaskPayload>) => Promise<void>;
   onState: (task: Task, data: TaskStatePayload) => Promise<void>;
@@ -80,7 +62,6 @@ const labels: Record<Field, string> = {
   responsible_id: "Persona asignada",
   start_date: "Fecha de inicio",
   due_date: "Fecha límite",
-  labels: "Etiquetas",
 };
 const icons: Record<Field, ComponentType<{ className?: string }>> = {
   state_code: StatusIcon,
@@ -88,7 +69,6 @@ const icons: Record<Field, ComponentType<{ className?: string }>> = {
   responsible_id: UserIcon,
   start_date: CalendarIcon,
   due_date: CalendarIcon,
-  labels: HashIcon,
 };
 
 export function StateIcon({
@@ -140,7 +120,10 @@ export function StateIcon({
 
 export function StateLabel({ code, name, category, color }: ProjectTaskState) {
   return (
-    <span data-state={code} className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs font-medium text-neutral-700">
+    <span
+      data-state={code}
+      className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs  text-neutral-700 dark:text-neutral-300"
+    >
       <StateIcon code={code} name={name} category={category} color={color} />
       <span className="truncate">{name}</span>
     </span>
@@ -151,7 +134,7 @@ export function StateBadge({ code, name, category, color }: ProjectTaskState) {
   return (
     <span
       data-state={code}
-      className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-white"
+      className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-lg px-2 py-1 text-xs  text-white"
       style={{ backgroundColor: color ?? "#737373" }}
     >
       <StateIcon code={code} name={name} category={category} color="#fff" />
@@ -168,9 +151,12 @@ export function PriorityLabel({
   name: string;
 }) {
   return (
-    <span className={styles.priority} data-priority={priority}>
+    <span
+      className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-neutral-700 dark:text-neutral-300"
+      data-priority={priority}
+    >
       <FlagIcon
-        className={`size-4 shrink-0 ${priorityTones[priority ?? 0] ?? "text-neutral-500"}`}
+        className={`size-4 shrink-0 ${priorityTones[priority ?? 0] ?? "text-neutral-500 dark:text-neutral-400"}`}
         fill
       />
       <span className="truncate">{name}</span>
@@ -195,7 +181,7 @@ function Editor({
       : [],
   );
   const [search, setSearch] = useState("");
-  const [taskLabels, setTaskLabels] = useState<Label[]>(task.labels);
+
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const id = useId();
@@ -209,7 +195,9 @@ function Editor({
     (state) =>
       matches(state.name) &&
       (state.code === task.state_code ||
-        (task.move_targets ?? task.transitions.map((item) => item.target)).includes(state.code)),
+        (
+          task.move_targets ?? task.transitions.map((item) => item.target)
+        ).includes(state.code)),
   );
 
   async function save() {
@@ -217,13 +205,10 @@ function Editor({
     setBusy(true);
     setError("");
     try {
-      if (field === "state_code")
-        await onState(task, { state_code: value });
+      if (field === "state_code") await onState(task, { state_code: value });
       else if (field === "responsible_id")
         await onPatch(task, { responsible_ids: responsibles });
-      else if (field === "labels") {
-        await onPatch(task, labelSelection(taskLabels));
-      } else
+      else
         await onPatch(task, {
           [field]:
             field === "priority"
@@ -251,7 +236,7 @@ function Editor({
       <button
         type="button"
         key={key}
-        className={styles.option}
+        className="flex items-center gap-2 w-full min-h-9 my-0.5 mx-0 py-1.5 px-2 rounded-lg text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-left text-xs cursor-pointer"
         aria-pressed={selected}
         onClick={() => {
           if (field === "responsible_id")
@@ -267,47 +252,44 @@ function Editor({
         }}
       >
         {content}
-        <span className={styles.check}>
+        <span className="ml-auto">
           {selected && <SuccessIcon className="size-4" />}
         </span>
       </button>
     );
   }
   return (
-    <div className={styles.editor} aria-busy={busy}>
-      <fieldset disabled={busy}>
+    <div className="grid gap-2.5">
+      <fieldset disabled={busy} className="grid gap-2">
         {field === "state_code" && (
           <>
-            <label htmlFor={`${id}-search`}>
+            <label
+              htmlFor={`${id}-search`}
+              className="text-xs  text-neutral-700 dark:text-neutral-300"
+            >
               {field === "state_code" ? "Buscar estado" : "Buscar por nombre"}
             </label>
             <input
               id={`${id}-search`}
-              name="search"
               type="search"
-              autoComplete="off"
               placeholder="Buscar…"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
+              className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-600 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
             />
           </>
         )}
         <div
-          className={field === "responsible_id" ? undefined : styles.options}
+          className={
+            field === "responsible_id" ? undefined : "max-h-60 overflow-y-auto"
+          }
         >
-          {field === "labels" && (
-            <LabelEditor
-              title="Etiquetas de la tarea"
-              compact
-              labels={taskLabels}
-              onChange={setTaskLabels}
-              specialties={catalogs.specialties}
-            />
-          )}
           {field === "state_code" &&
             groupTaskStates(states).map((group) => (
               <section key={group.label}>
-                <h3>{group.label}</h3>
+                <h3 className="mb-1 text-xs  text-neutral-600 dark:text-neutral-400">
+                  {group.label}
+                </h3>
                 {group.states.map((state) =>
                   option(state.code, state.name, <StateLabel {...state} />),
                 )}
@@ -359,28 +341,30 @@ function Editor({
           ref={errorMessage}
           tabIndex={-1}
           id={`${id}-error`}
-          className={styles.error}
+          className="m-0 text-red-700 dark:text-red-400 text-xs"
           role="alert"
         >
           {error}
         </p>
       )}
-      <div className={styles.editorActions}>
-        <button type="button" disabled={busy} onClick={close}>
+      <div className="flex justify-end gap-2 pt-2.5 border-t border-neutral-200 dark:border-neutral-800">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={close}
+          className="cursor-pointer rounded-lg px-3 py-1.5 text-xs  text-neutral-700 hover:bg-neutral-100 disabled:opacity-50 dark:text-neutral-300 dark:hover:bg-neutral-900"
+        >
           Cancelar
         </button>
         <button
           type="button"
-          className="primary-button bg-neutral-800 font-medium text-white hover:bg-neutral-700"
+          className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-white hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
           disabled={
             busy ||
-            (field === "labels"
-              ? JSON.stringify(labelSelection(taskLabels)) ===
-                JSON.stringify(labelSelection(task.labels))
-              : field === "responsible_id"
-                ? JSON.stringify([...responsibles].sort((a, b) => a - b)) ===
-                  JSON.stringify(taskAssignees(task).map((person) => person.id))
-                : value === String(task[field] ?? ""))
+            (field === "responsible_id"
+              ? JSON.stringify([...responsibles].sort((a, b) => a - b)) ===
+                JSON.stringify(taskAssignees(task).map((person) => person.id))
+              : value === String(task[field] ?? ""))
           }
           onClick={() => {
             void save();
@@ -414,9 +398,7 @@ export default function TaskCell(props: TaskCellProps) {
             ? "Sin prioridad"
             : (catalogs.priorities.find((item) => item.code === task.priority)
                 ?.name ?? String(task.priority))
-          : field === "labels"
-            ? `${task.labels.length} etiquetas`
-            : formatTaskDate(task[field]);
+          : formatTaskDate(task[field]);
   const content =
     field === "state_code" ? (
       <StateBadge
@@ -436,23 +418,13 @@ export default function TaskCell(props: TaskCellProps) {
           />
         ))}
         {people.length > 3 && (
-          <span className="text-xs text-neutral-700">+{people.length - 3}</span>
+          <span className="text-xs text-neutral-700 dark:text-neutral-300">
+            +{people.length - 3}
+          </span>
         )}
       </span>
     ) : field === "responsible_id" && props.appearance !== "detail" ? (
       <UserIcon className="size-4" />
-    ) : field === "labels" ? (
-      props.appearance === "detail" ? (
-        <span>
-          {task.labels.length
-            ? "Editar etiquetas"
-            : permitted
-              ? "Añadir etiquetas"
-              : "Sin etiquetas"}
-        </span>
-      ) : (
-        <HashIcon className="size-4" />
-      )
     ) : field === "priority" ? (
       <PriorityLabel priority={task.priority} name={value} />
     ) : (
@@ -506,17 +478,7 @@ export default function TaskCell(props: TaskCellProps) {
           : undefined
       }
     >
-      {(close) => (
-        <>
-          {props.appearance === "detail" &&
-            !["start_date", "due_date", "labels"].includes(field) && (
-              <h3 className="m-0 mb-3 text-sm font-semibold">
-                {labels[field]}
-              </h3>
-            )}
-          <Editor {...props} close={close} />
-        </>
-      )}
+      {(close) => <Editor {...props} close={close} />}
     </TaskProperty>
   );
 }

@@ -30,9 +30,12 @@ export default function PublicationsView() {
   }
 
   return (
-    <main id="main-content" className="min-h-full text-neutral-800 dark:text-neutral-100">
+    <main
+      id="main-content"
+      className="min-h-full text-neutral-800 dark:text-neutral-100"
+    >
       <header className="mb-6">
-        <h1 className="text-lg font-medium text-neutral-800 dark:text-neutral-100">
+        <h1 className="text-lg  text-neutral-800 dark:text-neutral-100">
           Publicaciones
         </h1>
         <p className="mt-0.5 text-sm text-neutral-600 dark:text-neutral-400">
@@ -64,7 +67,7 @@ export default function PublicationsView() {
           <button
             type="button"
             onClick={() => void refetch()}
-            className="cursor-pointer rounded-lg border border-red-200 bg-white px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-neutral-900 dark:text-red-300 dark:hover:bg-red-950/40"
+            className="cursor-pointer rounded-lg border border-red-200 bg-white px-2.5 py-1 text-xs  text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-neutral-900 dark:text-red-300 dark:hover:bg-red-950/40"
           >
             Reintentar
           </button>
@@ -78,7 +81,7 @@ export default function PublicationsView() {
 
         {loading && data.length === 0 ? null : error && data.length === 0 ? (
           <div className="rounded-xl border border-neutral-200 bg-white px-6 py-16 text-center dark:border-neutral-800 dark:bg-neutral-900">
-            <h2 className="text-sm font-medium text-neutral-800 dark:text-neutral-100">
+            <h2 className="text-sm  text-neutral-800 dark:text-neutral-100">
               No se pudieron cargar las publicaciones
             </h2>
             <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
@@ -87,14 +90,14 @@ export default function PublicationsView() {
             <button
               type="button"
               onClick={() => void refetch()}
-              className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+              className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
             >
               Reintentar
             </button>
           </div>
         ) : data.length === 0 ? (
           <div className="rounded-xl border border-neutral-200 bg-white px-6 py-16 text-center dark:border-neutral-800 dark:bg-neutral-900">
-            <h2 className="text-sm font-medium text-neutral-800 dark:text-neutral-100">
+            <h2 className="text-sm  text-neutral-800 dark:text-neutral-100">
               {query ? "Sin resultados" : "No hay ofertas abiertas"}
             </h2>
             <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
@@ -106,7 +109,7 @@ export default function PublicationsView() {
               <button
                 type="button"
                 onClick={clearSearch}
-                className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
               >
                 Limpiar búsqueda
               </button>

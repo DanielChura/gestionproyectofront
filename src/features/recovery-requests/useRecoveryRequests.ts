@@ -7,6 +7,25 @@ import {
 } from "../auth/api";
 import { useToast } from "../../hooks/useToast";
 
+async function fetchAllRecoveryRequests(): Promise<RecoveryRequest[]> {
+  const requests: RecoveryRequest[] = [];
+  let cursor: string | null = null;
+  for (let page = 0; page < 100; page += 1) {
+    const query = new URLSearchParams({ page_size: "50" });
+    if (cursor) query.set("cursor", cursor);
+    const data = await apiRequest<any>(`admin/recovery-requests/?${query.toString()}`);
+    const rows = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.results)
+        ? data.results
+        : [];
+    requests.push(...rows);
+    cursor = Array.isArray(data) ? null : (data?.next_cursor ?? null);
+    if (!cursor) break;
+  }
+  return requests;
+}
+
 export interface RecoveryRequestFilters {
   search?: string;
 }
@@ -19,9 +38,7 @@ export function useRecoveryRequests(filters: RecoveryRequestFilters = {}) {
 
   const load = useCallback(async () => {
     try {
-      setRequests(
-        await apiRequest<RecoveryRequest[]>("admin/recovery-requests/"),
-      );
+      setRequests(await fetchAllRecoveryRequests());
     } catch (failure) {
       addToast({
         icon: "error",

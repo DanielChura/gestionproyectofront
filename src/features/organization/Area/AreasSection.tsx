@@ -45,8 +45,15 @@ function AreasSection() {
   return (
     <section aria-label="Áreas" className="flex h-full flex-col">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100">Áreas</h3>
-        <Button type="button" onClick={() => setModal({ mode: "create" })} aria-label="Nueva área" className="inline-flex items-center gap-1.5">
+        <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100">
+          Áreas
+        </h3>
+        <Button
+          type="button"
+          onClick={() => setModal({ mode: "create" })}
+          aria-label="Nueva área"
+          className="inline-flex items-center gap-1.5"
+        >
           <PlusIcon className="size-4" />
           <span>Nueva área</span>
         </Button>
@@ -68,8 +75,10 @@ function AreasSection() {
                 >
                   <FolderIcon className="size-4" />
                 </span>
-                <span className="text-neutral-800 dark:text-neutral-100 truncate">{area.name}</span>
-                <span className="px-2 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded font-medium">
+                <span className="text-neutral-800 dark:text-neutral-100 truncate">
+                  {area.name}
+                </span>
+                <span className="px-2 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded ">
                   {area.code}
                 </span>
               </div>

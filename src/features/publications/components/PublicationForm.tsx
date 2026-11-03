@@ -185,7 +185,7 @@ export default function PublicationForm({
           <label className="text-xs text-neutral-800 dark:text-neutral-100">
             Proyecto
           </label>
-          <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-800 dark:text-neutral-100">
+          <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-800 dark:text-neutral-100">
             {publication.project.name}
           </div>
         </div>
@@ -220,13 +220,13 @@ export default function PublicationForm({
               setSelectedState(e.target.value as PublicationStateCode)
             }
           >
-            {(["BORRADOR", "ABIERTA", "CANCELADA"] as PublicationStateCode[]).map(
-              (s) => (
-                <option key={s} value={s}>
-                  {PUBLICATION_STATE_LABELS[s]}
-                </option>
-              ),
-            )}
+            {(
+              ["BORRADOR", "ABIERTA", "CANCELADA"] as PublicationStateCode[]
+            ).map((s) => (
+              <option key={s} value={s}>
+                {PUBLICATION_STATE_LABELS[s]}
+              </option>
+            ))}
           </Select>
         )}
       </div>

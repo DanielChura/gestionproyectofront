@@ -26,7 +26,9 @@ function ProjectsSection() {
   return (
     <section aria-label="Proyectos" className="flex h-full flex-col">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100">Proyectos</h3>
+        <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100">
+          Proyectos
+        </h3>
       </div>
 
       {data.length === 0 ? (
@@ -60,7 +62,7 @@ function ProjectsSection() {
                 {project.areas.map((area, index) => (
                   <span
                     key={index}
-                    className="px-2 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded font-medium"
+                    className="px-2 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded "
                   >
                     {area.name}
                   </span>

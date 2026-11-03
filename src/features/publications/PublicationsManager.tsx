@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ChevronDownIcon from "../../shared/icons/ChevronDownIcon";
+import ChevronDownIcon from "../../shared/icons/ChevronIcon";
 import EditIcon from "../../shared/icons/EditIcon";
 import PlusIcon from "../../shared/icons/PlusIcon";
 import SearchIcon from "../../shared/icons/SearchIcon";
@@ -37,7 +37,7 @@ function ErrorAlert({
       <button
         type="button"
         onClick={onRetry}
-        className="cursor-pointer rounded-lg border border-red-200 bg-white px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-neutral-900 dark:text-red-300 dark:hover:bg-red-950/40"
+        className="cursor-pointer rounded-lg border border-red-200 bg-white px-2.5 py-1 text-xs  text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-neutral-900 dark:text-red-300 dark:hover:bg-red-950/40"
       >
         Reintentar
       </button>
@@ -64,12 +64,11 @@ export default function PublicationsManager() {
   const [form, setForm] = useState<{ publication?: Publication } | null>(null);
   const { addToast } = useToast();
 
-  const { data, loading, error, refetch, create, update } =
-    usePublications({
-      search: appliedSearch || undefined,
-      state: appliedState || undefined,
-      project_id: appliedProject ? Number(appliedProject) : undefined,
-    });
+  const { data, loading, error, refetch, create, update } = usePublications({
+    search: appliedSearch || undefined,
+    state: appliedState || undefined,
+    project_id: appliedProject ? Number(appliedProject) : undefined,
+  });
   const catalogsQuery = usePublicationCatalogs(true);
   const catalogs = catalogsQuery.data;
   const canWrite = catalogs !== null && !catalogsQuery.error;
@@ -118,8 +117,6 @@ export default function PublicationsManager() {
     }
   }
 
-
-
   return (
     <main
       id="main-content"
@@ -127,7 +124,7 @@ export default function PublicationsManager() {
     >
       <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <h1 className="m-0 text-lg font-medium text-neutral-800 dark:text-neutral-100">
+          <h1 className="m-0 text-lg  text-neutral-800 dark:text-neutral-100">
             Publicaciones
           </h1>
           <p className="m-0 mt-0.5 text-sm text-neutral-600 dark:text-neutral-400">
@@ -159,7 +156,7 @@ export default function PublicationsManager() {
         onSubmit={applyFilters}
         className="mb-6 flex flex-wrap items-center gap-2"
       >
-        <h2 className="m-0 mr-auto text-sm font-medium text-neutral-800 dark:text-neutral-100">
+        <h2 className="m-0 mr-auto text-sm  text-neutral-800 dark:text-neutral-100">
           Publicaciones{" "}
           <span className="font-normal text-neutral-600 dark:text-neutral-400">
             ({data.length})
@@ -230,7 +227,7 @@ export default function PublicationsManager() {
 
       {loading && data.length === 0 ? null : error && data.length === 0 ? (
         <section className="rounded-xl border border-neutral-200 bg-white px-6 py-16 text-center dark:border-neutral-800 dark:bg-neutral-900">
-          <h2 className="text-sm font-medium text-neutral-800 dark:text-neutral-100">
+          <h2 className="text-sm  text-neutral-800 dark:text-neutral-100">
             No se pudieron cargar las publicaciones
           </h2>
           <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
@@ -239,14 +236,14 @@ export default function PublicationsManager() {
           <button
             type="button"
             onClick={() => void refetch()}
-            className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+            className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
           >
             Reintentar
           </button>
         </section>
       ) : data.length === 0 ? (
         <section className="rounded-xl border border-neutral-200 bg-white px-6 py-16 text-center dark:border-neutral-800 dark:bg-neutral-900">
-          <h2 className="text-sm font-medium text-neutral-800 dark:text-neutral-100">
+          <h2 className="text-sm  text-neutral-800 dark:text-neutral-100">
             {hasFilters ? "Sin resultados" : "Aún no hay publicaciones"}
           </h2>
           <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
@@ -258,7 +255,7 @@ export default function PublicationsManager() {
             <button
               type="button"
               onClick={clearFilters}
-              className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+              className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
             >
               Limpiar filtros
             </button>
@@ -267,7 +264,7 @@ export default function PublicationsManager() {
               <button
                 type="button"
                 onClick={openCreate}
-                className="mt-4 inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+                className="mt-4 inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
               >
                 <PlusIcon className="size-4" />
                 Crear publicación
@@ -279,7 +276,7 @@ export default function PublicationsManager() {
         <section className="border border-neutral-200 dark:border-neutral-800 overflow-hidden rounded-xl">
           <div className="w-full overflow-x-auto">
             <table className="w-full border-collapse text-left text-xs text-neutral-600 dark:text-neutral-400">
-              <thead className="border-b border-neutral-200 dark:border-neutral-800 font-medium text-neutral-700 dark:text-neutral-300">
+              <thead className="border-b border-neutral-200 dark:border-neutral-800  text-neutral-700 dark:text-neutral-300">
                 <tr>
                   <th scope="col" className="p-3">
                     Título
@@ -312,7 +309,7 @@ export default function PublicationsManager() {
                       key={publication.id}
                       className="border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                     >
-                      <td className="px-3 py-2.5 font-medium text-neutral-800 dark:text-neutral-100">
+                      <td className="px-3 py-2.5  text-neutral-800 dark:text-neutral-100">
                         {publication.title}
                       </td>
                       <td className="px-3 py-2.5">
@@ -328,7 +325,7 @@ export default function PublicationsManager() {
                         {Number(publication.weekly_hours)} h
                       </td>
                       <td
-                        className={`px-3 py-2.5 font-medium ${STATE_TEXT[publication.state]}`}
+                        className={`px-3 py-2.5  ${STATE_TEXT[publication.state]}`}
                       >
                         {PUBLICATION_STATE_LABELS[publication.state]}
                       </td>
@@ -337,15 +334,15 @@ export default function PublicationsManager() {
                       </td>
                       <td className="px-3 py-2.5">
                         <div className="flex items-center gap-2">
-                           <button
-                             type="button"
-                             onClick={() => openEdit(publication)}
-                             disabled={!editable}
-                             aria-label={`Editar ${publication.title}`}
-                             className="cursor-pointer rounded-lg p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
-                           >
-                             <EditIcon className="size-4" />
-                           </button>
+                          <button
+                            type="button"
+                            onClick={() => openEdit(publication)}
+                            disabled={!editable}
+                            aria-label={`Editar ${publication.title}`}
+                            className="cursor-pointer rounded-lg p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <EditIcon className="size-4" />
+                          </button>
                         </div>
                       </td>
                     </tr>

@@ -7,7 +7,7 @@ import type {
   TaskIdentity,
 } from "../types";
 import { PriorityLabel, StateIcon } from "../TaskList/TaskCell";
-import ChevronRightIcon from "../../../shared/icons/ChevronRightIcon";
+import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
 import QuickTaskRow from "../TaskList/QuickTaskRow";
 import Tooltip from "../../../shared/Tooltip";
 import { avatarFor } from "../../../shared/Avatar";
@@ -62,23 +62,20 @@ export default function TaskSubtasks({
   const completed = page?.completed ?? 0,
     total = page?.total ?? 0;
   return (
-    <section
-      aria-label="Subtareas"
-      className="my-7 min-w-0 [container-type:inline-size]"
-    >
-      <div className="mb-2 flex flex-wrap items-center gap-3">
+    <section aria-label="Subtareas" className="my-7 min-w-0 text-sm">
+      <div className="mb-2 flex flex-wrap items-center gap-3 border-b border-neutral-300 pb-3 dark:border-neutral-700">
         <button
           type="button"
           aria-expanded={open}
           aria-controls={`detail-${task.id}-subtasks`}
-          className="flex cursor-pointer items-center gap-2 rounded-lg py-2 text-sm font-medium"
+          className="flex cursor-pointer items-center gap-2 rounded-lg py-2 text-sm "
           onClick={() => setOpen(!open)}
         >
           <span className={open ? "rotate-90" : ""}>
-            <ChevronRightIcon className="size-4" />
+            <ChevronDownIcon className="size-4 -rotate-90" />
           </span>{" "}
           Subtareas{" "}
-          <span className="text-xs font-normal text-neutral-600">
+          <span className="text-xs font-normal text-neutral-600 dark:text-neutral-400">
             Completadas: {completed} de {total}
           </span>
         </button>
@@ -86,7 +83,7 @@ export default function TaskSubtasks({
           max={total || 1}
           value={completed}
           aria-label={`${completed} de ${total} subtareas completadas`}
-          className="h-1.5 w-24 appearance-none overflow-hidden rounded-full [&::-webkit-progress-bar]:bg-neutral-200 [&::-webkit-progress-value]:bg-neutral-800 [&::-moz-progress-bar]:bg-neutral-800"
+          className="h-1.5 w-24 rounded-full accent-neutral-800 dark:accent-neutral-200"
         />
       </div>
       <div id={`detail-${task.id}-subtasks`} hidden={!open}>
@@ -121,7 +118,7 @@ export default function TaskSubtasks({
           {visible.map((item) => (
             <li
               key={item.id}
-              className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-2 border-b border-neutral-200 py-2 max-sm:grid-cols-[auto_minmax(0,1fr)]"
+              className="flex min-w-0 flex-wrap items-center gap-2 border-b border-neutral-200 py-2 dark:border-neutral-800"
             >
               <span
                 aria-label={`Estado: ${item.state_name}`}
@@ -136,14 +133,14 @@ export default function TaskSubtasks({
               </span>
               <button
                 type="button"
-                className="min-w-0 cursor-pointer break-words rounded-lg py-1 text-left text-xs text-neutral-800 hover:underline"
+                className="min-w-0 flex-1 cursor-pointer break-words rounded-lg py-1 text-left text-xs text-neutral-800 hover:underline dark:text-neutral-100"
                 onClick={() =>
                   onNavigate({ projectId: target.projectId, taskId: item.id })
                 }
               >
                 {item.name}
               </button>
-              <div className="flex max-w-36 flex-wrap gap-1 max-sm:col-start-2">
+              <div className="flex max-w-36 flex-wrap gap-1">
                 {taskAssignees(item).map((person) => (
                   <Tooltip
                     key={person.id}
@@ -155,7 +152,7 @@ export default function TaskSubtasks({
                         tabIndex={0}
                         aria-label={person.name}
                         aria-describedby={description}
-                        className="inline-grid size-7 place-items-center rounded-full bg-sky-700 text-xs font-medium text-white"
+                        className="inline-grid size-7 place-items-center rounded-full bg-sky-700 text-xs  text-white"
                       >
                         {avatarFor(person.name)}
                       </span>
@@ -163,7 +160,7 @@ export default function TaskSubtasks({
                   </Tooltip>
                 ))}
               </div>
-              <div className="text-xs max-sm:col-start-2">
+              <div className="text-xs">
                 <PriorityLabel
                   priority={item.priority}
                   name={

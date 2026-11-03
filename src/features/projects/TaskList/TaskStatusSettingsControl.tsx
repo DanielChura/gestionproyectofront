@@ -1,4 +1,3 @@
-import { useId, useState } from "react";
 import DotsIcon from "../../../shared/icons/DotsIcon";
 
 export default function TaskStatusSettingsControl({
@@ -6,33 +5,15 @@ export default function TaskStatusSettingsControl({
 }: {
   onClick: () => void;
 }) {
-  const id = useId();
-  const [dismissed, setDismissed] = useState(false);
   return (
-    <div className="group relative flex shrink-0 items-center">
-      <button
-        type="button"
-        aria-label="Ajustes de estados"
-        aria-haspopup="dialog"
-        aria-describedby={id}
-        onClick={onClick}
-        onFocus={() => setDismissed(false)}
-        onMouseEnter={() => setDismissed(false)}
-        onKeyDown={(event) => {
-          if (event.key === "Escape") setDismissed(true);
-        }}
-        className="inline-flex cursor-pointer touch-manipulation items-center justify-center rounded-lg p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 [@media(pointer:coarse)]:p-3.5"
-      >
-        <DotsIcon className="size-4" />
-      </button>
-      <span
-        id={id}
-        role="tooltip"
-        hidden={dismissed}
-        className="invisible absolute right-0 top-full z-10 mt-1 whitespace-nowrap rounded-lg border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-800 group-hover:visible group-focus-within:visible"
-      >
-        Ajustes de estados
-      </span>
-    </div>
+    <button
+      type="button"
+      aria-label="Ajustes de estados"
+      onClick={onClick}
+      className="inline-flex cursor-pointer items-center gap-1.5 p-1.5 text-neutral-600 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
+    >
+      <DotsIcon className="size-4" />
+      <span className="text-xs">Ajustes</span>
+    </button>
   );
 }

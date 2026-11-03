@@ -72,7 +72,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
                 {specialties.map((item) => (
                   <li
                     key={item.id}
-                    className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-white bg-sky-600 rounded-full"
+                    className="inline-flex items-center gap-1 px-2 py-1 text-xs  text-white bg-sky-600 rounded-full"
                   >
                     {item.name}
                     <button

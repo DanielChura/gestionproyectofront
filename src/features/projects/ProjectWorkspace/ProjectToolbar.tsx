@@ -11,7 +11,7 @@ export default function ProjectToolbar({
     <div
       role="group"
       aria-label="Herramientas del proyecto"
-      className="flex shrink-0 flex-wrap items-start gap-1.5 pt-1.5 pb-3"
+      className="flex shrink-0 flex-wrap items-center gap-2 pt-2 pb-6"
     >
       {children}
       {action && <div className="ml-auto shrink-0">{action}</div>}

@@ -26,7 +26,7 @@ function StatusBadge({ children, tone = "neutral" }: StatusBadgeProps) {
   const dot = dotStyles[tone] ?? dotStyles.neutral;
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-medium ${style}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px]  ${style}`}
     >
       <span className={`w-1 h-1 rounded-full ${dotStyles[tone]}`}></span>
       {children}

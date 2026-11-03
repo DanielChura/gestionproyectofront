@@ -43,9 +43,11 @@ export default function TeamDetailPage() {
     <main className="min-h-full text-neutral-800 dark:text-neutral-100">
       <header className="mb-8">
         <div className="flex items-center gap-2.5">
-          <h1 className="text-lg font-medium text-neutral-800 dark:text-neutral-100">{team.name}</h1>
+          <h1 className="text-lg  text-neutral-800 dark:text-neutral-100">
+            {team.name}
+          </h1>
           <span
-            className={`text-xs font-medium ${team.active ? "text-green-500" : "text-red-600"}`}
+            className={`text-xs  ${team.active ? "text-green-500" : "text-red-600"}`}
           >
             {team.active ? "Activo" : "Inactivo"}
           </span>
@@ -57,7 +59,7 @@ export default function TeamDetailPage() {
       </header>
 
       <div className="flex flex-wrap items-center gap-2 mb-6">
-        <h2 className="mr-auto text-sm font-medium text-neutral-800 dark:text-neutral-100">
+        <h2 className="mr-auto text-sm  text-neutral-800 dark:text-neutral-100">
           Integrantes{" "}
           <span className="font-normal text-neutral-600 dark:text-neutral-400">
             ({visible.length})
@@ -65,14 +67,24 @@ export default function TeamDetailPage() {
         </h2>
         <div className="relative flex-1 min-w-48 max-w-sm">
           <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-neutral-600 dark:text-neutral-400" />
-          <Input type="search" value={search} placeholder="Buscar por nombre" onChange={(e) => setSearch(e.target.value)} className="!pl-8" />
+          <Input
+            type="search"
+            value={search}
+            placeholder="Buscar por nombre"
+            onChange={(e) => setSearch(e.target.value)}
+            className="!pl-8"
+          />
         </div>
         <Select value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="">Todos</option>
           <option value="activo">Activos</option>
           <option value="inactivo">Inactivos</option>
         </Select>
-        <Button type="button" onClick={() => setAdding(true)} className="inline-flex items-center gap-1.5">
+        <Button
+          type="button"
+          onClick={() => setAdding(true)}
+          className="inline-flex items-center gap-1.5"
+        >
           <PlusIcon className="size-4" />
           Añadir integrante
         </Button>
@@ -91,7 +103,7 @@ export default function TeamDetailPage() {
         ) : (
           <div className="w-full overflow-x-auto">
             <table className="w-full border-collapse text-xs text-neutral-600 dark:text-neutral-400 text-left">
-              <thead className="border-b border-neutral-200 dark:border-neutral-800 font-medium text-neutral-700 dark:text-neutral-300">
+              <thead className="border-b border-neutral-200 dark:border-neutral-800  text-neutral-700 dark:text-neutral-300">
                 <tr>
                   <th className="p-3">
                     <span className="inline-flex items-center gap-1.5">
@@ -131,7 +143,7 @@ export default function TeamDetailPage() {
                         <span className="flex items-center gap-2 min-w-0">
                           <span
                             aria-hidden="true"
-                            className="size-7 flex-none inline-flex items-center justify-center rounded-full bg-sky-500 text-[10px] font-medium text-white"
+                            className="size-7 flex-none inline-flex items-center justify-center rounded-full bg-sky-500 text-[10px]  text-white"
                           >
                             {avatarFor(member.worker_name)}
                           </span>
@@ -142,7 +154,7 @@ export default function TeamDetailPage() {
                       </td>
                       <td className="px-3 py-2">{member.joined_date}</td>
                       <td
-                        className={`px-3 py-2 text-center font-medium ${isActive ? "text-green-500" : "text-red-600"}`}
+                        className={`px-3 py-2 text-center  ${isActive ? "text-green-500" : "text-red-600"}`}
                       >
                         {isActive ? "Activo" : "Inactivo"}
                       </td>

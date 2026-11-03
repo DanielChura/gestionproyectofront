@@ -184,6 +184,18 @@ export async function getSessionProfile(): Promise<SessionProfile> {
   return apiRequest<SessionProfile>("me/");
 }
 
+export async function updateSessionProfile(payload: {
+  first_names?: string;
+  last_names?: string;
+  email?: string;
+  password?: string;
+}): Promise<SessionProfile> {
+  return apiRequest<SessionProfile>("me/", {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function refreshSession(): Promise<SessionUser> {
   if (!renewal) {
     const epoch = sessionEpoch;

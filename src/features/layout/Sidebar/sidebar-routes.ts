@@ -1,12 +1,12 @@
 import type { ComponentType } from "react";
 import AdminIcon from "../../../shared/icons/AdminIcon";
 import FolderIcon from "../../../shared/icons/FolderIcon";
-import HomeIcon from "../../../shared/icons/HomeIcon";
 import KeyIcon from "../../../shared/icons/KeyIcon";
 import TeamsIcon from "../../../shared/icons/TeamsIcon";
 import type { IconProps } from "../../../shared/icons/types";
 import BriefcaseIcon from "../../../shared/icons/BriefcaseIcon";
 import TablerIcon from "../../../shared/icons/TablerIcon";
+import DashboardIcon from "../../../shared/icons/Dashboard";
 
 export interface NavigationEntry {
   label: string;
@@ -16,7 +16,7 @@ export interface NavigationEntry {
 }
 
 export const navigation: NavigationEntry[] = [
-  { label: "Inicio", path: "/", icon: HomeIcon, requiresAdmin: false },
+  { label: "Inicio", path: "/", icon: DashboardIcon, requiresAdmin: false },
   {
     label: "Publicaciones",
     path: "/publicaciones",

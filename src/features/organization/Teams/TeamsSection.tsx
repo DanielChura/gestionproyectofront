@@ -62,8 +62,15 @@ function TeamsSection() {
   return (
     <section aria-label="Equipos" className="flex h-full flex-col">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100">Equipos</h3>
-        <Button type="button" onClick={() => setModal({ mode: "create" })} aria-label="Nuevo equipo" className="inline-flex items-center gap-1.5">
+        <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100">
+          Equipos
+        </h3>
+        <Button
+          type="button"
+          onClick={() => setModal({ mode: "create" })}
+          aria-label="Nuevo equipo"
+          className="inline-flex items-center gap-1.5"
+        >
           <PlusIcon className="size-4" />
           <span>Nuevo equipo</span>
         </Button>
@@ -82,11 +89,13 @@ function TeamsSection() {
                 <span className="inline-flex items-center" aria-hidden="true">
                   <TeamsIcon className="size-4" />
                 </span>
-                <span className="text-neutral-800 dark:text-neutral-100 truncate">{team.name}</span>
-                <span className="px-2 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded font-medium">
+                <span className="text-neutral-800 dark:text-neutral-100 truncate">
+                  {team.name}
+                </span>
+                <span className="px-2 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded ">
                   {team.area_name}
                 </span>
-                <span className="px-2 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded font-medium">
+                <span className="px-2 py-0.5 text-[10px] text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 rounded ">
                   {team.active_members} miembros
                 </span>
               </div>

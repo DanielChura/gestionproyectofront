@@ -128,8 +128,16 @@ export default function QuickTaskRow({
       }}
       className={
         parent
-          ? "grid w-full min-w-0 grid-cols-1 p-2 text-xs text-neutral-800"
-          : "sticky left-0 grid w-[100cqw] max-w-full grid-cols-[minmax(0,1fr)_var(--quick-task-end-space,0.75rem)] py-2 pl-3 text-xs text-neutral-800"
+          ? "grid w-full min-w-0 grid-cols-1 p-2 text-xs text-neutral-800 dark:text-neutral-100"
+          : "sticky left-0 grid w-full max-w-full py-2 pl-3 text-xs text-neutral-800 dark:text-neutral-100"
+      }
+      style={
+        parent
+          ? undefined
+          : {
+              gridTemplateColumns:
+                "minmax(0, 1fr) var(--quick-task-end-space, 0.75rem)",
+            }
       }
       onSubmit={(event) => {
         event.preventDefault();
@@ -159,7 +167,7 @@ export default function QuickTaskRow({
         className="col-start-1 row-start-1 m-0 flex min-w-0 flex-wrap items-center gap-2 border-0 p-0"
       >
         <div
-          className={`min-w-0 flex-[1_1_10rem] ${differentState ? "basis-full @[36rem]:basis-40" : ""}`}
+          className={`min-w-0 grow basis-40 ${differentState ? "basis-full @xl:basis-40" : ""}`}
         >
           <div className="flex min-w-0 items-center gap-2">
             <label htmlFor={`${id}-name`} className="sr-only">
@@ -178,7 +186,7 @@ export default function QuickTaskRow({
               aria-describedby={
                 draft.errors["task-name"] ? `${id}-error` : undefined
               }
-              className="w-0 min-w-0 flex-1 border-0 border-b-2 border-transparent bg-transparent px-1 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-600 focus-visible:border-neutral-700 focus-visible:outline-none! aria-invalid:border-red-700"
+              className="w-0 min-w-0 flex-1 border-0 border-b-2 border-transparent bg-transparent px-1 py-1.5 text-xs text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-600 dark:placeholder:text-neutral-500 focus-visible:border-neutral-700 focus-visible:outline-none! aria-invalid:border-red-700"
             />
             {differentState && draft.state && (
               <Tooltip label={stateHelp}>
@@ -187,7 +195,7 @@ export default function QuickTaskRow({
                     type="button"
                     aria-label={stateHelp}
                     aria-describedby={description}
-                    className="inline-flex max-w-32 shrink-0 cursor-help items-center gap-1 rounded-lg px-1.5 py-1 text-[10px] text-neutral-700 hover:bg-neutral-100"
+                    className="inline-flex max-w-32 shrink-0 cursor-help items-center gap-1 rounded-lg px-1.5 py-1 text-xs text-neutral-700 dark:text-neutral-300"
                   >
                     <StateIcon
                       code={draft.state!.code}
@@ -202,7 +210,11 @@ export default function QuickTaskRow({
             )}
           </div>
           {draft.errors["task-name"] && (
-            <p id={`${id}-error`} className="mt-1 text-red-700" role="alert">
+            <p
+              id={`${id}-error`}
+              className="mt-1 text-red-700 dark:text-red-400"
+              role="alert"
+            >
               {draft.errors["task-name"]}
             </p>
           )}
@@ -226,13 +238,13 @@ export default function QuickTaskRow({
         <button
           type="button"
           onClick={cancel}
-          className="cursor-pointer rounded-lg px-3 py-1.5 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800"
+          className="cursor-pointer rounded-lg px-3 py-1.5 text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-100"
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 font-medium text-white hover:bg-neutral-700"
+          className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5  text-white "
         >
           {draft.busy ? "Guardando…" : "Guardar"}
         </button>
@@ -248,7 +260,7 @@ export default function QuickTaskRow({
         <p
           tabIndex={-1}
           role="alert"
-          className="col-start-1 mb-0 mt-1 break-words text-red-700"
+          className="col-start-1 mb-0 mt-1 break-words text-red-700 dark:text-red-400"
         >
           {draft.error}
         </p>

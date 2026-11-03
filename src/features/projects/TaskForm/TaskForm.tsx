@@ -19,30 +19,26 @@ import type {
 import TaskProperties from "./TaskProperties";
 import { taskCreationStart } from "./taskDates";
 const styles = {
-  form: "flex min-h-0 flex-col text-neutral-900 [&_[aria-invalid=true]]:border-red-700 [&_:focus-visible]:outline-2 [&_:focus-visible]:outline-offset-2 [&_:focus-visible]:outline-neutral-700",
-  body: "min-h-0 overflow-y-auto overscroll-contain px-7 pb-7 pt-[22px] max-sm:p-4",
-  fields: "m-0 grid min-w-0 gap-[18px] border-0 p-0",
+  form: "flex min-h-0 flex-col text-neutral-900 dark:text-neutral-100",
+  body: "min-h-0 overflow-y-auto overscroll-contain px-7 pb-7 pt-5 max-sm:p-4",
+  fields: "m-0 grid min-w-0 gap-5 border-0 p-0",
   context:
-    "m-0 text-xs leading-relaxed text-neutral-600 [overflow-wrap:anywhere]",
+    "m-0 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400 break-words",
   titleField: "grid min-w-0 gap-1",
-  descriptionField:
-    "grid min-w-0 gap-1 [&_textarea]:w-full [&_textarea]:min-h-[88px] [&_textarea]:max-h-[180px] [&_textarea]:resize-y [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-transparent [&_textarea]:bg-white [&_textarea]:px-1 [&_textarea]:py-2 [&_textarea]:text-[15px] [&_textarea]:leading-relaxed [&_textarea]:placeholder:text-neutral-600 hover:[&_textarea]:border-neutral-200",
-  reasonField:
-    "grid min-w-0 gap-1 [&_label]:text-xs [&_label]:text-neutral-600 [&_input]:min-h-9 [&_input]:w-full [&_input]:rounded-lg [&_input]:border [&_input]:border-neutral-200 [&_input]:px-2 [&_input]:py-1.5 [&_input]:text-[13px]",
-  name: "min-h-11 w-full rounded-lg border border-transparent border-b-neutral-200 bg-white px-1 py-2 text-[22px] leading-snug font-medium tracking-tight text-neutral-900 placeholder:text-neutral-600 hover:border-neutral-200",
-  fieldError:
-    "m-0 px-1 text-xs leading-relaxed text-red-700 [overflow-wrap:anywhere]",
+  descriptionField: "grid min-w-0 gap-1",
+  reasonField: "grid min-w-0 gap-1",
+  name: "min-h-11 w-full rounded-lg border border-transparent border-b-neutral-200 bg-white px-1 py-2 text-2xl leading-snug  tracking-tight text-neutral-900 placeholder:text-neutral-600 hover:border-neutral-200 aria-invalid:border-red-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-400",
+  fieldError: "m-0 px-1 text-xs leading-relaxed text-red-700 break-words",
   metadata:
-    "m-0 text-[11px] leading-relaxed text-neutral-600 [overflow-wrap:anywhere]",
+    "m-0 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400 break-words",
   labels: "min-w-0",
   footer:
-    "shrink-0 border-t border-neutral-200 bg-white px-7 py-3.5 max-sm:px-4",
+    "shrink-0 border-t border-neutral-200 bg-white px-7 py-3.5 max-sm:px-4 dark:border-neutral-800 dark:bg-neutral-900",
   footerRow: "flex items-center justify-between gap-3 max-sm:flex-wrap",
   actions: "flex shrink-0 items-center gap-2 max-sm:ml-auto",
   cancel:
-    "min-h-9 rounded-lg border border-transparent bg-white px-3 py-2 text-[13px] text-neutral-600 hover:border-neutral-200 hover:bg-neutral-100 hover:text-neutral-900 cursor-pointer disabled:opacity-50",
-  generalError:
-    "mb-2.5 mt-0 text-[13px] leading-relaxed text-red-700 [overflow-wrap:anywhere]",
+    "min-h-9 rounded-lg border border-transparent bg-white px-3 py-2 text-sm text-neutral-600 hover:border-neutral-200 hover:bg-neutral-100 hover:text-neutral-900 cursor-pointer disabled:opacity-50 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-100",
+  generalError: "mb-2.5 mt-0 text-sm leading-relaxed text-red-700 break-words",
   srOnly: "sr-only",
 };
 
@@ -85,11 +81,23 @@ export default function TaskForm({
 }: TaskFormProps) {
   const [name, setName] = useState(task?.name ?? "");
   const [description, setDescription] = useState(task?.description ?? "");
-  const [stateCode, setStateCode] = useState(initialState ?? project.task_states.states.find((state) => state.category === "not_started" || !state.category && state.code === "PENDIENTE")?.code ?? "PENDIENTE");
-  const [priority, setPriority] = useState<number | null>(task ? task.priority : 3);
+  const [stateCode, setStateCode] = useState(
+    initialState ??
+      project.task_states.states.find(
+        (state) =>
+          state.category === "not_started" ||
+          (!state.category && state.code === "PENDIENTE"),
+      )?.code ??
+      "PENDIENTE",
+  );
+  const [priority, setPriority] = useState<number | null>(
+    task ? task.priority : 3,
+  );
   const creationMin = taskCreationStart(project.start_date, parent?.start_date);
   const [dueDate, setDueDate] = useState(() => {
-    const value = task ? task.due_date ?? "" : parent?.due_date ?? project.end_date ?? "";
+    const value = task
+      ? (task.due_date ?? "")
+      : (parent?.due_date ?? project.end_date ?? "");
     return !task && value && value < creationMin ? "" : value;
   });
   const [startDate, setStartDate] = useState(task?.start_date ?? creationMin);
@@ -146,14 +154,22 @@ export default function TaskForm({
     setError("");
     const invalid: FieldErrors = {};
     if (!name.trim()) invalid["task-name"] = "Indica el nombre de la tarea.";
-    if (!task && startDate < creationMin) invalid["task-start"] = "Las tareas nuevas deben iniciar hoy o después.";
-    if (!task && dueDate && dueDate < creationMin) invalid["task-due"] = "La fecha límite de una tarea nueva no puede preceder a hoy.";
-    if (!startDate || (project.start_date && startDate < project.start_date) || (lastDate && startDate > lastDate))
-      invalid["task-start"] = "El inicio debe quedar dentro del periodo permitido.";
-    if (dueDate && (
-      (startDate && dueDate < startDate) ||
-      (lastDate && dueDate > lastDate)
-    ))
+    if (!task && startDate < creationMin)
+      invalid["task-start"] = "Las tareas nuevas deben iniciar hoy o después.";
+    if (!task && dueDate && dueDate < creationMin)
+      invalid["task-due"] =
+        "La fecha límite de una tarea nueva no puede preceder a hoy.";
+    if (
+      !startDate ||
+      (project.start_date && startDate < project.start_date) ||
+      (lastDate && startDate > lastDate)
+    )
+      invalid["task-start"] =
+        "El inicio debe quedar dentro del periodo permitido.";
+    if (
+      dueDate &&
+      ((startDate && dueDate < startDate) || (lastDate && dueDate > lastDate))
+    )
       invalid["task-due"] =
         "La fecha límite debe quedar dentro del periodo permitido.";
     if (
@@ -189,11 +205,11 @@ export default function TaskForm({
         task
           ? data
           : {
-            ...data,
-            state_code: stateCode,
-            parent_id: parent?.id ?? null,
-            reason: reason.trim(),
-          },
+              ...data,
+              state_code: stateCode,
+              parent_id: parent?.id ?? null,
+              reason: reason.trim(),
+            },
       );
     } catch (failure) {
       const fields = apiFieldErrors(failure, taskFields);
@@ -266,6 +282,7 @@ export default function TaskForm({
                 rows={3}
                 maxLength={10000}
                 value={description}
+                className="min-h-22 max-h-45 w-full resize-y rounded-lg border border-transparent bg-white px-1 py-2 text-base leading-relaxed text-neutral-900 placeholder:text-neutral-600 hover:border-neutral-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 aria-invalid:border-red-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-400"
                 aria-invalid={Boolean(fieldErrors["task-description"])}
                 aria-describedby={
                   fieldErrors["task-description"]
@@ -291,7 +308,10 @@ export default function TaskForm({
               dueDate={dueDate}
               startDate={startDate}
               creationMin={task ? undefined : creationMin}
-              onStartDate={(value) => { setStartDate(value); clearError("task-start"); }}
+              onStartDate={(value) => {
+                setStartDate(value);
+                clearError("task-start");
+              }}
               priority={priority}
               labels={labels}
               errors={fieldErrors}
@@ -346,10 +366,16 @@ export default function TaskForm({
             )}
             {!task && ["BLOQUEADA", "CANCELADA"].includes(stateCode) && (
               <div className={styles.reasonField}>
-                <label htmlFor="task-reason">Motivo obligatorio</label>
+                <label
+                  htmlFor="task-reason"
+                  className="text-xs text-neutral-600 dark:text-neutral-400"
+                >
+                  Motivo obligatorio
+                </label>
                 <input
                   id="task-reason"
                   name="reason"
+                  className="min-h-9 w-full rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-sm text-neutral-900 aria-invalid:border-red-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
                   required
                   maxLength={500}
                   value={reason}
@@ -395,7 +421,7 @@ export default function TaskForm({
               </button>
               <button
                 type="submit"
-                className="min-h-10 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
+                className="min-h-10 rounded-lg bg-neutral-900 px-4 py-2 text-sm  text-white hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
                 disabled={busy}
               >
                 {busy

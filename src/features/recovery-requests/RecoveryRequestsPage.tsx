@@ -26,10 +26,13 @@ export default function RecoveryRequestsPage() {
   };
 
   return (
-    <main className="min-h-full text-neutral-800 dark:text-neutral-100" id="main-content">
+    <main
+      className="min-h-full text-neutral-800 dark:text-neutral-100"
+      id="main-content"
+    >
       <header className="flex flex-wrap items-end justify-between gap-4 mb-8">
         <div className="max-w-2xl">
-          <h1 className="m-0 text-lg font-medium text-neutral-800 dark:text-neutral-100">
+          <h1 className="m-0 text-lg  text-neutral-800 dark:text-neutral-100">
             Solicitudes de recuperación
           </h1>
           <p className="m-0 mt-0.5 text-sm text-neutral-600 dark:text-neutral-400">
@@ -42,7 +45,7 @@ export default function RecoveryRequestsPage() {
         onSubmit={applyFilters}
         className="flex flex-wrap items-center gap-2 mb-6"
       >
-        <h2 className="m-0 mr-auto text-sm font-medium text-neutral-800 dark:text-neutral-100">
+        <h2 className="m-0 mr-auto text-sm  text-neutral-800 dark:text-neutral-100">
           Solicitudes{" "}
           <span className="font-normal text-neutral-600 dark:text-neutral-400">
             ({requests.length})
@@ -51,12 +54,20 @@ export default function RecoveryRequestsPage() {
 
         <div className="relative flex-1 min-w-48 max-w-sm">
           <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-neutral-600 dark:text-neutral-400" />
-          <Input type="search" value={searchInput} maxLength={100} placeholder="Buscar por nombre o correo" aria-label="Buscar solicitudes" onChange={(e) => setSearchInput(e.target.value)} className="!pl-8" />
+          <Input
+            type="search"
+            value={searchInput}
+            maxLength={100}
+            placeholder="Buscar por nombre o correo"
+            aria-label="Buscar solicitudes"
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="!pl-8"
+          />
         </div>
 
         <button
           type="submit"
-          className="bg-neutral-800 text-white hover:bg-neutral-700 px-3 py-1.5 text-xs font-medium rounded-lg cursor-pointer dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+          className="bg-neutral-800 text-white hover:bg-neutral-700 px-3 py-1.5 text-xs  rounded-lg cursor-pointer dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
         >
           Buscar solicitud
         </button>
@@ -65,7 +76,7 @@ export default function RecoveryRequestsPage() {
           <button
             type="button"
             onClick={clearFilters}
-            className="text-xs font-medium text-neutral-700 hover:text-neutral-800 px-2 py-1.5 rounded-lg hover:bg-neutral-100 cursor-pointer dark:text-neutral-300 dark:hover:text-neutral-100 dark:hover:bg-neutral-800"
+            className="text-xs  text-neutral-700 hover:text-neutral-800 px-2 py-1.5 rounded-lg hover:bg-neutral-100 cursor-pointer dark:text-neutral-300 dark:hover:text-neutral-100 dark:hover:bg-neutral-800"
           >
             Limpiar
           </button>
@@ -75,7 +86,7 @@ export default function RecoveryRequestsPage() {
       <section className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 overflow-hidden rounded-xl">
         <div className="w-full overflow-x-auto">
           <table className="w-full border-collapse text-xs text-neutral-600 dark:text-neutral-400 text-left">
-            <thead className="border-b border-neutral-200 dark:border-neutral-800 font-medium text-neutral-700 dark:text-neutral-300">
+            <thead className="border-b border-neutral-200 dark:border-neutral-800  text-neutral-700 dark:text-neutral-300">
               <tr>
                 <th scope="col" className="p-3 items-center">
                   <span className="inline-flex items-center gap-1.5">
@@ -129,7 +140,7 @@ export default function RecoveryRequestsPage() {
                       type="button"
                       disabled={busy}
                       onClick={() => issueReset(entry.id)}
-                      className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 px-3 py-1.5 text-xs font-medium rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                      className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 px-3 py-1.5 text-xs  rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                     >
                       Verificar y enviar
                     </button>

@@ -116,7 +116,7 @@ export default function PublicationBoard({
               </div>
 
               <div className="flex flex-col gap-0.5">
-                <h3 className="line-clamp-1 text-sm font-medium text-neutral-800 dark:text-neutral-100">
+                <h3 className="line-clamp-1 text-sm  text-neutral-800 dark:text-neutral-100">
                   {publication.title}
                 </h3>
                 <p className="truncate text-xs text-neutral-500 dark:text-neutral-400">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
-import ChevronsIcon from "../../../shared/icons/ChevronsIcon";
+import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
 import type { SessionUser } from "../../auth/api";
 import ProfileMenu from "../../profile/ProfileMenu/ProfileMenu";
 import ProjectsMenu from "./ProjectsMenu";
@@ -41,9 +41,8 @@ export default function Sidebar({ user, onLogout }: SidebarProps) {
           aria-controls="sidebar-navigation"
           className="flex items-center justify-center p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100 rounded-xl cursor-pointer"
         >
-          <ChevronsIcon
+          <ChevronDownIcon
             className={`size-5 ${isCollapsed ? "" : "-scale-x-100"}`}
-            aria-hidden="true"
           />
         </button>
       </div>
@@ -59,7 +58,8 @@ export default function Sidebar({ user, onLogout }: SidebarProps) {
             const isActive =
               entry.path === "/"
                 ? pathname === "/"
-                : pathname === entry.path || pathname.startsWith(`${entry.path}/`);
+                : pathname === entry.path ||
+                  pathname.startsWith(`${entry.path}/`);
 
             return (
               <Link

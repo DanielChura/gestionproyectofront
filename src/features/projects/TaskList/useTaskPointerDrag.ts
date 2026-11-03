@@ -27,7 +27,7 @@ export function useTaskPointerDrag({ movement, locate, region }: PointerDragOpti
     cancel.current?.();
     if (!enabled || event.pointerType !== "mouse" || !event.isPrimary || event.button !== 0) return;
     const target = event.target;
-    if (!(target instanceof Element) || target.closest("[popover], [contenteditable]:not([contenteditable=false])")) return;
+    if (!(target instanceof Element) || target.closest("[contenteditable]:not([contenteditable=false])")) return;
     const interactive = target.closest("button, input, textarea, select, a, summary");
     if (interactive && (!interactive.matches("button[data-task-drag-surface]") || !event.currentTarget.contains(interactive))) return;
 

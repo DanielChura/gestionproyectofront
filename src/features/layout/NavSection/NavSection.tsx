@@ -67,7 +67,7 @@ function NavSection({
             <Link
               to={item.path}
               aria-current={currentPath === item.path ? "page" : undefined}
-              className={`flex items-center w-full min-h-[38px] px-2.5 py-2 text-sm leading-snug no-underline shadow-none ${currentPath === item.path ? "text-neutral-900 bg-neutral-200 font-semibold" : "text-neutral-600 bg-white font-normal"}`}
+              className={`flex items-center w-full min-h-[38px] px-2.5 py-2 text-sm leading-snug no-underline shadow-none ${currentPath === item.path ? "text-neutral-900 bg-neutral-200 font-" : "text-neutral-600 bg-white font-normal"}`}
             >
               {item.label}
             </Link>

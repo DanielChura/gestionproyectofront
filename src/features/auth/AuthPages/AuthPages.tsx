@@ -26,10 +26,7 @@ function AuthFrame({ title, intro, children }: AuthFrameProps) {
           alt="GM Ingenieros y Consultores"
         />
         <div className="my-5">
-          <h1
-            id="auth-title"
-            className="m-0 text-neutral-900 text-2xl font-semibold"
-          >
+          <h1 id="auth-title" className="m-0 text-neutral-900 text-2xl font-">
             {title}
           </h1>
           <p className="mb-0 text-neutral-600 text-sm leading-relaxed">
@@ -74,10 +71,7 @@ export function LoginPage({
       intro="Ingresa con tu correo de trabajador y contraseña."
     >
       <form className="grid gap-2.5" onSubmit={submit}>
-        <label
-          className="text-neutral-900 text-sm font-medium"
-          htmlFor="login-email"
-        >
+        <label className="text-neutral-900 text-sm " htmlFor="login-email">
           Correo electrónico
         </label>
         <input
@@ -89,10 +83,7 @@ export function LoginPage({
           value={email}
           onChange={(event) => setEmail(event.target.value)}
         />
-        <label
-          className="text-neutral-900 text-sm font-medium"
-          htmlFor="login-password"
-        >
+        <label className="text-neutral-900 text-sm " htmlFor="login-password">
           Contraseña
         </label>
         <input
@@ -157,10 +148,7 @@ export function RecoveryPage() {
       intro="Un administrador revisará tu solicitud antes de enviarte un enlace."
     >
       <form className="grid gap-2.5" onSubmit={submit}>
-        <label
-          className="text-neutral-900 text-sm font-medium"
-          htmlFor="recovery-email"
-        >
+        <label className="text-neutral-900 text-sm " htmlFor="recovery-email">
           Correo electrónico
         </label>
         <input
@@ -323,10 +311,7 @@ export function PasswordPage({ mode }: { mode: "activar" | "restablecer" }) {
             </dl>
           )}
           <form className="grid gap-2.5" onSubmit={submit}>
-            <label
-              className="text-neutral-900 text-sm font-medium"
-              htmlFor="new-password"
-            >
+            <label className="text-neutral-900 text-sm " htmlFor="new-password">
               Contraseña
             </label>
             <input
@@ -349,7 +334,7 @@ export function PasswordPage({ mode }: { mode: "activar" | "restablecer" }) {
               a tu nombre o correo.
             </p>
             <label
-              className="text-neutral-900 text-sm font-medium"
+              className="text-neutral-900 text-sm "
               htmlFor="confirm-password"
             >
               Confirmar contraseña

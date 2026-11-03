@@ -22,7 +22,7 @@ import type {
 import { formatTaskDate } from "../TaskList/taskHierarchy";
 import FlagIcon from "../../../shared/icons/FlagIcon";
 import CalendarIcon from "../../../shared/icons/CalendarIcon";
-import ChevronRightIcon from "../../../shared/icons/ChevronRightIcon";
+import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
 import { taskAssignees } from "../taskAssignees";
 import { stateInk } from "../TaskList/stateInk";
 
@@ -80,7 +80,7 @@ function Card({
     <div
       ref={setNodeRef}
       style={style}
-      className="border border-neutral-200 bg-white p-2.5 text-xs rounded-lg cursor-grab active:cursor-grabbing hover:bg-neutral-50"
+      className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-2.5 text-xs rounded-lg cursor-grab active:cursor-grabbing hover:bg-neutral-50 dark:hover:bg-neutral-800"
       onClick={() => onAction("detail", task.id)}
       {...(draggable ? listeners : {})}
       {...(draggable ? attributes : {})}
@@ -94,12 +94,12 @@ function Card({
         } else listeners?.onKeyDown?.(event);
       }}
     >
-      <div className="font-medium text-neutral-800 leading-snug">
+      <div className=" text-neutral-800 dark:text-neutral-100 leading-snug">
         {task.name}
       </div>
       {people.length > 0 && (
-        <div className="mt-1.5 flex items-center gap-1.5 text-neutral-600 truncate">
-          <span className="inline-grid place-items-center size-4 rounded-full bg-sky-700 text-white text-[9px] font-medium shrink-0">
+        <div className="mt-1.5 flex items-center gap-1.5 text-neutral-600 dark:text-neutral-400 truncate">
+          <span className="inline-grid place-items-center size-4 rounded-full bg-sky-700 text-white text-[9px]  shrink-0">
             {people[0].name.charAt(0).toUpperCase()}
           </span>
           <span className="truncate">
@@ -109,13 +109,13 @@ function Card({
       )}
       <div className="mt-1.5 flex flex-wrap gap-1.5">
         {task.priority != null && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded bg-neutral-100 text-neutral-700">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px]  rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
             <FlagIcon className="size-3.5" />
             {priorityName(catalogs, task.priority)}
           </span>
         )}
         {task.due_date && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded bg-neutral-100 text-neutral-700">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px]  rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
             <CalendarIcon className="size-3.5" />
             {formatTaskDate(task.due_date)}
           </span>
@@ -123,13 +123,13 @@ function Card({
         {task.labels.slice(0, 3).map((label) => (
           <span
             key={label.id}
-            className="px-2 py-0.5 text-[10px] font-medium rounded bg-neutral-100 text-neutral-800"
+            className="px-2 py-0.5 text-[10px]  rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100"
           >
             {label.name}
           </span>
         ))}
         {task.labels.length > 3 && (
-          <span className="px-2 py-0.5 text-[10px] font-medium rounded bg-neutral-100 text-neutral-600">
+          <span className="px-2 py-0.5 text-[10px]  rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
             +{task.labels.length - 3}
           </span>
         )}
@@ -138,7 +138,7 @@ function Card({
         <div className="mt-1.5">
           <button
             type="button"
-            className="inline-flex cursor-pointer items-center gap-1 rounded p-0.5 text-neutral-600 hover:bg-neutral-200 hover:text-neutral-800"
+            className="inline-flex cursor-pointer items-center gap-1 rounded p-0.5 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-800 dark:text-neutral-100 dark:hover:text-neutral-100"
             aria-expanded={expanded}
             aria-label={`${expanded ? "Contraer" : "Expandir"} subtareas de ${task.name}`}
             onClick={(event) => {
@@ -149,19 +149,17 @@ function Card({
             <span
               className={expanded ? "[transform:rotate(90deg)]" : undefined}
             >
-              <ChevronRightIcon className="size-4" />
+              <ChevronDownIcon className="size-4 -rotate-90" />
             </span>
-            <span className="text-[10px] font-medium">
-              {resolvedChildCount}
-            </span>
+            <span className="text-[10px] ">{resolvedChildCount}</span>
           </button>
           {expanded && resolvedChildren.length > 0 && (
-            <div className="mt-2 space-y-2 border-l border-neutral-200 pl-2">
+            <div className="mt-2 space-y-2 border-l border-neutral-200 dark:border-neutral-800 pl-2">
               {resolvedChildren.map((child) => (
                 <button
                   key={child.id}
                   type="button"
-                  className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left text-xs text-neutral-700 hover:bg-neutral-100"
+                  className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left text-xs text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800"
                   onPointerDown={(event) => event.stopPropagation()}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -169,7 +167,7 @@ function Card({
                   }}
                 >
                   <span className="truncate">{child.name}</span>
-                  <span className="shrink-0 text-[10px] text-neutral-600">
+                  <span className="shrink-0 text-[10px] text-neutral-600 dark:text-neutral-400">
                     {child.state_name}
                   </span>
                 </button>
@@ -215,7 +213,7 @@ function Column({
     >
       <header className="flex shrink-0 items-center gap-2 px-2 py-1.5">
         <div
-          className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs font-medium"
+          className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs "
           style={
             headerColor
               ? { backgroundColor: headerColor, color: stateInk(headerColor) }
@@ -231,7 +229,7 @@ function Column({
           )}
           {state.name}
         </div>
-        <span className="text-[10px] font-medium text-neutral-600 bg-white/70 px-1.5 py-0.5 rounded">
+        <span className="text-[10px]  text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-900/70 px-1.5 py-0.5 rounded">
           {tasks.length}
         </span>
       </header>

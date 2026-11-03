@@ -72,5 +72,6 @@ export const useProfile = () => {
     saving,
     addSpecialty,
     dropSpecialty,
+    reload: fetch,
   };
 };

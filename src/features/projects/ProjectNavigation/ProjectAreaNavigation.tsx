@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import ChevronDownIcon from "../../../shared/icons/ChevronDownIcon";
+import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
 import { projectPath } from "../../../routes";
 import type { ProjectNavigationProps } from "../types";
 import ProjectNavigation from "./ProjectNavigation";
@@ -40,12 +40,18 @@ export default function ProjectAreaNavigation({
   return (
     <div aria-busy={loading}>
       {loading && (
-        <p className="mx-3 text-xs text-neutral-600 dark:text-neutral-400" role="status">
+        <p
+          className="mx-3 text-xs text-neutral-600 dark:text-neutral-400"
+          role="status"
+        >
           Cargando proyectos…
         </p>
       )}
       {error && (
-        <p className="mx-3 break-words text-xs text-neutral-600 dark:text-neutral-400" role="alert">
+        <p
+          className="mx-3 break-words text-xs text-neutral-600 dark:text-neutral-400"
+          role="alert"
+        >
           {error}
         </p>
       )}
@@ -60,7 +66,10 @@ export default function ProjectAreaNavigation({
         </button>
       )}
       {!loading && !error && groups.length === 0 && (
-        <p className="mx-3 text-xs text-neutral-600 dark:text-neutral-400" role="status">
+        <p
+          className="mx-3 text-xs text-neutral-600 dark:text-neutral-400"
+          role="status"
+        >
           No hay proyectos autorizados con trabajadores asociados.
         </p>
       )}
@@ -80,7 +89,7 @@ export default function ProjectAreaNavigation({
                 aria-controls={childrenId}
                 aria-label={`${expanded ? "Contraer" : "Expandir"} área ${area.name}`}
                 title={area.name}
-                className="flex w-full min-w-0 cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 text-left text-xs font-medium text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-neutral-700"
+                className="flex w-full min-w-0 cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 text-left text-xs  text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-neutral-700"
                 onClick={() =>
                   setExpandedAreas((current) => ({
                     ...current,
@@ -99,7 +108,7 @@ export default function ProjectAreaNavigation({
               >
                 <span
                   aria-hidden="true"
-                  className="grid size-5 shrink-0 place-items-center rounded-md bg-neutral-200 dark:bg-neutral-700 text-xs font-semibold text-neutral-800 dark:text-neutral-100"
+                  className="grid size-5 shrink-0 place-items-center rounded-md bg-neutral-200 dark:bg-neutral-700 text-xs font- text-neutral-800 dark:text-neutral-100"
                 >
                   {Array.from(area.name.trim())[0]?.toLocaleUpperCase("es")}
                 </span>

@@ -44,7 +44,7 @@ function ToastItem({
     >
       <div className="flex items-center gap-2">
         <Icon className={`size-4 ${color}`} />
-        <p className="m-0 flex-1 text-xs font-semibold text-neutral-800">
+        <p className="m-0 flex-1 text-xs font- text-neutral-800">
           {toast.title}
         </p>
         <button

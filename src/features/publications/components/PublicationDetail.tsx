@@ -44,11 +44,11 @@ const confirmCopy: Record<ConfirmState, string> = {
 };
 
 function primaryButton() {
-  return `inline-flex cursor-pointer items-center justify-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200`;
+  return `inline-flex cursor-pointer items-center justify-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200`;
 }
 
 function secondaryButton() {
-  return "inline-flex cursor-pointer items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800";
+  return "inline-flex cursor-pointer items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800";
 }
 
 export default function PublicationDetail({
@@ -114,10 +114,8 @@ export default function PublicationDetail({
       projectComposer
     >
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5 max-sm:px-4">
-        <p className={`m-0 text-xs ${feedback.text}`}>
-          {feedback.label}
-        </p>
-        <h3 className="mt-1 text-lg font-medium text-neutral-800 dark:text-neutral-100">
+        <p className={`m-0 text-xs ${feedback.text}`}>{feedback.label}</p>
+        <h3 className="mt-1 text-lg  text-neutral-800 dark:text-neutral-100">
           {publication.title}
         </h3>
         <p className="mt-0.5 truncate text-xs text-neutral-500 dark:text-neutral-400">
@@ -127,7 +125,8 @@ export default function PublicationDetail({
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-600 dark:text-neutral-400">
           <span className="inline-flex items-center gap-1.5">
             <UserIcon className="size-4 text-neutral-400" />
-            {publication.available_vacancies} de {publication.vacancies} vacantes
+            {publication.available_vacancies} de {publication.vacancies}{" "}
+            vacantes
           </span>
           <span className="inline-flex items-center gap-1.5">
             <ClockIcon className="size-4 text-neutral-400" />
@@ -143,14 +142,18 @@ export default function PublicationDetail({
         </div>
 
         <section className="mt-5">
-          <h4 className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Descripción</h4>
+          <h4 className="text-xs  text-neutral-700 dark:text-neutral-300">
+            Descripción
+          </h4>
           <p className="mt-1.5 whitespace-pre-line text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
             {publication.description}
           </p>
         </section>
 
         <section className="mt-5">
-          <h4 className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Requisitos</h4>
+          <h4 className="text-xs  text-neutral-700 dark:text-neutral-300">
+            Requisitos
+          </h4>
           {publication.requirements.length === 0 ? (
             <p className="mt-1.5 text-xs text-neutral-600 dark:text-neutral-400">
               Sin especialidades específicas.
@@ -162,7 +165,7 @@ export default function PublicationDetail({
                   key={requirement.specialty_id}
                   className="inline-flex items-center gap-1.5"
                 >
-                  <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-[10px] font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100">
+                  <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-[10px]  text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100">
                     {requirement.specialty_name}
                   </span>
                   <span className="text-[10px] text-neutral-500 dark:text-neutral-400">
@@ -242,9 +245,10 @@ export default function PublicationDetail({
                   Editar
                 </button>
               )}
-              {!canManage && onApply && (
-                applied ? (
-                  <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+              {!canManage &&
+                onApply &&
+                (applied ? (
+                  <span className="text-xs  text-emerald-600 dark:text-emerald-400">
                     Ya te postulaste a esta oferta.
                   </span>
                 ) : (
@@ -260,8 +264,7 @@ export default function PublicationDetail({
                         ? "Sin vacantes"
                         : "Postularme"}
                   </button>
-                )
-              )}
+                ))}
               {!hasActions && (
                 <button
                   type="button"

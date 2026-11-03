@@ -1,6 +1,7 @@
 import type { ProjectAreaGroup, ProjectSummary } from "../types";
 
 export function groupProjectsByArea(projects: ProjectSummary[]): ProjectAreaGroup[] {
+  if (!Array.isArray(projects)) return [];
   const groups = new Map<number, ProjectAreaGroup>();
   for (const project of projects) {
     if (project.has_associated_workers !== true || project.areas.length !== 1) continue;
