@@ -1,3 +1,4 @@
+import { observeGanttCollections, currentGanttTasks, selectGanttTask, selectedGanttTaskId } from "./ganttBrowserControls.mjs";
 import assert from "node:assert/strict";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
@@ -10,7 +11,7 @@ const output = process.env.GM_BROWSER_REPORT_DIR;
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const context = await browser.newContext({ viewport: { width: 1600, height: 1100 }, timezoneId: "America/Lima" });
-const page = await context.newPage();
+const page = await context.newPage(); observeGanttCollections(page);
 page.setDefaultTimeout(30000);
 const requests = [], errors = [], measurements = [], checks = [];
 let currentCheck = "benchmark";
@@ -65,8 +66,8 @@ try {
       }, sample.project);
       const renderedRows = await page.locator(".gm-task-gantt .wx-row[data-id]").count();
       assert.ok(renderedRows > 0 && renderedRows < 100);
-      const localizerCount = await page.getByRole("combobox", { name: "Localizar tarea", exact: true }).locator("option").count();
-      assert.equal(localizerCount, sample.size + 1);
+      const loadedCount = currentGanttTasks(page).length;
+      assert.equal(loadedCount, sample.size);
       await cdp.send("HeapProfiler.collectGarbage");
       const first = await metrics(cdp);
       await cdp.send("Profiler.startPreciseCoverage", { callCount: true, detailed: true });
@@ -87,7 +88,7 @@ try {
       assert.equal(reads.filter(entry => entry.path === "/api/projects/" + sample.project + "/tasks/").length, 1);
       assert.equal(reads.filter(entry => /\/tasks\/\d+\//.test(entry.path)).length, 0);
       measurements.push({ size: sample.size, attempt, mounted_ms: mountedMs, gesture_ms: gestureMs, function_calls: calls,
-        rendered_rows: renderedRows, localizer_options: localizerCount, collection, reads,
+        rendered_rows: renderedRows, authorized_loaded_rows: loadedCount, collection, reads,
         gesture_script_ms: (last.ScriptDuration - first.ScriptDuration) * 1000,
         gesture_task_ms: (last.TaskDuration - first.TaskDuration) * 1000,
         listeners_before: first.JSEventListeners, listeners_after: last.JSEventListeners, nodes_before: first.Nodes, nodes_after: last.Nodes });
@@ -98,7 +99,7 @@ try {
   const sample = secrets.context.benchmarks[0];
   await load(sample);
   const locate = async id => {
-    await page.getByRole("combobox", { name: "Localizar tarea", exact: true }).selectOption(String(id));
+    await selectGanttTask(page, String(id));
     await row(id).waitFor();
     await settled();
   };
@@ -111,8 +112,8 @@ try {
     const results = [];
     for (const sample of secrets.context.benchmarks) {
       await load(sample);
-      const listing = await page.getByRole("combobox", { name: "Localizar tarea", exact: true }).locator("option").count();
-      assert.equal(listing, sample.size + 1);
+      const listing = currentGanttTasks(page).length;
+      assert.equal(listing, sample.size);
       const measured = await page.evaluate(async sample => {
         const { toGanttRows, fromGanttWindow } = await import("/src/features/projects/TaskGantt/ganttCalendar.ts");
         const { ganttProjection, emptyGanttFilters } = await import("/src/features/projects/TaskGantt/ganttQuery.ts");
@@ -160,9 +161,9 @@ try {
           const fg = style.getPropertyValue("--wx-grid-header-font-color");
           const bg = style.getPropertyValue("--wx-background");
           const a = luminance(fg), b = luminance(bg);
-          const table = node.querySelector(".wx-table"), chart = node.querySelector(".wx-chart");
+          const table = node.querySelector(".wx-table"), chart = node.querySelector(".wx-chart"), region = node.closest(".gm-gantt-canvas");
           return { width: node.clientWidth, grid_width: table.getBoundingClientRect().width, timeline_width: chart.getBoundingClientRect().width,
-            outer_width: node.parentElement.clientWidth, overflow: node.parentElement.scrollWidth > node.parentElement.clientWidth,
+            outer_width: region.clientWidth, overflow: region.scrollWidth > region.clientWidth,
             page_width: globalThis.document.documentElement.scrollWidth, viewport_width: globalThis.innerWidth,
             font: style.getPropertyValue("--wx-grid-header-font"), contrast: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05),
             columns: [...node.querySelectorAll(".wx-header .wx-cell")].map(cell => cell.textContent) };
@@ -187,13 +188,13 @@ try {
     }
     return snapshots;
   });
-  await check("Columns use shared popover, keyboard focus returns and no compressed timeline", async () => {
-    const trigger = page.getByRole("button", { name: "Columnas de Gantt:", exact: true });
+  await check("Columns use header fields panel, keyboard focus returns and no compressed timeline", async () => {
+    const trigger = page.getByRole("button", { name: "Añadir o quitar columnas", exact: true });
     await trigger.click();
-    const popup = page.getByRole("dialog", { name: "Columnas de Gantt", exact: true });
+    const popup = page.getByRole("dialog", { name: "Campos", exact: true });
     await popup.waitFor();
-    await popup.getByRole("button", { name: "Responsable", exact: true }).click();
-    assert.equal(await popup.getByRole("button", { name: "Responsable", exact: true }).getAttribute("aria-pressed"), "true");
+    await popup.getByRole("switch", { name: "Responsable", exact: true }).click();
+    assert.equal(await popup.getByRole("switch", { name: "Responsable", exact: true }).getAttribute("aria-checked"), "true");
     await page.keyboard.press("Escape");
     assert.equal(await trigger.evaluate(node => node === globalThis.document.activeElement), true);
     const region = page.getByRole("region", { name: "Calendario de tareas; tabla y línea de tiempo", exact: true });
@@ -206,7 +207,7 @@ try {
     await page.setViewportSize({ width: 1600, height: 1100 });
     await page.reload();
     await row(sample.first).waitFor();
-    return { shared_popup: true, keyboard_return: true, keyboard_horizontal_scroll: scrolled };
+    return { header_fields_panel: true, keyboard_return: true, keyboard_horizontal_scroll: scrolled };
   });
   await check("Per-control borders, concise tooltips, visible focus and keyboard navigation", async () => {
     const previous = page.getByRole("button", { name: "Anterior", exact: true });
@@ -217,10 +218,10 @@ try {
     await previous.hover();
     assert.notEqual(await previous.evaluate(node => globalThis.getComputedStyle(node).borderColor), "rgba(0, 0, 0, 0)");
     assert.equal(await today.evaluate(node => globalThis.getComputedStyle(node).borderColor), "rgba(0, 0, 0, 0)");
-    await page.getByRole("combobox", { name: "Escala de Gantt", exact: true }).focus();
+    await page.getByRole("button", { name: /^Periodo de Gantt:/ }).focus();
     await page.keyboard.press("Tab");
-    assert.equal(await previous.evaluate(node => node === globalThis.document.activeElement), true);
-    const outline = await previous.evaluate(node => globalThis.getComputedStyle(node).outlineWidth);
+    assert.equal(await today.evaluate(node => node === globalThis.document.activeElement), true);
+    const outline = await today.evaluate(node => globalThis.getComputedStyle(node).outlineWidth);
     assert.notEqual(outline, "0px");
     await page.keyboard.press("Enter");
     await today.click();
@@ -282,7 +283,7 @@ try {
     await page.waitForFunction(() => !globalThis.document.querySelector("button[aria-label='Actualizar Gantt']")?.disabled);
     await page.unroute(collection, delay);
     assert.equal(await handle.evaluate(node => node.isConnected), true);
-    assert.equal(await page.getByRole("combobox", { name: "Localizar tarea", exact: true }).inputValue(), String(sample.drag));
+    assert.equal(await selectedGanttTaskId(page), String(sample.drag));
     const after = await chart.evaluate(node => ({ left: node.scrollLeft, top: node.scrollTop }));
     assert.ok(Math.abs(before.left - after.left) < 2 && Math.abs(before.top - after.top) < 2, JSON.stringify({ before, after }));
     const failure = route => route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ detail: "Error QA de actualización" }) });

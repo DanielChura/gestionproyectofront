@@ -9,22 +9,33 @@ export const ganttColumnChoices = [
 
 export function useGanttLayout() {
   const container = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
+  const [canvasWidth, setCanvasWidth] = useState(0);
   const [chosen, setChosen] = useState<Set<string> | null>(null);
   useLayoutEffect(() => {
-    const node = container.current;
-    if (!node) return;
-    const measure = () => setWidth(Math.round(node.clientWidth));
+    const node = container.current, viewport = canvas.current;
+    if (!node || !viewport) return;
+    let frame = 0;
+    const measure = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        setWidth(Math.round(node.clientWidth));
+        setCanvasWidth(Math.round(viewport.clientWidth));
+      });
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(node);
-    return () => observer.disconnect();
+    observer.observe(viewport);
+    return () => { observer.disconnect(); cancelAnimationFrame(frame); };
   }, []);
   const narrow = width > 0 && width < 1200;
   const nameOnly = width > 0 && width < 800;
   const visible = useMemo(() => chosen ?? new Set(narrow ? nameOnly ? [] : ["gmStateName"] : ganttColumnChoices.map(column => column.id)), [chosen, narrow, nameOnly]);
-  const gridWidth = 250 + ganttColumnChoices.reduce((total, column) => total + (visible.has(column.id) ? column.width : 0), 0);
-  const minWidth = Math.max(680, gridWidth + 360);
+  const columnsWidth = 250 + ganttColumnChoices.reduce((total, column) => total + (visible.has(column.id) ? column.width : 0), 0);
+  const minWidth = 680;
+  const gridWidth = Math.min(columnsWidth, Math.max(220, Math.min(Math.max(minWidth, canvasWidth) - 360, canvasWidth > 0 ? canvasWidth - 100 : columnsWidth)));
   function toggle(id: string) {
     setChosen(current => {
       const next = new Set(current ?? visible);
@@ -32,5 +43,5 @@ export function useGanttLayout() {
       return next;
     });
   }
-  return { container, visible, gridWidth, minWidth, toggle };
+  return { container, canvas, visible, gridWidth, minWidth, toggle, overlay: width < 1024 };
 }

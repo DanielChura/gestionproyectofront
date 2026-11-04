@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
 import ts from "typescript";
-import { DataStore } from "@svar-ui/gantt-store";
+import { DataStore, getAdder, getDiffer, getUnitStart } from "@svar-ui/gantt-store";
 
 const context = vm.createContext({ Date, console });
 const modules = new Map();
@@ -13,7 +13,16 @@ async function load(relative) {
   const code = ts.transpileModule(readFileSync(url, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
   const module = new vm.SourceTextModule(code, { context });
   modules.set(url.href, module);
-  await module.link((name) => load(new URL(name + ".ts", url)));
+  await module.link(async (name) => {
+    if (name === "@svar-ui/gantt-store") {
+      const imported = new vm.SyntheticModule(["getAdder", "getDiffer", "getUnitStart"], function() {
+        this.setExport("getAdder", getAdder); this.setExport("getDiffer", getDiffer); this.setExport("getUnitStart", getUnitStart);
+      }, { context });
+      await imported.link(() => {});
+      return imported;
+    }
+    return load(new URL(name + ".ts", url));
+  });
   return module;
 }
 const queryModule = await load("../src/features/projects/TaskGantt/ganttQuery.ts");
@@ -23,7 +32,7 @@ await viewportModule.evaluate();
 const calendarModule = await load("../src/features/projects/TaskGantt/ganttCalendar.ts");
 await calendarModule.evaluate();
 const { ganttProjection, ganttDependencies, emptyGanttFilters } = queryModule.namespace;
-const { centeredViewport, fitProjectViewport, ganttDay, viewportAnchor, viewportScales, viewportContains } = viewportModule.namespace;
+const { centeredViewport, fitProjectViewport, fitTimelineViewport, taskTimelineBounds, ganttDay, pageViewport, viewportAnchor, viewportCellWidth, viewportScales, viewportContains } = viewportModule.namespace;
 const { toGanttRows } = calendarModule.namespace;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 const task = (id, changes = {}) => ({
@@ -138,19 +147,85 @@ test("ordinary real store refresh retains controlled selection, collapse, viewpo
   assert.equal(store.getTask(60).text, "Nombre actualizado");
 });
 
-test("fit uses the requested project bounds and limits cells for a centuries-long explicit fit", () => {
+test("fit uses the complete authorized task collection and fits centuries inside the actual timeline width", () => {
   const tasks = [task(1, { start_date: "1901-01-01", due_date: "2099-01-01" })];
-  const fixed = fitProjectViewport({ start_date: "2026-10-01", end_date: "2026-11-30" }, tasks, "2026-10-30");
-  assert.equal(fixed.start.getFullYear(), 2026);
-  assert.equal(fixed.end.getFullYear(), 2026);
-  const expanded = fitProjectViewport({ start_date: "1900-01-01", end_date: null }, tasks, "2026-10-30");
-  assert.equal(expanded.scale, "month");
-  assert.ok(expanded.step > 100);
-  assert.equal(viewportScales(expanded)[1].step, expanded.step);
+  const expanded = fitProjectViewport(tasks, "2026-10-30", 640);
+  assert.equal(expanded.scale, "year");
+  assert.ok(expanded.step > 1);
+  assert.equal(viewportScales(expanded)[0].step, expanded.step);
   assert.equal(viewportContains(expanded, "2099-01-01"), true);
+  const store = new DataStore();
+  store.init({ ...config, ...expanded, tasks: toGanttRows(tasks), scales: viewportScales(expanded), cellWidth: viewportCellWidth(expanded) });
+  assert.ok(store.getState()._scales.width <= 640.01);
+  assert.ok(store.getState()._scales.rows[0].cells.length < 12);
+  assert.equal(store.getTask(1).start.getFullYear(), 1901);
   const anchor = viewportAnchor(centeredViewport(ganttDay("2026-10-30"), "week"), 192);
-  assert.equal(anchor.getDate(), 16);
-  assert.equal(plain(fixed).scale, "day");
+  assert.equal(anchor.getDate(), 11);
+});
+
+test("fit includes unbounded starts without inventing ends, ignores active matches and handles empty or single-day projects", () => {
+  const tasks = [task(1, { start_date: "2026-01-01", due_date: "2026-01-02" }), task(2, { start_date: "2027-12-31", due_date: null })];
+  const bounds = taskTimelineBounds(tasks, "2026-11-03");
+  assert.deepEqual(plain(bounds), { first: "2026-01-01", last: "2027-12-31" });
+  const matching = ganttProjection(tasks, filter({ search: "Tarea 1" }), "2026-11-03");
+  assert.equal(matching.matches.size, 1);
+  assert.equal(fitProjectViewport(tasks, "2026-11-03", 500).frame.last, "2027-12-31");
+  for (const source of [[], [task(1, { start_date: "2026-11-03", due_date: "2026-11-03" })], [task(1, { start_date: "2026-11-03", due_date: null })]]) {
+    const fit = fitProjectViewport(source, "2026-11-03", 500);
+    const store = new DataStore();
+    store.init({ ...config, ...fit, tasks: toGanttRows(source), scales: viewportScales(fit), cellWidth: viewportCellWidth(fit) });
+    assert.equal(fit.scale, "day");
+    assert.equal(store.getState()._scales.width, 500);
+    assert.equal(store.getState()._scales.rows[1].cells.length, 1);
+    if (source[0]?.due_date === null) assert.equal(store.getTask(1).end, undefined);
+  }
+});
+
+test("all six period choices use real calendar units; custom ranges are inclusive, validated and responsive", () => {
+  for (const scale of ["day", "week", "month", "quarter", "year"]) {
+    const view = centeredViewport(ganttDay("2026-11-03"), scale);
+    const scales = viewportScales(view);
+    assert.equal(scales.at(-1).unit, scale);
+    const store = new DataStore();
+    store.init({ ...config, ...view, tasks: [], scales });
+    assert.equal(store.getState()._scales.minUnit, scale);
+    assert.ok(scales.at(-1).format(view.start).length > 0);
+  }
+  for (const [first, last] of [["2024-02-29", "2024-03-01"], ["2026-12-31", "2027-01-01"], ["1901-01-01", "2099-12-31"]]) {
+    for (const width of [240, 500, 1100]) {
+      const fit = fitTimelineViewport(first, last, width, true);
+      assert.equal(fit.scale, "flexible");
+      assert.equal(viewportContains(fit, first), true);
+      assert.equal(viewportContains(fit, last), true);
+      const store = new DataStore();
+      store.init({ ...config, ...fit, tasks: [], scales: viewportScales(fit), cellWidth: viewportCellWidth(fit) });
+      assert.ok(store.getState()._scales.width <= width + 0.01);
+      assert.ok(store.getState()._scales.rows.at(-1).cells.length < 32);
+    }
+  }
+  assert.throws(() => fitTimelineViewport("2026-11-03", "2026-11-02", 500), /posterior/);
+  assert.throws(() => fitTimelineViewport("2026-02-30", "2026-03-01", 500), /válida/);
+});
+
+test("diagram paging preserves density and window size after a custom or centuries-long fit", () => {
+  for (const source of [fitTimelineViewport("2026-11-03", "2026-11-14", 600, true), fitTimelineViewport("1901-01-01", "2099-12-31", 600)]) {
+    const next = pageViewport(source, 1, 600).viewport;
+    assert.equal(next.cellWidth, source.cellWidth);
+    assert.equal(next.scale, source.scale);
+    assert.equal(next.step, source.step);
+    assert.equal(next.frame, undefined);
+    const previous = pageViewport(next, -1, 600).viewport;
+    assert.equal(previous.start.getTime(), source.start.getTime());
+    assert.equal(previous.end.getTime(), source.end.getTime());
+  }
+});
+
+test("automatic framing keeps a fourteen-month schedule at legible quarters without an empty year margin", () => {
+  const view = fitTimelineViewport("2026-10-14", "2027-12-08", 450);
+  assert.equal(view.unit, "quarter");
+  assert.equal(view.start.getMonth(), 9);
+  assert.equal(view.start.getFullYear(), 2026);
+  assert.ok(view.cellWidth >= 64);
 });
 
 test("all authorized records remain addressable beyond previous listing limits with stable sibling order", () => {

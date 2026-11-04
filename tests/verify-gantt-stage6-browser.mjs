@@ -1,3 +1,4 @@
+import { observeGanttCollections, currentGanttTasks, waitGantt, selectGanttTask } from "./ganttBrowserControls.mjs";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
@@ -19,7 +20,7 @@ const bar = (client, id) => client.page.locator("[data-gantt-calendar-task='" + 
 const settled = page => page.evaluate(() => new Promise(resolve => globalThis.requestAnimationFrame(() => globalThis.requestAnimationFrame(resolve))));
 async function session(role, timezone = "America/Lima") {
   const context = await browser.newContext({ viewport: { width: 1800, height: 1100 }, timezoneId: timezone });
-  const page = await context.newPage();
+  const page = await context.newPage(); observeGanttCollections(page);
   page.setDefaultTimeout(20000);
   const client = { context, page, role, timezone };
   clients.push(client); active = client;
@@ -58,7 +59,7 @@ async function snapshot(client, project, id) {
 }
 async function open(client, project) {
   await client.page.goto(origin + "/proyectos/" + project.id + "?vista=gantt");
-  await client.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+  await waitGantt(client.page);
   await row(client, project.cases[0].id).waitFor();
 }
 async function navigate(client, project) {
@@ -66,12 +67,12 @@ async function navigate(client, project) {
   if (await expand.count()) await expand.click();
   await client.page.getByRole("link", { name: "Lista de tareas de " + project.name, exact: true }).click();
   await client.page.getByRole("link", { name: "Gantt", exact: true }).click();
-  await client.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+  await waitGantt(client.page);
   await row(client, project.cases[0].id).waitFor();
 }
 async function locate(client, id) {
-  await client.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).selectOption(String(id));
-  await client.page.getByRole("button", { name: "Localizar selección", exact: true }).click();
+  await selectGanttTask(client.page, String(id));
+
   await row(client, id).waitFor();
   await settled(client.page);
 }
@@ -112,7 +113,7 @@ try {
     const delivered = main.page.waitForResponse(response => new URL(response.url()).pathname === resource(first.id));
     gate.resolve(); await delivered; await settled(main.page);
     await main.page.getByRole("heading", { level: 1, name: second.name, exact: true }).waitFor();
-    const values = await main.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).locator("option").evaluateAll(nodes => nodes.map(node => Number(node.value)).filter(Boolean));
+    const values = currentGanttTasks(main.page).map(task => task.id);
     assert.ok(values.includes(second.cases[0].id));
     assert.ok(values.every(id => !idsA.body.some(task => task.id === id)));
     assert.equal(await row(main, first.cases[0].id).count(), 0);
@@ -133,7 +134,7 @@ try {
     assert.equal(await bar(main, project.null).locator(":visible").count(), 0);
     await row(main, project.null).getByText("Sin fecha límite", { exact: true }).waitFor();
     await main.page.reload();
-    await main.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+    await waitGantt(main.page);
     await locate(main, project.chain.at(-1));
     for (const id of project.chain) {
       const task = original.find(task => task.id === id);
@@ -224,7 +225,7 @@ try {
       assert.equal(requests.length, before);
       assert.equal(await client.page.locator("dialog[open]").count(), 0);
       await client.page.reload();
-      await client.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+      await waitGantt(client.page);
       const final = (await api(client, resource(project.id))).body;
       for (const example of project.cases) {
         const task = final.find(task => task.id === example.id);

@@ -1,3 +1,4 @@
+import { observeGanttCollections, currentGanttTasks, waitGantt, chooseGanttPeriod, selectGanttTask, selectedGanttTaskId, ganttFilter, clearGanttFilters, currentGanttPeriod } from "./ganttBrowserControls.mjs";
 import assert from "node:assert/strict";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
@@ -14,7 +15,7 @@ const network = [], errors = [], records = [], clients = [], resources = [];
 let admin, currentCheck = "", baselineTasks;
 async function login(role) {
   const context = await browser.newContext({ viewport: { width: 1600, height: 1100 }, timezoneId: "America/Lima" });
-  const page = await context.newPage();
+  const page = await context.newPage(); observeGanttCollections(page);
   page.setDefaultTimeout(20000);
   page.on("pageerror", (error) => errors.push({ role, message: error.message.slice(0, 400) }));
   page.on("request", (request) => resources.push({ role, path: new URL(request.url()).pathname, method: request.method() }));
@@ -44,10 +45,10 @@ async function check(name, callback) {
 }
 const row = (page, id) => page.locator(".gm-task-gantt .wx-row[data-id='" + id + "']");
 const locate = async (page, id) => {
-  await page.getByRole("combobox", { name: "Localizar tarea", exact: true }).selectOption(String(id));
+  await selectGanttTask(page, String(id));
   await row(page, id).waitFor();
 };
-const textStatus = (page) => page.getByRole("status").filter({ hasText: /de \d+ tareas/ });
+const textStatus = (page) => page.locator(".gm-gantt-chart-top");
 const businessReads = (role) => resources.filter((entry) => entry.role === role && entry.path.startsWith("/api/projects/") && entry.method === "GET");
 const collectionPath = "/api/projects/" + data.operational_project + "/tasks/";
 try {
@@ -60,8 +61,8 @@ try {
     baselineTasks = await reply.json();
     assert.equal(baselineTasks.length, data.operational_count);
     assert.ok(baselineTasks.length > 350);
-    await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
-    assert.equal(await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).locator("option").count(), baselineTasks.length + 1);
+    await waitGantt(admin.page);
+    assert.equal(currentGanttTasks(admin.page).length, baselineTasks.length);
     await admin.page.locator(".gm-task-gantt .wx-row[data-id]").first().waitFor();
     const rendered = await admin.page.locator(".gm-task-gantt .wx-row[data-id]").count();
     assert.ok(rendered > 0 && rendered < 100, "the widget must virtualize its loaded collection");
@@ -84,7 +85,7 @@ try {
     await row(admin.page, data.deep_grandchild).getByText("BLOQUEADA", { exact: true }).waitFor();
     assert.equal(await admin.page.locator(".wx-bar.wx-summary").count(), 0);
     await admin.page.reload();
-    await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+    await waitGantt(admin.page);
     await locate(admin.page, data.deep_leaf);
     await row(admin.page, data.deep_child).getByText("EN CURSO", { exact: true }).waitFor();
     assert.deepEqual((await request(admin, "projects/" + data.operational_project + "/tasks/")).body, baselineTasks);
@@ -105,7 +106,7 @@ try {
     await admin.page.waitForFunction(() => globalThis.document.querySelectorAll(".gm-task-gantt .wx-row[data-id]").length === 4);
     assert.equal(await admin.page.locator(".gm-task-gantt .wx-row[data-id]").count(), 4);
     await admin.page.screenshot({ path: path.join(output, "02_filtro_ancestros.png"), fullPage: true });
-    await admin.page.getByRole("button", { name: "Limpiar filtros", exact: true }).click();
+    await clearGanttFilters(admin.page);
     assert.equal(businessReads("admin").length, before);
     return { matches: 1, ancestor_context_rows: 3, read_requests: 0 };
   });
@@ -113,38 +114,41 @@ try {
     const child = baselineTasks.find((task) => task.id === data.deep_child);
     const person = child.assignees[0];
     const before = businessReads("admin").length;
-    await admin.page.getByRole("combobox", { name: "Filtrar Gantt por responsable" }).selectOption(String(person.id));
-    await admin.page.getByRole("combobox", { name: "Filtrar Gantt por estado" }).selectOption("EN_CURSO");
+    await ganttFilter(admin.page, "Persona", String(person.id));
+    await ganttFilter(admin.page, "Estado", "EN_CURSO");
     await row(admin.page, data.deep_child).waitFor();
-    await admin.page.getByRole("combobox", { name: "Filtrar Gantt por fecha límite" }).selectOption("undated");
+    await ganttFilter(admin.page, "Fecha", "undated");
     await admin.page.getByText("No hay tareas que coincidan con los filtros.", { exact: true }).waitFor();
     assert.equal(await admin.page.getByText("Este proyecto todavía no tiene tareas.", { exact: true }).count(), 0);
-    await admin.page.getByRole("button", { name: "Limpiar filtros", exact: true }).click();
+    await clearGanttFilters(admin.page);
     await locate(admin.page, data.deep_child);
     await row(admin.page, data.deep_child).getByText(person.name, { exact: true }).waitFor();
     assert.equal(businessReads("admin").length, before);
     return { filters: ["state", "additional_assignee", "due_date"], valid_no_matches: true, read_requests: 0 };
   });
-  await check("Escalas día semana mes, hoy, localización y ajuste explícito sin extremos ficticios", async () => {
+  await check("Escalas día semana mes, hoy y ajuste completo sin extremos ficticios", async () => {
     const before = businessReads("admin").length;
     for (const scale of ["week", "month", "day"]) {
-      await admin.page.getByRole("combobox", { name: "Escala de Gantt" }).selectOption(scale);
-      assert.equal(await admin.page.getByRole("combobox", { name: "Escala de Gantt" }).inputValue(), scale);
+      await chooseGanttPeriod(admin.page, scale);
+      assert.equal(await currentGanttPeriod(admin.page), scale);
     }
     await locate(admin.page, data.extreme);
     await row(admin.page, data.extreme).locator("time[datetime='2099-01-01']").first().waitFor();
     await textStatus(admin.page).filter({ hasText: "2099-" }).waitFor();
     await admin.page.getByRole("button", { name: "Hoy", exact: true }).click();
     await textStatus(admin.page).filter({ hasText: data.today.slice(0, 4) + "-" }).waitFor();
-    await admin.page.getByRole("button", { name: "Ajustar proyecto", exact: true }).click();
-    await textStatus(admin.page).filter({ hasText: "1899-" }).waitFor();
-    assert.equal(await admin.page.getByRole("combobox", { name: "Escala de Gantt" }).inputValue(), "month");
+    await admin.page.getByRole("button", { name: "Ajuste automático", exact: true }).click();
+    await textStatus(admin.page).filter({ hasText: "1901-" }).waitFor();
+    assert.equal(await currentGanttPeriod(admin.page), "year");
     await admin.page.getByRole("button", { name: "Hoy", exact: true }).click();
-    await textStatus(admin.page).filter({ hasText: data.today.slice(0, 4) + "-" }).waitFor();
+    const currentYear = admin.page.locator(".gm-task-gantt .wx-chart").getByText(data.today.slice(0, 4), { exact: true });
+    await currentYear.waitFor();
+    const yearBounds = await currentYear.boundingBox(), timeline = await admin.page.locator(".gm-task-gantt .wx-chart").boundingBox();
+    assert.ok(yearBounds.x + yearBounds.width > timeline.x && yearBounds.x < timeline.x + timeline.width);
     await locate(admin.page, data.deep_grandchild);
     await row(admin.page, data.deep_grandchild).getByText("Sin fecha límite", { exact: true }).waitFor();
     assert.equal(await admin.page.locator(".wx-bar[data-id='" + data.deep_grandchild + "']").isVisible(), false);
-    await admin.page.getByRole("combobox", { name: "Escala de Gantt" }).selectOption("day");
+    await chooseGanttPeriod(admin.page, "day");
     await admin.page.screenshot({ path: path.join(output, "03_navegacion.png"), fullPage: true });
     assert.equal(businessReads("admin").length, before);
     return { scales: 3, extreme_locatable: true, initial_range_bounded: true, explicit_fit: true, null_end_preserved: true, read_requests: 0 };
@@ -180,8 +184,8 @@ try {
     await response;
     await admin.page.getByRole("button", { name: "Actualizar Gantt", exact: true }).waitFor({ state: "visible" });
     await admin.page.waitForFunction(() => !globalThis.document.querySelector("button[aria-label='Actualizar Gantt']")?.disabled);
-    await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).locator("option", { hasText: "Sucesora actualizada QA" }).waitFor({ state: "attached" });
-    assert.equal(await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).inputValue(), String(data.branch));
+    assert.ok(currentGanttTasks(admin.page).some(task => task.name === "Sucesora actualizada QA"));
+    assert.equal(await selectedGanttTaskId(admin.page), String(data.branch));
     assert.equal(await textStatus(admin.page).textContent(), visibleRange);
     const after = await chart.evaluate((node) => ({ left: node.scrollLeft, top: node.scrollTop }));
     assert.ok(Math.abs(before.left - after.left) < 2 && Math.abs(before.top - after.top) < 2, JSON.stringify({ before, after }));
@@ -208,7 +212,7 @@ try {
     const panel = admin.page.getByRole("region", { name: "Dependencias de la tarea seleccionada", exact: true });
     await panel.getByRole("button", { name: "Localizar sucesora Sucesora operativa QA", exact: true }).waitFor();
     await panel.getByRole("button", { name: "Localizar sucesora Sucesora operativa QA", exact: true }).click();
-    assert.equal(await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).inputValue(), String(data.successor));
+    assert.equal(await selectedGanttTaskId(admin.page), String(data.successor));
     await panel.getByRole("button", { name: "Localizar predecesora Predecesora no asignada QA", exact: true }).waitFor();
     assert.equal(await admin.page.locator(".gm-task-gantt .wx-link").count(), 0);
     assert.equal(businessReads("admin").length, before);
@@ -222,8 +226,8 @@ try {
     const search = admin.page.getByRole("searchbox", { name: "Buscar tareas por nombre, responsable o etiqueta", exact: true });
     await search.fill("Cuarto nivel búsqueda");
     await row(admin.page, data.deep_leaf).waitFor();
-    await admin.page.getByRole("button", { name: "Limpiar filtros", exact: true }).click();
-    await admin.page.getByRole("button", { name: "Localizar selección", exact: true }).click();
+    await clearGanttFilters(admin.page);
+    await locate(admin.page, data.deep_root);
     await admin.page.getByRole("button", { name: "Expandir subtareas de Raíz operativa QA", exact: true }).waitFor();
     await row(admin.page, data.deep_child).waitFor({ state: "hidden" });
     return { temporary_context_expansion: true, original_collapse_restored: true };
@@ -236,8 +240,8 @@ try {
     const successor = listing.body.find((task) => task.id === data.successor);
     assert.deepEqual(successor.dependencies, [data.deep_root]);
     await worker.page.goto(origin + "/proyectos/" + data.operational_project + "?vista=gantt");
-    await worker.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
-    assert.equal(await worker.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).locator("option").count(), listing.body.length + 1);
+    await waitGantt(worker.page);
+    assert.equal(currentGanttTasks(worker.page).length, listing.body.length);
     await locate(worker.page, data.successor);
     const panel = worker.page.getByRole("region", { name: "Dependencias de la tarea seleccionada", exact: true });
     await panel.getByRole("button", { name: "Localizar predecesora Raíz operativa QA", exact: true }).waitFor();
@@ -261,31 +265,32 @@ try {
     });
     assert.ok(target);
     await row(admin.page, target).locator("time").first().click();
-    await admin.page.waitForFunction((id) => globalThis.document.querySelector("select[name='gantt_task']").value === id, target);
+    await admin.page.getByRole("region", { name: "Acciones de la tarea seleccionada" }).waitFor();
+    assert.equal(await selectedGanttTaskId(admin.page), target);
     await admin.page.getByRole("button", { name: "Actualizar Gantt", exact: true }).click();
     await admin.page.waitForFunction(() => !globalThis.document.querySelector("button[aria-label='Actualizar Gantt']")?.disabled);
-    assert.equal(await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).inputValue(), target);
+    assert.equal(await selectedGanttTaskId(admin.page), target);
     await admin.page.evaluate(() => globalThis.localStorage.setItem("theme", "dark"));
     await admin.page.reload();
-    await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+    await waitGantt(admin.page);
     await locate(admin.page, Number(target));
     assert.equal(await admin.page.evaluate(() => globalThis.document.documentElement.classList.contains("dark")), true);
     await admin.page.screenshot({ path: path.join(output, "06_oscuro.png"), fullPage: true });
     await admin.page.setViewportSize({ width: 390, height: 844 });
     const region = admin.page.getByRole("region", { name: "Calendario de tareas; tabla y línea de tiempo", exact: true });
     assert.equal(await region.evaluate((node) => node.scrollWidth > node.clientWidth), true);
-    await admin.page.getByRole("combobox", { name: "Escala de Gantt" }).selectOption("week");
+    await chooseGanttPeriod(admin.page, "week");
     await admin.page.screenshot({ path: path.join(output, "07_movil.png"), fullPage: true });
     await admin.page.setViewportSize({ width: 1600, height: 1100 });
     await admin.page.evaluate(() => { globalThis.localStorage.setItem("theme", "light"); globalThis.document.documentElement.classList.remove("dark"); });
-    await admin.page.getByRole("combobox", { name: "Escala de Gantt" }).selectOption("day");
+    await chooseGanttPeriod(admin.page, "day");
     assert.ok(await chart.isVisible());
     return { pointer_selection: true, selection_after_refresh: target, dark: true, mobile_width: 390, scroll_region: true };
   });
   await check("Atajos y puntero sin permiso siguen sin mutaciones; recarga conserva la colección íntegra", async () => {
     const readonly = await login("worker");
     await readonly.page.goto(origin + "/proyectos/" + data.readonly_project + "?vista=gantt");
-    await readonly.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+    await waitGantt(readonly.page);
     const bar = readonly.page.locator(".gm-task-gantt .wx-bar[data-id='" + data.readonly_task + "']");
     await bar.scrollIntoViewIfNeeded();
     const box = await bar.boundingBox();
@@ -299,8 +304,8 @@ try {
     await readonly.page.keyboard.press("Control+c");
     await readonly.page.keyboard.press("Control+v");
     await admin.page.reload();
-    await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
-    assert.equal(await admin.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).locator("option").count(), data.operational_count + 1);
+    await waitGantt(admin.page);
+    assert.equal(currentGanttTasks(admin.page).length, data.operational_count);
     const writes = network.filter((entry) => entry.path.startsWith("/api/projects/") && entry.method !== "GET");
     assert.deepEqual(writes, []);
     assert.deepEqual((await request(admin, "projects/" + data.operational_project + "/tasks/")).body, baselineTasks);

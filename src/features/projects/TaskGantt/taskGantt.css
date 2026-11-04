@@ -122,7 +122,7 @@
   inset: 0;
   display: flex;
   align-items: center;
-  padding-inline: 9px;
+  padding-inline: min(9px, 10%);
   overflow: hidden;
   user-select: none;
 }
@@ -135,6 +135,7 @@
 }
 
 .gm-task-gantt .gm-gantt-bar-text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gm-task-gantt .wx-scale { overflow: clip; }
 .gm-task-gantt .gm-gantt-resize { position: absolute; inset-block: 0; padding-inline: 3px; cursor: col-resize; opacity: 0; }
 .gm-task-gantt .gm-gantt-bar:hover .gm-gantt-resize,
 .gm-task-gantt .gm-gantt-bar[data-calendar-active] .gm-gantt-resize { opacity: 1; }
@@ -143,3 +144,36 @@
 
 .dark .gm-gantt-feedback [data-general-error] { color: var(--color-neutral-200); }
 .dark .gm-gantt-feedback button { color: var(--color-neutral-200); }
+
+.gm-gantt-fields { inline-size: 18rem; flex: 0 0 18rem; }
+.gm-gantt-body:has(.gm-gantt-fields[data-overlay]) .gm-gantt-fields {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: 20;
+  max-inline-size: 100%;
+}
+.gm-gantt-fields :focus-visible { outline: 2px solid var(--color-sky-700); outline-offset: 2px; }
+.dark .gm-gantt-fields :focus-visible { outline-color: var(--color-sky-300); }
+.gm-gantt-chart-top nav > span:first-child,
+.gm-gantt-chart-top nav > span:last-child { position: sticky; z-index: 1; background: var(--color-white); }
+.gm-gantt-chart-top nav > span:first-child { left: 0; }
+.gm-gantt-chart-top nav > span:last-child { right: 0; }
+.dark .gm-gantt-chart-top nav > span:first-child,
+.dark .gm-gantt-chart-top nav > span:last-child { background: var(--color-neutral-900); }
+.gm-gantt-controls [popover] input,
+.gm-gantt-controls [popover] select { color: var(--color-neutral-800); }
+.dark .gm-gantt-controls [popover] input,
+.dark .gm-gantt-controls [popover] select,
+.dark .gm-gantt-controls [popover] button { background-color: var(--color-neutral-900); color: var(--color-neutral-200); }
+.dark .gm-gantt-controls [popover] :is(button:hover, button[aria-checked="true"], button[aria-selected="true"]) {
+  background-color: var(--color-neutral-800);
+}
+@media (max-width: 640px) {
+  .gm-gantt-chart-top nav > .tabular-nums { visibility: hidden; }
+  .gm-gantt-toolbar-time,
+  .gm-gantt-toolbar-actions { flex-basis: 100%; }
+  .gm-gantt-toolbar-time { justify-content: space-between; }
+  .gm-gantt-search:has(input) { flex-basis: 100%; order: 2; }
+  .gm-gantt-search:has(input) > div { inline-size: 100%; }
+}

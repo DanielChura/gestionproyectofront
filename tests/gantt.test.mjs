@@ -184,7 +184,7 @@ test("cleanup detaches only its own gesture guards and cannot remove a later bin
   assert.equal(store.getTask(1).text, "released");
 });
 
-test("loading empty and retryable resource error remain distinct without importing the widget", () => {
+test("loading empty and retryable resource error remain distinct before the deferred view is ready", () => {
   const props = { tasks: [], loading: false, error: "", onRetry() {}, onOpenTask() {} };
   const markup = (changes) => renderToStaticMarkup(React.createElement(Entry, { ...props, ...changes }));
   assert.match(markup({}), /todavía no tiene tareas/);

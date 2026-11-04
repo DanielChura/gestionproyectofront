@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { IApi } from "@svar-ui/react-gantt";
+import { calcScaleCellDate } from "@svar-ui/gantt-store";
 import type { TaskGanttProps } from "./types";
 import { toGanttRows } from "./ganttCalendar";
 import { bindGanttReadOnly } from "./ganttReadOnly";
 import { emptyGanttFilters, ganttDependencies, ganttProjection, hasGanttFilters } from "./ganttQuery";
 import type { GanttFilters } from "./ganttQuery";
-import { centeredViewport, fitProjectViewport, ganttDay, shiftGanttDay, viewportAnchor, viewportContains, viewportScales } from "./ganttViewport";
+import { centeredViewport, fitProjectViewport, fitTimelineViewport, ganttDay, pageViewport, viewportAnchor, viewportContains, viewportScales, viewportUnit } from "./ganttViewport";
 import type { GanttScale } from "./ganttViewport";
 import { projectToday } from "../TaskList/taskGrouping";
 import { taskAssignees } from "../taskAssignees";
@@ -14,7 +15,12 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
   const [filters, setFilters] = useState<GanttFilters>({ ...emptyGanttFilters });
   const [collapsed, setCollapsed] = useState<Set<number>>(() => new Set());
   const [selection, setSelection] = useState<number[]>([]);
-  const [viewport, setViewport] = useState(() => centeredViewport(ganttDay(projectToday())));
+  const [view, setViewport] = useState(() => centeredViewport(ganttDay(projectToday())));
+  const [timelineWidth, setTimelineWidth] = useState(360);
+  const [actualGridWidth, setActualGridWidth] = useState<number | null>(null);
+  const viewport = useMemo(() => view.frame
+    ? fitTimelineViewport(view.frame.first, view.frame.last, timelineWidth, view.frame.flexible)
+    : view, [view, timelineWidth]);
   const [destination, setDestination] = useState<{ id?: number; date: Date } | null>(null);
   const widget = useRef<IApi | null>(null);
   const cleanup = useRef<(() => void) | null>(null);
@@ -39,7 +45,16 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
     cleanup.current = null;
     widget.current = api;
     onAttach?.(api);
-    if (api) cleanup.current = bindGanttReadOnly(api, allowPreview);
+    if (api) {
+      const unbind = bindGanttReadOnly(api, allowPreview);
+      const tag = Symbol("gm-gantt-viewport");
+      api.on("resize-chart", ({ width }: { width: number }) => {
+        if (width > 0) setTimelineWidth(width);
+        setActualGridWidth(api.getState().gridWidth);
+      }, { tag });
+      api.on("resize-grid", () => setActualGridWidth(api.getState().gridWidth), { tag });
+      cleanup.current = () => { unbind(); api.detach(tag); };
+    }
   }, [allowPreview, onAttach]);
   const resizeGrid = useCallback((width: number) => { void widget.current?.exec("resize-grid", { width }); }, []);
   const toggleBranch = useCallback((id: number, expanded: boolean) => {
@@ -68,33 +83,45 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
     while (parent !== null && !parents.has(parent)) { parents.add(parent); parent = byId.get(parent)?.parent_id ?? null; }
     setCollapsed((current) => new Set([...current].filter((item) => !parents.has(item))));
     setSelection([id]);
-    if (viewport.step > 1 || !viewportContains(viewport, task.start_date)) setViewport(centeredViewport(ganttDay(task.start_date), viewport.scale));
+    if (viewport.frame || !viewportContains(viewport, task.start_date)) setViewport(centeredViewport(ganttDay(task.start_date), viewport.scale, viewportUnit(viewport)));
     setDestination({ id, date: ganttDay(task.start_date) });
   }
   function changeScale(scale: GanttScale) {
-    const anchor = viewportAnchor(viewport, widget.current?.getState().scrollLeft ?? 0);
+    if (scale === "flexible") return;
+    const state = widget.current?.getState();
+    const anchor = state ? calcScaleCellDate(state.scrollLeft, state) : viewportAnchor(viewport, 0);
     setViewport(centeredViewport(anchor, scale));
     setDestination({ date: anchor });
   }
   function goToday() {
     const date = ganttDay(projectToday());
-    if (viewport.step > 1 || !viewportContains(viewport, projectToday())) setViewport(centeredViewport(date, viewport.scale));
+    if (viewport.frame || !viewportContains(viewport, projectToday())) setViewport(centeredViewport(date, viewport.scale, viewportUnit(viewport)));
     setDestination({ date });
   }
   function page(direction: number) {
-    const anchor = viewportAnchor(viewport, widget.current?.getState().scrollLeft ?? 0);
-    const date = shiftGanttDay(anchor, direction * (viewport.scale === "day" ? 35 : viewport.scale === "week" ? 140 : 540));
-    setViewport(centeredViewport(date, viewport.scale));
-    setDestination({ date });
+    const state = widget.current?.getState();
+    const anchor = state ? calcScaleCellDate(state.scrollLeft, state) : viewportAnchor(viewport, 0);
+    const next = pageViewport(viewport, direction, timelineWidth, anchor);
+    setViewport(next.viewport);
+    setDestination({ date: next.date });
   }
   function fitProject() {
-    const next = fitProjectViewport(project, tasks, today);
+    const next = fitProjectViewport(tasks, today, timelineWidth);
     setViewport(next);
     setDestination({ date: next.start });
   }
+  function setFlexible(first: string, last: string) {
+    const next = fitTimelineViewport(first, last, timelineWidth, true);
+    setViewport(next);
+    setDestination({ date: next.start });
+  }
+  function manualNavigation() {
+    if (!viewport.frame) return;
+    setViewport({ ...viewport, frame: undefined });
+  }
   useEffect(() => {
     const api = widget.current;
-    if (!api || !destination || !rows.length) return;
+    if (!api || !destination) return;
     let current = true;
     void (async () => {
       if (destination.id !== undefined) await api.exec("select-task", { id: destination.id, show: "y" });
@@ -106,5 +133,5 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
     return () => { current = false; };
   }, [destination, viewport, rows]);
   return { rows, viewport, scales, selected, selectedId: selected.at(-1) ?? null, attach, resizeGrid, toggleBranch, onOpenTask, onSelectTask,
-    filters, setFilters, filtered, projection, dependencies, people, states, locate, changeScale, goToday, page, fitProject };
+    filters, setFilters, filtered, projection, dependencies, people, states, locate, changeScale, goToday, page, fitProject, setFlexible, manualNavigation, actualGridWidth };
 }

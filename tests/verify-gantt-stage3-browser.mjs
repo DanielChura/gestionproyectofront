@@ -1,3 +1,4 @@
+import { observeGanttCollections, waitGantt, chooseGanttPeriod, selectGanttTask } from "./ganttBrowserControls.mjs";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
@@ -20,7 +21,7 @@ function remember(id, sent, body) {
 }
 async function session(role) {
   const context = await browser.newContext({ viewport: { width: 1800, height: 1100 }, timezoneId: "America/Lima" });
-  const page = await context.newPage(); page.setDefaultTimeout(18000);
+  const page = await context.newPage(); observeGanttCollections(page); page.setDefaultTimeout(18000);
   clients.push({ page, context });
   page.on("pageerror", (error) => errors.push({ role, message: error.message.slice(0,400) }));
   page.on("request", (request) => {
@@ -58,15 +59,15 @@ async function api(client, id, method = "GET", payload, pid = project) {
 async function snapshot(client,id) { const result = await api(client,id); assert.equal(result.status,200); return result.body.task; }
 async function gantt(client,pid = project) {
   await client.page.goto(origin + "/proyectos/" + pid + "?vista=gantt");
-  await client.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+  await waitGantt(client.page);
   await client.page.locator(".gm-task-gantt .wx-row[data-id]").first().waitFor();
 }
 const bar = (client,id) => client.page.locator(".gm-gantt-bar[data-gantt-calendar-task='" + id + "']");
 const row = (client,id) => client.page.locator(".gm-task-gantt .wx-row[data-id='" + id + "']");
 const card = (client,name) => client.page.locator("[aria-label='Calendario de " + name + "']");
 async function locate(client,id) {
-  await client.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).selectOption(String(id));
-  await client.page.getByRole("button", { name: "Localizar selección", exact: true }).click();
+  await selectGanttTask(client.page, String(id));
+
   await row(client,id).waitFor();
 }
 async function begin(client,id,dx,mode="move") {
@@ -270,7 +271,7 @@ try {
     remember(id,reply.request().postDataJSON(),await reply.json());
     await a.page.keyboard.press("Escape");await a.page.keyboard.press("Escape");
     await locate(a,id);await bar(a,id).waitFor(); const saved=await snapshot(a,id);
-    await a.page.reload();await a.page.getByRole("combobox",{name:"Localizar tarea",exact:true}).waitFor();await locate(a,id);
+    await a.page.reload();await waitGantt(a.page);await locate(a,id);
     await row(a,id).locator("time[datetime='"+saved.due_date+"']").waitFor();
     await a.page.goto(origin+"/proyectos/"+project+"?vista=lista");await a.page.locator(".gm-task-list").waitFor();
     const listRow=a.page.locator("tr[data-task-id='"+id+"']").first();await listRow.waitFor();
@@ -288,7 +289,7 @@ try {
   await check("Escalas semana y mes conservan duración y realizan una sola operación",async()=>{
     const id=data.editing_second;
     for(const scale of ["week","month"]){
-      await a.page.getByRole("combobox",{name:"Escala de Gantt",exact:true}).selectOption(scale);
+      await chooseGanttPeriod(a.page, scale);
       const before=await snapshot(a,id),count=requests.length;
       await drag(a,id,scale==="week"?96:20);await confirmed(a,"Otra barra editable QA");
       const after=await snapshot(a,id);
@@ -296,7 +297,7 @@ try {
       assert.equal(diff(before.start_date,before.due_date),diff(after.start_date,after.due_date));
       assert.equal(requests.length,count+1);
     }
-    await a.page.getByRole("combobox",{name:"Escala de Gantt",exact:true}).selectOption("day");
+    await chooseGanttPeriod(a.page, "day");
     return {scales:["week","month"],span_preserved:true,writes_per_gesture:1};
   });
   await check("Volver a Gantt durante una escritura conserva bloqueo visible por tarea",async()=>{
@@ -304,7 +305,7 @@ try {
     await a.page.route(patchPattern(id),async(route)=>{entered.resolve();await gate.promise;await route.continue();},{times:1});
     await begin(a,id,40);await a.page.mouse.up();await entered.promise;
     await a.page.getByRole("link",{name:"Lista",exact:true}).click();await a.page.locator(".gm-task-list").waitFor();
-    await a.page.getByRole("link",{name:"Gantt",exact:true}).click();await a.page.getByRole("combobox",{name:"Localizar tarea",exact:true}).waitFor();
+    await a.page.getByRole("link",{name:"Gantt",exact:true}).click();await waitGantt(a.page);
     await locate(a,id);assert.equal(await bar(a,id).getAttribute("data-calendar-pending"),"true");
     const count=requests.length;await begin(a,id,40);await a.page.mouse.up();assert.equal(requests.length,count);
     await drag(a,data.editing_second,40);await confirmed(a,"Otra barra editable QA");

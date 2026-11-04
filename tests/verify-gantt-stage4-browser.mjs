@@ -1,3 +1,4 @@
+import { observeGanttCollections, waitGantt, selectGanttTask, ganttFilter } from "./ganttBrowserControls.mjs";
 import assert from "node:assert/strict";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
@@ -24,7 +25,7 @@ function observe(page,role){
 }
 async function login(role){
  const context=await browser.newContext({viewport:{width:1800,height:1100},timezoneId:"America/Lima"});
- const page=await context.newPage();page.setDefaultTimeout(16000);clients.push({context,page});observe(page,role);
+ const page=await context.newPage(); observeGanttCollections(page);page.setDefaultTimeout(16000);clients.push({context,page});observe(page,role);
  await page.goto(origin);await page.getByLabel("Correo electrónico",{exact:true}).fill(secrets[role].email);
  await page.getByLabel("Contraseña",{exact:true}).fill(secrets[role].password);
  const waiting=page.waitForResponse(r=>new URL(r.url()).pathname==="/api/auth/login/"&&r.request().method()==="POST");
@@ -40,12 +41,12 @@ async function snapshot(client,id){const reply=await api(client,url(id));assert.
 async function gantt(client,pid=project){
  await client.page.goto(origin+"/proyectos/"+pid+"?vista=gantt");
  await client.page.getByRole("button",{name:"Abrir menú de perfil"}).waitFor();
- if(pid!==data.empty_project){await client.page.getByRole("combobox",{name:"Localizar tarea",exact:true}).waitFor();await client.page.locator(".gm-task-gantt .wx-row[data-id]").first().waitFor();}
+ if(pid!==data.empty_project){await waitGantt(client.page);await client.page.locator(".gm-task-gantt .wx-row[data-id]").first().waitFor();}
 }
 const action=client=>client.page.getByRole("region",{name:"Acciones de la tarea seleccionada",exact:true});
 const dialog=client=>client.page.locator("dialog[open]");
 const graph=client=>client.page.getByRole("region",{name:"Dependencias de la tarea seleccionada",exact:true});
-async function select(client,id){await client.page.getByRole("combobox",{name:"Localizar tarea",exact:true}).selectOption(String(id));await action(client).waitFor();}
+async function select(client,id){await selectGanttTask(client.page, String(id), {calendar:false,search:true});const clear=client.page.getByRole("button",{name:"Limpiar búsqueda",exact:true});if(await clear.count())await clear.click();await action(client).waitFor();}
 async function open(client,id,dependencies=false){
  await select(client,id);await action(client).getByRole("button",{name:dependencies?"Gestionar dependencias":"Abrir detalle",exact:true}).click();
  await dialog(client).locator('section[aria-label="Propiedades de la tarea"]').waitFor();
@@ -197,10 +198,10 @@ try{
  });
  await check("Filtrar y recargar conserva padre, estados propios y propiedades entre vistas",async()=>{
   const task=await snapshot(a,newChild.id);assert.equal(task.parent_id,data.operations_root);assert.equal(task.state_code,"EN_CURSO");
-  await a.page.getByRole("combobox",{name:"Filtrar Gantt por estado",exact:true}).selectOption("EN_CURSO");
+  await ganttFilter(a.page, "Estado", "EN_CURSO");
   await a.page.getByRole("button",{name:"Abrir tarea Principal de gestión QA",exact:true}).waitFor();
   await a.page.getByRole("button",{name:"Abrir tarea Hija nueva Gantt QA",exact:true}).waitFor();
-  await a.page.reload();await a.page.getByRole("combobox",{name:"Localizar tarea",exact:true}).waitFor();
+  await a.page.reload();await waitGantt(a.page);
   await select(a,newChild.id);await a.page.getByRole("button",{name:"Abrir tarea Hija nueva Gantt QA",exact:true}).waitFor();
   await a.page.getByRole("link",{name:"Lista",exact:true}).click();await a.page.locator(".gm-task-list").waitFor();
   const parent=a.page.locator("tr[data-task-id='"+data.operations_root+"']").first();
@@ -209,7 +210,7 @@ try{
   await a.page.getByRole("link",{name:"Tablero",exact:true}).click();await a.page.getByText("Hija nueva Gantt QA",{exact:true}).first().waitFor();
   await a.page.getByText("Principal de gestión QA",{exact:true}).first().click();await dialog(a).locator('section[aria-label="Propiedades de la tarea"]').waitFor();
   const root=await snapshot(a,data.operations_root);assert.equal(root.priority,4);assert.equal(root.labels[0].name,"Competencia remota QA");await close(a);
-  await a.page.getByRole("link",{name:"Gantt",exact:true}).click();await a.page.getByRole("combobox",{name:"Localizar tarea",exact:true}).waitFor();
+  await a.page.getByRole("link",{name:"Gantt",exact:true}).click();await waitGantt(a.page);
   await a.page.screenshot({path:path.join(output,"01_gestion_gantt.png")});
   return {gantt_list_board_detail:true,persisted_after_reload:true,own_state:true,parent_preserved:true};
  });
@@ -250,7 +251,7 @@ try{
   await open(a,data.operations_root);gate.resolve();
   await dialog(a).getByRole("button",{name:"Editar nombre: Principal de gestión QA",exact:true}).waitFor();
   touched.add(data.operations_null);touched.add(data.operations_outside);
-  await close(a);await a.page.reload();await a.page.getByRole("combobox",{name:"Localizar tarea",exact:true}).waitFor();
+  await close(a);await a.page.reload();await waitGantt(a.page);
   await select(a,data.operations_null);await graph(a).getByRole("button",{name:"Localizar sucesora Principal fuera del rango QA",exact:true}).waitFor();
   return {old_detail_response_discarded:true,server_result_visible_after_explicit_reload:true};
  });

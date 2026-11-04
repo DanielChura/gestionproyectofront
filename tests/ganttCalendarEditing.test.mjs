@@ -277,6 +277,43 @@ test("week scale movement retains the five inclusive days across a month boundar
   env.gesture.dispose(); env.detach();
 });
 
+test("quarter and year gestures preserve inclusive windows and resize only their selected endpoint", async () => {
+  for (const unit of ["quarter", "year"]) {
+    for (const mode of ["move", "start", "end"]) {
+      const env = await pointerHarness(mode, {}, {
+        start: new Date(2025, 0, 1), end: new Date(2030, 0, 1), cellWidth: 140,
+        scales: [{ unit, step: 1, format: "%Y" }],
+      });
+      env.down();
+      const clientX = mode === "start" ? -90 : 190;
+      env.dispatch("pointermove", { clientX }); env.dispatch("pointerup", { clientX });
+      assert.equal(env.commits.length, 1, unit + " " + mode);
+      const changes = env.commits[0][1];
+      if (mode === "move") {
+        assert.equal(getDiffer("day")(new Date(changes.due_date + "T12:00:00"), new Date(changes.start_date + "T12:00:00")), 4);
+      } else {
+        assert.deepEqual(Object.keys(changes), [mode === "start" ? "start_date" : "due_date"]);
+      }
+      assert.equal(env.commits[0][0].calendar_revision, "9007199254740999");
+      assert.equal(env.commits[0][0].state_code, "EN_CURSO");
+      env.gesture.dispose(); env.detach();
+    }
+  }
+});
+
+test("one-day tasks stay one day after moving in coarse calendar scales", async () => {
+  for (const unit of ["quarter", "year"]) {
+    const env = await pointerHarness("move", { due_date: "2026-10-30" }, {
+      start: new Date(2025, 0, 1), end: new Date(2030, 0, 1), cellWidth: 140,
+      scales: [{ unit, step: 1, format: "%Y" }],
+    });
+    env.down(); env.dispatch("pointermove", { clientX: 190 }); env.dispatch("pointerup", { clientX: 190 });
+    assert.equal(env.commits.length, 1);
+    assert.equal(env.commits[0][1].start_date, env.commits[0][1].due_date);
+    env.gesture.dispose(); env.detach();
+  }
+});
+
 test("pending shared calendar writes remain explicit across a Gantt remount and notify release", async () => {
   const wait = deferred(), env = await setup({ send: () => wait.promise });
   const base = task(); env.sync.observe(base);

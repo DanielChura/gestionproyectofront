@@ -1,3 +1,4 @@
+import { observeGanttCollections, waitGantt } from "./ganttBrowserControls.mjs";
 import assert from "node:assert/strict";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
@@ -22,7 +23,7 @@ function observe(page, role) {
 }
 async function login(role) {
   const context = await browser.newContext({ viewport: { width: 1600, height: 1000 }, timezoneId: "America/Lima" });
-  const page = await context.newPage();
+  const page = await context.newPage(); observeGanttCollections(page);
   page.setDefaultTimeout(15000);
   observe(page, role);
   clients.push({ page, context, role });
@@ -121,7 +122,7 @@ try {
   await check("Ratón sin permiso, teclado, doble clic y menú no editan el widget", async () => {
     const readonly = await login("worker");
     await readonly.page.goto(origin + "/proyectos/" + data.readonly_project + "?vista=gantt");
-    await readonly.page.getByRole("combobox", { name: "Localizar tarea", exact: true }).waitFor();
+    await waitGantt(readonly.page);
     const bar = readonly.page.locator(".gm-task-gantt .wx-bar[data-id='" + data.readonly_task + "']");
     await bar.scrollIntoViewIfNeeded();
     const box = await bar.boundingBox();
