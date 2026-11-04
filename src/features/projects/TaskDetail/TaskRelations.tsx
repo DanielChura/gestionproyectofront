@@ -42,6 +42,7 @@ function RelationPicker({ target, kind, onLink, busy, error, close }: {
 
 function RelationChooser({ target, task, mutation, close }: { target: TaskIdentity; task: Task; mutation: ReturnType<typeof useRelationMutation>; close: () => void }) {
   const [kind, setKind] = useState<RelationKind | null>(null);
+  if (mutation.uncertain) return <div className="grid gap-2 text-xs"><p role="status">Resultado sin confirmar. Consulta las relaciones antes de otra operación; no se repetirá el envío.</p><button type="button" className={button} disabled={mutation.busy} onClick={() => { void mutation.consult().then(confirmed => { if (confirmed) close(); }); }}>Consultar resultado</button></div>;
   return kind ? <RelationPicker key={kind} target={target} kind={kind} onLink={mutation.link} busy={mutation.busy} error={mutation.error} close={close} /> : <div className="grid">
     {(Object.keys(labels) as RelationKind[]).map((mode) => <button type="button" key={mode} disabled={Boolean(task.parent_id) && mode !== "custom"} className={`${button} disabled:cursor-default disabled:opacity-50`} onClick={() => setKind(mode)}>{labels[mode]}</button>)}
     {task.parent_id && <p className="m-0 px-3 py-2 text-xs text-neutral-600">Las dependencias solo están disponibles entre tareas principales. Las relaciones informativas sí admiten subtareas.</p>}
@@ -70,11 +71,12 @@ export default function TaskRelations({ target, task, page, loading, error, retr
       {(close) => <RelationChooser target={target} task={task} mutation={mutation} close={close} />}
     </TaskProperty>
     {loading && <p role="status" className="text-xs text-neutral-600">Cargando relaciones…</p>}
+    {mutation.uncertain && <p role="status" className="text-xs">Resultado sin confirmar; no se repetirá el envío. <button type="button" className={button} disabled={mutation.busy} onClick={() => { void mutation.consult().then(confirmed => { if (confirmed) setRemoving(null); }); }}>Consultar resultado</button></p>}
     {(error || mutation.error) && <p role="alert" className="text-xs text-red-700">{error || mutation.error} <button type="button" className="cursor-pointer underline" onClick={retry}>Reintentar</button></p>}
     <ul className="m-0 list-none p-0">{page?.items.map((relation) => <li key={relation.id} className="flex min-w-0 flex-wrap items-center gap-2 border-b border-neutral-200 py-2 text-xs">
       <span className="text-neutral-600">{relation.kind === "custom" ? relation.name : relation.kind === "blocks" ? "Bloquea" : "Está bloqueada por"}</span>
       <button type="button" className="min-w-0 flex-1 cursor-pointer break-words rounded-lg px-1 py-1 text-left text-neutral-800 hover:underline" onClick={() => onNavigate({ projectId: target.projectId, taskId: relation.target_id })}>{relation.target_name}</button>
-      {task.permissions.relations && (removing === relation.id ? <><button type="button" disabled={mutation.busy} className={`${button} text-red-700`} onClick={() => { void mutation.unlink(relation).then((saved) => { if (saved) setRemoving(null); }); }}>Confirmar desvinculación</button><button type="button" disabled={mutation.busy} className={button} onClick={() => setRemoving(null)}>Cancelar</button></>
+      {task.permissions.relations && (removing === relation.id ? <><button type="button" disabled={mutation.busy || mutation.uncertain} className={`${button} text-red-700`} onClick={() => { void mutation.unlink(relation).then((saved) => { if (saved) setRemoving(null); }); }}>Confirmar desvinculación</button><button type="button" disabled={mutation.busy} className={button} onClick={() => setRemoving(null)}>Cancelar</button></>
         : <button type="button" className={button} onClick={() => setRemoving(relation.id)}>Desvincular</button>)}
     </li>)}</ul>
     {page?.next_cursor != null && <button type="button" className={button} disabled={moreBusy} onClick={() => { void loadMore(); }}>Más relaciones</button>}

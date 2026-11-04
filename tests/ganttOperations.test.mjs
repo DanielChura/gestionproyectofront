@@ -69,7 +69,7 @@ test("Gantt actions expose only authorized existing capabilities and route to sh
  for(const node of elements(tree).filter(node=>node.type==="button"))node.props.onClick();
  assert.deepEqual(calls,[[7],["edit",7],["state",7],["child",7],[7,"relations"]]);
  const readonly=Actions({...props,task:{...baseTask,permissions:{}}});
- assert.deepEqual(elements(readonly).filter(node=>node.type==="button").map(node=>node.props.children),["Abrir detalle"]);
+ assert.deepEqual(elements(readonly).filter(node=>node.type==="button").map(node=>node.props.children),["Abrir detalle", "Ver relaciones"]);
  const child=renderToStaticMarkup(Actions({...props,task:{...baseTask,parent_id:2,permissions:{...baseTask.permissions,dependencies:false}}}));
  assert.doesNotMatch(child,/Gestionar dependencias|progreso|avance|Duplicar|Eliminar|Hito/);
  const disabled=Actions({...props,disabled:true});
@@ -122,10 +122,19 @@ async function relationHarness(){
  const h=hooks(),calls=[],changed=[],wait=deferred();let current=true,ticket=1;
  const sync={isCurrent:()=>current,token:()=>ticket};
  const services={changeDependency:(...args)=>{calls.push(args);return wait.promise;},createTaskRelation:()=>wait.promise,removeTaskRelation:()=>wait.promise,searchRelatedTasks(){}};
- const {useRelationMutation}=await load("TaskDetail/useTaskRelations.ts",{react:h.react,"../services":services,"../../auth/api":{errorText:error=>error.message},"../useTaskSync":{useTaskSync:()=>sync},"./useTaskDetail":{useTaskPage(){}}});
+ const {useRelationMutation}=await load("TaskDetail/useTaskRelations.ts",{"../useTaskCalendarEdit":{calendarProblem:error=>error.status===503?"ambiguous":null},react:h.react,"../services":services,"../../auth/api":{errorText:error=>error.message},"../useTaskSync":{useTaskSync:()=>sync},"./useTaskDetail":{useTaskPage(){}}});
  const render=()=>h.render(()=>useRelationMutation({projectId:4,taskId:7},async id=>{changed.push(id);}));
  return {...h,calls,changed,wait,render,invalidate(){current=false;ticket++;}};
 }
+test("an ambiguous dependency response retains context and blocks another mutation in that intention",async()=>{
+ const h=await relationHarness();const one=h.render().link("blocks",8,"");
+ h.wait.reject(Object.assign(new Error("Respuesta perdida"),{status:503}));assert.equal(await one,false);
+ assert.equal(h.render().uncertain,true);assert.equal(await h.render().link("blocks",8,""),false);
+ assert.equal(await h.render().unlink({kind:"blocks",successor_id:8,predecessor_id:7,target_id:8}),false);
+ assert.equal(h.calls.length,1);assert.deepEqual(h.changed,[]);
+ assert.equal(await h.render().consult(),true);assert.equal(h.calls.length,1);assert.deepEqual(h.changed,[8]);assert.equal(h.render().uncertain,false);h.unmount();
+});
+
 test("dependency mutations retain directed IDs, guard duplicate dispatch and reconcile only after success",async()=>{
  const h=await relationHarness();const model=h.render();
  const one=model.link("blocks",8,""),two=model.link("blocks",8,"");

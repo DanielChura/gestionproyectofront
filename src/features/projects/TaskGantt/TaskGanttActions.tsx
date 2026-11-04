@@ -15,6 +15,6 @@ export default function TaskGanttActions({ task, disabled = false, onOpenTask, o
       {task.permissions.state && <button type="button" className={button} disabled={disabled} onClick={() => onAction("state", task.id)}>Cambiar estado</button>}
       {task.permissions.create_child && <button type="button" className={button} disabled={disabled} onClick={() => onAction("child", task.id)}>Crear subtarea</button>}
     </>}
-    {task.permissions.dependencies && <button type="button" className={button} onClick={() => onOpenTask(task.id, "relations")}>Gestionar dependencias</button>}
+    {<button type="button" className={button} onClick={() => onOpenTask(task.id, "relations")}>{task.permissions.dependencies ? "Gestionar dependencias" : "Ver relaciones"}</button>}
   </section>;
 }

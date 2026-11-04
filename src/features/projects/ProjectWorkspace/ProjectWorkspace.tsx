@@ -471,6 +471,8 @@ function ProjectWorkspaceContent({
 
       {view === "gantt" && <TaskGanttEntry
         project={project}
+        catalogs={catalogs}
+        onCreated={acceptTask}
         tasks={tasks}
         loading={loading}
         error={error}

@@ -159,8 +159,8 @@ test("fit uses the complete authorized task collection and fits centuries inside
   assert.ok(store.getState()._scales.width <= 640.01);
   assert.ok(store.getState()._scales.rows[0].cells.length < 12);
   assert.equal(store.getTask(1).start.getFullYear(), 1901);
-  const anchor = viewportAnchor(centeredViewport(ganttDay("2026-10-30"), "week"), 192);
-  assert.equal(anchor.getDate(), 11);
+  const anchor = viewportAnchor(centeredViewport(ganttDay("2026-10-30"), "week"), 280);
+  assert.equal(anchor.getDate(), 5);
 });
 
 test("fit includes unbounded starts without inventing ends, ignores active matches and handles empty or single-day projects", () => {
@@ -185,10 +185,10 @@ test("all six period choices use real calendar units; custom ranges are inclusiv
   for (const scale of ["day", "week", "month", "quarter", "year"]) {
     const view = centeredViewport(ganttDay("2026-11-03"), scale);
     const scales = viewportScales(view);
-    assert.equal(scales.at(-1).unit, scale);
+    assert.equal(scales.at(-1).unit, scale === "week" ? "day" : scale);
     const store = new DataStore();
     store.init({ ...config, ...view, tasks: [], scales });
-    assert.equal(store.getState()._scales.minUnit, scale);
+    assert.equal(store.getState()._scales.minUnit, scale === "week" ? "day" : scale);
     assert.ok(scales.at(-1).format(view.start).length > 0);
   }
   for (const [first, last] of [["2024-02-29", "2024-03-01"], ["2026-12-31", "2027-01-01"], ["1901-01-01", "2099-12-31"]]) {

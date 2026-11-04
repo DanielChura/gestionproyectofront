@@ -2,6 +2,7 @@ import { getAdder, getDiffer, getUnitStart } from "@svar-ui/gantt-store";
 import type { IScaleConfig } from "@svar-ui/react-gantt";
 import { calendarDate, calendarDateKey } from "../calendarDate";
 import type { Task } from "../types";
+import { isoWeekLabel } from "./ganttGeometry";
 
 export type GanttUnit = "day" | "week" | "month" | "quarter" | "year";
 export type GanttScale = GanttUnit | "flexible";
@@ -12,11 +13,11 @@ export interface GanttViewport {
 
 const months = new Intl.DateTimeFormat("es-PE", { month: "long", year: "numeric" });
 const shortMonths = new Intl.DateTimeFormat("es-PE", { month: "short" });
+const weekdays = ["do", "lu", "ma", "mi", "ju", "vi", "sá"];
 const years = new Intl.DateTimeFormat("es-PE", { year: "numeric" });
-const days = new Intl.DateTimeFormat("es-PE", { day: "numeric", month: "short" });
 const units: GanttUnit[] = ["day", "week", "month", "quarter", "year"];
-const widths = { day: 40, week: 96, month: 100, quarter: 120, year: 140 };
-const labelWidths = { day: 28, week: 64, month: 64, quarter: 64, year: 72 };
+const widths = { day: 40, week: 280, month: 100, quarter: 120, year: 140 };
+const labelWidths = { day: 28, week: 280, month: 64, quarter: 64, year: 72 };
 
 export function ganttDay(value: string): Date {
   const date = calendarDate(value);
@@ -35,7 +36,7 @@ export function viewportUnit(view: GanttViewport): GanttUnit {
 }
 
 export function centeredViewport(date: Date, scale: GanttScale = "day", unit: GanttUnit = scale === "flexible" ? "day" : scale): GanttViewport {
-  const anchor = getUnitStart(unit, date);
+  const anchor = getUnitStart(unit, date, 1);
   const before = unit === "day" ? 7 : unit === "week" ? 4 : 1;
   const after = unit === "day" ? 49 : unit === "week" ? 24 : unit === "month" ? 18 : 8;
   return { start: getAdder(unit)(anchor, -before), end: getAdder(unit)(anchor, after), scale, unit, step: 1 };
@@ -59,8 +60,8 @@ export function fitTimelineViewport(first: string, last: string, width: number, 
   let unit: GanttUnit = "year", start = from, end = through, count = 1;
   for (const candidate of units) {
     unit = candidate;
-    start = getUnitStart(unit, from);
-    end = getAdder(unit)(getUnitStart(unit, through), 1);
+    start = getUnitStart(unit, from, 1);
+    end = getAdder(unit)(getUnitStart(unit, through, 1), 1);
     count = Math.max(1, getDiffer(unit)(end, start));
     if (count * labelWidths[unit] <= available) break;
   }
@@ -82,17 +83,18 @@ export function fitProjectViewport(tasks: Task[], today: string, width: number):
 }
 
 export function viewportCellWidth(view: GanttViewport): number {
-  return view.cellWidth ?? widths[viewportUnit(view)];
+  const width = view.cellWidth ?? widths[viewportUnit(view)];
+  return viewportUnit(view) === "week" ? width / 7 : width;
 }
 
 export function viewportAnchor(view: GanttViewport, left: number): Date {
-  const cells = Math.floor(Math.max(0, left) / viewportCellWidth(view));
+  const cells = Math.floor(Math.max(0, left) / (view.cellWidth ?? widths[viewportUnit(view)]));
   const unit = viewportUnit(view);
-  return getAdder(unit)(getUnitStart(unit, view.start), cells);
+  return getAdder(unit)(getUnitStart(unit, view.start, 1), cells);
 }
 
 export function pageViewport(view: GanttViewport, direction: number, width: number, anchor = view.start) {
-  const distance = direction * Math.max(1, Math.floor(width / viewportCellWidth(view)));
+  const distance = direction * Math.max(1, Math.floor(width / (view.cellWidth ?? widths[viewportUnit(view)])));
   const shift = getAdder(viewportUnit(view));
   return {
     viewport: { ...view, start: shift(view.start, distance), end: shift(view.end, distance), frame: undefined },
@@ -111,8 +113,8 @@ export function viewportScales(view: GanttViewport): IScaleConfig[] {
     { unit: "day", step: 1, format: (date) => String(date.getDate()) },
   ];
   if (unit === "week") return [
-    { unit: "month", step: 1, format: (date) => months.format(date) },
-    { unit: "week", step: 1, format: (date) => days.format(date) },
+    { unit: "week", step: 1, format: isoWeekLabel },
+    { unit: "day", step: 1, format: (date) => `${weekdays[date.getDay()]} ${date.getDate()}` },
   ];
   if (unit === "month") return [
     { unit: "year", step: 1, format: (date) => years.format(date) },

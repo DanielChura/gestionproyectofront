@@ -1,7 +1,11 @@
 .gm-task-gantt {
-  block-size: clamp(24rem, 62vh, 48rem);
+  block-size: var(--gm-gantt-height, 60vh);
   min-inline-size: 42.5rem;
 }
+.gm-gantt-native { position: relative; z-index: 0; block-size: 100%; }
+.dark .gm-gantt-inline :is(form, input, label, button, [role="alert"]) { color: var(--color-neutral-200); }
+.dark .gm-gantt-inline :is(input, [popover], button:not(.bg-neutral-800)) { background: var(--color-neutral-900); }
+.dark .gm-gantt-inline input::placeholder { color: var(--color-neutral-300); }
 
 .gm-task-gantt .wx-willow-theme {
   block-size: 100%;
@@ -118,14 +122,53 @@
 }
 
 .gm-task-gantt .gm-gantt-bar {
+  container-type: inline-size;
   position: absolute;
-  inset: 0;
+  inset: 5px 0;
   display: flex;
   align-items: center;
   padding-inline: min(9px, 10%);
   overflow: hidden;
   user-select: none;
+  background: color-mix(in srgb, var(--gm-state-color) 24%, white);
+  border: 1px solid color-mix(in srgb, var(--gm-state-color) 65%, white);
+  border-radius: 4px;
+  color: var(--color-neutral-800);
 }
+
+.dark .gm-task-gantt .gm-gantt-bar { background: color-mix(in srgb, var(--gm-state-color) 30%, var(--color-neutral-900)); color: var(--color-neutral-200); }
+.gm-task-gantt .gm-gantt-bar-text { visibility: hidden; }
+@container (min-width: 5rem) { .gm-task-gantt .gm-gantt-bar-text { visibility: visible; } }
+.gm-task-gantt .wx-bar:has(.gm-gantt-bar) { background: transparent; border-color: transparent; }
+.gm-task-gantt .gm-gantt-bar[data-gantt-parent] { inset-block: 10px; border-radius: 0; border-inline-width: 3px; background: var(--gm-state-color); }
+.gm-task-gantt .gm-gantt-bar[data-gantt-parent] .gm-gantt-bar-text { visibility: hidden; }
+.gm-task-gantt .gm-gantt-bar[data-calendar-pending] { border-style: dashed; }
+.gm-task-gantt .wx-resizer { visibility: hidden; pointer-events: none; }
+.gm-gantt-splitter { position: absolute; inset-block: 0; inline-size: 8px; z-index: 12; cursor: col-resize; touch-action: none; border-inline: 2px solid transparent; }
+.gm-gantt-splitter:hover, .gm-gantt-splitter:focus-visible { border-inline-color: var(--color-neutral-400); background: var(--color-neutral-100); }
+.gm-gantt-add-child { visibility: hidden; margin-inline-start: auto; }
+.wx-row:hover .gm-gantt-add-child, .wx-row:focus-within .gm-gantt-add-child, .gm-gantt-add-child:focus-visible { visibility: visible; }
+.gm-task-gantt .gm-gantt-weekend { background: repeating-linear-gradient(135deg, transparent 0 3px, color-mix(in srgb, var(--color-neutral-400) 16%, transparent) 3px 5px); }
+.gm-task-gantt .wx-gantt-holidays .gm-gantt-weekend { position: absolute; block-size: 100%; pointer-events: none; }
+.gm-task-gantt .wx-scale .wx-cell { white-space: nowrap; }
+.gm-task-gantt .wx-scale .wx-cell > span { font-size: 11px; }
+.gm-gantt-scene { position: absolute; overflow: hidden; pointer-events: none; z-index: 5; }
+.gm-gantt-links { position: absolute; overflow: hidden; pointer-events: none; color: var(--color-neutral-600); }
+.dark .gm-gantt-links { color: var(--color-neutral-300); }
+.gm-gantt-link { fill: none; stroke: currentColor; stroke-width: 1.25; pointer-events: stroke; cursor: pointer; }
+.gm-gantt-link:hover, .gm-gantt-link:focus-visible, .gm-gantt-link[data-related] { stroke: var(--color-sky-700); stroke-width: 2; }
+.dark .gm-gantt-link:hover, .dark .gm-gantt-link[data-related] { stroke: var(--color-sky-300); }
+.gm-gantt-link-preview { stroke-dasharray: 4 3; pointer-events: none; }
+.gm-gantt-connectors { opacity: 0; }
+.gm-gantt-connectors[data-selected], .gm-gantt-connectors:hover { opacity: 1; }
+.gm-gantt-link-source { fill: var(--color-white); stroke: var(--color-sky-700); stroke-width: 1.5; pointer-events: all; cursor: crosshair; touch-action: none; }
+.gm-gantt-link-target { fill: var(--color-neutral-200); stroke: var(--color-neutral-500); pointer-events: none; }
+.gm-gantt-zoom { position: absolute; display: flex; background: var(--color-white); border: 1px solid var(--color-neutral-200); border-radius: 8px; pointer-events: auto; z-index: 2; }
+.dark .gm-gantt-zoom { background: var(--color-neutral-900); border-color: var(--color-neutral-700); }
+.gm-gantt-today { position: absolute; bottom: 0; border-inline-start: 1px solid var(--color-red-700); color: var(--color-red-700); }
+.gm-gantt-today span { position: absolute; top: 0; left: 2px; font-size: 10px; border-radius: 4px; background: var(--color-white); padding-inline: 3px; white-space: nowrap; }
+.dark .gm-gantt-today { color: var(--color-red-300); border-color: var(--color-red-300); }
+.dark .gm-gantt-today span { background: var(--color-neutral-900); }
 
 .gm-task-gantt .gm-gantt-bar[data-calendar-editable] { cursor: grab; }
 .gm-task-gantt .gm-gantt-bar[data-calendar-active] { cursor: grabbing; }

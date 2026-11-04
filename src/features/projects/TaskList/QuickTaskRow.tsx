@@ -17,6 +17,7 @@ export default function QuickTaskRow({
   onDetachedCreated,
   parent,
   onBusyChange,
+  onCheckCreation,
 }: {
   project: Project;
   catalogs: ProjectCatalogs;
@@ -27,6 +28,7 @@ export default function QuickTaskRow({
   onDetachedCreated?: (task: Task) => void;
   parent?: Task;
   onBusyChange?: (value: boolean) => void;
+  onCheckCreation?: () => void;
 }) {
   const draft = useQuickTask(
     project,
@@ -53,7 +55,7 @@ export default function QuickTaskRow({
   useEffect(() => {
     const outside = (event: PointerEvent) => {
       if (
-        !pending.current &&
+        !pending.current && !draft.uncertain &&
         !insideEvents.current.has(event) &&
         event.target instanceof Node &&
         !form.current?.contains(event.target)
@@ -78,13 +80,14 @@ export default function QuickTaskRow({
       document.removeEventListener("pointerdown", outside);
       document.removeEventListener("keydown", escape);
     };
-  }, [onClose]);
+  }, [onClose, draft.uncertain]);
   const cancel = () => {
     if (!pending.current) onClose(true);
   };
   useLayoutEffect(() => {
     name.current?.focus();
   }, []);
+  useLayoutEffect(() => { onBusyChange?.(draft.busy || draft.uncertain); }, [draft.busy, draft.uncertain, onBusyChange]);
   useLayoutEffect(() => {
     if (!draft.busy && (draft.error || Object.keys(draft.errors).length)) {
       form.current
@@ -124,7 +127,7 @@ export default function QuickTaskRow({
         if (panel) {
           panel.hidePopover();
           document.getElementById(panel.dataset.returnFocus ?? "")?.focus();
-        } else cancel();
+        } else if (!draft.uncertain) cancel();
       }}
       className={
         parent
@@ -155,7 +158,7 @@ export default function QuickTaskRow({
       }}
     >
       <fieldset
-        disabled={draft.busy}
+        disabled={draft.busy || draft.uncertain}
         className="col-start-1 row-start-1 m-0 flex min-w-0 flex-wrap items-center gap-2 border-0 p-0"
       >
         <div
@@ -244,6 +247,8 @@ export default function QuickTaskRow({
       >
         {alignmentState && <StateLabel {...alignmentState} />}
       </span>
+      {draft.uncertain && onCheckCreation && <button type="button" className="cursor-pointer rounded-lg px-3 py-1.5 text-xs underline" onClick={onCheckCreation}>Consultar tareas antes de otra creación</button>}
+      {draft.uncertain && <button type="button" className="cursor-pointer rounded-lg px-3 py-1.5 text-xs underline" onClick={() => onClose(true)}>Cerrar borrador sin reenviar</button>}
       {draft.error && (
         <p
           tabIndex={-1}

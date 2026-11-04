@@ -9,6 +9,8 @@ import type { GanttFilters } from "./ganttQuery";
 import { centeredViewport, fitProjectViewport, fitTimelineViewport, ganttDay, pageViewport, viewportAnchor, viewportContains, viewportScales, viewportUnit } from "./ganttViewport";
 import type { GanttScale } from "./ganttViewport";
 import { projectToday } from "../TaskList/taskGrouping";
+import { useGanttToday } from "./useGanttToday";
+import { calendarScrollLeft } from "./ganttGeometry";
 import { taskAssignees } from "../taskAssignees";
 
 export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: (event: object) => boolean, onAttach?: (api: IApi | null) => void) {
@@ -21,10 +23,11 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
   const viewport = useMemo(() => view.frame
     ? fitTimelineViewport(view.frame.first, view.frame.last, timelineWidth, view.frame.flexible)
     : view, [view, timelineWidth]);
-  const [destination, setDestination] = useState<{ id?: number; date: Date } | null>(null);
+  const [destination, setDestination] = useState<{ id?: number; date: Date; center?: boolean } | null>(null);
   const widget = useRef<IApi | null>(null);
+  const [api, setApi] = useState<IApi | null>(null);
   const cleanup = useRef<(() => void) | null>(null);
-  const today = projectToday();
+  const today = useGanttToday();
   const projection = useMemo(() => ganttProjection(tasks, filters, today), [tasks, filters, today]);
   const filtered = hasGanttFilters(filters);
   const rows = useMemo(() => toGanttRows(projection.tasks).map((row) => ({
@@ -43,7 +46,7 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
   const attach = useCallback((api: IApi | null) => {
     cleanup.current?.();
     cleanup.current = null;
-    widget.current = api;
+    widget.current = api; setApi(api);
     onAttach?.(api);
     if (api) {
       const unbind = bindGanttReadOnly(api, allowPreview);
@@ -93,6 +96,15 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
     setViewport(centeredViewport(anchor, scale));
     setDestination({ date: anchor });
   }
+  function zoom(direction: number) {
+    const state = widget.current?.getState();
+    const anchor = state ? calcScaleCellDate(state.scrollLeft + timelineWidth / 2, state) : viewportAnchor(viewport, 0);
+    const choices = ["year", "quarter", "month", "week", "day"] as const;
+    const index = choices.indexOf(viewportUnit(viewport));
+    const scale = choices[Math.max(0, Math.min(4, index + direction))];
+    const next = centeredViewport(anchor, scale);
+    setViewport(next); setDestination({ date: anchor, center: true });
+  }
   function goToday() {
     const date = ganttDay(projectToday());
     if (viewport.frame || !viewportContains(viewport, projectToday())) setViewport(centeredViewport(date, viewport.scale, viewportUnit(viewport)));
@@ -126,12 +138,12 @@ export function useTaskGantt({ tasks, project }: TaskGanttProps, allowPreview?: 
     void (async () => {
       if (destination.id !== undefined) await api.exec("select-task", { id: destination.id, show: "y" });
       if (current && widget.current === api) {
-        await api.exec("scroll-chart", { date: destination.date });
+        await api.exec("scroll-chart", { left: calendarScrollLeft(destination.date, api.getState(), destination.center) });
         if (current && widget.current === api) setDestination(null);
       }
     })();
     return () => { current = false; };
-  }, [destination, viewport, rows]);
+  }, [destination, viewport, rows, timelineWidth]);
   return { rows, viewport, scales, selected, selectedId: selected.at(-1) ?? null, attach, resizeGrid, toggleBranch, onOpenTask, onSelectTask,
-    filters, setFilters, filtered, projection, dependencies, people, states, locate, changeScale, goToday, page, fitProject, setFlexible, manualNavigation, actualGridWidth };
+    filters, setFilters, filtered, projection, dependencies, people, states, locate, changeScale, goToday, page, fitProject, setFlexible, manualNavigation, actualGridWidth, api, today, zoom };
 }

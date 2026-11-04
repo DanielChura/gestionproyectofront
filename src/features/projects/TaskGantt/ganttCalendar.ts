@@ -59,6 +59,7 @@ export function toGanttRows(tasks: Task[]): GanttRow[] {
       gmHasChildren: parents.has(task.id),
       open: true,
       gmStateName: task.state_name,
+      gmState: { code: task.state_code, name: task.state_name, category: task.state_category, color: task.state_color },
       gmCreatedAt: task.created_at,
       gmEditable: task.permissions?.edit ?? false,
       gmResponsible: taskAssignees(task).map((person) => person.name).join(", ") || "Sin persona asignada",

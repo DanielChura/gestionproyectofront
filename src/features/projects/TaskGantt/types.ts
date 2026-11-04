@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
-import type { Task, Project, TaskActionKind } from "../types";
+import type { Task, Project, ProjectCatalogs, TaskActionKind, ProjectTaskState } from "../types";
 
 export interface TaskGanttProps {
-  project: Pick<Project, "id" | "start_date" | "end_date" | "task_states">;
+  project: Project;
+  catalogs: ProjectCatalogs;
+  onCreated: (task: Task) => void;
   tasks: Task[];
   loading: boolean;
   error: string;
@@ -27,6 +29,7 @@ export interface GanttRow {
   gmStartDate: string;
   gmDueDate: string | null;
   gmStateName: string;
+  gmState: ProjectTaskState;
   gmCreatedAt: string;
   gmResponsible: string;
   gmContext?: boolean;

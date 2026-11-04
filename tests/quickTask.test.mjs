@@ -65,7 +65,7 @@ async function harness(context = project, onDetachedCreated) {
     useEffect(effect) { cleanup ??= effect(); },
   };
   const { useQuickTask } = await load("../src/features/projects/TaskList/useQuickTask.ts", {
-    react, "../../auth/api": { errorText: (error) => error.message },
+    react, "../useTaskCalendarEdit": { calendarProblem: error => error.ambiguous ? "ambiguous" : null }, "../../auth/api": { errorText: (error) => error.message },
     "../formErrors": { apiFieldErrors: () => ({ "task-due": "Fuera del periodo" }) },
     "./quickTaskState": state,
     "../labelSelection": labelSelection,
@@ -145,4 +145,11 @@ test("an already sent request can deliver to its still-mounted List after regrou
   previous.unmount(); listActive = false; previous.requests[0].resolve({ id: 8 });
   await late;
   assert.equal(accepted.length, 1);
+});
+
+test("ambiguous quick creation retains its draft and blocks any second POST even after content changes", async () => {
+  const hook = await harness(); hook.render().setName("Borrador incierto");
+  const first = hook.render().save(); hook.requests[0].reject(Object.assign(new Error("Red interrumpida"), { ambiguous: true }));
+  await first; assert.equal(hook.render().uncertain, true); assert.equal(hook.render().name, "Borrador incierto");
+  hook.render().setName("Otra edición"); assert.equal(await hook.render().save(), false); assert.equal(hook.requests.length, 1);
 });

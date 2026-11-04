@@ -57,10 +57,20 @@ async function api(client, id, method = "GET", payload, pid = project) {
   return { status: reply.status(), body };
 }
 async function snapshot(client,id) { const result = await api(client,id); assert.equal(result.status,200); return result.body.task; }
+async function dateColumns(client) {
+  await client.page.getByRole("button", { name: "Añadir o quitar columnas" }).click();
+  const fields = client.page.getByRole("dialog", { name: "Campos", exact: true });
+  for (const name of ["Inicio", "Fecha límite"]) {
+    const choice = fields.getByRole("switch", { name, exact: true });
+    if (await choice.getAttribute("aria-checked") !== "true") await choice.click();
+  }
+  await client.page.keyboard.press("Escape");
+}
 async function gantt(client,pid = project) {
   await client.page.goto(origin + "/proyectos/" + pid + "?vista=gantt");
   await waitGantt(client.page);
   await client.page.locator(".gm-task-gantt .wx-row[data-id]").first().waitFor();
+  await dateColumns(client);
 }
 const bar = (client,id) => client.page.locator(".gm-gantt-bar[data-gantt-calendar-task='" + id + "']");
 const row = (client,id) => client.page.locator(".gm-task-gantt .wx-row[data-id='" + id + "']");
@@ -271,7 +281,7 @@ try {
     remember(id,reply.request().postDataJSON(),await reply.json());
     await a.page.keyboard.press("Escape");await a.page.keyboard.press("Escape");
     await locate(a,id);await bar(a,id).waitFor(); const saved=await snapshot(a,id);
-    await a.page.reload();await waitGantt(a.page);await locate(a,id);
+    await a.page.reload();await waitGantt(a.page);await dateColumns(a);await locate(a,id);
     await row(a,id).locator("time[datetime='"+saved.due_date+"']").waitFor();
     await a.page.goto(origin+"/proyectos/"+project+"?vista=lista");await a.page.locator(".gm-task-list").waitFor();
     const listRow=a.page.locator("tr[data-task-id='"+id+"']").first();await listRow.waitFor();

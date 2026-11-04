@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { calendarProblem } from "../useTaskCalendarEdit";
 import { errorText } from "../../auth/api";
 import { apiFieldErrors } from "../formErrors";
 import type { FieldErrors } from "../formErrors";
@@ -20,7 +21,8 @@ export function useQuickTask(project: Project, groupCode: string | undefined, on
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [error, setError] = useState("");
-  const pending = useRef(false);
+  const pending = useRef(false), ambiguous = useRef(false);
+  const [uncertain, setUncertain] = useState(false);
   const active = useRef(false);
   const state = quickTaskState(project, groupCode, responsible.length > 0);
   useEffect(() => {
@@ -29,7 +31,7 @@ export function useQuickTask(project: Project, groupCode: string | undefined, on
   }, []);
 
   async function save() {
-    if (pending.current || !active.current) return false;
+    if (pending.current || ambiguous.current || !active.current) return false;
     if (!name.trim()) { setErrors({ "task-name": "Indica el nombre de la tarea." }); return false; }
     if (!state || !(parent ? parent.permissions.create_child : project.permissions.create_tasks)) { setError("No hay un estado inicial autorizado. Usa el formulario completo."); return false; }
     pending.current = true;
@@ -46,7 +48,8 @@ export function useQuickTask(project: Project, groupCode: string | undefined, on
     } catch (failure) {
       if (active.current) {
         setErrors(apiFieldErrors(failure, fields));
-        setError(errorText(failure));
+        if (calendarProblem(failure) === "ambiguous") { ambiguous.current = true; setUncertain(true); }
+        setError(ambiguous.current ? "No se pudo confirmar la creación. Conserva el borrador y consulta las tareas; no se repetirá el envío." : errorText(failure));
       }
       return false;
     } finally {
@@ -54,5 +57,5 @@ export function useQuickTask(project: Project, groupCode: string | undefined, on
       if (active.current) setBusy(false);
     }
   }
-  return { name, setName, responsible, setResponsible, dueDate, setDueDate, priority, setPriority, labels, setLabels, busy, errors, error, state, save };
+  return { name, setName, responsible, setResponsible, dueDate, setDueDate, priority, setPriority, labels, setLabels, busy, errors, error, uncertain, state, save };
 }

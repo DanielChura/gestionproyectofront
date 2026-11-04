@@ -4,7 +4,7 @@ export const ganttColumnChoices = [
   { id: "gmResponsible", label: "Responsable", width: 180 },
   { id: "gmStartDate", label: "Inicio", width: 130 },
   { id: "gmDueDate", label: "Fecha límite", width: 150 },
-  { id: "gmStateName", label: "Estado", width: 130 },
+  { id: "gmStateName", label: "Estado", width: 150 },
 ] as const;
 
 export function useGanttLayout() {
@@ -13,6 +13,7 @@ export function useGanttLayout() {
   const [width, setWidth] = useState(0);
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [chosen, setChosen] = useState<Set<string> | null>(null);
+  const [preferredWidth, setPreferredWidth] = useState<number | null>(null);
   useLayoutEffect(() => {
     const node = container.current, viewport = canvas.current;
     if (!node || !viewport) return;
@@ -22,20 +23,25 @@ export function useGanttLayout() {
       frame = requestAnimationFrame(() => {
         setWidth(Math.round(node.clientWidth));
         setCanvasWidth(Math.round(viewport.clientWidth));
+        node.style.setProperty("--gm-gantt-height", `${Math.max(280, window.innerHeight - node.getBoundingClientRect().top - 82)}px`);
       });
     };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(node);
     observer.observe(viewport);
-    return () => { observer.disconnect(); cancelAnimationFrame(frame); };
+    window.addEventListener("resize", measure);
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); cancelAnimationFrame(frame); };
   }, []);
-  const narrow = width > 0 && width < 1200;
-  const nameOnly = width > 0 && width < 800;
-  const visible = useMemo(() => chosen ?? new Set(narrow ? nameOnly ? [] : ["gmStateName"] : ganttColumnChoices.map(column => column.id)), [chosen, narrow, nameOnly]);
+  useLayoutEffect(() => {
+    const node = container.current;
+    if (node) node.style.setProperty("--gm-gantt-height", `${Math.max(280, window.innerHeight - node.getBoundingClientRect().top - 82)}px`);
+  });
+  const visible = useMemo(() => chosen ?? new Set(["gmStateName"]), [chosen]);
   const columnsWidth = 250 + ganttColumnChoices.reduce((total, column) => total + (visible.has(column.id) ? column.width : 0), 0);
   const minWidth = 680;
-  const gridWidth = Math.min(columnsWidth, Math.max(220, Math.min(Math.max(minWidth, canvasWidth) - 360, canvasWidth > 0 ? canvasWidth - 100 : columnsWidth)));
+  const available = Math.max(440, canvasWidth);
+  const gridWidth = Math.max(220, Math.min(preferredWidth ?? columnsWidth, available - 220));
   function toggle(id: string) {
     setChosen(current => {
       const next = new Set(current ?? visible);
@@ -43,5 +49,5 @@ export function useGanttLayout() {
       return next;
     });
   }
-  return { container, canvas, visible, gridWidth, minWidth, toggle, overlay: width < 1024 };
+  return { container, canvas, visible, gridWidth, minWidth, toggle, overlay: width < 1024, available, setPreferredWidth };
 }
