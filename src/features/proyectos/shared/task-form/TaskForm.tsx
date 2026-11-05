@@ -28,6 +28,7 @@ interface TaskFormProps {
   onSubmit: (data: TaskFormPayload) => Promise<void>;
   onConfigured: (configuration: ProjectTaskConfiguration) => void;
   onClose: () => void;
+  onCheckCreation?: () => Promise<unknown>;
 }
 
 const taskFields: Record<string, string> = {
@@ -55,6 +56,7 @@ export default function TaskForm({
   onSubmit,
   onConfigured,
   onClose,
+  onCheckCreation,
 }: TaskFormProps) {
   const [name, setName] = useState(task?.name ?? "");
   const [description, setDescription] = useState(task?.description ?? "");
@@ -85,11 +87,14 @@ export default function TaskForm({
   const [reason, setReason] = useState("");
   const [configuring, setConfiguring] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [uncertainCreation, setUncertainCreation] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [error, setError] = useState("");
 
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const form = useRef<HTMLFormElement>(null);
-  const pendingFocus = useRef(false);
+  const pendingFocus = useRef(false),
+    submitting = useRef(false);
   const canAssign =
     project.permissions.manage && (!task || task.permissions.assign);
   const canConfigure =
@@ -130,7 +135,7 @@ export default function TaskForm({
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (busy) return;
+    if (submitting.current || uncertainCreation) return;
     pendingFocus.current = true;
     setError("");
     const invalid: FieldErrors = {};
@@ -174,6 +179,7 @@ export default function TaskForm({
       setFieldErrors(invalid);
       return;
     }
+    submitting.current = true;
     setBusy(true);
     setError("");
     setFieldErrors({});
@@ -200,10 +206,19 @@ export default function TaskForm({
             },
       );
     } catch (failure) {
+      const uncertain = !task;
+      if (uncertain) setUncertainCreation(true);
       const fields = apiFieldErrors(failure, taskFields);
       setFieldErrors(fields);
-      setError(Object.keys(fields).length ? "" : errorText(failure));
+      setError(
+        uncertain
+          ? "No se pudo confirmar la creación. Conserva este borrador y consulta las tareas antes de volver a crear; no se repetirá el envío."
+          : Object.keys(fields).length
+            ? ""
+            : errorText(failure),
+      );
     } finally {
+      submitting.current = false;
       setBusy(false);
     }
   }

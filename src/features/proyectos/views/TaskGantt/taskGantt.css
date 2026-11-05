@@ -1,0 +1,222 @@
+.gm-task-gantt {
+  block-size: var(--gm-gantt-height, 60vh);
+  min-inline-size: 42.5rem;
+}
+.gm-gantt-native { position: relative; z-index: 0; block-size: 100%; }
+.dark .gm-gantt-inline :is(form, input, label, button, [role="alert"]) { color: var(--color-neutral-200); }
+.dark .gm-gantt-inline :is(input, [popover], button:not(.bg-neutral-800)) { background: var(--color-neutral-900); }
+.dark .gm-gantt-inline input::placeholder { color: var(--color-neutral-300); }
+
+.gm-task-gantt .wx-willow-theme {
+  block-size: 100%;
+  --wx-font-family: "Inter", sans-serif;
+  --wx-font-size: 12px;
+  --wx-font-size-sm: 12px;
+  --wx-font-weight: 400;
+  --wx-font-weight-md: 500;
+  --wx-background: var(--color-white);
+  --wx-background-alt: var(--color-neutral-50);
+  --wx-background-hover: var(--color-neutral-100);
+  --wx-color-font: var(--color-neutral-800);
+  --wx-color-font-alt: var(--color-neutral-600);
+  --wx-color-primary: var(--color-sky-700);
+  --wx-border: 1px solid var(--color-neutral-200);
+  --wx-gantt-border: 1px solid #e5e5e5;
+  --wx-gantt-border-color: var(--color-neutral-200);
+  --wx-gantt-task-color: var(--color-sky-700);
+  --wx-gantt-task-font-color: var(--color-white);
+  --wx-gantt-task-border: 1px solid transparent;
+  --wx-gantt-task-border-color: var(--color-sky-900);
+  --wx-gantt-bar-border-radius: 4px;
+  --wx-gantt-select-color: var(--color-neutral-100);
+  --wx-table-select-background: var(--color-neutral-100);
+  --wx-table-select-focus-background: var(--color-neutral-100);
+  --wx-table-select-border: 1px solid var(--color-neutral-400);
+  --wx-gantt-bar-font: 400 12px "Inter", sans-serif;
+  --wx-grid-header-font: 500 12px "Inter", sans-serif;
+  --wx-grid-header-font-color: var(--color-neutral-600);
+  --wx-grid-body-font: 400 12px "Inter", sans-serif;
+  --wx-grid-body-font-color: var(--color-neutral-800);
+  --wx-timescale-font: 500 12px "Inter", sans-serif;
+  --wx-timescale-font-color: var(--color-neutral-600);
+  --wx-timescale-border: 1px solid var(--color-neutral-200);
+  --wx-gantt-holiday-background: var(--color-neutral-50);
+  --wx-gantt-holiday-color: var(--color-neutral-600);
+  --wx-gantt-icon-color: var(--color-neutral-600);
+  --wx-gantt-bar-shadow: none;
+  --wx-grid-header-shadow: none;
+  --wx-timescale-shadow: none;
+}
+
+.dark .gm-task-gantt .wx-willow-theme {
+  --wx-background: var(--color-neutral-900);
+  --wx-background-alt: var(--color-neutral-900);
+  --wx-background-hover: var(--color-neutral-800);
+  --wx-color-font: var(--color-neutral-200);
+  --wx-color-font-alt: var(--color-neutral-300);
+  --wx-color-primary: var(--color-sky-400);
+  --wx-border: 1px solid var(--color-neutral-700);
+  --wx-gantt-border: 1px solid #404040;
+  --wx-gantt-border-color: var(--color-neutral-700);
+  --wx-gantt-task-color: var(--color-sky-800);
+  --wx-gantt-task-border-color: var(--color-sky-300);
+  --wx-gantt-select-color: var(--color-neutral-800);
+  --wx-table-select-background: var(--color-neutral-800);
+  --wx-table-select-focus-background: var(--color-neutral-800);
+  --wx-table-select-border: 1px solid var(--color-neutral-500);
+  --wx-grid-header-font-color: var(--color-neutral-300);
+  --wx-grid-body-font-color: var(--color-neutral-200);
+  --wx-timescale-font-color: var(--color-neutral-300);
+  --wx-timescale-border: 1px solid var(--color-neutral-700);
+  --wx-gantt-holiday-background: var(--color-neutral-800);
+  --wx-gantt-holiday-color: var(--color-neutral-300);
+  --wx-gantt-icon-color: var(--color-neutral-300);
+}
+
+.gm-gantt-controls input { border-color: transparent; }
+
+.gm-gantt-controls input:hover,
+.gm-gantt-controls input:focus,
+.gm-gantt-controls .gm-gantt-control:focus,
+.gm-gantt-controls .gm-gantt-control[aria-expanded="true"] {
+  border-color: var(--color-neutral-400);
+}
+
+.dark .gm-gantt-controls input,
+.dark .gm-gantt-controls select option,
+.dark .gm-gantt-controls [popover] {
+  background: var(--color-neutral-900);
+  color: var(--color-neutral-200);
+}
+
+.dark .gm-gantt-controls [popover] { border-color: var(--color-neutral-700); }
+
+.dark .gm-gantt-controls button,
+.dark .gm-gantt-controls [popover] label {
+  color: var(--color-neutral-200);
+}
+
+.gm-task-gantt *,
+.gm-task-gantt *::before,
+.gm-task-gantt *::after {
+  box-shadow: none;
+  transition: none;
+}
+
+.gm-task-gantt :focus-visible {
+  outline: 2px solid var(--color-sky-700);
+  outline-offset: -2px;
+}
+
+.dark .gm-task-gantt :focus-visible {
+  outline-color: var(--color-sky-300);
+}
+
+.dark .gm-task-gantt [data-before-creation] {
+  color: var(--color-red-300);
+}
+
+.gm-task-gantt .wx-bar.gm-open-ended,
+.gm-task-gantt .wx-toggle-icon {
+  display: none;
+}
+
+.gm-task-gantt .gm-gantt-bar {
+  container-type: inline-size;
+  position: absolute;
+  inset: 5px 0;
+  display: flex;
+  align-items: center;
+  padding-inline: min(9px, 10%);
+  overflow: hidden;
+  user-select: none;
+  background: color-mix(in srgb, var(--gm-state-color) 24%, white);
+  border: 1px solid color-mix(in srgb, var(--gm-state-color) 65%, white);
+  border-radius: 4px;
+  color: var(--color-neutral-800);
+}
+
+.dark .gm-task-gantt .gm-gantt-bar { background: color-mix(in srgb, var(--gm-state-color) 30%, var(--color-neutral-900)); color: var(--color-neutral-200); }
+.gm-task-gantt .gm-gantt-bar-text { visibility: hidden; }
+@container (min-width: 5rem) { .gm-task-gantt .gm-gantt-bar-text { visibility: visible; } }
+.gm-task-gantt .wx-bar:has(.gm-gantt-bar) { background: transparent; border-color: transparent; }
+.gm-task-gantt .gm-gantt-bar[data-gantt-parent] { inset-block: 10px; border-radius: 0; border-inline-width: 3px; background: var(--gm-state-color); }
+.gm-task-gantt .gm-gantt-bar[data-gantt-parent] .gm-gantt-bar-text { visibility: hidden; }
+.gm-task-gantt .gm-gantt-bar[data-calendar-pending] { border-style: dashed; }
+.gm-task-gantt .wx-resizer { visibility: hidden; pointer-events: none; }
+.gm-gantt-splitter { position: absolute; inset-block: 0; inline-size: 8px; z-index: 12; cursor: col-resize; touch-action: none; border-inline: 2px solid transparent; }
+.gm-gantt-splitter:hover, .gm-gantt-splitter:focus-visible { border-inline-color: var(--color-neutral-400); background: var(--color-neutral-100); }
+.gm-gantt-add-child { visibility: hidden; margin-inline-start: auto; }
+.wx-row:hover .gm-gantt-add-child, .wx-row:focus-within .gm-gantt-add-child, .gm-gantt-add-child:focus-visible { visibility: visible; }
+.gm-task-gantt .gm-gantt-weekend { background: repeating-linear-gradient(135deg, transparent 0 3px, color-mix(in srgb, var(--color-neutral-400) 16%, transparent) 3px 5px); }
+.gm-task-gantt .wx-gantt-holidays .gm-gantt-weekend { position: absolute; block-size: 100%; pointer-events: none; }
+.gm-task-gantt .wx-scale .wx-cell { white-space: nowrap; }
+.gm-task-gantt .wx-scale .wx-cell > span { font-size: 11px; }
+.gm-gantt-scene { position: absolute; overflow: hidden; pointer-events: none; z-index: 5; }
+.gm-gantt-links { position: absolute; overflow: hidden; pointer-events: none; color: var(--color-neutral-600); }
+.dark .gm-gantt-links { color: var(--color-neutral-300); }
+.gm-gantt-link { fill: none; stroke: currentColor; stroke-width: 1.25; pointer-events: stroke; cursor: pointer; }
+.gm-gantt-link:hover, .gm-gantt-link:focus-visible, .gm-gantt-link[data-related] { stroke: var(--color-sky-700); stroke-width: 2; }
+.dark .gm-gantt-link:hover, .dark .gm-gantt-link[data-related] { stroke: var(--color-sky-300); }
+.gm-gantt-link-preview { stroke-dasharray: 4 3; pointer-events: none; }
+.gm-gantt-connectors { opacity: 0; }
+.gm-gantt-connectors[data-selected], .gm-gantt-connectors:hover { opacity: 1; }
+.gm-gantt-link-source { fill: var(--color-white); stroke: var(--color-sky-700); stroke-width: 1.5; pointer-events: all; cursor: crosshair; touch-action: none; }
+.gm-gantt-link-target { fill: var(--color-neutral-200); stroke: var(--color-neutral-500); pointer-events: none; }
+.gm-gantt-zoom { position: absolute; display: flex; background: var(--color-white); border: 1px solid var(--color-neutral-200); border-radius: 8px; pointer-events: auto; z-index: 2; }
+.dark .gm-gantt-zoom { background: var(--color-neutral-900); border-color: var(--color-neutral-700); }
+.gm-gantt-today { position: absolute; bottom: 0; border-inline-start: 1px solid var(--color-red-700); color: var(--color-red-700); }
+.gm-gantt-today span { position: absolute; top: 0; left: 2px; font-size: 10px; border-radius: 4px; background: var(--color-white); padding-inline: 3px; white-space: nowrap; }
+.dark .gm-gantt-today { color: var(--color-red-300); border-color: var(--color-red-300); }
+.dark .gm-gantt-today span { background: var(--color-neutral-900); }
+
+.gm-task-gantt .gm-gantt-bar[data-calendar-editable] { cursor: grab; }
+.gm-task-gantt .gm-gantt-bar[data-calendar-active] { cursor: grabbing; }
+.gm-task-gantt .wx-bar:has(.gm-gantt-bar[data-calendar-active]) {
+  outline: 1px solid currentColor;
+  outline-offset: 1px;
+}
+
+.gm-task-gantt .gm-gantt-bar-text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.gm-task-gantt .wx-scale { overflow: clip; }
+.gm-task-gantt .gm-gantt-resize { position: absolute; inset-block: 0; padding-inline: 3px; cursor: col-resize; opacity: 0; }
+.gm-task-gantt .gm-gantt-bar:hover .gm-gantt-resize,
+.gm-task-gantt .gm-gantt-bar[data-calendar-active] .gm-gantt-resize { opacity: 1; }
+.gm-task-gantt .gm-gantt-resize-start { inset-inline-start: 0; border-inline-start: 2px solid currentColor; }
+.gm-task-gantt .gm-gantt-resize-end { inset-inline-end: 0; border-inline-end: 2px solid currentColor; }
+
+.dark .gm-gantt-feedback [data-general-error] { color: var(--color-neutral-200); }
+.dark .gm-gantt-feedback button { color: var(--color-neutral-200); }
+
+.gm-gantt-fields { inline-size: 18rem; flex: 0 0 18rem; }
+.gm-gantt-body:has(.gm-gantt-fields[data-overlay]) .gm-gantt-fields {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: 20;
+  max-inline-size: 100%;
+}
+.gm-gantt-fields :focus-visible { outline: 2px solid var(--color-sky-700); outline-offset: 2px; }
+.dark .gm-gantt-fields :focus-visible { outline-color: var(--color-sky-300); }
+.gm-gantt-chart-top nav > span:first-child,
+.gm-gantt-chart-top nav > span:last-child { position: sticky; z-index: 1; background: var(--color-white); }
+.gm-gantt-chart-top nav > span:first-child { left: 0; }
+.gm-gantt-chart-top nav > span:last-child { right: 0; }
+.dark .gm-gantt-chart-top nav > span:first-child,
+.dark .gm-gantt-chart-top nav > span:last-child { background: var(--color-neutral-900); }
+.gm-gantt-controls [popover] input,
+.gm-gantt-controls [popover] select { color: var(--color-neutral-800); }
+.dark .gm-gantt-controls [popover] input,
+.dark .gm-gantt-controls [popover] select,
+.dark .gm-gantt-controls [popover] button { background-color: var(--color-neutral-900); color: var(--color-neutral-200); }
+.dark .gm-gantt-controls [popover] :is(button:hover, button[aria-checked="true"], button[aria-selected="true"]) {
+  background-color: var(--color-neutral-800);
+}
+@media (max-width: 640px) {
+  .gm-gantt-chart-top nav > .tabular-nums { visibility: hidden; }
+  .gm-gantt-toolbar-time,
+  .gm-gantt-toolbar-actions { flex-basis: 100%; }
+  .gm-gantt-toolbar-time { justify-content: space-between; }
+  .gm-gantt-search:has(input) { flex-basis: 100%; order: 2; }
+  .gm-gantt-search:has(input) > div { inline-size: 100%; }
+}
