@@ -72,7 +72,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
                 {specialties.map((item) => (
                   <li
                     key={item.id}
-                    className="inline-flex items-center gap-1 px-2 py-1 text-xs  text-white bg-sky-600 rounded-full"
+                    className="inline-flex items-center gap-1 px-2 py-1 text-xs  text-neutral-100 bg-sky-600 rounded-full"
                   >
                     {item.name}
                     <button
@@ -80,7 +80,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
                       disabled={saving}
                       onClick={() => handleDrop(item.id, item.name)}
                       aria-label={`Quitar ${item.name}`}
-                      className="text-white hover:text-neutral-100 cursor-pointer disabled:opacity-50 leading-none inline-flex items-center"
+                      className="text-neutral-100 hover:text-neutral-100 cursor-pointer disabled:opacity-50 leading-none inline-flex items-center"
                     >
                       <XIcon className="size-3" />
                     </button>
@@ -128,7 +128,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
               <button
                 type="submit"
                 disabled={saving || !selectedId}
-                className="bg-neutral-800 text-white hover:bg-neutral-700 px-3 py-1.5 text-xs rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-neutral-800 text-neutral-100 hover:bg-neutral-700 px-3 py-1.5 text-xs rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? "Guardando…" : "Agregar"}
               </button>

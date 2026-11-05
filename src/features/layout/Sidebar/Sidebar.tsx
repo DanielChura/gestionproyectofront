@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
-import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
 import type { SessionUser } from "../../auth/api";
 import ProfileMenu from "../../profile/ProfileMenu/ProfileMenu";
 import ProjectsMenu from "./ProjectsMenu";
 import { navigation } from "./sidebar-routes";
+import ChevronsIcon from "../../../shared/icons/ChevronsIcon";
 
 interface SidebarProps {
   user: SessionUser;
@@ -19,7 +19,7 @@ export default function Sidebar({ user, onLogout }: SidebarProps) {
 
   return (
     <aside
-      className={`sticky top-0 z-10 flex h-screen min-w-0 shrink-0 flex-col bg-white dark:bg-neutral-900 p-2 pb-4 border-r border-neutral-200 dark:border-neutral-800 max-md:static max-md:h-auto max-md:max-h-[45dvh] max-md:w-full max-md:border-r-0 max-md:border-b ${
+      className={`sticky top-0 z-10 flex h-screen min-w-0 shrink-0 flex-col bg-neutral-50 dark:bg-neutral-900 p-2 pb-4 border-r border-neutral-200 dark:border-neutral-800 max-md:static max-md:h-auto max-md:max-h-[45dvh] max-md:w-full max-md:border-r-0 max-md:border-b ${
         isCollapsed ? "w-16 items-center px-2" : "w-64"
       }`}
     >
@@ -39,10 +39,10 @@ export default function Sidebar({ user, onLogout }: SidebarProps) {
           }
           aria-expanded={!isCollapsed}
           aria-controls="sidebar-navigation"
-          className="flex items-center justify-center p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100 rounded-xl cursor-pointer"
+          className="flex items-center justify-center p-1.5 text-neutral-700 hover:bg-neutral-100 hover:text-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100 rounded-xl cursor-pointer"
         >
-          <ChevronDownIcon
-            className={`size-5 ${isCollapsed ? "" : "-scale-x-100"}`}
+          <ChevronsIcon
+            className={`size-5 ${isCollapsed ? "-rotate-90" : "rotate-90"}`}
           />
         </button>
       </div>

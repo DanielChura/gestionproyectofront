@@ -101,7 +101,7 @@ function SettingsPage() {
       id="main-content"
     >
       <header className="mb-6">
-        <h1 className="text-xl  text-neutral-900 dark:text-white">
+        <h1 className="text-xl  text-neutral-900 dark:text-neutral-100">
           Mis ajustes
         </h1>
       </header>
@@ -110,7 +110,7 @@ function SettingsPage() {
         {/* Sección: Perfil */}
         <section className="flex flex-col md:flex-row  gap-12 py-6">
           <div className="md:flex-1">
-            <h2 className="text-sm  text-neutral-900 dark:text-white">
+            <h2 className="text-sm  text-neutral-900 dark:text-neutral-100">
               Perfil
             </h2>
             <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
@@ -223,7 +223,7 @@ function SettingsPage() {
             <button
               type="submit"
               disabled={savingProfile}
-              className="inline-flex cursor-pointer items-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex cursor-pointer items-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {savingProfile ? "Guardando…" : "Guardar cambios"}
             </button>
@@ -233,7 +233,7 @@ function SettingsPage() {
         {/* Sección: Apariencia */}
         <section className="flex flex-col md:flex-row  gap-12 py-6">
           <div className="md:flex-1">
-            <h2 className="text-sm  text-neutral-900 dark:text-white">
+            <h2 className="text-sm  text-neutral-900 dark:text-neutral-100">
               Apariencia
             </h2>
             <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
@@ -273,7 +273,7 @@ function SettingsPage() {
         {/* Sección: Mis especialidades */}
         <section className="flex flex-col md:flex-row  gap-12 py-6">
           <div className="md:flex-1">
-            <h2 className="text-sm  text-neutral-900 dark:text-white">
+            <h2 className="text-sm  text-neutral-900 dark:text-neutral-100">
               Mis especialidades
             </h2>
             <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">

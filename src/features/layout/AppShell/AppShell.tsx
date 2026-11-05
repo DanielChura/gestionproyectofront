@@ -24,18 +24,10 @@ export default function AppShell({
     <div className="flex min-h-screen flex-col bg-white text-neutral-900 dark:bg-neutral-950/10 dark:text-neutral-100 md:h-screen md:flex-row">
       <Sidebar user={user} onLogout={onLogout} />
       <div
-        className={`min-w-0 w-full flex-1 bg-white dark:bg-neutral-950/50 pb-0! p-3 md:p-6 ${
-          projectWorkspace ? "md:overflow-hidden" : "md:overflow-y-auto"
+        className={`min-w-0 w-full flex-1 bg-white dark:bg-neutral-950/50 pb-0 p-4 flex flex-col ${
+          projectWorkspace ? "md:overflow-hidden md:h-full" : "md:overflow-y-auto"
         }`}
       >
-        {logoutError && (
-          <p
-            role="alert"
-            className="mb-4 text-sm text-neutral-800 dark:text-neutral-200"
-          >
-            {logoutError}
-          </p>
-        )}
         <Suspense fallback={null}>
           <Routes>
             {appRoutes.map((route) => (

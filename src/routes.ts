@@ -4,11 +4,9 @@ import type { ComponentType } from "react";
 export const DashboardPage = lazy(
   () => import("./features/dashboard/DashboardPage/DashboardPage"),
 );
-export const ProjectList = lazy(
-  () => import("./features/projects/ProjectList/ProjectList"),
-);
+
 export const ProjectRoute = lazy(
-  () => import("./features/projects/ProjectRoute/ProjectRoute"),
+  () => import("./features/proyectos/ProjectPage"),
 );
 
 export const PublicationsPage = lazy(
@@ -45,12 +43,7 @@ export const appRoutes: AppRoute[] = [
   },
   {
     path: "/proyectos",
-    Component: ProjectList,
-    requiresAdmin: false,
-  },
-  {
-    path: "/proyectos/resumen",
-    Component: ProjectList,
+    Component: ProjectRoute,
     requiresAdmin: false,
   },
   {
@@ -99,5 +92,3 @@ export const appRoutes: AppRoute[] = [
 export function projectPath(projectId: number): string {
   return `/proyectos/${projectId}`;
 }
-
-

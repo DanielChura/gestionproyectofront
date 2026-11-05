@@ -49,7 +49,7 @@ function DashboardPage({
         </div>
         {onCreateProject && (
           <button
-            className="px-4 py-2 bg-neutral-900 text-white text-sm shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-neutral-900 text-neutral-100 text-sm shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
             type="button"
             disabled={creationDisabled}
             onClick={onCreateProject}

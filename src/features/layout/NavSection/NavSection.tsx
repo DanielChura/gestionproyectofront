@@ -1,6 +1,6 @@
 import { Link } from "react-router";
-import type { ProjectSummary } from "../../projects/types";
-import ProjectNavigation from "../../projects/ProjectNavigation/ProjectNavigation";
+import type { ProjectSummary } from "../../../core/interfaces/project.interface";
+import ProjectAreaNavigation from "../Sidebar/ProjectAreaNavigation";
 
 interface NavigationSection {
   id: string;
@@ -15,8 +15,6 @@ interface NavSectionProps {
   canCreateProject: boolean;
   projectCreationDisabled: boolean;
   onCreateProject: () => void;
-  projectsLoading: boolean;
-  projectError: string;
   canCreateTasks: boolean;
   onCreateTask: (projectId: number) => void;
 }
@@ -28,8 +26,6 @@ function NavSection({
   canCreateProject,
   projectCreationDisabled,
   onCreateProject,
-  projectsLoading,
-  projectError,
   canCreateTasks,
   onCreateTask,
 }: NavSectionProps) {
@@ -75,11 +71,9 @@ function NavSection({
         ))}
       </ul>
       {section.id === "projects" && (
-        <ProjectNavigation
+        <ProjectAreaNavigation
           projects={projects}
           currentPath={currentPath}
-          loading={projectsLoading}
-          error={projectError}
           canCreateTasks={canCreateTasks}
           onCreateTask={onCreateTask}
         />

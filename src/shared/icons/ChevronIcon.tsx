@@ -30,7 +30,7 @@ export function ChevronIcon({ className, fill }: IconProps) {
       className={className}
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M6 10l6 6l6 -6h-12" />
+      <path d="M6 9l6 6l6 -6" />
     </svg>
   );
 }

@@ -67,7 +67,7 @@ export default function RecoveryRequestsPage() {
 
         <button
           type="submit"
-          className="bg-neutral-800 text-white hover:bg-neutral-700 px-3 py-1.5 text-xs  rounded-lg cursor-pointer dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+          className="bg-neutral-800 text-neutral-100 hover:bg-neutral-700 px-3 py-1.5 text-xs  rounded-lg cursor-pointer dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
         >
           Buscar solicitud
         </button>

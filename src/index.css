@@ -41,6 +41,8 @@
 
   body {
     font-family: "Inter";
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
   }
 
   h1,
@@ -60,9 +62,5 @@
   *::-webkit-scrollbar {
     width: 6px;
     height: 6px;
-  }
-
-  *::-webkit-scrollbar-track {
-    background: transparent;
   }
 }

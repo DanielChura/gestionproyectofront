@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { getProjects } from "../../projects/services";
-import type { ProjectSummary } from "../../projects/types";
+import { getProjects } from "../../../core/services/projectService";
+import type { ProjectSummary } from "../../../core/interfaces/project.interface";
 import { projectPath } from "../../../routes";
 import EmptyState from "../../../shared/EmptyState/EmptyState";
 import ProjectsIcon from "../../../shared/icons/ProjectsIcon";

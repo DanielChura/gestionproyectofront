@@ -24,7 +24,7 @@ export default function Avatar({
   return (
     <span
       {...props}
-      className={`inline-grid shrink-0 place-items-center rounded-full bg-sky-600  text-white ${className}`}
+      className={`inline-grid shrink-0 place-items-center rounded-full bg-sky-600  text-neutral-100 ${className}`}
     >
       {avatarFor(name)}
     </span>

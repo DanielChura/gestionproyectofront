@@ -101,7 +101,7 @@ export function LoginPage({
           </p>
         )}
         <button
-          className="w-full mt-2 min-h-10 px-4 py-2 bg-neutral-900 text-white text-sm rounded-lg shadow-none hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-2 min-h-10 px-4 py-2 bg-neutral-900 text-neutral-100 text-sm rounded-lg shadow-none hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           disabled={busy}
         >
@@ -171,7 +171,7 @@ export function RecoveryPage() {
           </p>
         )}
         <button
-          className="w-full mt-2 min-h-10 px-4 py-2 bg-neutral-900 text-white text-sm rounded-lg shadow-none hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-2 min-h-10 px-4 py-2 bg-neutral-900 text-neutral-100 text-sm rounded-lg shadow-none hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           type="submit"
           disabled={busy}
         >
@@ -351,7 +351,7 @@ export function PasswordPage({ mode }: { mode: "activar" | "restablecer" }) {
               onChange={(event) => setConfirmation(event.target.value)}
             />
             <button
-              className="w-full mt-2 min-h-10 px-4 py-2 bg-neutral-900 text-white text-sm rounded-lg shadow-none hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-2 min-h-10 px-4 py-2 bg-neutral-900 text-neutral-100 text-sm rounded-lg shadow-none hover:bg-neutral-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               type="submit"
               disabled={busy}
             >

@@ -143,7 +143,7 @@ export default function TeamDetailPage() {
                         <span className="flex items-center gap-2 min-w-0">
                           <span
                             aria-hidden="true"
-                            className="size-7 flex-none inline-flex items-center justify-center rounded-full bg-sky-500 text-[10px]  text-white"
+                            className="size-7 flex-none inline-flex items-center justify-center rounded-full bg-sky-500 text-[10px]  text-neutral-100"
                           >
                             {avatarFor(member.worker_name)}
                           </span>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   LoginPage,
   PasswordPage,
@@ -20,13 +21,26 @@ import AppShell from "./features/layout/AppShell/AppShell";
 import { GlobalLoading } from "./shared/GlobalLoading/GlobalLoading";
 import { Toast } from "./shared/Toast/Toast";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 30,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+
 function App() {
   return (
-    <LoadingProvider>
-      <ToastProvider>
-        <AppContent />
-      </ToastProvider>
-    </LoadingProvider>
+    <QueryClientProvider client={queryClient}>
+      <LoadingProvider>
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
+      </LoadingProvider>
+    </QueryClientProvider>
   );
 }
 

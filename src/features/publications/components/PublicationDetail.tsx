@@ -3,7 +3,7 @@ import type {
   Publication,
   PublicationStateCode,
 } from "../../../core/interfaces/publication.interface";
-import Modal from "../../projects/Modal/Modal";
+import Modal from "../../../shared/Modal/Modal";
 import CalendarIcon from "../../../shared/icons/CalendarIcon";
 import ClockIcon from "../../../shared/icons/ClockIcon";
 import UserIcon from "../../../shared/icons/UserIcon";
@@ -44,7 +44,7 @@ const confirmCopy: Record<ConfirmState, string> = {
 };
 
 function primaryButton() {
-  return `inline-flex cursor-pointer items-center justify-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-white hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200`;
+  return `inline-flex cursor-pointer items-center justify-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200`;
 }
 
 function secondaryButton() {

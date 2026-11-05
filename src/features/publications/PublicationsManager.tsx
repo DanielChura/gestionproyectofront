@@ -264,7 +264,7 @@ export default function PublicationsManager() {
               <button
                 type="button"
                 onClick={openCreate}
-                className="mt-4 inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+                className="mt-4 inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
               >
                 <PlusIcon className="size-4" />
                 Crear publicación
