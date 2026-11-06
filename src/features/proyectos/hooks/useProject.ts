@@ -2,7 +2,10 @@ import { useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Dispatch, SetStateAction } from "react";
 import type { Project } from "../../../core/interfaces/task.interface";
-import { getProject, setProjectFavorite } from "../../../core/services/projectService";
+import {
+  getProject,
+  setProjectFavorite,
+} from "../../../core/services/projectService";
 import { errorText } from "../../auth/api";
 import { useToast } from "../../../hooks/useToast";
 
@@ -43,12 +46,16 @@ export function useProject(projectId: number) {
   const toggleFavorite = useCallback(async () => {
     if (!project) return;
     const nextFavorite = !project.is_favorite;
-    setProject((prev) => (prev ? { ...prev, is_favorite: nextFavorite } : prev));
+    setProject((prev) =>
+      prev ? { ...prev, is_favorite: nextFavorite } : prev,
+    );
     try {
       await setProjectFavorite(projectId, nextFavorite);
       void queryClient.invalidateQueries({ queryKey: ["projects"] });
     } catch (err) {
-      setProject((prev) => (prev ? { ...prev, is_favorite: !nextFavorite } : prev));
+      setProject((prev) =>
+        prev ? { ...prev, is_favorite: !nextFavorite } : prev,
+      );
       addToast({
         icon: "error",
         title: "Error al actualizar favorito",

@@ -21,4 +21,3 @@ export function quickTaskState(
     ? group
     : initial;
 }
-

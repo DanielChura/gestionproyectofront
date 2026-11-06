@@ -70,7 +70,10 @@ export function errorText(failure: unknown): string {
     : "No se pudo completar la solicitud";
 }
 
-export const apiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+export const apiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(
+  /\/+$/,
+  "",
+);
 
 let accessToken: string | null = null;
 let renewal: Promise<SessionUser> | null = null;
@@ -90,7 +93,9 @@ export function sessionKey(user: SessionUser): string {
   ]);
 }
 
-export function sessionVersion(): number { return sessionEpoch; }
+export function sessionVersion(): number {
+  return sessionEpoch;
+}
 
 export function checkSession(epoch: number): void {
   if (epoch !== sessionEpoch) {
@@ -107,9 +112,13 @@ function csrfCookie(): string {
   return match?.[1] ? decodeURIComponent(match[1]) : "";
 }
 
-export function getCsrfToken(): string { return csrfCookie(); }
+export function getCsrfToken(): string {
+  return csrfCookie();
+}
 
-export function invalidateReads(): void { pendingReads.clear(); }
+export function invalidateReads(): void {
+  pendingReads.clear();
+}
 
 export function expireSession(epoch: number): void {
   if (epoch !== sessionEpoch) return;
@@ -117,7 +126,10 @@ export function expireSession(epoch: number): void {
   window.dispatchEvent(new Event("gm-session-expired"));
 }
 
-export function sharedRead<T>(scope: string, load: () => Promise<T>): Promise<T> {
+export function sharedRead<T>(
+  scope: string,
+  load: () => Promise<T>,
+): Promise<T> {
   const key = JSON.stringify([sessionEpoch, scope]);
   const existing = pendingReads.get(key);
   if (existing) return existing as Promise<T>;
@@ -357,5 +369,7 @@ export function apiRequest<T>(
     return executeRequest<T>(path, options, retry, namespace);
   }
 
-  return sharedRead(JSON.stringify([namespace, path, retry]), () => executeRequest<T>(path, options, retry, namespace));
+  return sharedRead(JSON.stringify([namespace, path, retry]), () =>
+    executeRequest<T>(path, options, retry, namespace),
+  );
 }

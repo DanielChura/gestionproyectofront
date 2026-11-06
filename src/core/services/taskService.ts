@@ -75,17 +75,25 @@ export async function changeDependency(
   remove: boolean,
 ): Promise<void> {
   if (remove) {
-    await httpClient.delete(`projects/${projectId}/tasks/${taskId}/dependencies/`, {
-      data: { predecessor_id: predecessorId },
-    });
+    await httpClient.delete(
+      `projects/${projectId}/tasks/${taskId}/dependencies/`,
+      {
+        data: { predecessor_id: predecessorId },
+      },
+    );
   } else {
-    await httpClient.post(`projects/${projectId}/tasks/${taskId}/dependencies/`, {
-      predecessor_id: predecessorId,
-    });
+    await httpClient.post(
+      `projects/${projectId}/tasks/${taskId}/dependencies/`,
+      {
+        predecessor_id: predecessorId,
+      },
+    );
   }
 }
 
-export async function getTaskDetail(target: TaskIdentity): Promise<TaskDetailData> {
+export async function getTaskDetail(
+  target: TaskIdentity,
+): Promise<TaskDetailData> {
   const { data } = await httpClient.get<TaskDetailData>(
     `projects/${target.projectId}/tasks/${target.taskId}/`,
   );
@@ -128,7 +136,11 @@ export async function searchRelatedTasks(
   query: string,
   cursor = 0,
 ): Promise<TaskPage<Task>> {
-  const params = new URLSearchParams({ kind, q: query, cursor: String(cursor) });
+  const params = new URLSearchParams({
+    kind,
+    q: query,
+    cursor: String(cursor),
+  });
   const { data } = await httpClient.get<TaskPage<Task>>(
     `projects/${target.projectId}/tasks/${target.taskId}/related-candidates/?${params}`,
   );

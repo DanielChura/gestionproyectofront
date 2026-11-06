@@ -12,41 +12,74 @@ import ts from "typescript";
 const context = vm.createContext({ Date, console });
 const modules = new Map();
 async function load(relative) {
-  const url = relative instanceof URL ? relative : new URL(relative, import.meta.url);
+  const url =
+    relative instanceof URL ? relative : new URL(relative, import.meta.url);
   if (modules.has(url.href)) return modules.get(url.href);
   const source = ts.transpileModule(readFileSync(url, "utf8"), {
-    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022, jsx: ts.JsxEmit.ReactJSX },
+    compilerOptions: {
+      target: ts.ScriptTarget.ES2022,
+      module: ts.ModuleKind.ES2022,
+      jsx: ts.JsxEmit.ReactJSX,
+    },
   }).outputText;
   const module = new vm.SourceTextModule(source, { context });
   modules.set(url.href, module);
   await module.link(async (name) => {
-    const external = name === "react" ? React : name === "react/jsx-runtime" ? jsx : null;
-    if (external) return new vm.SyntheticModule(Object.keys(external), function () {
-      for (const [key, value] of Object.entries(external)) this.setExport(key, value);
-    }, { context });
+    const external =
+      name === "react" ? React : name === "react/jsx-runtime" ? jsx : null;
+    if (external)
+      return new vm.SyntheticModule(
+        Object.keys(external),
+        function () {
+          for (const [key, value] of Object.entries(external))
+            this.setExport(key, value);
+        },
+        { context },
+      );
     assert.ok(name.startsWith("."), name);
     return load(new URL(name + ".ts", url));
   });
   return module;
 }
-const calendarModule = await load("../src/features/projects/TaskGantt/ganttCalendar.ts");
+const calendarModule = await load(
+  "../src/features/projects/TaskGantt/ganttCalendar.ts",
+);
 await calendarModule.evaluate();
 const adapter = calendarModule.namespace;
-const readOnlyModule = await load("../src/features/projects/TaskGantt/ganttReadOnly.ts");
+const readOnlyModule = await load(
+  "../src/features/projects/TaskGantt/ganttReadOnly.ts",
+);
 await readOnlyModule.evaluate();
 const { bindGanttReadOnly } = readOnlyModule.namespace;
-const entryModule = await load("../src/features/projects/TaskGantt/TaskGanttEntry.tsx");
+const entryModule = await load(
+  "../src/features/projects/TaskGantt/TaskGanttEntry.tsx",
+);
 await entryModule.evaluate();
 const Entry = entryModule.namespace.default;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 const task = (changes = {}) => ({
-  id: 1, parent_id: null, name: "Tarea QA", state_name: "Pendiente", state_code: "PENDIENTE",
-  start_date: "2026-10-07", due_date: "2026-10-07", calendar_revision: "9007199254740999",
-  estimated_minutes: 98000, labels: [], dependencies: [], ...changes,
+  id: 1,
+  parent_id: null,
+  name: "Tarea QA",
+  state_name: "Pendiente",
+  state_code: "PENDIENTE",
+  start_date: "2026-10-07",
+  due_date: "2026-10-07",
+  calendar_revision: "9007199254740999",
+  estimated_minutes: 98000,
+  labels: [],
+  dependencies: [],
+  ...changes,
 });
 const config = {
-  links: [], durationUnit: "day", inclusiveEnd: true, cellWidth: 40, cellHeight: 40, scaleHeight: 28,
-  columns: [{ id: "text", header: "Tarea" }], scales: [{ unit: "day", step: 1, format: "%j" }],
+  links: [],
+  durationUnit: "day",
+  inclusiveEnd: true,
+  cellWidth: 40,
+  cellHeight: 40,
+  scaleHeight: 28,
+  columns: [{ id: "text", header: "Tarea" }],
+  scales: [{ unit: "day", step: 1, format: "%j" }],
 };
 function storeFor(tasks) {
   const rows = adapter.toGanttRows(tasks);
@@ -56,13 +89,24 @@ function storeFor(tasks) {
 }
 
 test("Gantt calendar round trips calendar days in five zones including DST, leap and year boundaries", () => {
-  const transpile = (file) => ts.transpileModule(readFileSync(new URL(file, import.meta.url), "utf8"), {
-    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
-  }).outputText;
+  const transpile = (file) =>
+    ts.transpileModule(readFileSync(new URL(file, import.meta.url), "utf8"), {
+      compilerOptions: {
+        target: ts.ScriptTarget.ES2022,
+        module: ts.ModuleKind.CommonJS,
+      },
+    }).outputText;
   const dateCode = transpile("../src/features/projects/calendarDate.ts");
-  const ganttCode = transpile("../src/features/projects/TaskGantt/ganttCalendar.ts");
-  const program = "const d={};new Function('exports'," + JSON.stringify(dateCode) + ")(d);" +
-    "const a={};new Function('exports','require'," + JSON.stringify(ganttCode) + ")(a,()=>d);" +
+  const ganttCode = transpile(
+    "../src/features/projects/TaskGantt/ganttCalendar.ts",
+  );
+  const program =
+    "const d={};new Function('exports'," +
+    JSON.stringify(dateCode) +
+    ")(d);" +
+    "const a={};new Function('exports','require'," +
+    JSON.stringify(ganttCode) +
+    ")(a,()=>d);" +
     "const assert=require('node:assert/strict');" +
     "for(const [start_date,due_date] of [['2026-10-07','2026-10-07'],['2028-02-28','2028-02-29'],['2026-12-31','2026-12-31'],['0099-01-01','0099-01-01'],['9999-12-31','9999-12-31'],['2026-03-07','2026-03-09'],['2026-10-31','2026-11-02'],['2026-10-07',null]]){" +
     "const w=a.toGanttWindow({start_date,due_date});assert.deepEqual(a.fromGanttWindow(w),{start_date,due_date});" +
@@ -70,8 +114,16 @@ test("Gantt calendar round trips calendar days in five zones including DST, leap
     "else{assert.equal(w.start.getHours(),0);assert.equal(w.end.getHours(),0)}}" +
     "assert.throws(()=>a.toGanttWindow({start_date:'2026-10-07',due_date:'2026-10-06'}));" +
     "assert.throws(()=>a.toGanttWindow({start_date:'2026-02-29',due_date:null}));";
-  for (const TZ of ["UTC", "America/Lima", "America/New_York", "Pacific/Kiritimati", "Asia/Kolkata"])
-    execFileSync(process.execPath, ["-e", program], { env: { ...process.env, TZ } });
+  for (const TZ of [
+    "UTC",
+    "America/Lima",
+    "America/New_York",
+    "Pacific/Kiritimati",
+    "Asia/Kolkata",
+  ])
+    execFileSync(process.execPath, ["-e", program], {
+      env: { ...process.env, TZ },
+    });
 });
 
 test("real MIT store preserves one-day exclusive end and inclusiveEnd does not mutate storage", () => {
@@ -81,13 +133,23 @@ test("real MIT store preserves one-day exclusive end and inclusiveEnd does not m
   assert.equal(row.end.getDate(), 8);
   assert.equal(toInclusiveTask(row).end.getDate(), 7);
   assert.equal(row.end.getDate(), 8);
-  assert.deepEqual(plain(adapter.fromGanttWindow(row)), { start_date: "2026-10-07", due_date: "2026-10-07" });
+  assert.deepEqual(plain(adapter.fromGanttWindow(row)), {
+    start_date: "2026-10-07",
+    due_date: "2026-10-07",
+  });
 });
 
 test("real MIT runtime would invent an end if only native start were supplied", () => {
   const store = new DataStore();
-  store.init({ ...config, tasks: [{ id: 1, type: "task", start: new Date(2026, 9, 7), unscheduled: true }],
-    unscheduledTasks: true, start: new Date(2026, 9, 1), end: new Date(2026, 10, 1) });
+  store.init({
+    ...config,
+    tasks: [
+      { id: 1, type: "task", start: new Date(2026, 9, 7), unscheduled: true },
+    ],
+    unscheduledTasks: true,
+    start: new Date(2026, 9, 1),
+    end: new Date(2026, 10, 1),
+  });
   assert.equal(store.getState().unscheduledTasks, false);
   assert.equal(store.getTask(1).duration, 1);
   assert.equal(store.getTask(1).end.getDate(), 8);
@@ -103,12 +165,21 @@ test("null deadline remains a visible real MIT tree row without computed start e
   assert.equal(row.start, undefined);
   assert.equal(row.end, undefined);
   assert.equal(row.duration, undefined);
-  assert.equal(store.getState()._tasks.some((item) => item.id === 1), true);
-  assert.deepEqual(plain(adapter.fromGanttWindow(row)), { start_date: original.start_date, due_date: null });
+  assert.equal(
+    store.getState()._tasks.some((item) => item.id === 1),
+    true,
+  );
+  assert.deepEqual(plain(adapter.fromGanttWindow(row)), {
+    start_date: original.start_date,
+    due_date: null,
+  });
 });
 
 test("an entirely unbounded project has a viewport without inventing task windows", () => {
-  const store = storeFor([task({ due_date: null }), task({ id: 2, parent_id: 1, due_date: null })]);
+  const store = storeFor([
+    task({ due_date: null }),
+    task({ id: 2, parent_id: 1, due_date: null }),
+  ]);
   for (const id of [1, 2]) {
     const row = store.getTask(id);
     assert.equal(row.end, undefined);
@@ -120,9 +191,18 @@ test("an entirely unbounded project has a viewport without inventing task window
 });
 
 test("parents stay tasks and retain independent calendars even with dated and undated descendants", () => {
-  const tasks = [task({ due_date: null }), task({ id: 2, parent_id: 1, due_date: "2026-10-09", state_name: "En curso" }),
-    task({ id: 3, parent_id: 2, due_date: null })];
-  const before = structuredClone(tasks), store = storeFor(tasks);
+  const tasks = [
+    task({ due_date: null }),
+    task({
+      id: 2,
+      parent_id: 1,
+      due_date: "2026-10-09",
+      state_name: "En curso",
+    }),
+    task({ id: 3, parent_id: 2, due_date: null }),
+  ];
+  const before = structuredClone(tasks),
+    store = storeFor(tasks);
   assert.deepEqual(tasks, before);
   assert.equal(store.getTask(1).type, "gm-open-ended");
   assert.equal(store.getTask(1).start, undefined);
@@ -134,24 +214,49 @@ test("parents stay tasks and retain independent calendars even with dated and un
 });
 
 test("bounded parent keeps its own dates instead of deriving a summary from children", () => {
-  const store = storeFor([task({ start_date: "2026-10-01", due_date: "2026-10-31" }), task({ id: 2, parent_id: 1 })]);
+  const store = storeFor([
+    task({ start_date: "2026-10-01", due_date: "2026-10-31" }),
+    task({ id: 2, parent_id: 1 }),
+  ]);
   assert.equal(store.getTask(1).type, "task");
-  assert.deepEqual(plain(adapter.fromGanttWindow(store.getTask(1))), { start_date: "2026-10-01", due_date: "2026-10-31" });
+  assert.deepEqual(plain(adapter.fromGanttWindow(store.getTask(1))), {
+    start_date: "2026-10-01",
+    due_date: "2026-10-31",
+  });
 });
 
 test("bad dates duplicate IDs and fabricated null intervals fail visibly", () => {
   assert.throws(() => adapter.toGanttRows([task(), task()]), /duplicadas/);
-  assert.throws(() => adapter.toGanttRows([task({ start_date: "not-a-date" })]), /válida/);
-  assert.throws(() => adapter.fromGanttWindow({ ...adapter.toGanttWindow(task({ due_date: null })), end: new Date() }), /calculado/);
+  assert.throws(
+    () => adapter.toGanttRows([task({ start_date: "not-a-date" })]),
+    /válida/,
+  );
+  assert.throws(
+    () =>
+      adapter.fromGanttWindow({
+        ...adapter.toGanttWindow(task({ due_date: null })),
+        end: new Date(),
+      }),
+    /calculado/,
+  );
 });
 
 test("read-only intercepts actual MIT data actions while allowing selection and expansion", async () => {
-  const store = storeFor([task(), task({ id: 2, parent_id: 1, due_date: null })]);
-  const api = { intercept: store.in.intercept.bind(store.in), detach: store.in.detach.bind(store.in) };
+  const store = storeFor([
+    task(),
+    task({ id: 2, parent_id: 1, due_date: null }),
+  ]);
+  const api = {
+    intercept: store.in.intercept.bind(store.in),
+    detach: store.in.detach.bind(store.in),
+  };
   const release = bindGanttReadOnly(api);
   const before = JSON.stringify(store.serialize());
   for (const [action, payload] of [
-    ["update-task", { id: 1, task: { text: "Changed", start: new Date(2026, 9, 8) } }],
+    [
+      "update-task",
+      { id: 1, task: { text: "Changed", start: new Date(2026, 9, 8) } },
+    ],
     ["drag-task", { id: 1, left: 400, top: 80 }],
     ["move-task", { id: 2, target: 1, mode: "before" }],
     ["indent-task", { id: 2, mode: false }],
@@ -174,8 +279,12 @@ test("read-only intercepts actual MIT data actions while allowing selection and 
 
 test("cleanup detaches only its own gesture guards and cannot remove a later binding", async () => {
   const store = storeFor([task()]);
-  const api = { intercept: store.in.intercept.bind(store.in), detach: store.in.detach.bind(store.in) };
-  const first = bindGanttReadOnly(api), second = bindGanttReadOnly(api);
+  const api = {
+    intercept: store.in.intercept.bind(store.in),
+    detach: store.in.detach.bind(store.in),
+  };
+  const first = bindGanttReadOnly(api),
+    second = bindGanttReadOnly(api);
   first();
   await store.in.exec("update-task", { id: 1, task: { text: "blocked" } });
   assert.equal(store.getTask(1).text, "Tarea QA");
@@ -185,8 +294,15 @@ test("cleanup detaches only its own gesture guards and cannot remove a later bin
 });
 
 test("loading empty and retryable resource error remain distinct before the deferred view is ready", () => {
-  const props = { tasks: [], loading: false, error: "", onRetry() {}, onOpenTask() {} };
-  const markup = (changes) => renderToStaticMarkup(React.createElement(Entry, { ...props, ...changes }));
+  const props = {
+    tasks: [],
+    loading: false,
+    error: "",
+    onRetry() {},
+    onOpenTask() {},
+  };
+  const markup = (changes) =>
+    renderToStaticMarkup(React.createElement(Entry, { ...props, ...changes }));
   assert.match(markup({}), /todavía no tiene tareas/);
   assert.match(markup({ loading: true }), /Actualizando tareas/);
   assert.doesNotMatch(markup({ loading: true }), /todavía no tiene tareas/);
@@ -208,13 +324,22 @@ test("worker-filtered children remain visible without fetching or exposing an un
 });
 
 test("real MIT calendar durations use calendar days across DST in independent timezone processes", () => {
-  const program = "const {DataStore}=require('@svar-ui/gantt-store');const a=require('node:assert/strict');" +
+  const program =
+    "const {DataStore}=require('@svar-ui/gantt-store');const a=require('node:assert/strict');" +
     "for(const [year,month,day,length] of [[2026,2,7,3],[2026,9,31,3],[2028,1,28,2],[2026,11,31,1]]){" +
     "const start=new Date(year,month,day),end=new Date(year,month,day+length),s=new DataStore();" +
     "s.init({tasks:[{id:1,type:'task',start,end}],links:[],durationUnit:'day',inclusiveEnd:true,columns:[{id:'text'}]," +
     "scales:[{unit:'day',step:1,format:'%j'}],start:new Date(year,month,day-1),end:new Date(year,month,day+length+1),cellWidth:40,cellHeight:40,scaleHeight:28});" +
     "const task=s.getTask(1);a.equal(task.duration,length);a.equal(task.end.getFullYear(),end.getFullYear());" +
     "a.equal(task.end.getMonth(),end.getMonth());a.equal(task.end.getDate(),end.getDate());}";
-  for (const TZ of ["UTC", "America/Lima", "America/New_York", "Pacific/Kiritimati", "Asia/Kolkata"])
-    execFileSync(process.execPath, ["-e", program], { env: { ...process.env, TZ } });
+  for (const TZ of [
+    "UTC",
+    "America/Lima",
+    "America/New_York",
+    "Pacific/Kiritimati",
+    "Asia/Kolkata",
+  ])
+    execFileSync(process.execPath, ["-e", program], {
+      env: { ...process.env, TZ },
+    });
 });

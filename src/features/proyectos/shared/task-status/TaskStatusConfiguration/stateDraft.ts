@@ -11,7 +11,9 @@ export function newStateCode() {
   return `draft_${crypto.randomUUID().replaceAll("-", "").slice(0, 14)}`;
 }
 
-export function templateDraft(template: TaskStatusTemplate): ProjectTaskState[] {
+export function templateDraft(
+  template: TaskStatusTemplate,
+): ProjectTaskState[] {
   return template.states.map((state) => ({
     code: newStateCode(),
     name: state.name,
@@ -39,9 +41,8 @@ export function draftError(states: ProjectTaskState[]): string {
     return "Usa nombres de 1 a 70 caracteres.";
   }
   if (
-    new Set(
-      states.map((state) => state.name.trim().toLocaleLowerCase("es")),
-    ).size !== states.length
+    new Set(states.map((state) => state.name.trim().toLocaleLowerCase("es")))
+      .size !== states.length
   ) {
     return "Ya existe un estado con ese nombre.";
   }

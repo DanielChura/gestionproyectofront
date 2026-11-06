@@ -95,7 +95,9 @@ export function groupTasks(
   ): Descriptor[] {
     const unique = [
       ...new Map(tokens.map((token) => [token.id, token])).values(),
-    ].sort((left, right) => (left.id < right.id ? -1 : left.id > right.id ? 1 : 0));
+    ].sort((left, right) =>
+      left.id < right.id ? -1 : left.id > right.id ? 1 : 0,
+    );
     if (!unique.length) {
       return [{ key: "none", name: empty, rank: 0, tokens: [] }];
     }
@@ -132,7 +134,9 @@ export function groupTasks(
       }
       case "priority": {
         const priority =
-          task.priority === null ? undefined : priorityByCode.get(task.priority);
+          task.priority === null
+            ? undefined
+            : priorityByCode.get(task.priority);
         return [
           {
             key: task.priority == null ? "none" : String(task.priority),
@@ -209,8 +213,7 @@ export function groupTasks(
           : [];
       })
       .sort(
-        (left, right) =>
-          taskOrder.get(left.id)! - taskOrder.get(right.id)!,
+        (left, right) => taskOrder.get(left.id)! - taskOrder.get(right.id)!,
       );
   }
   const alphabetical =
@@ -224,4 +227,3 @@ export function groupTasks(
         compareNames.compare(left.key, right.key)),
   );
 }
-

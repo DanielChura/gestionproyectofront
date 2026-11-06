@@ -67,4 +67,3 @@ export function groupTaskStates(states: ProjectTaskState[]) {
     }))
     .filter((group) => group.states.length > 0);
 }
-

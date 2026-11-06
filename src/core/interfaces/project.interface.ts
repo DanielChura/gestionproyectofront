@@ -55,4 +55,3 @@ export interface ProjectCatalogs {
   states: ProjectTaskState[];
   priorities: { code: number; name: string }[];
 }
-

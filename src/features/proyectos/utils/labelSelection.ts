@@ -18,4 +18,3 @@ export function labelSelection(labels: Label[]) {
     ],
   };
 }
-

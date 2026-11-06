@@ -17,7 +17,11 @@ export function useGanttToday() {
     update();
     window.addEventListener("focus", update);
     document.addEventListener("visibilitychange", update);
-    return () => { clearTimeout(timer); window.removeEventListener("focus", update); document.removeEventListener("visibilitychange", update); };
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("focus", update);
+      document.removeEventListener("visibilitychange", update);
+    };
   }, []);
   return today;
 }

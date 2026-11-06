@@ -56,8 +56,12 @@ export async function setProjectFavorite(
   favorite: boolean,
 ): Promise<ProjectFavoriteState> {
   const { data } = favorite
-    ? await httpClient.put<ProjectFavoriteState>(`projects/${projectId}/favorite/`)
-    : await httpClient.delete<ProjectFavoriteState>(`projects/${projectId}/favorite/`);
+    ? await httpClient.put<ProjectFavoriteState>(
+        `projects/${projectId}/favorite/`,
+      )
+    : await httpClient.delete<ProjectFavoriteState>(
+        `projects/${projectId}/favorite/`,
+      );
   return data;
 }
 

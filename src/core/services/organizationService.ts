@@ -25,8 +25,14 @@ export async function createArea(payload: AreaWriteData): Promise<Area> {
   return data;
 }
 
-export async function updateArea(id: number, payload: AreaWriteData): Promise<Area> {
-  const { data } = await httpClient.put<Area>(`organization/areas/${id}/`, payload);
+export async function updateArea(
+  id: number,
+  payload: AreaWriteData,
+): Promise<Area> {
+  const { data } = await httpClient.put<Area>(
+    `organization/areas/${id}/`,
+    payload,
+  );
   return data;
 }
 
@@ -35,17 +41,26 @@ export async function removeArea(id: number): Promise<void> {
 }
 
 export async function listSpecialties(): Promise<Specialty[]> {
-  const { data } = await httpClient.get<Specialty[]>("organization/specialties/");
+  const { data } = await httpClient.get<Specialty[]>(
+    "organization/specialties/",
+  );
   return data;
 }
 
 export async function getSpecialtyById(id: number): Promise<Specialty> {
-  const { data } = await httpClient.get<Specialty>(`organization/specialties/${id}/`);
+  const { data } = await httpClient.get<Specialty>(
+    `organization/specialties/${id}/`,
+  );
   return data;
 }
 
-export async function createSpecialty(payload: SpecialtyWriteData): Promise<Specialty> {
-  const { data } = await httpClient.post<Specialty>("organization/specialties/", payload);
+export async function createSpecialty(
+  payload: SpecialtyWriteData,
+): Promise<Specialty> {
+  const { data } = await httpClient.post<Specialty>(
+    "organization/specialties/",
+    payload,
+  );
   return data;
 }
 
@@ -79,7 +94,10 @@ export async function createTeam(payload: TeamWriteData): Promise<Team> {
   return data;
 }
 
-export async function updateTeam(id: number, payload: TeamWriteData): Promise<Team> {
+export async function updateTeam(
+  id: number,
+  payload: TeamWriteData,
+): Promise<Team> {
   const { data } = await httpClient.put<Team>(`teams/teams/${id}/`, payload);
   return data;
 }

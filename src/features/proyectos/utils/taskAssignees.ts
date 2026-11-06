@@ -18,4 +18,3 @@ export function taskAssignees(task: Task): TaskAssignee[] {
   }
   return [...people.values()].sort((left, right) => left.id - right.id);
 }
-

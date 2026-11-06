@@ -1,4 +1,9 @@
-import type { ProjectSummary, ProjectTaskState, StateCategory, Tema } from "./project.interface";
+import type {
+  ProjectSummary,
+  ProjectTaskState,
+  StateCategory,
+  Tema,
+} from "./project.interface";
 
 export type LabelKind = "technical" | "nontechnical" | "specialty";
 
@@ -200,11 +205,7 @@ export interface TaskAssignee {
 }
 
 export type TaskGroupingMode =
-  | "state"
-  | "assignees"
-  | "priority"
-  | "labels"
-  | "due_date";
+  "state" | "assignees" | "priority" | "labels" | "due_date";
 
 export type TaskGroupOrder = "asc" | "desc";
 
@@ -235,7 +236,9 @@ export interface TaskListGroup {
   roots: Task[];
 }
 
-export interface CreateTaskPayload extends Partial<Omit<EditTaskPayload, "name">> {
+export interface CreateTaskPayload extends Partial<
+  Omit<EditTaskPayload, "name">
+> {
   name: string;
   state_code: string;
   parent_id: number | null;
@@ -250,11 +253,7 @@ export interface TaskStatePayload {
 }
 
 export type TaskActionKind =
-  | "edit"
-  | "state"
-  | "child"
-  | "dependencies"
-  | "detail";
+  "edit" | "state" | "child" | "dependencies" | "detail";
 
 export type TaskAction =
   | { kind: "create"; stateCode?: string }
@@ -265,5 +264,8 @@ export interface TaskCreationRequest {
   sequence: number;
 }
 
-// Re-export for convenience
-export type { StateCategory, ProjectTaskState, Tema } from "./project.interface";
+export type {
+  StateCategory,
+  ProjectTaskState,
+  Tema,
+} from "./project.interface";

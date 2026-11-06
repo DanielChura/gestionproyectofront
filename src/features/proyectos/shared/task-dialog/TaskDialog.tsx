@@ -48,8 +48,8 @@ export default function TaskDialog({
 
   const composed =
     action.kind === "create" ||
-      action.kind === "edit" ||
-      action.kind === "child";
+    action.kind === "edit" ||
+    action.kind === "child";
 
   function form() {
     if (!action) return null;

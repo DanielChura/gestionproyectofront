@@ -276,7 +276,7 @@ export default function QuickTaskRow({
         <p
           tabIndex={-1}
           role="alert"
-          className="col-start-1 mb-0 mt-1 break-words text-red-700 dark:text-red-400"
+          className="col-start-1 mb-0 mt-1 wrap-break-word text-red-700 dark:text-red-400"
         >
           {draft.error}
         </p>

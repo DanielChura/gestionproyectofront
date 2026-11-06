@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import type { Task, Project, ProjectCatalogs, TaskActionKind, ProjectTaskState } from "../types";
+import type {
+  Task,
+  Project,
+  ProjectCatalogs,
+  TaskActionKind,
+  ProjectTaskState,
+} from "../types";
 
 export interface TaskGanttProps {
   project: Project;

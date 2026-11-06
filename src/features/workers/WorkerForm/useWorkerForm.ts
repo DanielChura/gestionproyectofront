@@ -23,7 +23,10 @@ export function useWorkerForm(worker: Worker) {
     active: worker.active,
   });
 
-  const updateField = (field: keyof WorkerFormState, value: string | boolean) => {
+  const updateField = (
+    field: keyof WorkerFormState,
+    value: string | boolean,
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 

@@ -31,4 +31,3 @@ export default function LabelList({ labels, onRemove }: LabelListProps) {
     </ul>
   );
 }
-

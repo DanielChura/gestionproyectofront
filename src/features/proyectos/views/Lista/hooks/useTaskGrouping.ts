@@ -42,4 +42,3 @@ export function useTaskGrouping(
 
   return { hierarchy, groups };
 }
-

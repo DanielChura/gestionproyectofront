@@ -13,7 +13,9 @@ async function fetchAllRecoveryRequests(): Promise<RecoveryRequest[]> {
   for (let page = 0; page < 100; page += 1) {
     const query = new URLSearchParams({ page_size: "50" });
     if (cursor) query.set("cursor", cursor);
-    const data = await apiRequest<any>(`admin/recovery-requests/?${query.toString()}`);
+    const data = await apiRequest<any>(
+      `admin/recovery-requests/?${query.toString()}`,
+    );
     const rows = Array.isArray(data)
       ? data
       : Array.isArray(data?.results)

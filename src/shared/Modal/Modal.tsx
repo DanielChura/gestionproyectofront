@@ -43,9 +43,14 @@ export default function Modal({
 
   let sizeClasses = "max-w-2xl";
   if (wide) sizeClasses = "max-w-3xl";
-  if (taskComposer || projectComposer) sizeClasses = "max-w-3xl overflow-hidden open:flex open:flex-col";
-  if (statusComposer) sizeClasses = "max-w-3xl h-dvh max-h-[48rem] overflow-hidden rounded-xl open:flex open:flex-col";
-  if (taskDetail) sizeClasses = "max-w-screen-2xl h-dvh max-h-dvh overflow-hidden rounded-xl open:flex open:flex-col";
+  if (taskComposer || projectComposer)
+    sizeClasses = "max-w-3xl overflow-hidden open:flex open:flex-col";
+  if (statusComposer)
+    sizeClasses =
+      "max-w-3xl h-dvh max-h-[48rem] overflow-hidden rounded-xl open:flex open:flex-col";
+  if (taskDetail)
+    sizeClasses =
+      "max-w-screen-2xl h-dvh max-h-dvh overflow-hidden rounded-xl open:flex open:flex-col";
 
   return (
     <dialog
@@ -103,7 +108,10 @@ export default function Modal({
         </h2>
       ) : (
         <header className="sticky top-0 z-20 flex shrink-0 items-center justify-between gap-4 border-b border-neutral-200 bg-white px-6 py-3 dark:border-neutral-800 dark:bg-neutral-900">
-          <h2 id={titleId} className="m-0 break-words text-sm font-semibold text-neutral-800 dark:text-neutral-100">
+          <h2
+            id={titleId}
+            className="m-0 break-words text-sm font-semibold text-neutral-800 dark:text-neutral-100"
+          >
             {title}
           </h2>
           <button
@@ -121,4 +129,3 @@ export default function Modal({
     </dialog>
   );
 }
-

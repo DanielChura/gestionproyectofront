@@ -25,7 +25,9 @@ export default function AppShell({
       <Sidebar user={user} onLogout={onLogout} />
       <div
         className={`min-w-0 w-full flex-1 bg-white dark:bg-neutral-950/50 pb-0 p-4 flex flex-col ${
-          projectWorkspace ? "md:overflow-hidden md:h-full" : "md:overflow-y-auto"
+          projectWorkspace
+            ? "md:overflow-hidden md:h-full"
+            : "md:overflow-y-auto"
         }`}
       >
         <Suspense fallback={null}>

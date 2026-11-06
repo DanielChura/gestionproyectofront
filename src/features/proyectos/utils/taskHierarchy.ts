@@ -33,7 +33,8 @@ export function taskHierarchy(tasks: Task[], search = "") {
     let current: Task | undefined = task;
     while (current && !visible.has(current.id)) {
       visible.add(current.id);
-      current = current.parent_id === null ? undefined : byId.get(current.parent_id);
+      current =
+        current.parent_id === null ? undefined : byId.get(current.parent_id);
     }
   }
   function descendants(
@@ -77,4 +78,3 @@ export function initials(name: string): string {
     .join("")
     .toLocaleUpperCase("es");
 }
-

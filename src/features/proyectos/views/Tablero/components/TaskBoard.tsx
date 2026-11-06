@@ -91,8 +91,7 @@ export default function TaskBoard({
     return map;
   }, [tasks, taskById]);
 
-  const activeTask =
-    activeId != null ? (taskById.get(activeId) ?? null) : null;
+  const activeTask = activeId != null ? (taskById.get(activeId) ?? null) : null;
   const activeParent =
     activeTask?.parent_id != null
       ? taskById.get(activeTask.parent_id)

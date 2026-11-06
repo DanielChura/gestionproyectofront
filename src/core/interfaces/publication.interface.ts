@@ -1,8 +1,5 @@
 export type PublicationStateCode =
-  | "BORRADOR"
-  | "ABIERTA"
-  | "CERRADA"
-  | "CANCELADA";
+  "BORRADOR" | "ABIERTA" | "CERRADA" | "CANCELADA";
 
 export interface PublicationProject {
   id: number;
@@ -20,8 +17,7 @@ export interface PublicationRequirementWriteData {
   minimum_level: number;
 }
 
-export interface PublicationRequirement
-  extends PublicationRequirementWriteData {
+export interface PublicationRequirement extends PublicationRequirementWriteData {
   specialty_name: string;
 }
 

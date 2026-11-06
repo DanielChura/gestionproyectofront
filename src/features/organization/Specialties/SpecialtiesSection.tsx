@@ -18,8 +18,7 @@ import type {
 } from "../../../core/interfaces/organization.interface";
 
 type SpecialtyModal =
-  | { mode: "create" }
-  | { mode: "edit"; specialty: Specialty };
+  { mode: "create" } | { mode: "edit"; specialty: Specialty };
 
 const emptySpecialty: SpecialtyWriteData = { name: "" };
 

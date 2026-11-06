@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { TaskFieldView } from "../types";
-import { getIcon, iconMap } from "../../../../../../../shared/Icons/icon-catalog";
+import {
+  getIcon,
+  iconMap,
+} from "../../../../../../../shared/Icons/icon-catalog";
 
 export default function TaskStateCell({ view }: { view: TaskFieldView }) {
   const { task, project, onState } = view;
@@ -33,7 +36,10 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
           }}
           className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium"
         >
-          <IconComponent className="size-4 fill" style={{ color: tone ?? undefined }} />
+          <IconComponent
+            className="size-4 fill"
+            style={{ color: tone ?? undefined }}
+          />
           <span className="truncate">{task.state_name}</span>
         </button>
 
@@ -56,7 +62,10 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
                       : "text-neutral-700 dark:text-neutral-300"
                   }`}
                 >
-                  <IconComponent className="size-4 fill" style={{ color: state.tema?.color ?? undefined }} />
+                  <IconComponent
+                    className="size-4 fill"
+                    style={{ color: state.tema?.color ?? undefined }}
+                  />
                   <span
                     style={{
                       backgroundColor: state.tema?.color

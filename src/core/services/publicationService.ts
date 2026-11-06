@@ -33,10 +33,7 @@ export async function getPublicationCatalogs(): Promise<PublicationCatalogs> {
 export async function createPublication(
   payload: PublicationCreateData,
 ): Promise<Publication> {
-  const { data } = await httpClient.post<Publication>(
-    "publications/",
-    payload,
-  );
+  const { data } = await httpClient.post<Publication>("publications/", payload);
   return data;
 }
 

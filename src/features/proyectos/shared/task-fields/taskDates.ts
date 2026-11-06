@@ -13,4 +13,3 @@ export function taskCreationStart(
     .sort()
     .at(-1)!;
 }
-

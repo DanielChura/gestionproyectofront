@@ -15,4 +15,3 @@ export function stateInk(color: string): string {
     ? "#000000"
     : "#ffffff";
 }
-

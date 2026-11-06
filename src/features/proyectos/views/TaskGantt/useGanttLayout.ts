@@ -15,7 +15,8 @@ export function useGanttLayout() {
   const [chosen, setChosen] = useState<Set<string> | null>(null);
   const [preferredWidth, setPreferredWidth] = useState<number | null>(null);
   useLayoutEffect(() => {
-    const node = container.current, viewport = canvas.current;
+    const node = container.current,
+      viewport = canvas.current;
     if (!node || !viewport) return;
     let frame = 0;
     const measure = () => {
@@ -23,7 +24,10 @@ export function useGanttLayout() {
       frame = requestAnimationFrame(() => {
         setWidth(Math.round(node.clientWidth));
         setCanvasWidth(Math.round(viewport.clientWidth));
-        node.style.setProperty("--gm-gantt-height", `${Math.max(280, window.innerHeight - node.getBoundingClientRect().top - 82)}px`);
+        node.style.setProperty(
+          "--gm-gantt-height",
+          `${Math.max(280, window.innerHeight - node.getBoundingClientRect().top - 82)}px`,
+        );
       });
     };
     measure();
@@ -31,23 +35,50 @@ export function useGanttLayout() {
     observer.observe(node);
     observer.observe(viewport);
     window.addEventListener("resize", measure);
-    return () => { observer.disconnect(); window.removeEventListener("resize", measure); cancelAnimationFrame(frame); };
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+      cancelAnimationFrame(frame);
+    };
   }, []);
   useLayoutEffect(() => {
     const node = container.current;
-    if (node) node.style.setProperty("--gm-gantt-height", `${Math.max(280, window.innerHeight - node.getBoundingClientRect().top - 82)}px`);
+    if (node)
+      node.style.setProperty(
+        "--gm-gantt-height",
+        `${Math.max(280, window.innerHeight - node.getBoundingClientRect().top - 82)}px`,
+      );
   });
   const visible = useMemo(() => chosen ?? new Set(["gmStateName"]), [chosen]);
-  const columnsWidth = 250 + ganttColumnChoices.reduce((total, column) => total + (visible.has(column.id) ? column.width : 0), 0);
+  const columnsWidth =
+    250 +
+    ganttColumnChoices.reduce(
+      (total, column) => total + (visible.has(column.id) ? column.width : 0),
+      0,
+    );
   const minWidth = 680;
   const available = Math.max(440, canvasWidth);
-  const gridWidth = Math.max(220, Math.min(preferredWidth ?? columnsWidth, available - 220));
+  const gridWidth = Math.max(
+    220,
+    Math.min(preferredWidth ?? columnsWidth, available - 220),
+  );
   function toggle(id: string) {
-    setChosen(current => {
+    setChosen((current) => {
       const next = new Set(current ?? visible);
-      if (next.has(id)) next.delete(id); else next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   }
-  return { container, canvas, visible, gridWidth, minWidth, toggle, overlay: width < 1024, available, setPreferredWidth };
+  return {
+    container,
+    canvas,
+    visible,
+    gridWidth,
+    minWidth,
+    toggle,
+    overlay: width < 1024,
+    available,
+    setPreferredWidth,
+  };
 }

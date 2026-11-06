@@ -71,5 +71,3 @@ export interface TaskDialogController {
   changeDependency: (predecessorId: number, remove: boolean) => Promise<void>;
   configuredStates: (configuration: ProjectTaskConfiguration) => void;
 }
-
-

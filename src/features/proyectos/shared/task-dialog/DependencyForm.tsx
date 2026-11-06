@@ -89,7 +89,9 @@ export default function DependencyForm({
           </p>
           <ul className="m-0 space-y-1.5 p-0 list-none">
             {task.dependencies.map((dependencyId) => {
-              const predecessor = tasks.find((item) => item.id === dependencyId);
+              const predecessor = tasks.find(
+                (item) => item.id === dependencyId,
+              );
               return (
                 <li
                   key={dependencyId}
@@ -124,4 +126,3 @@ export default function DependencyForm({
     </ProjectForm>
   );
 }
-

@@ -96,5 +96,4 @@ export function usePublications({
   );
 
   return { data, loading, error, refetch, create, update, apply };
-
 }
