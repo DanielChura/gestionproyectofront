@@ -1,7 +1,7 @@
 import { useId, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { projectPath } from "../../../routes";
-import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
+import ChevronDownIcon from "../../../shared/Icons/ChevronIcon";
 import ProjectAreaNavigation from "./ProjectAreaNavigation";
 import { useProjects } from "../../proyectos/hooks/useProjects";
 

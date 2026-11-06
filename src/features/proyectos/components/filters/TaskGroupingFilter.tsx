@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import StackIcon from "../../../../shared/icons/StackIcon";
+import StackIcon from "../../../../shared/Icons/StackIcon";
 import type { TaskGroupingMode, TaskGroupingPreferences } from "../../types";
 
 const options: { value: TaskGroupingMode; label: string }[] = [
@@ -44,7 +44,9 @@ export default function TaskGroupingFilter({
       {open && (
         <div className="absolute left-0 top-full z-20 mt-1 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-2 shadow-sm">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-neutral-600 dark:text-neutral-400">Agrupar por:</span>
+            <span className="text-xs text-neutral-600 dark:text-neutral-400">
+              Agrupar por:
+            </span>
             <select
               value={preferences.mode}
               onChange={(event) =>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import XIcon from "../../../shared/icons/XIcon";
+import XIcon from "../../../shared/Icons/XIcon";
 import { errorText } from "../../auth/api";
 import { useProfile } from "./useProfile";
 

@@ -1,7 +1,7 @@
 import { useId } from "react";
 import type { Project } from "../../../../../core/interfaces/task.interface";
 import TaskProperty from "../TaskProperty";
-import UserIcon from "../../../../../shared/icons/UserIcon";
+import UserIcon from "../../../../../shared/Icons/UserIcon";
 import AssigneeSelector from "./AssigneeSelector";
 
 export default function ResponsiblePicker({

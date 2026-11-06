@@ -1,8 +1,8 @@
-import ActivityIcon from "../../../../../shared/icons/ActivityIcon";
-import AlertIcon from "../../../../../shared/icons/AlertIcon";
-import ClockIcon from "../../../../../shared/icons/ClockIcon";
-import HourglassIcon from "../../../../../shared/icons/HourglassIcon";
-import CheckIcon from "../../../../../shared/icons/CheckIcon";
+import ActivityIcon from "../../../../../shared/Icons/ActivityIcon";
+import AlertIcon from "../../../../../shared/Icons/AlertIcon";
+import ClockIcon from "../../../../../shared/Icons/ClockIcon";
+import HourglassIcon from "../../../../../shared/Icons/HourglassIcon";
+import CheckIcon from "../../../../../shared/Icons/CheckIcon";
 
 function formatMinutes(minutes: number): string {
   if (!minutes || minutes <= 0) return "0h";

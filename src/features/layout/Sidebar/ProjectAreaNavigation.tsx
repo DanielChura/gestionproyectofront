@@ -5,9 +5,9 @@ import type {
   ProjectSummary,
 } from "../../../core/interfaces/project.interface";
 import { projectPath } from "../../../routes";
-import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
-import PlusIcon from "../../../shared/icons/PlusIcon";
-import ProjectsIcon from "../../../shared/icons/ProjectsIcon";
+import ChevronDownIcon from "../../../shared/Icons/ChevronIcon";
+import PlusIcon from "../../../shared/Icons/PlusIcon";
+import ProjectsIcon from "../../../shared/Icons/ProjectsIcon";
 
 interface ProjectAreaNavigationProps {
   projects: ProjectSummary[];
@@ -75,8 +75,7 @@ export default function ProjectAreaNavigation({
                 {area.projects.map((project) => {
                   const path = projectPath(project.id);
                   const active =
-                    currentPath === path ||
-                    currentPath.startsWith(`${path}/`);
+                    currentPath === path || currentPath.startsWith(`${path}/`);
                   return (
                     <li
                       key={project.id}
@@ -92,7 +91,10 @@ export default function ProjectAreaNavigation({
                             : "text-neutral-600 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100"
                         }`}
                       >
-                        <ProjectsIcon className="size-4 shrink-0" fill={false} />
+                        <ProjectsIcon
+                          className="size-4 shrink-0"
+                          fill={false}
+                        />
                         <span className="min-w-0 flex-1 truncate pr-6">
                           {project.name}
                         </span>

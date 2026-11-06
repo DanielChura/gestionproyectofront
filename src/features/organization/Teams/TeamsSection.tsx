@@ -1,8 +1,8 @@
 import { useState } from "react";
-import TeamsIcon from "../../../shared/icons/TeamsIcon";
-import EditIcon from "../../../shared/icons/EditIcon";
-import TrashIcon from "../../../shared/icons/TrashIcon";
-import PlusIcon from "../../../shared/icons/PlusIcon";
+import TeamsIcon from "../../../shared/Icons/TeamsIcon";
+import EditIcon from "../../../shared/Icons/EditIcon";
+import TrashIcon from "../../../shared/Icons/TrashIcon";
+import PlusIcon from "../../../shared/Icons/PlusIcon";
 import Button from "../../../shared/Button/Button";
 import EmptyState from "../../../shared/EmptyState/EmptyState";
 import {

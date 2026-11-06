@@ -1,6 +1,6 @@
-import DarkThemeIcon from "../../shared/icons/DarkThemeIcon";
-import LightThemeIcon from "../../shared/icons/LightThemeIcon";
-import SystemThemeIcon from "../../shared/icons/SystemThemeIcon";
+import DarkThemeIcon from "../../shared/Icons/DarkThemeIcon";
+import LightThemeIcon from "../../shared/Icons/LightThemeIcon";
+import SystemThemeIcon from "../../shared/Icons/SystemThemeIcon";
 
 interface ThemePreviewProps {
   theme: "system" | "light" | "dark";

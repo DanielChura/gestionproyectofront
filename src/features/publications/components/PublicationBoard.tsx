@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import CalendarIcon from "../../../shared/icons/CalendarIcon";
-import ClockIcon from "../../../shared/icons/ClockIcon";
-import DotsIcon from "../../../shared/icons/DotsIcon";
-import UserIcon from "../../../shared/icons/UserIcon";
+import CalendarIcon from "../../../shared/Icons/CalendarIcon";
+import ClockIcon from "../../../shared/Icons/ClockIcon";
+import DotsIcon from "../../../shared/Icons/DotsIcon";
+import UserIcon from "../../../shared/Icons/UserIcon";
 import type { Publication } from "../../../core/interfaces/publication.interface";
 import {
   formatPublicationDate,

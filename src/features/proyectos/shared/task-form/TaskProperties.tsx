@@ -6,13 +6,16 @@ import type {
   Project,
   Task,
 } from "../../../../core/interfaces/task.interface";
-import type { ProjectCatalogs } from "../../../../core/interfaces/project.interface";
+import type {
+  ProjectCatalogs,
+  ProjectTaskState,
+} from "../../../../core/interfaces/project.interface";
 import TaskOptionalProperties from "./TaskOptionalProperties";
 import TaskProperty from "../task-fields/TaskProperty";
-import CheckIcon from "../../../../shared/icons/CheckIcon";
-import SettingsIcon from "../../../../shared/icons/SettingsIcon";
-import CalendarIcon from "../../../../shared/icons/CalendarIcon";
-import StatusIcon from "../../../../shared/icons/StatusIcon";
+import CheckIcon from "../../../../shared/Icons/CheckIcon";
+import SettingsIcon from "../../../../shared/Icons/SettingsIcon";
+import CalendarIcon from "../../../../shared/Icons/CalendarIcon";
+import StatusIcon from "../../../../shared/Icons/StatusIcon";
 import { taskAssignees } from "../../utils/taskAssignees";
 import Calendar from "../task-fields/Calendar";
 import TaskDateValue from "../task-fields/TaskDateValue";
@@ -117,39 +120,43 @@ export default function TaskProperties({
               className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
             />
             <div className="mt-2 max-h-60 overflow-y-auto rounded-lg border border-neutral-200 dark:border-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-800">
-              {groups.map((group) => (
-                <section key={group.label} aria-label={group.label}>
-                  <h3 className="px-3 py-1 text-[10px] font-semibold text-neutral-500 uppercase tracking-wider bg-neutral-50 dark:bg-neutral-800/50">
-                    {group.label}
-                  </h3>
-                  {group.states.map((state) => (
-                    <button
-                      key={state.code}
-                      type="button"
-                      className="flex w-full cursor-pointer items-center justify-between px-3 py-2 text-xs text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-50"
-                      aria-pressed={selectedState === state.code}
-                      disabled={Boolean(task) || !canAssign}
-                      onClick={() => {
-                        onState(state.code);
-                        close();
-                      }}
-                    >
-                      <div className="flex items-center gap-2">
-                        <StateIcon
-                          code={state.code}
-                          name={state.name}
-                          category={state.category}
-                          color={state.color}
-                        />
-                        <span>{state.name}</span>
-                      </div>
-                      {selectedState === state.code && (
-                        <CheckIcon className="size-4" />
-                      )}
-                    </button>
-                  ))}
-                </section>
-              ))}
+              {groups.map(
+                (group: { label: string; states: ProjectTaskState[] }) => (
+                  <section key={group.label} aria-label={group.label}>
+                    <h3 className="px-3 py-1 text-[10px] font-semibold text-neutral-500 uppercase tracking-wider bg-neutral-50 dark:bg-neutral-800/50">
+                      {group.label}
+                    </h3>
+                    {group.states.map((state) => (
+                      <button
+                        key={state.code}
+                        type="button"
+                        className="flex w-full cursor-pointer items-center justify-between px-3 py-2 text-xs text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-50"
+                        aria-pressed={selectedState === state.code}
+                        disabled={Boolean(task) || !canAssign}
+                        onClick={() => {
+                          onState(state.code);
+                          close();
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <StateIcon
+                            code={state.code}
+                            name={state.name}
+                            category={state.category}
+                            color={
+                              state.tema ? state.tema.color : "neutral-700"
+                            }
+                          />
+                          <span>{state.name}</span>
+                        </div>
+                        {selectedState === state.code && (
+                          <CheckIcon className="size-4" />
+                        )}
+                      </button>
+                    ))}
+                  </section>
+                ),
+              )}
               {groups.length === 0 && (
                 <p className="p-3 text-xs text-neutral-500" role="status">
                   No hay estados que coincidan.

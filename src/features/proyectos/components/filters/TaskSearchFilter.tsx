@@ -1,4 +1,4 @@
-import SearchIcon from "../../../../shared/icons/SearchIcon";
+import SearchIcon from "../../../../shared/Icons/SearchIcon";
 
 export default function TaskSearchFilter({
   value,

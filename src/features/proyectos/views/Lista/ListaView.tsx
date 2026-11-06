@@ -1,7 +1,7 @@
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import ChevronDownIcon from "../../../../shared/icons/ChevronIcon";
-import PlusIcon from "../../../../shared/icons/PlusIcon";
+import ChevronDownIcon from "../../../../shared/Icons/ChevronIcon";
+import PlusIcon from "../../../../shared/Icons/PlusIcon";
 import ProjectToolbar from "../../shared/ProjectToolbar";
 import TaskDialog from "../../shared/task-dialog/TaskDialog";
 import TaskStatusConfiguration from "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration";
@@ -109,24 +109,32 @@ export default function ListaView({
     configuredStates,
   };
 
+  const groupsRef = useRef(groups);
+  groupsRef.current = groups;
+  const groupKeys = groups.map((group) => group.key).join("|");
+
   useEffect(() => {
+    const currentGroups = groupsRef.current;
     setGroupControls({
       expanded:
-        groups.length > 0 && groups.every((group) => !collapsed.has(group.key)),
-      disabled: groups.length === 0,
-      controls: groups.map((_, index) => `${listId}-group-${index}`).join(" "),
+        currentGroups.length > 0 &&
+        currentGroups.every((group) => !collapsed.has(group.key)),
+      disabled: currentGroups.length === 0,
+      controls: currentGroups
+        .map((_, index) => `${listId}-group-${index}`)
+        .join(" "),
       toggle: () =>
         setCollapsed((current) => {
           const next = new Set(current);
-          const close = groups.every((group) => !current.has(group.key));
-          for (const group of groups) {
+          const close = currentGroups.every((group) => !current.has(group.key));
+          for (const group of currentGroups) {
             if (close) next.add(group.key);
             else next.delete(group.key);
           }
           return next;
         }),
     });
-  }, [groups, collapsed, listId, setGroupControls]);
+  }, [groupKeys, collapsed, listId, setGroupControls]);
 
   useEffect(() => () => setGroupControls(null), [setGroupControls]);
 
@@ -263,6 +271,9 @@ export default function ListaView({
         {groups.map((group, index) => {
           const open = !collapsed.has(group.key);
           const groupId = `${listId}-group-${index}`;
+          const groupState = group.stateCode
+            ? states.find((s) => s.code === group.stateCode)
+            : undefined;
           const canCreateGroup = group.stateCode
             ? canCreateIn(group.stateCode)
             : project.permissions.create_tasks;
@@ -292,30 +303,30 @@ export default function ListaView({
                     className={`size-4 ${open ? "" : "-rotate-90"}`}
                     fill
                   />
+
                   {group.stateCode ? (
-                    <>
-                      <span
-                        className="inline-flex items-center rounded-lg px-2 py-1 text-xs text-neutral-100"
-                        style={{
-                          backgroundColor: group.stateColor ?? "#737373",
-                        }}
-                      >
-                        <TaskGroupLabel group={group} mode={preferences.mode} />
-                      </span>
-                      <span className="text-xs text-neutral-600 dark:text-neutral-400">
-                        {group.members.size}{" "}
-                        {group.members.size === 1 ? "tarea" : "tareas"}
-                      </span>
-                    </>
+                    <span
+                      style={{
+                        backgroundColor:
+                          groupState?.tema?.color ??
+                          group.stateColor ??
+                          "#525252",
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-white"
+                    >
+                      <TaskGroupLabel
+                        group={group}
+                        mode={preferences.mode}
+                        state={groupState}
+                      />
+                    </span>
                   ) : (
-                    <>
-                      <TaskGroupLabel group={group} mode={preferences.mode} />
-                      <span className="text-xs text-neutral-600 dark:text-neutral-400">
-                        {group.members.size}{" "}
-                        {group.members.size === 1 ? "tarea" : "tareas"}
-                      </span>
-                    </>
+                    <TaskGroupLabel group={group} mode={preferences.mode} />
                   )}
+
+                  <span className="text-xs text-neutral-600 dark:text-neutral-400">
+                    {group.members.size}
+                  </span>
                 </button>
               </h2>
 

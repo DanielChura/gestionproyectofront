@@ -1,13 +1,13 @@
 import { useState } from "react";
-import ActivityIcon from "../../shared/icons/ActivityIcon";
-import AtIcon from "../../shared/icons/AtIcon";
-import ClockIcon from "../../shared/icons/ClockIcon";
-import DotsIcon from "../../shared/icons/DotsIcon";
-import EditIcon from "../../shared/icons/EditIcon";
-import HashIcon from "../../shared/icons/HashIcon";
-import SearchIcon from "../../shared/icons/SearchIcon";
-import UserIcon from "../../shared/icons/UserIcon";
-import ChevronDownIcon from "../../shared/icons/ChevronIcon";
+import ActivityIcon from "../../shared/Icons/ActivityIcon";
+import AtIcon from "../../shared/Icons/AtIcon";
+import ClockIcon from "../../shared/Icons/ClockIcon";
+import DotsIcon from "../../shared/Icons/DotsIcon";
+import EditIcon from "../../shared/Icons/EditIcon";
+import HashIcon from "../../shared/Icons/HashIcon";
+import SearchIcon from "../../shared/Icons/SearchIcon";
+import UserIcon from "../../shared/Icons/UserIcon";
+import ChevronDownIcon from "../../shared/Icons/ChevronIcon";
 import { useWorkers } from "./useWorkers";
 import { useAreas } from "../organization/Area/useAreas";
 import WorkerForm from "./WorkerForm/WorkerForm";
@@ -16,7 +16,7 @@ import type {
   Worker,
   WorkerUpdateData,
 } from "../../core/interfaces/worker.interface";
-import StackIcon from "../../shared/icons/StackIcon";
+import StackIcon from "../../shared/Icons/StackIcon";
 import Button from "../../shared/Button/Button";
 import SecondaryButton from "../../shared/Button/SecondaryButton";
 import Input from "../../shared/Input/Input";

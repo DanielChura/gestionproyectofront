@@ -4,9 +4,9 @@ import type {
   PublicationStateCode,
 } from "../../../core/interfaces/publication.interface";
 import Modal from "../../../shared/Modal/Modal";
-import CalendarIcon from "../../../shared/icons/CalendarIcon";
-import ClockIcon from "../../../shared/icons/ClockIcon";
-import UserIcon from "../../../shared/icons/UserIcon";
+import CalendarIcon from "../../../shared/Icons/CalendarIcon";
+import ClockIcon from "../../../shared/Icons/ClockIcon";
+import UserIcon from "../../../shared/Icons/UserIcon";
 import {
   LEVEL_LABELS,
   PUBLICATION_STATE_HINTS,

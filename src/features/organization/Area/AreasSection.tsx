@@ -1,7 +1,7 @@
 import { useState } from "react";
-import FolderIcon from "../../../shared/icons/FolderIcon";
-import EditIcon from "../../../shared/icons/EditIcon";
-import PlusIcon from "../../../shared/icons/PlusIcon";
+import FolderIcon from "../../../shared/Icons/FolderIcon";
+import EditIcon from "../../../shared/Icons/EditIcon";
+import PlusIcon from "../../../shared/Icons/PlusIcon";
 import { useAreas } from "./useAreas";
 import EmptyState from "../../../shared/EmptyState/EmptyState";
 import {

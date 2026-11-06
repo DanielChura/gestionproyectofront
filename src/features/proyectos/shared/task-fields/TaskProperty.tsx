@@ -1,7 +1,7 @@
 import type { ComponentType, ReactNode } from "react";
 import { useState } from "react";
 import Modal from "../../../../shared/Modal/Modal";
-import type { IconProps } from "../../../../shared/icons/types";
+import type { IconProps } from "../../../../shared/Icons/types";
 
 interface TaskPropertyProps {
   id: string;
@@ -12,6 +12,7 @@ interface TaskPropertyProps {
   disabled?: boolean;
   cell?: boolean;
   compact?: boolean;
+  board?: boolean;
   selected?: boolean;
   triggers?: { label: string; content: ReactNode }[];
   content?: ReactNode;
@@ -27,6 +28,7 @@ export default function TaskProperty({
   disabled,
   cell,
   compact,
+  board,
   selected,
   triggers,
   content,
@@ -61,11 +63,13 @@ export default function TaskProperty({
             className={
               triggers || compact
                 ? "inline-flex h-full cursor-pointer items-center justify-center rounded border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700"
-                : `inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700${cell ? " h-10 w-full px-2 text-xs" : " px-2.5 py-1.5 text-xs"}`
+                : board
+                  ? `inline-flex max-w-full min-w-0 cursor-pointer items-center gap-1.5 overflow-hidden rounded-lg border border-neutral-100 px-1.5 py-1 text-xs font-medium hover:bg-neutral-100 disabled:cursor-default disabled:opacity-50 dark:border-neutral-800 dark:hover:bg-neutral-800${selected ? " text-neutral-700 dark:text-neutral-200" : " text-neutral-400 dark:text-neutral-500"}`
+                  : `inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700${cell ? " h-10 w-full px-2 text-xs" : " px-2.5 py-1.5 text-xs"}`
             }
             disabled={disabled}
             aria-label={item.label}
-            aria-pressed={compact ? selected : undefined}
+            aria-pressed={compact || board ? selected : undefined}
             onClick={() => setOpen(true)}
           >
             {item.content}
@@ -91,4 +95,3 @@ export default function TaskProperty({
     </div>
   );
 }
-

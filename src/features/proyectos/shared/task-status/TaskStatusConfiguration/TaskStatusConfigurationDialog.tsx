@@ -1,11 +1,11 @@
 import { useEffect, useId, useRef, useState } from "react";
-import ChevronDownIcon from "../../../../../shared/icons/ChevronIcon";
-import DotsIcon from "../../../../../shared/icons/DotsIcon";
-import InfoIcon from "../../../../../shared/icons/InfoIcon";
-import PlusIcon from "../../../../../shared/icons/PlusIcon";
+import ChevronDownIcon from "../../../../../shared/Icons/ChevronIcon";
+import DotsIcon from "../../../../../shared/Icons/DotsIcon";
+import InfoIcon from "../../../../../shared/Icons/InfoIcon";
+import PlusIcon from "../../../../../shared/Icons/PlusIcon";
 import Modal from "../../../../../shared/Modal/Modal";
-import CheckIcon from "../../../../../shared/icons/CheckIcon";
-import SettingsIcon from "../../../../../shared/icons/SettingsIcon";
+import CheckIcon from "../../../../../shared/Icons/CheckIcon";
+import SettingsIcon from "../../../../../shared/Icons/SettingsIcon";
 import { categoryValue, stateCategories } from "../../../utils/stateGroups";
 import StateIcon from "../StateIcon";
 import type {
@@ -431,7 +431,7 @@ export default function TaskStatusConfiguration({
                               code={state.code}
                               name={state.name}
                               category={category.value}
-                              color={state.color ?? category.color}
+                              color={category.color}
                             />
                           </span>
                           {editing?.code === state.code ? (
@@ -544,19 +544,24 @@ export default function TaskStatusConfiguration({
                                 Cambiar nombre
                               </button>
                               <label className="flex cursor-pointer items-center justify-between gap-2 rounded px-2.5 py-1.5 text-xs text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800">
-                                Cambiar color
-                                <input
-                                  aria-label={`Color de ${state.name}`}
-                                  name="state_color"
-                                  type="color"
-                                  value={state.color ?? category.color}
-                                  className="size-6 cursor-pointer rounded border border-neutral-200 bg-white p-0.5"
+                                Tema
+                                <select
+                                  aria-label={`Tema de ${state.name}`}
+                                  value={state.tema_id ?? 1}
+                                  className="rounded border border-neutral-200 bg-white px-2 py-1 text-xs dark:border-neutral-700 dark:bg-neutral-800"
                                   onChange={(event) =>
                                     update(state.code, {
-                                      color: event.target.value,
+                                      tema_id: Number(event.target.value),
                                     })
                                   }
-                                />
+                                >
+                                  <option value={1}>Emerald</option>
+                                  <option value={2}>Sky</option>
+                                  <option value={3}>Red</option>
+                                  <option value={4}>Green</option>
+                                  <option value={5}>Amber</option>
+                                  <option value={6}>Neutral</option>
+                                </select>
                               </label>
                               {draft && (
                                 <label className="grid gap-1 px-2.5 py-1.5 text-xs text-neutral-800 dark:text-neutral-200">

@@ -1,9 +1,12 @@
 import { useId } from "react";
-import CalendarIcon from "../../../../shared/icons/CalendarIcon";
-import FlagIcon from "../../../../shared/icons/FlagIcon";
-import HashIcon from "../../../../shared/icons/HashIcon";
-import UserIcon from "../../../../shared/icons/UserIcon";
-import type { Label, Project } from "../../../../core/interfaces/task.interface";
+import CalendarIcon from "../../../../shared/Icons/CalendarIcon";
+import FlagIcon from "../../../../shared/Icons/FlagIcon";
+import HashIcon from "../../../../shared/Icons/HashIcon";
+import UserIcon from "../../../../shared/Icons/UserIcon";
+import type {
+  Label,
+  Project,
+} from "../../../../core/interfaces/task.interface";
 import type { ProjectCatalogs } from "../../../../core/interfaces/project.interface";
 import type { FieldErrors } from "../../utils/formErrors";
 import ResponsiblePicker from "../task-fields/ResponsiblePicker/ResponsiblePicker";
@@ -93,9 +96,7 @@ export default function TaskOptionalProperties({
           compact ? (
             <span
               className={
-                isPastTaskDate(dueDate)
-                  ? "text-red-600 dark:text-red-400"
-                  : ""
+                isPastTaskDate(dueDate) ? "text-red-600 dark:text-red-400" : ""
               }
             >
               <CalendarIcon className="size-4" />
@@ -169,4 +170,3 @@ export default function TaskOptionalProperties({
     </>
   );
 }
-

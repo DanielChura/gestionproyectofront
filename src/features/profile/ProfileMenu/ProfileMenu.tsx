@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import LogoutIcon from "../../../shared/icons/LogoutIcon";
-import SettingsIcon from "../../../shared/icons/SettingsIcon";
+import LogoutIcon from "../../../shared/Icons/LogoutIcon";
+import SettingsIcon from "../../../shared/Icons/SettingsIcon";
 import Avatar from "../../../shared/Avatar";
 import type { SessionUser } from "../../auth/api";
 import { roleLabel } from "../../auth/roles";
@@ -88,7 +88,6 @@ function ProfileMenu({ user, onLogout, isCollapsed }: ProfileMenuProps) {
           </div>
         </>
       )}
-
     </div>
   );
 }

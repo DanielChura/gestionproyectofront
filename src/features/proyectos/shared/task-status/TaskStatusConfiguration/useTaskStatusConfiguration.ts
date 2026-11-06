@@ -208,7 +208,7 @@ export function useTaskStatusConfiguration(
         return;
       }
       draft.onApply(
-        orderedDraft(states).map((state) => ({
+        orderedDraft(states).map((state: ProjectTaskState) => ({
           ...state,
           name: state.name.trim().toLocaleUpperCase("es"),
         })),

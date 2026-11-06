@@ -2,7 +2,6 @@ import { useEffect, useId, useLayoutEffect, useRef } from "react";
 import Tooltip from "../../../../../shared/Tooltip";
 import { taskCreationStart } from "../../../shared/task-fields/taskDates";
 import TaskOptionalProperties from "../../../shared/task-form/TaskOptionalProperties";
-import StateIcon from "../../../shared/task-status/StateIcon";
 import type { Project, ProjectCatalogs, Task } from "../../../types";
 import { useQuickTask } from "../hooks/useQuickTask";
 import { useQuickTaskAlignment } from "../hooks/useQuickTaskAlignment";
@@ -56,7 +55,8 @@ export default function QuickTaskRow({
   useEffect(() => {
     const outside = (event: PointerEvent) => {
       if (
-        !pending.current && !draft.uncertain &&
+        !pending.current &&
+        !draft.uncertain &&
         !insideEvents.current.has(event) &&
         event.target instanceof Node &&
         !form.current?.contains(event.target)
@@ -68,7 +68,6 @@ export default function QuickTaskRow({
         event.key === "Escape" &&
         !event.defaultPrevented &&
         !event.isComposing &&
-        !composing.current &&
         !pending.current
       ) {
         event.preventDefault();
@@ -88,7 +87,9 @@ export default function QuickTaskRow({
   useLayoutEffect(() => {
     name.current?.focus();
   }, []);
-  useLayoutEffect(() => { onBusyChange?.(draft.busy || draft.uncertain); }, [draft.busy, draft.uncertain, onBusyChange]);
+  useLayoutEffect(() => {
+    onBusyChange?.(draft.busy || draft.uncertain);
+  }, [draft.busy, draft.uncertain, onBusyChange]);
   useLayoutEffect(() => {
     if (!draft.busy && (draft.error || Object.keys(draft.errors).length)) {
       form.current
@@ -96,7 +97,6 @@ export default function QuickTaskRow({
         ?.focus();
     }
   }, [draft.busy, draft.errors, draft.error]);
-  // React capture also reaches owned portals, unlike DOM contains().
   return (
     <form
       ref={form}
@@ -201,27 +201,21 @@ export default function QuickTaskRow({
                     aria-describedby={description}
                     className="inline-flex max-w-32 shrink-0 cursor-help items-center gap-1 rounded-lg px-1.5 py-1 text-xs text-neutral-700 dark:text-neutral-300"
                   >
-                    <StateIcon
-                      code={draft.state!.code}
-                      name={draft.state!.name}
-                      category={draft.state!.category}
-                      color={draft.state!.color}
-                    />
                     <span className="truncate">{draft.state!.name}</span>
                   </button>
                 )}
               </Tooltip>
             )}
+            {draft.errors["task-name"] && (
+              <p
+                id={`${id}-error`}
+                className="mt-1 text-red-700 dark:text-red-400"
+                role="alert"
+              >
+                {draft.errors["task-name"]}
+              </p>
+            )}
           </div>
-          {draft.errors["task-name"] && (
-            <p
-              id={`${id}-error`}
-              className="mt-1 text-red-700 dark:text-red-400"
-              role="alert"
-            >
-              {draft.errors["task-name"]}
-            </p>
-          )}
         </div>
         <TaskOptionalProperties
           compact
@@ -260,8 +254,24 @@ export default function QuickTaskRow({
       >
         {alignmentState && <StateLabel {...alignmentState} />}
       </span>
-      {draft.uncertain && onCheckCreation && <button type="button" className="cursor-pointer rounded-lg px-3 py-1.5 text-xs underline" onClick={onCheckCreation}>Consultar tareas antes de otra creación</button>}
-      {draft.uncertain && <button type="button" className="cursor-pointer rounded-lg px-3 py-1.5 text-xs underline" onClick={() => onClose(true)}>Cerrar borrador sin reenviar</button>}
+      {draft.uncertain && onCheckCreation && (
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg px-3 py-1.5 text-xs underline"
+          onClick={onCheckCreation}
+        >
+          Consultar tareas antes de otra creación
+        </button>
+      )}
+      {draft.uncertain && (
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg px-3 py-1.5 text-xs underline"
+          onClick={() => onClose(true)}
+        >
+          Cerrar borrador sin reenviar
+        </button>
+      )}
       {draft.error && (
         <p
           tabIndex={-1}

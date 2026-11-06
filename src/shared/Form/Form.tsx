@@ -1,5 +1,5 @@
 import type { FormEvent, ReactNode } from "react";
-import XIcon from "../icons/XIcon";
+import XIcon from "../Icons/XIcon";
 import Button from "../Button/Button";
 import SecondaryButton from "../Button/SecondaryButton";
 

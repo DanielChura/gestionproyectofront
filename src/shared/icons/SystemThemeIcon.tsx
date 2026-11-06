@@ -6,7 +6,8 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 128 72"
-      className={`appearance-theme-illustration ${props.className ?? ""}`.trim()}    >
+      className={`appearance-theme-illustration ${props.className ?? ""}`.trim()}
+    >
       <g clip-path="url(#appearance-auto-clip-dark)">
         <path fill="#313131" d="M0 0H64V72H0z" transform="translate(64)"></path>
         <g filter="url(#appearance-auto-shadow-sidebar-dark)">
@@ -53,7 +54,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
           color-interpolation-filters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -93,7 +94,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
           color-interpolation-filters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -133,7 +134,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
           color-interpolation-filters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"
@@ -173,7 +174,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
           color-interpolation-filters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             result="hardAlpha"

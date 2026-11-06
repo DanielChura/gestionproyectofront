@@ -1,5 +1,4 @@
 import type { IconProps } from "./types";
-
 function SuccessIcon({ className, fill = true }: IconProps) {
   if (fill) {
     return (

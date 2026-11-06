@@ -1,5 +1,4 @@
 import type { IconProps } from "./types";
-
 function DashboardIcon({ className, fill = false }: IconProps) {
   if (fill) {
     return (
@@ -24,7 +23,7 @@ function DashboardIcon({ className, fill = false }: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}

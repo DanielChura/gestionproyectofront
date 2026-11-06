@@ -1,8 +1,8 @@
 import { useState } from "react";
-import FileIcon from "../../../shared/icons/FileIcon";
-import EditIcon from "../../../shared/icons/EditIcon";
-import TrashIcon from "../../../shared/icons/TrashIcon";
-import PlusIcon from "../../../shared/icons/PlusIcon";
+import FileIcon from "../../../shared/Icons/FileIcon";
+import EditIcon from "../../../shared/Icons/EditIcon";
+import TrashIcon from "../../../shared/Icons/TrashIcon";
+import PlusIcon from "../../../shared/Icons/PlusIcon";
 import Button from "../../../shared/Button/Button";
 import { useSpecialties } from "./useSpecialties";
 import SpecialtyForm from "./SpecialtyForm/SpecialtyForm";
@@ -59,8 +59,15 @@ function SpecialtiesSection() {
   return (
     <section aria-label="Especialidades" className="flex h-full flex-col">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100">Especialidades</h3>
-        <Button type="button" onClick={() => setModal({ mode: "create" })} aria-label="Nueva especialidad" className="inline-flex items-center gap-1.5">
+        <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100">
+          Especialidades
+        </h3>
+        <Button
+          type="button"
+          onClick={() => setModal({ mode: "create" })}
+          aria-label="Nueva especialidad"
+          className="inline-flex items-center gap-1.5"
+        >
           <PlusIcon className="size-4" />
           <span>Nueva especialidad</span>
         </Button>

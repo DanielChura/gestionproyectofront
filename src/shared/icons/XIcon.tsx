@@ -1,5 +1,4 @@
 import type { IconProps } from "./types";
-
 function XIcon({ className, fill = false }: IconProps) {
   if (fill) {
     return (

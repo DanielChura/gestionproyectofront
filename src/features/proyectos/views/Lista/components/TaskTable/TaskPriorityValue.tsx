@@ -1,4 +1,4 @@
-import FlagIcon from "../../../../../../shared/icons/FlagIcon";
+import FlagIcon from "../../../../../../shared/Icons/FlagIcon";
 import { priorityTones } from "../../../../shared/task-fields/priorityTones";
 
 export default function TaskPriorityValue({
@@ -14,7 +14,7 @@ export default function TaskPriorityValue({
       data-priority={priority}
     >
       <FlagIcon
-        className={`size-4 shrink-0 ${priorityTones[priority ?? 0] ?? "text-neutral-500 dark:text-neutral-400"}`}
+        className={`size-4 shrink-0 ${priorityTones[priority ?? 0]?.text ?? "text-neutral-500 dark:text-neutral-400"}`}
         fill
       />
       <span className="truncate">{name}</span>

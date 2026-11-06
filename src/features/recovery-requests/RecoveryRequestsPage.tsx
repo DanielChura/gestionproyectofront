@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useRecoveryRequests } from "./useRecoveryRequests";
-import UserIcon from "../../shared/icons/UserIcon";
-import AtIcon from "../../shared/icons/AtIcon";
-import ClockIcon from "../../shared/icons/ClockIcon";
-import DotsIcon from "../../shared/icons/DotsIcon";
-import SearchIcon from "../../shared/icons/SearchIcon";
+import UserIcon from "../../shared/Icons/UserIcon";
+import AtIcon from "../../shared/Icons/AtIcon";
+import ClockIcon from "../../shared/Icons/ClockIcon";
+import DotsIcon from "../../shared/Icons/DotsIcon";
+import SearchIcon from "../../shared/Icons/SearchIcon";
 import Input from "../../shared/Input/Input";
 
 export default function RecoveryRequestsPage() {

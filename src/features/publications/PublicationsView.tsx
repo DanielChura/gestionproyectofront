@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import SearchIcon from "../../shared/icons/SearchIcon";
+import SearchIcon from "../../shared/Icons/SearchIcon";
 import PublicationBoard from "./components/PublicationBoard";
 import PublicationDetail from "./components/PublicationDetail";
 import { useToast } from "../../hooks/useToast";

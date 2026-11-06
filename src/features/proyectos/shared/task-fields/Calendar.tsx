@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import ChevronDownIcon from "../../../../shared/icons/ChevronIcon";
+import ChevronDownIcon from "../../../../shared/Icons/ChevronIcon";
 import { projectToday } from "../../utils/taskGrouping";
 
 interface CalendarProps {

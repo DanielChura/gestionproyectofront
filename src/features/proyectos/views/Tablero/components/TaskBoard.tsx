@@ -1,11 +1,8 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState, type WheelEvent } from "react";
 import {
   DndContext,
   DragOverlay,
-  KeyboardSensor,
   PointerSensor,
-  useDroppable,
-  useDraggable,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -13,244 +10,27 @@ import {
 } from "@dnd-kit/core";
 
 import type {
-  Task,
-  TaskActionKind,
+  EditTaskPayload,
   Project,
   ProjectCatalogs,
+  Task,
+  TaskActionKind,
   TaskStatePayload,
 } from "../../../types";
-import { formatTaskDate } from "../../../utils/taskHierarchy";
-import FlagIcon from "../../../../../shared/icons/FlagIcon";
-import CalendarIcon from "../../../../../shared/icons/CalendarIcon";
-import ChevronDownIcon from "../../../../../shared/icons/ChevronIcon";
-import { taskAssignees } from "../../../utils/taskAssignees";
-import { stateInk } from "../../../utils/stateInk";
+import TaskBoardCard, { type TaskCardView } from "./TaskBoardCard";
+import TaskBoardColumn from "./TaskBoardColumn";
 
 interface TaskBoardProps {
   project: Project;
   tasks: Task[];
   catalogs: ProjectCatalogs;
-  onAction: (kind: TaskActionKind, id: number) => void;
+  onAction: (
+    kind: TaskActionKind | "create",
+    id: number,
+    extra?: { stateCode?: string },
+  ) => void;
   onState: (task: Task, data: TaskStatePayload) => Promise<void>;
-}
-
-const priorityName = (catalogs: ProjectCatalogs, code: number | null) =>
-  code == null
-    ? "Sin prioridad"
-    : (catalogs.priorities.find((item) => item.code === code)?.name ??
-      String(code));
-
-function Card({
-  task,
-  catalogs,
-  onAction,
-  draggable,
-  childCount,
-  expanded = false,
-  onToggleChildren,
-  childrenTasks,
-  childrenMap,
-  overlay = false,
-}: {
-  task: Task;
-  catalogs: ProjectCatalogs;
-  onAction: (kind: TaskActionKind, id: number) => void;
-  draggable?: boolean;
-  childCount?: number;
-  expanded?: boolean;
-  onToggleChildren?: (id: number) => void;
-  childrenTasks?: Task[];
-  childrenMap?: Map<number, Task[]>;
-  overlay?: boolean;
-}) {
-  const resolvedChildCount =
-    childCount ?? childrenMap?.get(task.id)?.length ?? 0;
-  const resolvedChildren = childrenTasks ?? childrenMap?.get(task.id) ?? [];
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: overlay ? `preview-${task.id}` : task.id,
-    data: { task },
-    disabled: !draggable,
-  });
-  const style = {
-    transform: undefined,
-    opacity: isDragging ? 0 : 1,
-  };
-  const people = taskAssignees(task);
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-2.5 text-xs rounded-lg cursor-grab active:cursor-grabbing hover:bg-neutral-50 dark:hover:bg-neutral-800"
-      onClick={() => onAction("detail", task.id)}
-      {...(draggable ? listeners : {})}
-      {...(draggable ? attributes : {})}
-      role="button"
-      tabIndex={0}
-      aria-label={task.name}
-      onKeyDown={(event) => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          onAction("detail", task.id);
-        } else listeners?.onKeyDown?.(event);
-      }}
-    >
-      <div className=" text-neutral-800 dark:text-neutral-100 leading-snug">
-        {task.name}
-      </div>
-      {people.length > 0 && (
-        <div className="mt-1.5 flex items-center gap-1.5 text-neutral-600 dark:text-neutral-400 truncate">
-          <span className="inline-grid place-items-center size-4 rounded-full bg-sky-700 text-neutral-100 text-[9px]  shrink-0">
-            {people[0].name.charAt(0).toUpperCase()}
-          </span>
-          <span className="truncate">
-            {people.map((person) => person.name).join(", ")}
-          </span>
-        </div>
-      )}
-      <div className="mt-1.5 flex flex-wrap gap-1.5">
-        {task.priority != null && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px]  rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
-            <FlagIcon className="size-3.5" />
-            {priorityName(catalogs, task.priority)}
-          </span>
-        )}
-        {task.due_date && (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px]  rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
-            <CalendarIcon className="size-3.5" />
-            {formatTaskDate(task.due_date)}
-          </span>
-        )}
-        {task.labels.slice(0, 3).map((label) => (
-          <span
-            key={label.id}
-            className="px-2 py-0.5 text-[10px]  rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100"
-          >
-            {label.name}
-          </span>
-        ))}
-        {task.labels.length > 3 && (
-          <span className="px-2 py-0.5 text-[10px]  rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-            +{task.labels.length - 3}
-          </span>
-        )}
-      </div>
-      {resolvedChildCount > 0 && (
-        <div className="mt-1.5">
-          <button
-            type="button"
-            className="inline-flex cursor-pointer items-center gap-1 rounded p-0.5 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-800 dark:text-neutral-100 dark:hover:text-neutral-100"
-            aria-expanded={expanded}
-            aria-label={`${expanded ? "Contraer" : "Expandir"} subtareas de ${task.name}`}
-            onClick={(event) => {
-              event.stopPropagation();
-              onToggleChildren?.(task.id);
-            }}
-          >
-            <span
-              className={expanded ? "[transform:rotate(90deg)]" : undefined}
-            >
-              <ChevronDownIcon className="size-4 -rotate-90" />
-            </span>
-            <span className="text-[10px] ">{resolvedChildCount}</span>
-          </button>
-          {expanded && resolvedChildren.length > 0 && (
-            <div className="mt-2 space-y-2 border-l border-neutral-200 dark:border-neutral-800 pl-2">
-              {resolvedChildren.map((child) => (
-                <button
-                  key={child.id}
-                  type="button"
-                  className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left text-xs text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800"
-                  onPointerDown={(event) => event.stopPropagation()}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onAction("detail", child.id);
-                  }}
-                >
-                  <span className="truncate">{child.name}</span>
-                  <span className="shrink-0 text-[10px] text-neutral-600 dark:text-neutral-400">
-                    {child.state_name}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Column({
-  state,
-  tasks,
-  catalogs,
-  onAction,
-  isOver,
-  childrenMap,
-  expandedParents,
-  onToggleChildren,
-}: {
-  state: { code: string; name: string; color?: string; category?: string };
-  tasks: Task[];
-  catalogs: ProjectCatalogs;
-  onAction: (kind: TaskActionKind, id: number) => void;
-  isOver: boolean;
-  childrenMap: Map<number, Task[]>;
-  expandedParents: Set<number>;
-  onToggleChildren: (id: number) => void;
-}) {
-  const { setNodeRef } = useDroppable({ id: state.code });
-  const headerColor = state.color;
-  const softBg = headerColor ? `${headerColor}14` : "#f5f5f5";
-  return (
-    <section
-      ref={setNodeRef}
-      style={{ backgroundColor: softBg }}
-      className={`flex flex-col min-w-[260px] w-[300px] shrink-0 rounded-xl p-2 ${
-        isOver ? "ring-2 ring-neutral-400" : ""
-      }`}
-      aria-label={state.name}
-    >
-      <header className="flex shrink-0 items-center gap-2 px-2 py-1.5">
-        <div
-          className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs "
-          style={
-            headerColor
-              ? { backgroundColor: headerColor, color: stateInk(headerColor) }
-              : { backgroundColor: "#e5e5e5", color: "#404040" }
-          }
-        >
-          {headerColor && (
-            <span
-              className="inline-block size-2 rounded-full"
-              style={{ backgroundColor: stateInk(headerColor) }}
-              aria-hidden="true"
-            />
-          )}
-          {state.name}
-        </div>
-        <span className="text-[10px]  text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-900/70 px-1.5 py-0.5 rounded">
-          {tasks.length}
-        </span>
-      </header>
-      <div className="board-column-scroll flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
-        {tasks.map((task) => (
-          <Card
-            key={task.id}
-            task={task}
-            catalogs={catalogs}
-            onAction={onAction}
-            draggable={task.permissions.state}
-            childCount={childrenMap.get(task.id)?.length ?? 0}
-            expanded={expandedParents.has(task.id)}
-            onToggleChildren={onToggleChildren}
-            childrenTasks={childrenMap.get(task.id) ?? []}
-            childrenMap={childrenMap}
-          />
-        ))}
-      </div>
-    </section>
-  );
+  onPatch: (task: Task, data: Partial<EditTaskPayload>) => Promise<void>;
 }
 
 export default function TaskBoard({
@@ -259,6 +39,7 @@ export default function TaskBoard({
   catalogs,
   onAction,
   onState,
+  onPatch,
 }: TaskBoardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
@@ -267,6 +48,7 @@ export default function TaskBoard({
   const [expandedParents, setExpandedParents] = useState<Set<number>>(
     new Set(),
   );
+
   const toggleParent = (id: number) =>
     setExpandedParents((current) => {
       const next = new Set(current);
@@ -277,7 +59,6 @@ export default function TaskBoard({
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor),
   );
 
   const states = project.task_states.states;
@@ -285,29 +66,47 @@ export default function TaskBoard({
   for (const task of tasks) {
     const bucket = byState.get(task.state_code);
     if (bucket) bucket.push(task);
-    else {
-      // unknown state: put in first column fallback
-      if (states[0]) byState.get(states[0].code)?.push(task);
-    }
+    else if (states[0]) byState.get(states[0].code)?.push(task);
   }
+
+  const visibleStates =
+    activeId === null
+      ? states.filter((state) => (byState.get(state.code)?.length ?? 0) > 0)
+      : states;
+
+  const taskById = useMemo(
+    () => new Map(tasks.map((task) => [task.id, task])),
+    [tasks],
+  );
 
   const childrenMap = useMemo(() => {
     const map = new Map<number, Task[]>();
     for (const task of tasks) {
-      if (
-        task.parent_id !== null &&
-        tasks.some((item) => item.id === task.parent_id)
-      ) {
+      if (task.parent_id !== null && taskById.has(task.parent_id)) {
         const branch = map.get(task.parent_id) ?? [];
         branch.push(task);
         map.set(task.parent_id, branch);
       }
     }
     return map;
-  }, [tasks]);
+  }, [tasks, taskById]);
 
   const activeTask =
-    activeId != null ? tasks.find((t) => t.id === activeId) : null;
+    activeId != null ? (taskById.get(activeId) ?? null) : null;
+  const activeParent =
+    activeTask?.parent_id != null
+      ? taskById.get(activeTask.parent_id)
+      : undefined;
+
+  const view: TaskCardView = {
+    project,
+    catalogs,
+    childrenMap,
+    expandedParents,
+    onAction: (...args) => onAction(...args),
+    onPatch,
+    onToggleChildren: toggleParent,
+  };
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(Number(event.active.id));
@@ -322,7 +121,7 @@ export default function TaskBoard({
       if (!over) return;
       const taskId = Number(active.id);
       const target = String(over.id);
-      const task = tasks.find((t) => t.id === taskId);
+      const task = taskById.get(taskId);
       if (!task || task.state_code === target) return;
       if (!task.permissions.state) return;
       const transition = task.transitions.find(
@@ -335,14 +134,16 @@ export default function TaskBoard({
         setError(String(failure));
       }
     },
-    [tasks, onState],
+    [taskById, onState],
   );
 
-  const handleBoardWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+  const handleBoardWheel = (event: WheelEvent<HTMLDivElement>) => {
     if (event.shiftKey || !boardRef.current) return;
-    const col = (event.target as HTMLElement).closest?.(".board-column-scroll");
-    if (col) {
-      const { scrollTop, scrollHeight, clientHeight } = col;
+    const column = (event.target as HTMLElement).closest?.(
+      ".board-column-scroll",
+    );
+    if (column) {
+      const { scrollTop, scrollHeight, clientHeight } = column;
       const canScrollDown =
         event.deltaY > 0 && scrollTop + clientHeight < scrollHeight - 1;
       const canScrollUp = event.deltaY < 0 && scrollTop > 1;
@@ -360,46 +161,44 @@ export default function TaskBoard({
           {error}
         </p>
       )}
+
       <DndContext
         sensors={sensors}
         onDragStart={handleDragStart}
-        onDragEnd={(e) => void handleDragEnd(e)}
+        onDragEnd={(event) => void handleDragEnd(event)}
         onDragCancel={() => {
           setActiveId(null);
           setOverId(null);
         }}
-        onDragOver={(e) => setOverId(e.over ? String(e.over.id) : null)}
+        onDragOver={(event) =>
+          setOverId(event.over ? String(event.over.id) : null)
+        }
       >
         <div
           ref={boardRef}
           onWheel={handleBoardWheel}
-          className="flex min-h-0 flex-1 gap-3 overflow-x-auto"
+          className="flex min-h-0 flex-1 items-start gap-3 overflow-x-scroll"
         >
-          {states.map((state) => (
-            <Column
+          {visibleStates.map((state) => (
+            <TaskBoardColumn
               key={state.code}
               state={state}
               tasks={byState.get(state.code) ?? []}
-              catalogs={catalogs}
-              onAction={onAction}
+              taskById={taskById}
+              view={view}
               isOver={overId === state.code}
-              childrenMap={childrenMap}
-              expandedParents={expandedParents}
-              onToggleChildren={toggleParent}
             />
           ))}
         </div>
+
         <DragOverlay>
           {activeTask ? (
-            <div className="w-[300px]">
-              <Card
-                task={activeTask}
-                catalogs={catalogs}
-                onAction={onAction}
-                draggable={false}
-                overlay
-              />
-            </div>
+            <TaskBoardCard
+              task={activeTask}
+              view={view}
+              parent={activeParent}
+              overlay
+            />
           ) : null}
         </DragOverlay>
       </DndContext>

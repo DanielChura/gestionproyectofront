@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import FlagIcon from "../../../../../../../shared/icons/FlagIcon";
-import { priorityTones } from "../../../../../shared/task-fields/priorityTones";
+import FlagIcon from "../../../../../../../shared/Icons/FlagIcon";
 import type { TaskFieldView } from "../types";
+import { priorityTones } from "../../../../../shared/task-fields/priorityTones";
 
 export default function TaskPriorityCell({ view }: { view: TaskFieldView }) {
   const { task, catalogs, onPatch } = view;
@@ -29,7 +29,7 @@ export default function TaskPriorityCell({ view }: { view: TaskFieldView }) {
           className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
         >
           <FlagIcon
-            className={`size-4 shrink-0 ${priorityTones[task.priority ?? 0] ?? "text-neutral-400"}`}
+            className={`size-4 shrink-0 ${priorityTones[task.priority ?? 0]?.text ?? "text-neutral-400"}`}
             fill
           />
           <span className="truncate">{name}</span>
@@ -62,7 +62,7 @@ export default function TaskPriorityCell({ view }: { view: TaskFieldView }) {
                 }`}
               >
                 <FlagIcon
-                  className={`size-4 ${priorityTones[item.code] ?? "text-neutral-400"}`}
+                  className={`size-4 ${priorityTones[item.code]?.text ?? "text-neutral-400"}`}
                   fill
                 />
                 <span>{item.name}</span>

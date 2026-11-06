@@ -25,11 +25,18 @@ export interface ProjectAreaGroup extends ProjectArea {
 
 export type StateCategory = "not_started" | "active" | "done" | "closed";
 
+export type Tema = {
+  id: number;
+  color: string;
+  icono: string;
+};
+
 export interface ProjectTaskState {
   code: string;
   name: string;
   category?: StateCategory;
-  color?: string;
+  tema_id: number;
+  tema: Tema | null;
 }
 
 export interface TaskStatusTemplate {
@@ -37,7 +44,7 @@ export interface TaskStatusTemplate {
   name: string;
   preset: boolean;
   revision: number;
-  states: { name: string; category: StateCategory; color: string }[];
+  states: { name: string; category: StateCategory; tema_id: number }[];
 }
 
 export interface ProjectCatalogs {

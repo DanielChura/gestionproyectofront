@@ -1,11 +1,15 @@
-import CheckIcon from "../../../../shared/icons/CheckIcon";
-import CircleDashedIcon from "../../../../shared/icons/CircleDashedIcon";
-import CircleDotIcon from "../../../../shared/icons/CircleDotIcon";
-import CircleHalfIcon from "../../../../shared/icons/CircleHalfIcon";
-import CircleMinusIcon from "../../../../shared/icons/CircleMinusIcon";
-import SuccessIcon from "../../../../shared/icons/SuccessIcon";
-import XIcon from "../../../../shared/icons/XIcon";
-import type { ProjectTaskState } from "../../../../core/interfaces/project.interface";
+import CheckIcon from "../../../../shared/Icons/CheckIcon";
+import CircleDashedIcon from "../../../../shared/Icons/CircleDashedIcon";
+import CircleDotIcon from "../../../../shared/Icons/CircleDotIcon";
+import CircleHalfIcon from "../../../../shared/Icons/CircleHalfIcon";
+import CircleMinusIcon from "../../../../shared/Icons/CircleMinusIcon";
+import SuccessIcon from "../../../../shared/Icons/SuccessIcon";
+import XIcon from "../../../../shared/Icons/XIcon";
+import type {
+  ProjectTaskState,
+  StateCategory,
+  Tema,
+} from "../../../../core/interfaces/project.interface";
 import { categoryValue, stateCategories } from "../../utils/stateGroups";
 
 export default function StateIcon({
@@ -13,7 +17,14 @@ export default function StateIcon({
   name,
   category,
   color,
-}: Pick<ProjectTaskState, "code" | "category" | "color"> & { name?: string }) {
+  tema,
+}: {
+  code: string;
+  name?: string;
+  category?: StateCategory;
+  color?: string;
+  tema?: Tema | null;
+}) {
   const value = categoryValue({ code, name: "", category });
   const stateName = (name ?? "")
     .normalize("NFD")
@@ -22,6 +33,7 @@ export default function StateIcon({
     .toLocaleUpperCase("es");
   const tone =
     color ??
+    tema?.color ??
     (code === "CANCELADA" || stateName === "CANCELADA"
       ? "#a42a28"
       : stateCategories.find((item) => item.value === value)?.color);
@@ -55,4 +67,3 @@ export default function StateIcon({
     </span>
   );
 }
-

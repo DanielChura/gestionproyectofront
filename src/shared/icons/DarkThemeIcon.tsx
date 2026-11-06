@@ -6,7 +6,8 @@ export default function DarkThemeIcon(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 128 72"
-      className={`appearance-theme-illustration ${props.className ?? ""}`.trim()}    >
+      className={`appearance-theme-illustration ${props.className ?? ""}`.trim()}
+    >
       <g clip-path="url(#appearance-dark-clip)">
         <rect width="128" height="72" fill="#313131"></rect>
         <g filter="url(#appearance-dark-shadow-sidebar)">
@@ -69,7 +70,7 @@ export default function DarkThemeIcon(props: SVGProps<SVGSVGElement>) {
           filterUnits="userSpaceOnUse"
           color-interpolation-filters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -120,7 +121,7 @@ export default function DarkThemeIcon(props: SVGProps<SVGSVGElement>) {
           filterUnits="userSpaceOnUse"
           color-interpolation-filters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"

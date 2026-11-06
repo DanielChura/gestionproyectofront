@@ -1,9 +1,9 @@
 import Avatar from "../../../../../shared/Avatar";
-import ActivityIcon from "../../../../../shared/icons/ActivityIcon";
-import CalendarIcon from "../../../../../shared/icons/CalendarIcon";
-import CheckIcon from "../../../../../shared/icons/CheckIcon";
-import ClockIcon from "../../../../../shared/icons/ClockIcon";
-import UserIcon from "../../../../../shared/icons/UserIcon";
+import ActivityIcon from "../../../../../shared/Icons/ActivityIcon";
+import CalendarIcon from "../../../../../shared/Icons/CalendarIcon";
+import CheckIcon from "../../../../../shared/Icons/CheckIcon";
+import ClockIcon from "../../../../../shared/Icons/ClockIcon";
+import UserIcon from "../../../../../shared/Icons/UserIcon";
 import type { ProjectPerson } from "../../../../../core/interfaces/projectOverview.interface";
 
 interface Props {

@@ -7,9 +7,9 @@ import { useProfile } from "../profile/ProfileModal/useProfile";
 import { updateSessionProfile } from "../../features/auth/api";
 import { useToast } from "../../hooks/useToast";
 import Avatar from "../../shared/Avatar";
-import UserIcon from "../../shared/icons/UserIcon";
-import AtIcon from "../../shared/icons/AtIcon";
-import KeyIcon from "../../shared/icons/KeyIcon";
+import UserIcon from "../../shared/Icons/UserIcon";
+import AtIcon from "../../shared/Icons/AtIcon";
+import KeyIcon from "../../shared/Icons/KeyIcon";
 
 const appearanceOptions: Array<{
   value: Theme;

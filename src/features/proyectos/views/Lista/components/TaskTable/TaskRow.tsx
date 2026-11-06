@@ -33,10 +33,10 @@ export default function TaskRow({
     <tr
       data-task-id={task.id}
       className="group/row h-12 border-b border-neutral-200 hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-900"
-      onClick={(event) => {
+      onClick={(e) => {
         if (
-          event.target instanceof Element &&
-          !event.target.closest(
+          e.target instanceof Element &&
+          !e.target.closest(
             "button, input, textarea, select, a, summary, [contenteditable=true]",
           )
         ) {

@@ -1,4 +1,4 @@
-import DotsIcon from "../../../../shared/icons/DotsIcon";
+import DotsIcon from "../../../../shared/Icons/DotsIcon";
 
 export default function TaskStatusSettingsControl({
   onClick,

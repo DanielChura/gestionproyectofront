@@ -1,30 +1,39 @@
-import UserIcon from "../../../../../shared/icons/UserIcon";
-import StateIcon from "../../../shared/task-status/StateIcon";
-import type { TaskGroupingMode, TaskListGroup } from "../../../types";
+import UserIcon from "../../../../../shared/Icons/UserIcon";
+import { getIcon } from "../../../../../shared/Icons/icon-catalog";
+import type {
+  ProjectTaskState,
+  TaskGroupingMode,
+  TaskListGroup,
+} from "../../../types";
 import TaskPriorityValue from "./TaskTable/TaskPriorityValue";
+
+interface TaskGroupLabelProps {
+  group: TaskListGroup;
+  mode: TaskGroupingMode;
+  state?: ProjectTaskState;
+}
 
 export default function TaskGroupLabel({
   group,
   mode,
-}: {
-  group: TaskListGroup;
-  mode: TaskGroupingMode;
-}) {
-  if (group.stateCode)
+  state,
+}: TaskGroupLabelProps) {
+  if (group.stateCode) {
+    const Icon = getIcon(state?.tema?.icono);
+
     return (
-      <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs text-neutral-100">
-        <StateIcon
-          code={group.stateCode}
-          name={group.name}
-          category={group.stateCategory}
-          color="#fff"
-        />
+      <span className="inline-flex items-center gap-1.5 font-medium text-white">
+        <Icon className="size-3.5" fill />
         <span className="truncate">{group.name}</span>
       </span>
     );
-  if (mode === "priority")
+  }
+
+  if (mode === "priority") {
     return <TaskPriorityValue priority={group.priority} name={group.name} />;
-  if (group.tokens.length)
+  }
+
+  if (group.tokens.length) {
     return (
       <span
         className="inline-flex flex-wrap items-center gap-1.5"
@@ -50,6 +59,8 @@ export default function TaskGroupLabel({
         )}
       </span>
     );
+  }
+
   return (
     <span
       className={

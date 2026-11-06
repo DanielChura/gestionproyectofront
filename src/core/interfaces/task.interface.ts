@@ -1,4 +1,4 @@
-import type { ProjectSummary, ProjectTaskState, StateCategory } from "./project.interface";
+import type { ProjectSummary, ProjectTaskState, StateCategory, Tema } from "./project.interface";
 
 export type LabelKind = "technical" | "nontechnical" | "specialty";
 
@@ -75,7 +75,7 @@ export interface ProjectDraft {
 export interface CreateProjectPayload {
   participant_source?: "workers" | "teams";
   team_ids?: number[];
-  initial_task_states?: Pick<ProjectTaskState, "name" | "category" | "color">[];
+  initial_task_states?: Pick<ProjectTaskState, "name" | "category">[];
   name: string;
   description: string;
   end_date: string | null;
@@ -105,7 +105,8 @@ export interface Task {
   state_code: string;
   state_name: string;
   state_category?: StateCategory;
-  state_color?: string;
+  state_tema_id: number;
+  state_tema: Tema | null;
   priority: number | null;
   created_at: string;
   start_date: string;
@@ -265,4 +266,4 @@ export interface TaskCreationRequest {
 }
 
 // Re-export for convenience
-export type { StateCategory, ProjectTaskState } from "./project.interface";
+export type { StateCategory, ProjectTaskState, Tema } from "./project.interface";

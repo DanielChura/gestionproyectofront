@@ -1,4 +1,4 @@
-import VectorIcon from "../../../../shared/icons/VectorIcon";
+import VectorIcon from "../../../../shared/Icons/VectorIcon";
 
 export default function TaskGroupExpansionFilter({
   expanded,

@@ -1,11 +1,11 @@
 import { Link, useLocation, useParams } from "react-router";
-import BuildingIcon from "../../shared/icons/BuildingIcon";
-import ChevronDownIcon from "../../shared/icons/ChevronIcon";
-import DashboardIcon from "../../shared/icons/Dashboard";
-import FileIcon from "../../shared/icons/FileIcon";
-import FolderIcon from "../../shared/icons/FolderIcon";
-import StackIcon from "../../shared/icons/StackIcon";
-import StarIcon from "../../shared/icons/StarIcon";
+import BuildingIcon from "../../shared/Icons/BuildingIcon";
+import ChevronDownIcon from "../../shared/Icons/ChevronIcon";
+import DashboardIcon from "../../shared/Icons/Dashboard";
+import FileIcon from "../../shared/Icons/FileIcon";
+import FolderIcon from "../../shared/Icons/FolderIcon";
+import StackIcon from "../../shared/Icons/StackIcon";
+import StarIcon from "../../shared/Icons/StarIcon";
 import { projectPath } from "../../routes";
 import { useProject } from "./hooks/useProject";
 import ListaView from "./views/Lista/ListaView";

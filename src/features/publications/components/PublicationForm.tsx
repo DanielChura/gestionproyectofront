@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
-import PlusIcon from "../../../shared/icons/PlusIcon";
-import TrashIcon from "../../../shared/icons/TrashIcon";
+import PlusIcon from "../../../shared/Icons/PlusIcon";
+import TrashIcon from "../../../shared/Icons/TrashIcon";
 import Form from "../../../shared/Form/Form";
 import Input from "../../../shared/Input/Input";
 import Select from "../../../shared/Select/Select";

@@ -1,9 +1,9 @@
 import type { ComponentType } from "react";
-import type { IconProps } from "../icons/types";
-import FileIcon from "../icons/FileIcon";
-import FolderIcon from "../icons/FolderIcon";
-import ProjectsIcon from "../icons/ProjectsIcon";
-import TeamsIcon from "../icons/TeamsIcon";
+import type { IconProps } from "../Icons/types";
+import FileIcon from "../Icons/FileIcon";
+import FolderIcon from "../Icons/FolderIcon";
+import ProjectsIcon from "../Icons/ProjectsIcon";
+import TeamsIcon from "../Icons/TeamsIcon";
 
 interface EmptyStateProps {
   iconName: EmptyStateIconName;
@@ -27,10 +27,15 @@ function EmptyState({ iconName, message }: EmptyStateProps) {
       role="status"
       className="flex flex-1 flex-col items-center justify-center px-2.5 py-8 text-center"
     >
-      <span className="text-neutral-600 dark:text-neutral-400" aria-hidden="true">
+      <span
+        className="text-neutral-600 dark:text-neutral-400"
+        aria-hidden="true"
+      >
         <Icon className="size-8" fill={false} />
       </span>
-      <p className="m-0 mt-2 text-xs text-neutral-600 dark:text-neutral-400">{message}</p>
+      <p className="m-0 mt-2 text-xs text-neutral-600 dark:text-neutral-400">
+        {message}
+      </p>
     </div>
   );
 }

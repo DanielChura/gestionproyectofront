@@ -1,20 +1,32 @@
 import type {
   ProjectTaskState,
   StateCategory,
+  Tema,
   TaskStatusTemplate,
 } from "../../../../../core/interfaces/project.interface";
 import { categoryValue, stateCategories } from "../../../utils/stateGroups";
+import type { Tema as TemaType } from "../../../../../core/interfaces/project.interface";
 
 export function newStateCode() {
   return `draft_${crypto.randomUUID().replaceAll("-", "").slice(0, 14)}`;
 }
 
 export function templateDraft(template: TaskStatusTemplate): ProjectTaskState[] {
-  return template.states.map((state) => ({ ...state, code: newStateCode() }));
+  return template.states.map((state) => ({
+    code: newStateCode(),
+    name: state.name,
+    category: state.category,
+    tema_id: state.tema_id,
+    tema: {
+      id: state.tema_id,
+      color: "",
+      icono: "",
+    },
+  }));
 }
 
 export function orderedDraft(states: ProjectTaskState[]) {
-  return stateCategories.flatMap(({ value }) =>
+  return stateCategories.flatMap(({ value }: { value: StateCategory }) =>
     states.filter((state) => categoryValue(state) === value),
   );
 }
@@ -58,13 +70,10 @@ export function moveState(
 export function templateStates(
   states: ProjectTaskState[],
 ): TaskStatusTemplate["states"] {
-  return orderedDraft(states).map((state) => ({
+  return orderedDraft(states).map((state: ProjectTaskState) => ({
     name: state.name.trim().toLocaleUpperCase("es"),
     category: categoryValue(state),
-    color:
-      state.color ??
-      stateCategories.find((item) => item.value === categoryValue(state))!
-        .color,
+    tema_id: state.tema_id ?? 1,
   }));
 }
 
@@ -73,7 +82,7 @@ export function emptyState(category: StateCategory): ProjectTaskState {
     code: newStateCode(),
     name: "",
     category,
-    color: stateCategories.find((item) => item.value === category)!.color,
+    tema_id: 1, // tema por defecto (emerald)
+    tema: { id: 1, color: "", icono: "" },
   };
 }
-

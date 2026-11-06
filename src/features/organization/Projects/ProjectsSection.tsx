@@ -4,7 +4,7 @@ import { getProjects } from "../../../core/services/projectService";
 import type { ProjectSummary } from "../../../core/interfaces/project.interface";
 import { projectPath } from "../../../routes";
 import EmptyState from "../../../shared/EmptyState/EmptyState";
-import ProjectsIcon from "../../../shared/icons/ProjectsIcon";
+import ProjectsIcon from "../../../shared/Icons/ProjectsIcon";
 
 function ProjectsSection() {
   const [data, setData] = useState<ProjectSummary[]>([]);

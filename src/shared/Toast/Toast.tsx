@@ -1,12 +1,12 @@
 import { useEffect, type ComponentType } from "react";
 import type { Toast as ToastData, ToastIcon } from "../../context/ToastContext";
 import { useToast } from "../../hooks/useToast";
-import AlertIcon from "../icons/AlertIcon";
-import ErrorIcon from "../icons/ErrorIcon";
-import InfoIcon from "../icons/InfoIcon";
-import SuccessIcon from "../icons/SuccessIcon";
-import XIcon from "../icons/XIcon";
-import type { IconProps } from "../icons/types";
+import AlertIcon from "../Icons/AlertIcon";
+import ErrorIcon from "../Icons/ErrorIcon";
+import InfoIcon from "../Icons/InfoIcon";
+import SuccessIcon from "../Icons/SuccessIcon";
+import XIcon from "../Icons/XIcon";
+import type { IconProps } from "../Icons/types";
 
 const toastIcons: Record<
   ToastIcon,

@@ -1,5 +1,4 @@
 import type { IconProps } from "./types";
-
 function DotsIcon({ className, fill = false }: IconProps) {
   return (
     <svg

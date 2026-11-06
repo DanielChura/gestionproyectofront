@@ -1,5 +1,5 @@
-import ChevronDownIcon from "../../../../../../shared/icons/ChevronIcon";
-import StateIcon from "../../../../shared/task-status/StateIcon";
+import ChevronDownIcon from "../../../../../../shared/Icons/ChevronIcon";
+import { getIcon } from "../../../../../../shared/Icons/icon-catalog";
 import type { TaskRowModel } from "./types";
 
 export default function TaskNameCell({
@@ -16,6 +16,9 @@ export default function TaskNameCell({
   const { task, depth, context, open, searching, childCount, descendantCount } =
     row;
 
+  const Icon = getIcon(task.state_tema?.icono);
+  const color = task.state_tema?.color ?? "#525252";
+
   return (
     <td className="h-12 px-3">
       <div
@@ -24,7 +27,7 @@ export default function TaskNameCell({
       >
         {childCount > 0 ? (
           <button
-            className="inline-flex size-5 shrink-0 cursor-pointer items-center justify-center text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-100"
+            className="inline-flex size-5 shrink-0 cursor-pointer items-center justify-center text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100"
             type="button"
             aria-label={`${open ? "Contraer" : "Expandir"} subtareas de ${task.name}`}
             aria-expanded={open}
@@ -39,14 +42,11 @@ export default function TaskNameCell({
         ) : (
           <span className="w-5 shrink-0" />
         )}
-        <span className="inline-flex shrink-0" title={task.state_name}>
-          <StateIcon
-            code={task.state_code}
-            name={task.state_name}
-            category={task.state_category}
-            color={task.state_color}
-          />
+
+        <span style={{ color }} className="shrink-0" title={task.state_name}>
+          <Icon className="size-4" fill />
         </span>
+
         <div className={`min-w-0 flex-1 ${depth ? "pl-2" : ""}`}>
           <span
             className="block truncate text-xs leading-4 text-neutral-600 dark:text-neutral-400"

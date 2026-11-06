@@ -1,5 +1,4 @@
 import type { IconProps } from "./types";
-
 function HourglassIcon({ className }: IconProps) {
   return (
     <svg
@@ -9,7 +8,7 @@ function HourglassIcon({ className }: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}

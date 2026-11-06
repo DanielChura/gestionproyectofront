@@ -72,12 +72,13 @@ export function groupTasks(
   if (preferences.mode === "state") {
     for (const state of stateByCode.values()) {
       const key = `state:${state.code}`;
+      const color = state.tema?.color ?? "neutral-700";
       groups.set(key, {
         key,
         name: state.name,
         stateCode: state.code,
         stateCategory: state.category,
-        stateColor: state.color,
+        stateColor: `var(--color-${color})`,
         rank: state.rank,
         tokens: [],
         members: new Set(),

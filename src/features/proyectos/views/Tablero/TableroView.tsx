@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import PlusIcon from "../../../../shared/icons/PlusIcon";
+import PlusIcon from "../../../../shared/Icons/PlusIcon";
 import ProjectToolbar from "../../shared/ProjectToolbar";
 import TaskDialog from "../../shared/task-dialog/TaskDialog";
 import TaskStatusConfiguration from "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration";
@@ -35,6 +35,7 @@ export default function TableroView({
     setSearch,
     setAction,
     changeState,
+    patchTask,
     action,
     busy,
     saveTask,
@@ -66,8 +67,16 @@ export default function TableroView({
     configuredStates,
   };
 
-  function handleAction(kind: TaskActionKind, id: number) {
-    setAction({ kind: kind === "detail" ? "edit" : kind, taskId: id });
+  function handleAction(
+    kind: TaskActionKind | "create",
+    id: number,
+    extra?: { stateCode?: string },
+  ) {
+    if (kind === "create") {
+      setAction({ kind: "create", stateCode: extra?.stateCode });
+    } else {
+      setAction({ kind: kind === "detail" ? "edit" : kind, taskId: id });
+    }
   }
 
   return (
@@ -105,6 +114,7 @@ export default function TableroView({
         catalogs={catalogs}
         onAction={handleAction}
         onState={changeState}
+        onPatch={patchTask}
       />
 
       <TaskDialog controller={dialog} />

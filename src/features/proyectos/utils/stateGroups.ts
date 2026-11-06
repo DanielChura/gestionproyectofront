@@ -8,30 +8,35 @@ export const stateCategories: {
   label: string;
   help: string;
   color: string;
+  icono: string;
 }[] = [
   {
     value: "not_started",
     label: "No iniciado",
     help: "Pendiente de comenzar.",
     color: "#737373",
+    icono: "minus",
   },
   {
     value: "active",
     label: "Activo",
     help: "Trabajo en desarrollo, aunque su nombre indique otra cosa.",
     color: "#2563eb",
+    icono: "dot",
   },
   {
     value: "done",
     label: "Completado",
     help: "Trabajo terminado que puede requerir un paso final.",
     color: "#0d9488",
+    icono: "check",
   },
   {
     value: "closed",
     label: "Cerrado",
     help: "Finalizado y fuera del flujo activo. No archiva la tarea.",
     color: "#26834a",
+    icono: "lock",
   },
 ];
 

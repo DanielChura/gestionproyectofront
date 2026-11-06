@@ -36,6 +36,7 @@ export function useQuickTask(
   const [priority, setPriority] = useState<number | null>(null);
   const [labels, setLabels] = useState<Label[]>([]);
   const [busy, setBusy] = useState(false);
+  const [uncertain, setUncertain] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [error, setError] = useState("");
   const pending = useRef(false);
@@ -86,6 +87,7 @@ export function useQuickTask(
         return false;
       }
       onCreated(saved);
+      setUncertain(false);
       return true;
     } catch (failure) {
       if (active.current) {
@@ -111,6 +113,7 @@ export function useQuickTask(
     labels,
     setLabels,
     busy,
+    uncertain,
     errors,
     error,
     state,

@@ -1,13 +1,7 @@
-import FlagIcon from "../../../../shared/icons/FlagIcon";
-import SuccessIcon from "../../../../shared/icons/SuccessIcon";
+import FlagIcon from "../../../../shared/Icons/FlagIcon";
+import SuccessIcon from "../../../../shared/Icons/SuccessIcon";
 import type { ProjectCatalogs } from "../../../../core/interfaces/project.interface";
-
-const priorityColors: Record<number, string> = {
-  1: "text-red-600",
-  2: "text-amber-600",
-  3: "text-blue-600",
-  4: "text-neutral-500",
-};
+import { priorityTones } from "./priorityTones";
 
 export default function PriorityOptions({
   priorities,
@@ -29,7 +23,7 @@ export default function PriorityOptions({
           className="flex cursor-pointer items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-left text-xs text-neutral-800 hover:bg-neutral-100 aria-pressed:bg-neutral-100 aria-pressed:font-semibold dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800 dark:aria-pressed:bg-neutral-800"
         >
           <FlagIcon
-            className={`size-4 shrink-0 ${priorityColors[item.code ?? 0] ?? "text-neutral-400"}`}
+            className={`size-4 shrink-0 ${priorityTones[item.code ?? 0]?.text ?? "text-neutral-400"}`}
             fill
           />
           <span className="flex-1">{item.name}</span>
@@ -39,4 +33,3 @@ export default function PriorityOptions({
     </div>
   );
 }
-

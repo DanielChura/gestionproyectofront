@@ -1,5 +1,4 @@
 import type { IconProps } from "./types";
-
 function ProjectsIcon({ className, fill = true }: IconProps) {
   if (fill) {
     return (
@@ -24,7 +23,7 @@ function ProjectsIcon({ className, fill = true }: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}

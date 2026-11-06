@@ -4,7 +4,7 @@ import type { SessionUser } from "../../auth/api";
 import ProfileMenu from "../../profile/ProfileMenu/ProfileMenu";
 import ProjectsMenu from "./ProjectsMenu";
 import { navigation } from "./sidebar-routes";
-import ChevronsIcon from "../../../shared/icons/ChevronsIcon";
+import ChevronsIcon from "../../../shared/Icons/ChevronsIcon";
 
 interface SidebarProps {
   user: SessionUser;

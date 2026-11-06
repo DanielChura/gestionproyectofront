@@ -1,5 +1,4 @@
 import type { IconProps } from "./types";
-
 function StarIcon({ className, fill = false }: IconProps) {
   return (
     <svg
@@ -9,7 +8,7 @@ function StarIcon({ className, fill = false }: IconProps) {
       viewBox="0 0 24 24"
       fill={fill ? "currentColor" : "none"}
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}

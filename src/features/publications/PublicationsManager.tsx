@@ -1,8 +1,8 @@
 import { useState } from "react";
-import ChevronDownIcon from "../../shared/icons/ChevronIcon";
-import EditIcon from "../../shared/icons/EditIcon";
-import PlusIcon from "../../shared/icons/PlusIcon";
-import SearchIcon from "../../shared/icons/SearchIcon";
+import ChevronDownIcon from "../../shared/Icons/ChevronIcon";
+import EditIcon from "../../shared/Icons/EditIcon";
+import PlusIcon from "../../shared/Icons/PlusIcon";
+import SearchIcon from "../../shared/Icons/SearchIcon";
 import { useToast } from "../../hooks/useToast";
 import Button from "../../shared/Button/Button";
 import SecondaryButton from "../../shared/Button/SecondaryButton";

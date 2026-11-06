@@ -1,12 +1,12 @@
 import type { ComponentType } from "react";
-import AdminIcon from "../../../shared/icons/AdminIcon";
-import FolderIcon from "../../../shared/icons/FolderIcon";
-import KeyIcon from "../../../shared/icons/KeyIcon";
-import TeamsIcon from "../../../shared/icons/TeamsIcon";
-import type { IconProps } from "../../../shared/icons/types";
-import BriefcaseIcon from "../../../shared/icons/BriefcaseIcon";
-import TablerIcon from "../../../shared/icons/TablerIcon";
-import DashboardIcon from "../../../shared/icons/Dashboard";
+import AdminIcon from "../../../shared/Icons/AdminIcon";
+import FolderIcon from "../../../shared/Icons/FolderIcon";
+import KeyIcon from "../../../shared/Icons/KeyIcon";
+import TeamsIcon from "../../../shared/Icons/TeamsIcon";
+import type { IconProps } from "../../../shared/Icons/types";
+import BriefcaseIcon from "../../../shared/Icons/BriefcaseIcon";
+import TablerIcon from "../../../shared/Icons/TablerIcon";
+import DashboardIcon from "../../../shared/Icons/Dashboard";
 
 export interface NavigationEntry {
   label: string;
