@@ -165,7 +165,8 @@ function WorkersPage() {
               </tr>
             </thead>
             <tbody>
-              {data.map((worker) => (
+              {Array.isArray(data) ? (
+              data.map((worker) => (
                 <tr
                   key={worker.id}
                   className="border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 hover:bg-neutral-100 dark:hover:bg-neutral-800"
@@ -215,7 +216,7 @@ function WorkersPage() {
                     </button>
                   </td>
                 </tr>
-              ))}
+              ))) : null}
             </tbody>
           </table>
         </div>

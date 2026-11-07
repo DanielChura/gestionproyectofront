@@ -34,13 +34,15 @@ function TeamsPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const query = appliedSearch.trim().toLowerCase();
-  const visible = data.filter(
-    (team) =>
-      (query === "" ||
-        team.name.toLowerCase().includes(query) ||
-        team.area_name.toLowerCase().includes(query)) &&
-      (appliedActive === undefined || team.active === appliedActive),
-  );
+  const visible = Array.isArray(data)
+      ? data.filter(
+          (team) =>
+            (query === "" ||
+              team.name.toLowerCase().includes(query) ||
+              team.area_name.toLowerCase().includes(query)) &&
+            (appliedActive === undefined || team.active === appliedActive)
+        )
+      : [];
   const hasFilters = appliedSearch !== "" || appliedActive !== undefined;
 
   const applyFilters = (e: React.FormEvent) => {

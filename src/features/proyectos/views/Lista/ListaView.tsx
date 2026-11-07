@@ -82,18 +82,18 @@ export default function ListaView({
     [tasks],
   );
 
-  const states = project.task_states.states;
+  const states = project.task_states?.states;
   const { hierarchy, groups } = useTaskGrouping(
     tasks,
     search,
-    states,
+    states ?? [],
     catalogs.priorities,
     preferences,
   );
 
   const changes: TaskChanges = { onPatch: patchTask, onState: changeState };
   const canConfigure =
-    project.permissions.manage && project.task_states.can_configure;
+    project.permissions.manage && (project.task_states?.can_configure ?? false);
   const canCreate = project.permissions.create_tasks;
 
   const dialog: TaskDialogController = {
@@ -140,14 +140,14 @@ export default function ListaView({
 
   const canCreateIn = (code: string) =>
     project.permissions.create_tasks &&
-    states.some((state) => state.code === code) &&
+    ((states ?? []).some((state) => state.code === code)) &&
     (project.permissions.manage ||
-      states.some(
+      ((states ?? []).some(
         (state) =>
           state.code === code &&
           (state.category === "not_started" ||
             (!state.category && code === "PENDIENTE")),
-      ));
+      )));
 
   function onAction(kind: TaskActionKind, id: number) {
     setAction({ kind: kind === "detail" ? "edit" : kind, taskId: id });
@@ -272,7 +272,7 @@ export default function ListaView({
           const open = !collapsed.has(group.key);
           const groupId = `${listId}-group-${index}`;
           const groupState = group.stateCode
-            ? states.find((s) => s.code === group.stateCode)
+            ? (states ?? []).find((s) => s.code === group.stateCode)
             : undefined;
           const canCreateGroup = group.stateCode
             ? canCreateIn(group.stateCode)

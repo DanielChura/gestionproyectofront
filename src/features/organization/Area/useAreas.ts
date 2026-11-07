@@ -8,7 +8,7 @@ export const useAreas = () => {
   const fetch = async () => {
     try {
       const response = await listAreas();
-      setData(response);
+      setData(Array.isArray(response) ? response : []);
     } catch {
       // los componentes tsx no usan loading/error: se mantiene la lista vacía
     }

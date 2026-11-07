@@ -10,7 +10,7 @@ export const useTeams = () => {
     setLoading(true);
     try {
       const response = await listTeams();
-      setData(response);
+      setData(Array.isArray(response) ? response : []);
     } catch {
       // los componentes tsx no usan loading/error: se mantiene la lista vacía
     } finally {

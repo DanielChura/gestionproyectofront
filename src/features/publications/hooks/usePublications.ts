@@ -30,7 +30,7 @@ export function usePublications({
     listPublications({ search, state, project_id: projectId })
       .then((response) => {
         if (!active) return;
-        setData(response);
+        setData(Array.isArray(response) ? response : []);
         setError("");
       })
       .catch((failure: unknown) => {

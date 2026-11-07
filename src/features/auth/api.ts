@@ -69,11 +69,7 @@ export function errorText(failure: unknown): string {
     ? failure.message
     : "No se pudo completar la solicitud";
 }
-
-export const apiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(
-  /\/+$/,
-  "",
-);
+export const apiBase = import.meta.env.VITE_API_URL;
 
 let accessToken: string | null = null;
 let renewal: Promise<SessionUser> | null = null;

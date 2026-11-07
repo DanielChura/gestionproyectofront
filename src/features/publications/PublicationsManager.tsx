@@ -148,7 +148,7 @@ export default function PublicationsManager() {
           onRetry={catalogsQuery.retry}
         />
       )}
-      {error && data.length > 0 && (
+      {error && data && data.length > 0 && (
         <ErrorAlert message={error} onRetry={() => void refetch()} />
       )}
 
@@ -302,7 +302,8 @@ export default function PublicationsManager() {
                 </tr>
               </thead>
               <tbody>
-                {data.map((publication) => {
+                {Array.isArray(data) ? (
+                  data.map((publication) => {
                   const editable = canWrite && publication.permissions.edit;
                   return (
                     <tr
@@ -347,7 +348,7 @@ export default function PublicationsManager() {
                       </td>
                     </tr>
                   );
-                })}
+                })) : null}
               </tbody>
             </table>
           </div>
@@ -355,7 +356,7 @@ export default function PublicationsManager() {
         </section>
       )}
 
-      {!loading && data.length >= 200 && (
+      {!loading && Array.isArray(data) && data.length >= 200 && (
         <p className="mt-3 text-[10px] text-neutral-500 dark:text-neutral-400">
           Se muestran las 200 publicaciones más recientes.
         </p>

@@ -16,7 +16,7 @@ export const useWorkers = (filters?: WorkerFilters) => {
     try {
       setLoading(true);
       const response = await listWorkers(filtersRef.current);
-      setData(response);
+      setData(Array.isArray(response) ? response : []);
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e : new Error("Unknown error"));

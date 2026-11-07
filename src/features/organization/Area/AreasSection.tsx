@@ -59,7 +59,9 @@ function AreasSection() {
         </Button>
       </div>
 
-      {data.length === 0 ? (
+      {!Array.isArray(data) ? (
+        <EmptyState iconName="areas" message="No hay áreas registradas." />
+      ) : data.length === 0 ? (
         <EmptyState iconName="areas" message="No hay áreas registradas." />
       ) : (
         <ul className="m-0 p-0 list-none space-y-0.5">

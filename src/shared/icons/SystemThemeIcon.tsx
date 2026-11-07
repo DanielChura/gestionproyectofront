@@ -8,7 +8,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 128 72"
       className={`appearance-theme-illustration ${props.className ?? ""}`.trim()}
     >
-      <g clip-path="url(#appearance-auto-clip-dark)">
+      <g clipPath="url(#appearance-auto-clip-dark)">
         <path fill="#313131" d="M0 0H64V72H0z" transform="translate(64)"></path>
         <g filter="url(#appearance-auto-shadow-sidebar-dark)">
           <path fill="#222" d="M72 16a8 8 0 0 1 8-8h112v64H72z"></path>
@@ -26,7 +26,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
         ></path>
         <circle cx="111" cy="51" r="3" fill="#2563eb"></circle>
       </g>
-      <g clip-path="url(#appearance-auto-clip-light)">
+      <g clipPath="url(#appearance-auto-clip-light)">
         <path fill="#e0e0e0" d="M0 0H64V72H0z"></path>
         <g filter="url(#appearance-auto-shadow-sidebar-light)">
           <path fill="#f9f9f9" d="M8 16a8 8 0 0 1 8-8h112v64H8z"></path>
@@ -51,7 +51,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
           height="68"
           x="70"
           y="7"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
@@ -91,7 +91,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
           height="60"
           x="98"
           y="15"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
@@ -131,7 +131,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
           height="68"
           x="6"
           y="7"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
@@ -171,7 +171,7 @@ export default function SystemThemeIcon(props: SVGProps<SVGSVGElement>) {
           height="60"
           x="34"
           y="15"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
