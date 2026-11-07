@@ -1,5 +1,6 @@
-import UserIcon from "../../../../../shared/Icons/UserIcon";
 import { getIcon } from "../../../../../shared/Icons/icon-catalog";
+import UserIcon from "../../../../../shared/Icons/UserIcon";
+
 import type {
   ProjectTaskState,
   TaskGroupingMode,

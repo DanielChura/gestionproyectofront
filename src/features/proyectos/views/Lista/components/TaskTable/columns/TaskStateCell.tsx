@@ -64,7 +64,7 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
                 >
                   <IconComponent
                     className="size-4 fill"
-                    style={{ color: state.tema?.color ?? undefined }}
+                    style={{ color: state.tema!.color! }}
                   />
                   <span
                     style={{
