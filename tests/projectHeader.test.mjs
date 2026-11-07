@@ -62,7 +62,7 @@ const Toolbar = ({ children, action }) =>
 const expansion = await load(
   "../src/features/projects/TaskList/TaskGroupExpansionControl.tsx",
   {
-    "../../../shared/icons/ChevronDownIcon": { default: Icon },
+    "../../../shared/Icons/ChevronDownIcon": { default: Icon },
   },
 );
 let favoriteState = {};
@@ -74,14 +74,14 @@ const { default: ProjectHeader } = await load(
         React.createElement("a", { href: to, ...props }, children),
     },
     "../../../routes": { projectPath: (id) => `/proyectos/${id}` },
-    "../../../shared/icons/FolderIcon": { default: Icon },
-    "../../../shared/icons/BuildingIcon": { default: Icon },
-    "../../../shared/icons/ChevronRightIcon": { default: Icon },
-    "../../../shared/icons/StarIcon": { default: Icon },
-    "../../../shared/icons/CalendarIcon": { default: Icon },
-    "../../../shared/icons/ActivityIcon": { default: Icon },
-    "../../../shared/icons/FileIcon": { default: Icon },
-    "../../../shared/icons/StackIcon": { default: Icon },
+    "../../../shared/Icons/FolderIcon": { default: Icon },
+    "../../../shared/Icons/BuildingIcon": { default: Icon },
+    "../../../shared/Icons/ChevronRightIcon": { default: Icon },
+    "../../../shared/Icons/StarIcon": { default: Icon },
+    "../../../shared/Icons/CalendarIcon": { default: Icon },
+    "../../../shared/Icons/ActivityIcon": { default: Icon },
+    "../../../shared/Icons/FileIcon": { default: Icon },
+    "../../../shared/Icons/StackIcon": { default: Icon },
     "../TaskList/taskHierarchy": hierarchy,
     "../useProjectFavorite": {
       useProjectFavorite: (_id, initial) => ({
@@ -108,9 +108,9 @@ const { default: TaskList } = await load(
     "./taskDragSurface": await load(
       "../src/features/projects/TaskList/taskDragSurface.ts",
     ),
-    "../../../shared/icons/ChevronDownIcon": { default: Icon },
-    "../../../shared/icons/PlusIcon": { default: Icon },
-    "../../../shared/icons/RelationIcon": { default: Icon },
+    "../../../shared/Icons/ChevronDownIcon": { default: Icon },
+    "../../../shared/Icons/PlusIcon": { default: Icon },
+    "../../../shared/Icons/RelationIcon": { default: Icon },
     "./useTaskPointerDrag": {
       useTaskPointerDrag: () => ({
         onPointerDown() {},
@@ -384,7 +384,7 @@ test("empty List renders configured states through Workspace without extra state
       "../TaskStateForm/TaskStateForm": { default: Empty },
       "./ProjectHeader": { default: Empty },
       "./ProjectToolbar": { default: Toolbar },
-      "../../../shared/icons/PlusIcon": { default: Icon },
+      "../../../shared/Icons/PlusIcon": { default: Icon },
       "../taskAssignees": assignees,
       "../taskCollection": await load(
         "../src/features/projects/taskCollection.ts",

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { useGanttLayout } from "./useGanttLayout";
 import { ganttColumnChoices } from "./useGanttLayout";
-import XIcon from "../../../shared/icons/XIcon";
+import XIcon from "../../../shared/Icons/XIcon";
 import { GanttIconButton, ganttControl } from "./GanttControl";
 
 export default function TaskGanttFields({

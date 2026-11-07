@@ -6,8 +6,8 @@ import { calendarDateKey } from "../calendarDate";
 import { formatTaskDate } from "../TaskList/taskHierarchy";
 import { Calendar } from "../CreateProjectModal/ProjectEndDateSelector";
 import TaskProperty from "../TaskForm/TaskProperty";
-import ChevronDownIcon from "../../../shared/icons/ChevronDownIcon";
-import CalendarIcon from "../../../shared/icons/CalendarIcon";
+import ChevronDownIcon from "../../../shared/Icons/ChevronDownIcon";
+import CalendarIcon from "../../../shared/Icons/CalendarIcon";
 import { ganttControl } from "./GanttControl";
 
 const choices: { id: GanttScale; label: string }[] = [

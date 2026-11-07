@@ -198,7 +198,7 @@ test("Workspace saves announce through the shared overlay and refresh failures r
       "./ProjectHeader": { default: Empty },
       "../taskAssignees": { taskAssignees: () => [] },
       "./ProjectToolbar": { default: Empty },
-      "../../../shared/icons/PlusIcon": { default: Empty },
+      "../../../shared/Icons/PlusIcon": { default: Empty },
       "../TaskStatusConfiguration/TaskStatusConfiguration": { default: Empty },
       "../TaskDetail/TaskDetailDialog": { default: Empty },
       "../TaskDetail/useTaskDetail": {

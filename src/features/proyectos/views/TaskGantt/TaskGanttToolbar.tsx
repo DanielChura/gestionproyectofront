@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { useTaskGantt } from "./useTaskGantt";
 import TaskSearch from "../TaskList/TaskSearch";
 import TaskProperty from "../TaskForm/TaskProperty";
-import SettingsIcon from "../../../shared/icons/SettingsIcon";
+import SettingsIcon from "../../../shared/Icons/SettingsIcon";
 import TaskGanttPeriod from "./TaskGanttPeriod";
 import { GanttIconButton, ganttControl } from "./GanttControl";
 
