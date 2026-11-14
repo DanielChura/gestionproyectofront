@@ -2,11 +2,11 @@ import { useState, useMemo } from "react";
 import { useLocation, matchPath } from "react-router";
 import { appModules } from "../../../routes";
 import type { SessionUser } from "../../auth/api";
-import AppSidebar from "../Sidebar/AppSidebar";
-import SectionMenu from "../Sidebar/SectionMenu";
-import SectionMenuHighlights from "../Sidebar/SectionMenuHighlights";
+import AppSidebar from "../Sidebar/AppSidebar/AppSidebar";
+import SectionMenu from "../Sidebar/SectionMenu/SectionMenu";
+import SidebarHighlights from "../Sidebar/Highlights/SidebarHighlights";
 import AppRoutes from "./AppRoutes";
-import { GlobalLoading } from "../../../shared/GlobalLoading/GlobalLoading";
+import { GlobalLoading } from "../../../shared/states/GlobalLoading/GlobalLoading";
 import { useLoading } from "../../../hooks/useLoading";
 
 interface AppShellProps {
@@ -31,7 +31,7 @@ export default function AppShell({ user, onLogout }: AppShellProps) {
   }, [pathname]);
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-neutral-100 p-2 text-neutral-900 dark:bg-neutral-950/50 dark:text-neutral-100 gap-2">
+    <div className="flex h-screen w-screen overflow-hidden bg-white p-2 text-neutral-900 dark:bg-neutral-950/50 dark:text-neutral-100 gap-2">
       <AppSidebar
         modules={appModules}
         activePath={activeModule.path}
@@ -53,7 +53,7 @@ export default function AppShell({ user, onLogout }: AppShellProps) {
 
           <main
             className={`min-h-0 min-w-0 flex-1 overflow-hidden ${
-              isLoading ? "" : "p-4"
+              isLoading ? "" : "p-4 pb-1"
             }`}
           >
             {isLoading ? (
@@ -64,7 +64,7 @@ export default function AppShell({ user, onLogout }: AppShellProps) {
           </main>
         </div>
 
-        <SectionMenuHighlights />
+        <SidebarHighlights />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router";
-import PlusIcon from "../../shared/Icons/PlusIcon";
-import Button from "../../shared/Button/Button";
+import PlusIcon from "../../shared/icons/PlusIcon";
+import Button from "../../shared/components/Button/Button";
 import WorkerForm from "./WorkerForm/WorkerForm";
 import TeamForm from "../organizations/Teams/TeamForm/TeamForm";
 import type { TeamFormState } from "../organizations/Teams/TeamForm/useTeamForm";
@@ -62,7 +62,7 @@ export default function TeamsPage({ canManage = false }: TeamsPageProps) {
     >
       <header className="-mx-4 -mt-4 mb-3 border-b border-neutral-200 dark:border-neutral-800">
         <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <h1 className="m-0 text-sm font-medium text-neutral-800 dark:text-neutral-100">
+          <h1 className="m-0 text-sm  text-neutral-800 dark:text-neutral-100">
             {isTeams ? "Todos los equipos" : "Todos los trabajadores"}
           </h1>
           <span

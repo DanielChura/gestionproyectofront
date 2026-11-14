@@ -31,7 +31,7 @@ export default function NotFoundArt() {
         ry="40"
         transform="rotate(-14 254 132)"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="2"
         strokeDasharray="2 7"
         className="text-neutral-400 dark:text-neutral-600"
       />

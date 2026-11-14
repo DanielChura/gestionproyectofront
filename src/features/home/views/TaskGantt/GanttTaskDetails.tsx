@@ -1,4 +1,4 @@
-import Modal from "../../../../shared/Modal/Modal";
+import Modal from "../../../../shared/components/Modal/Modal";
 import TaskCell from "../../shared/TaskCell";
 import type { Project, Task } from "../../types";
 import type { useTaskView } from "../../hooks/useTaskView";

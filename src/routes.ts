@@ -1,15 +1,15 @@
 import { lazy } from "react";
 import type { ComponentType } from "react";
-import DashboardIcon from "./shared/Icons/Dashboard";
-import ProjectsIcon from "./shared/Icons/ProjectsIcon";
-import TeamsIcon from "./shared/Icons/TeamsIcon";
-import BuildingIcon from "./shared/Icons/BuildingIcon";
-import FileIcon from "./shared/Icons/FileIcon";
-import FolderIcon from "./shared/Icons/FolderIcon";
-import UserIcon from "./shared/Icons/UserIcon";
-import KeyIcon from "./shared/Icons/KeyIcon";
-import ClockIcon from "./shared/Icons/ClockIcon";
-import IdIcon from "./shared/Icons/IdIcon";
+import DashboardIcon from "./shared/icons/Dashboard";
+import TeamsIcon from "./shared/icons/TeamsIcon";
+import BuildingIcon from "./shared/icons/BuildingIcon";
+import FileIcon from "./shared/icons/FileIcon";
+import FolderIcon from "./shared/icons/FolderIcon";
+import UserIcon from "./shared/icons/UserIcon";
+import KeyIcon from "./shared/icons/KeyIcon";
+import ClockIcon from "./shared/icons/ClockIcon";
+import IdIcon from "./shared/icons/IdIcon";
+import PlusIcon from "./shared/icons/PlusIcon";
 
 export const HomePage = lazy(() => import("./features/home/HomePage"));
 export const ProjectRoute = lazy(() => import("./features/home/ProjectPage"));
@@ -18,8 +18,8 @@ export const PublicationsPage = lazy(
 );
 const TeamsPage = lazy(() => import("./features/teams/TeamsPage"));
 const TeamDetailPage = lazy(() => import("./features/teams/TeamDetailPage"));
-const OrganizationsPage = lazy(
-  () => import("./features/organizations/OrganizationsPage"),
+const StructurePage = lazy(
+  () => import("./features/organizations/structure/StructurePage"),
 );
 const AccountsPage = lazy(
   () => import("./features/organizations/accounts/AccountsPage"),
@@ -110,35 +110,29 @@ export const appModules: NavModule[] = [
   {
     label: "Organización",
     Icon: BuildingIcon,
-    path: "/organizaciones/equipos",
+    path: "/organizaciones/estructura",
     requiresAdmin: true,
     subRoutes: [
       {
-        title: "Equipos",
-        path: "/organizaciones/equipos",
-        Icon: TeamsIcon,
-        Component: OrganizationsPage,
+        title: "Crear proyecto",
+        path: "/organizaciones/estructura?modal=proyecto",
+        Icon: PlusIcon,
+        Component: StructurePage,
       },
       {
-        title: "Especialidades",
-        path: "/organizaciones/especialidades",
+        title: "Crear especialidad",
+        path: "/organizaciones/estructura?modal=especialidad",
         Icon: FileIcon,
-        Component: OrganizationsPage,
+        Component: StructurePage,
       },
       {
-        title: "Proyectos",
-        path: "/organizaciones/proyectos",
-        Icon: ProjectsIcon,
-        Component: OrganizationsPage,
-      },
-      {
-        title: "Áreas",
-        path: "/organizaciones/areas",
+        title: "Áreas y proyectos",
+        path: "/organizaciones/estructura",
         Icon: FolderIcon,
-        Component: OrganizationsPage,
+        Component: StructurePage,
       },
       {
-        title: "Cuentas",
+        title: "Cuentas y accesos",
         path: "/organizaciones/cuentas",
         Icon: UserIcon,
         Component: AccountsPage,
@@ -153,7 +147,21 @@ export const appModules: NavModule[] = [
         title: "Organización",
         path: "/organizaciones",
         Icon: BuildingIcon,
-        Component: OrganizationsPage,
+        Component: StructurePage,
+        hidden: true,
+      },
+      {
+        title: "Áreas",
+        path: "/organizaciones/areas",
+        Icon: FolderIcon,
+        Component: StructurePage,
+        hidden: true,
+      },
+      {
+        title: "Especialidades",
+        path: "/organizaciones/especialidades",
+        Icon: FileIcon,
+        Component: StructurePage,
         hidden: true,
       },
     ],

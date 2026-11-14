@@ -1,8 +1,8 @@
 import { useId } from "react";
-import CalendarIcon from "../../../../shared/Icons/CalendarIcon";
-import FlagIcon from "../../../../shared/Icons/FlagIcon";
-import HashIcon from "../../../../shared/Icons/HashIcon";
-import UserIcon from "../../../../shared/Icons/UserIcon";
+import CalendarIcon from "../../../../shared/icons/CalendarIcon";
+import FlagIcon from "../../../../shared/icons/FlagIcon";
+import HashIcon from "../../../../shared/icons/HashIcon";
+import UserIcon from "../../../../shared/icons/UserIcon";
 import type {
   Label,
   Project,

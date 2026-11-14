@@ -1,20 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
 
 import InvitationModal from "./InvitationModal/InvitationModal";
 import { useAccounts } from "./useAccounts";
-import PlusIcon from "../../../shared/Icons/PlusIcon";
-import SearchIcon from "../../../shared/Icons/SearchIcon";
-import ChevronDownIcon from "../../../shared/Icons/ChevronIcon";
-import UserIcon from "../../../shared/Icons/UserIcon";
-import AtIcon from "../../../shared/Icons/AtIcon";
-import StackIcon from "../../../shared/Icons/StackIcon";
-import AdminIcon from "../../../shared/Icons/AdminIcon";
-import ActivityIcon from "../../../shared/Icons/ActivityIcon";
-import DotsIcon from "../../../shared/Icons/DotsIcon";
-import Button from "../../../shared/Button/Button";
-import SecondaryButton from "../../../shared/Button/SecondaryButton";
-import Input from "../../../shared/Input/Input";
-import Select from "../../../shared/Select/Select";
+import PlusIcon from "../../../shared/icons/PlusIcon";
+import SearchIcon from "../../../shared/icons/SearchIcon";
+import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
+import UserIcon from "../../../shared/icons/UserIcon";
+import AtIcon from "../../../shared/icons/AtIcon";
+import StackIcon from "../../../shared/icons/StackIcon";
+import AdminIcon from "../../../shared/icons/AdminIcon";
+import ActivityIcon from "../../../shared/icons/ActivityIcon";
+import DotsIcon from "../../../shared/icons/DotsIcon";
+import Button from "../../../shared/components/Button/Button";
+import SecondaryButton from "../../../shared/components/Button/SecondaryButton";
+import Input from "../../../shared/components/Input/Input";
+import Select from "../../../shared/components/Select/Select";
 import { roleLabel } from "../../auth/roles";
 
 export default function AccountsPage() {
@@ -29,7 +30,16 @@ export default function AccountsPage() {
     active: appliedActive,
   });
   const [inviting, setInviting] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const hasFilters = appliedSearch !== "" || appliedActive !== undefined;
+
+  useEffect(() => {
+    if (searchParams.get("nuevo") !== "invitar") return;
+    setInviting(true);
+    const next = new URLSearchParams(searchParams);
+    next.delete("nuevo");
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   const applyFilters = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +84,7 @@ export default function AccountsPage() {
       >
         <h2 className="m-0 mr-auto text-sm  text-neutral-800 dark:text-neutral-100">
           Cuentas{" "}
-          <span className="font-normal text-neutral-600 dark:text-neutral-400">
+          <span className=" text-neutral-600 dark:text-neutral-400">
             ({accounts.length})
           </span>
         </h2>

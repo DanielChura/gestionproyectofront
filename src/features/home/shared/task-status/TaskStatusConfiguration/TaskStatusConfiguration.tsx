@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import type { ComponentProps } from "react";
-import Modal from "../../../../../shared/Modal/Modal";
+import Modal from "../../../../../shared/components/Modal/Modal";
 
 const ConfigurationDialog = lazy(
   () => import("./TaskStatusConfigurationDialog"),

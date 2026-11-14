@@ -1,8 +1,8 @@
-import EmptyState from "../../shared/EmptyState/EmptyState";
-import EmptyFilters from "../../shared/EmptyFilters/EmptyFilters";
-import Input from "../../shared/Input/Input";
-import Select from "../../shared/Select/Select";
-import SearchIcon from "../../shared/Icons/SearchIcon";
+import EmptyState from "../../shared/states/EmptyState/EmptyState";
+import EmptyFilters from "../../shared/states/EmptyFilters/EmptyFilters";
+import Input from "../../shared/components/Input/Input";
+import Select from "../../shared/components/Select/Select";
+import SearchIcon from "../../shared/icons/SearchIcon";
 import TeamCard from "./TeamCard";
 import type { TeamFilters } from "./types";
 import type { Area, Team } from "../../core/interfaces/organization.interface";

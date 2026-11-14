@@ -1,19 +1,24 @@
 import { Link } from "react-router";
-import BuildingIcon from "../../../shared/Icons/BuildingIcon";
-import CalendarIcon from "../../../shared/Icons/CalendarIcon";
-import ChevronDownIcon from "../../../shared/Icons/ChevronIcon";
-import DashboardIcon from "../../../shared/Icons/Dashboard";
-import FileIcon from "../../../shared/Icons/FileIcon";
-import FolderIcon from "../../../shared/Icons/FolderIcon";
-import StackIcon from "../../../shared/Icons/StackIcon";
-import StarIcon from "../../../shared/Icons/StarIcon";
+import BuildingIcon from "../../../shared/icons/BuildingIcon";
+import CalendarIcon from "../../../shared/icons/CalendarIcon";
+import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
+import DashboardIcon from "../../../shared/icons/Dashboard";
+import FileIcon from "../../../shared/icons/FileIcon";
+import FolderIcon from "../../../shared/icons/FolderIcon";
+import StackIcon from "../../../shared/icons/StackIcon";
+import StarIcon from "../../../shared/icons/StarIcon";
 import { projectPath } from "../../../routes";
 import type { Project } from "../../../core/interfaces/task.interface";
 
 const VIEWS = [
   { id: "lista", label: "Lista", Icon: FileIcon, color: "bg-sky-500" },
   { id: "tablero", label: "Tablero", Icon: StackIcon, color: "bg-emerald-500" },
-  { id: "overview", label: "Overview", Icon: DashboardIcon, color: "bg-indigo-500" },
+  {
+    id: "overview",
+    label: "Overview",
+    Icon: DashboardIcon,
+    color: "bg-indigo-500",
+  },
   { id: "gantt", label: "Gantt", Icon: CalendarIcon, color: "bg-amber-500" },
 ] as const;
 
@@ -43,11 +48,11 @@ export default function ProjectHeader({
             <li className="flex items-center gap-1">
               <ChevronDownIcon className="size-4 shrink-0 -rotate-90 text-neutral-400" />
               <FolderIcon className="size-4 shrink-0" fill={false} />
-              <Link to={projectPath(project.id)} className="truncate hover:underline">
+              <Link to={projectPath(project.id)} className="truncate ">
                 {project.name}
               </Link>
             </li>
-            <li className="flex items-center gap-1 font-medium text-neutral-800 dark:text-neutral-200">
+            <li className="flex items-center gap-1  text-neutral-800 dark:text-neutral-200">
               <ChevronDownIcon className="size-4 shrink-0 -rotate-90 text-neutral-400" />
               <span>{currentView}</span>
             </li>
@@ -72,7 +77,7 @@ export default function ProjectHeader({
           <Link
             key={id}
             to={`?vista=${id}`}
-            className={`flex items-center gap-1.5 border-b-2 pb-2 font-medium ${
+            className={`flex items-center gap-1.5 border-b-2 pb-2  ${
               viewKey === id
                 ? "border-neutral-800 text-neutral-800 dark:border-neutral-100 dark:text-neutral-100"
                 : "border-transparent text-neutral-600 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100"
@@ -88,4 +93,3 @@ export default function ProjectHeader({
     </header>
   );
 }
-

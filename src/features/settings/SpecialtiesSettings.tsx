@@ -1,6 +1,6 @@
-import Button from "../../shared/Button/Button";
-import XIcon from "../../shared/Icons/XIcon";
-import Select from "../../shared/Select/Select";
+import Button from "../../shared/components/Button/Button";
+import XIcon from "../../shared/icons/XIcon";
+import Select from "../../shared/components/Select/Select";
 import SettingsSection from "./SettingsSection";
 import type { SettingsController } from "./useSettings";
 
@@ -15,7 +15,10 @@ export default function SpecialtiesSettings({
       description="Añade las especialidades y competencias que dominas para la asignación de proyectos."
     >
       {settings.loading ? null : settings.error ? (
-        <p role="alert" className="m-0 text-xs text-neutral-600 dark:text-neutral-400">
+        <p
+          role="alert"
+          className="m-0 text-xs text-neutral-600 dark:text-neutral-400"
+        >
           No se pudieron cargar tus especialidades.
         </p>
       ) : (
@@ -29,7 +32,7 @@ export default function SpecialtiesSettings({
               {settings.specialties.map((specialty) => (
                 <li
                   key={specialty.id}
-                  className="inline-flex items-center gap-1 rounded-full bg-sky-600 px-2 py-0.5 text-xs font-medium text-white"
+                  className="inline-flex items-center gap-1 rounded-full bg-sky-600 px-2 py-0.5 text-xs  text-white"
                 >
                   {specialty.name}
                   <button

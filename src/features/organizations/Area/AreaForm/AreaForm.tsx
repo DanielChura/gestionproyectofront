@@ -1,7 +1,7 @@
 import type { AreaWriteData } from "../../../../core/interfaces/organization.interface";
 import { useAreaForm } from "./useAreaForm";
-import Form from "../../../../shared/Form/Form";
-import Input from "../../../../shared/Input/Input";
+import Form from "../../../../shared/components/Form/Form";
+import Input from "../../../../shared/components/Input/Input";
 
 interface AreaFormProps {
   title: string;
@@ -61,6 +61,15 @@ function AreaForm({
           required
         />
       </div>
+      <label className="col-span-2 flex items-center gap-2 text-xs text-neutral-800 dark:text-neutral-100 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={formData.active}
+          onChange={(e) => updateField("active", e.target.checked)}
+          className="size-4 rounded border-neutral-300 dark:border-neutral-700 text-neutral-900 focus:ring-0 cursor-pointer"
+        />
+        <span>Área activa</span>
+      </label>
     </Form>
   );
 }

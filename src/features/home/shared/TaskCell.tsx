@@ -1,16 +1,10 @@
 import { useId, useRef, useState } from "react";
 import type { ComponentType } from "react";
 import Avatar from "../../../shared/Avatar";
-import CalendarIcon from "../../../shared/Icons/CalendarIcon";
-import CheckIcon from "../../../shared/Icons/CheckIcon";
-import CircleDashedIcon from "../../../shared/Icons/CircleDashedIcon";
-import CircleDotIcon from "../../../shared/Icons/CircleDotIcon";
-import CircleHalfIcon from "../../../shared/Icons/CircleHalfIcon";
-import CircleMinusIcon from "../../../shared/Icons/CircleMinusIcon";
-import FlagIcon from "../../../shared/Icons/FlagIcon";
-import SuccessIcon from "../../../shared/Icons/SuccessIcon";
-import UserIcon from "../../../shared/Icons/UserIcon";
-import XIcon from "../../../shared/Icons/XIcon";
+import CalendarIcon from "../../../shared/icons/CalendarIcon";
+import FlagIcon from "../../../shared/icons/FlagIcon";
+import SuccessIcon from "../../../shared/icons/SuccessIcon";
+import UserIcon from "../../../shared/icons/UserIcon";
 import { useTaskCalendarEdit } from "../utils/useTaskCalendarEdit";
 import { errorText } from "../../auth/api";
 import LabelEditor from "./task-fields/LabelEditor";
@@ -23,11 +17,12 @@ import {
 } from "../utils/stateGroups";
 import { taskAssignees } from "../utils/taskAssignees";
 import PriorityOptions from "./task-fields/PriorityOptions";
-import { priorityTones } from "./task-fields/priorityTones";
+import { priorityTones } from "../../../shared/priorityTones";
 import { isBeforeTaskCreation, taskCreationDay } from "./task-fields/taskDates";
-import TaskIcon from "./task-form/TaskIcon";
+import HashIcon from "../../../shared/icons/HashIcon";
 import TaskDateValue from "./task-fields/TaskDateValue";
-import StatusIcon from "../../../shared/Icons/StatusIcon";
+import StatusIcon from "../../../shared/icons/StatusIcon";
+import { getIcon } from "../../../shared/icons/icon-catalog";
 import TaskProperty from "./task-fields/TaskProperty";
 import type {
   TaskPatchPayload,
@@ -39,7 +34,7 @@ import type {
   TaskStatePayload,
 } from "../types";
 import { formatTaskDate } from "../utils/taskHierarchy";
-import { themeColor, themeIcon } from "../utils/themePresentation";
+import { themeColor } from "../utils/themePresentation";
 import CalendarEditFeedback from "./CalendarEditFeedback";
 import Calendar from "./task-fields/Calendar";
 
@@ -47,7 +42,7 @@ const styles = {
   editor:
     "grid gap-2.5 [&_fieldset]:min-w-0 [&_fieldset]:m-0 [&_fieldset]:p-0 [&_fieldset]:[border:0] [&_textarea]:w-full [&_textarea]:p-2 [&_textarea]:border [&_textarea]:border-neutral-200 [&_textarea]:rounded-lg [&_textarea]:resize-y",
   options:
-    "max-h-60 overflow-y-auto [&_h3]:mt-3 [&_h3]:mx-1.5 [&_h3]:mb-[5px] [&_h3]:text-neutral-600 [&_h3]:text-[0.75rem] [&_h3]:font-normal",
+    "max-h-60 overflow-y-auto [&_h3]:mt-3 [&_h3]:mx-1.5 [&_h3]:mb-[5px] [&_h3]:text-neutral-600 [&_h3]:text-[0.75rem] [&_h3]:",
   option:
     "flex items-center gap-2 w-full min-h-9 my-0.5 mx-0 py-[7px] px-2 [border:0] rounded-lg   text-neutral-800 dark:text-neutral-100 dark:aria-pressed:bg-neutral-800 text-left text-[0.8125rem] cursor-pointer aria-pressed:bg-neutral-100 aria-pressed:[@media(pointer:coarse)]:min-h-11",
   check: "ml-auto",
@@ -92,7 +87,7 @@ const icons: Record<Field, ComponentType<{ className?: string }>> = {
   responsible_id: UserIcon,
   start_date: CalendarIcon,
   due_date: CalendarIcon,
-  labels: ({ className }) => <TaskIcon name="labels" className={className} />,
+  labels: ({ className }) => <HashIcon className={className} />,
 };
 
 export function StateIcon({
@@ -115,36 +110,13 @@ export function StateIcon({
     (code === "CANCELADA" || stateName === "CANCELADA"
       ? "#a42a28"
       : stateCategories.find((item) => item.value === value)?.color);
-  const Icon =
-    code === "CANCELADA" || stateName === "CANCELADA"
-      ? XIcon
-      : code === "BLOQUEADA" || stateName.startsWith("BLOQUEAD")
-        ? CircleMinusIcon
-        : code === "EN_REVISION" || stateName.includes("REVISION")
-          ? CircleHalfIcon
-          : code === "EN_CURSO" ||
-              stateName === "EN CURSO" ||
-              stateName === "EN PROGRESO"
-            ? CircleDotIcon
-            : code === "PENDIENTE" || stateName === "PENDIENTE"
-              ? CircleDashedIcon
-              : value === "done"
-                ? SuccessIcon
-                : value === "closed"
-                  ? CheckIcon
-                  : value === "active"
-                    ? CircleDotIcon
-                    : CircleDashedIcon;
+  const Icon = getIcon(tema?.icono);
   return (
     <span
       className="inline-flex shrink-0"
       style={tone ? { color: tone } : undefined}
     >
-      {/* {tema?.icono ? (
-        <DynamicIcon name={themeIcon(tema.icono)} className="size-4" fill />
-      ) : (
-        <Icon className="size-4" fill />
-      )} */}
+      <Icon className="size-4" fill />
     </span>
   );
 }
@@ -159,7 +131,7 @@ export function StateLabel({
   return (
     <span
       data-state={code}
-      className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300"
+      className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs  text-neutral-700 dark:text-neutral-300"
     >
       <StateIcon
         code={code}
@@ -183,7 +155,7 @@ export function StateBadge({
   return (
     <span
       data-state={code}
-      className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-white"
+      className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-lg px-2 py-1 text-xs  text-white"
       style={{ backgroundColor: themeColor(tema?.color ?? color) ?? "#737373" }}
     >
       <StateIcon
@@ -430,7 +402,7 @@ function Editor({
         <button
           type="button"
           ref={saveButton}
-          className="primary-button bg-neutral-800 font-medium text-white hover:bg-neutral-700"
+          className="primary-button bg-neutral-800  text-white hover:bg-neutral-700"
           disabled={
             busy ||
             calendarEdit.blocked ||
@@ -487,12 +459,13 @@ export default function TaskCell(props: TaskCellProps) {
         tema={task.state_tema}
       />
     ) : field === "responsible_id" && people.length > 0 ? (
-      <span className="flex min-w-0 flex-wrap items-center gap-1">
+      <span className="flex flex-wrap items-center gap-1">
         {people.slice(0, 3).map((person) => (
           <Avatar
             key={person.id}
             name={person.name}
             title={person.name}
+            className="size-7 rounded-full text-xs"
             aria-hidden="true"
           />
         ))}
@@ -502,30 +475,34 @@ export default function TaskCell(props: TaskCellProps) {
           </span>
         )}
       </span>
-    ) : field === "responsible_id" && props.appearance !== "detail" ? (
-      <UserIcon className="size-4" />
+    ) : field === "responsible_id" ? (
+      <span className="flex items-center gap-1.5">
+        <UserIcon className="size-4" />
+        {props.appearance === "detail"
+          ? permitted
+            ? "Asignar responsable"
+            : "Sin persona asignada"
+          : null}
+      </span>
     ) : field === "labels" ? (
-      props.appearance === "detail" ? (
-        <span>
-          {task.labels.length
-            ? "Editar etiquetas"
-            : permitted
-              ? "Añadir etiquetas"
-              : "Sin etiquetas"}
-        </span>
-      ) : (
-        <TaskIcon name="labels" className="size-4" />
-      )
+      <span className="flex items-center gap-1.5">
+        <HashIcon className="size-4" />
+        {props.appearance === "detail" && (
+          <span>
+            {task.labels.length
+              ? "Editar etiquetas"
+              : permitted
+                ? "Añadir etiquetas"
+                : "Sin etiquetas"}
+          </span>
+        )}
+      </span>
     ) : field === "priority" ? (
       <PriorityLabel priority={task.priority} name={value} />
     ) : (
       <>
-        {props.appearance !== "detail" && <CalendarIcon className="size-4" />}
-        {field === "start_date" || field === "due_date" ? (
-          <TaskDateValue value={task[field]} createdAt={task.created_at} />
-        ) : (
-          <span>{value}</span>
-        )}
+        <CalendarIcon className="size-4" />
+        <TaskDateValue value={task[field]} createdAt={task.created_at} />
       </>
     );
   return (
@@ -548,6 +525,7 @@ export default function TaskCell(props: TaskCellProps) {
                   <Avatar
                     name={person.name}
                     title={person.name}
+                    className="size-7 rounded-full text-xs"
                     aria-hidden="true"
                   />
                 ),
@@ -574,9 +552,7 @@ export default function TaskCell(props: TaskCellProps) {
         <>
           {props.appearance === "detail" &&
             !["start_date", "due_date", "labels"].includes(field) && (
-              <h3 className="m-0 mb-3 text-sm font-semibold">
-                {labels[field]}
-              </h3>
+              <h3 className="m-0 mb-3 text-sm ">{labels[field]}</h3>
             )}
           <Editor {...props} close={close} />
         </>

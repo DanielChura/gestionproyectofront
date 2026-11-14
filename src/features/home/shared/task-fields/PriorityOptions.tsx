@@ -1,7 +1,7 @@
-import FlagIcon from "../../../../shared/Icons/FlagIcon";
-import SuccessIcon from "../../../../shared/Icons/SuccessIcon";
+import FlagIcon from "../../../../shared/icons/FlagIcon";
+import SuccessIcon from "../../../../shared/icons/SuccessIcon";
 import type { ProjectCatalogs } from "../../../../core/interfaces/project.interface";
-import { priorityTones } from "./priorityTones";
+import { priorityTones } from "../../../../shared/priorityTones";
 
 export default function PriorityOptions({
   priorities,
@@ -20,7 +20,7 @@ export default function PriorityOptions({
           type="button"
           aria-pressed={value === item.code}
           onClick={() => onChange(item.code)}
-          className="flex cursor-pointer items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-left text-xs text-neutral-800 hover:bg-neutral-100 aria-pressed:bg-neutral-100 aria-pressed:font-semibold dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800 dark:aria-pressed:bg-neutral-800"
+          className="flex cursor-pointer items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-left text-xs text-neutral-800 hover:bg-neutral-100 aria-pressed:bg-neutral-100 aria-pressed: dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800 dark:aria-pressed:bg-neutral-800"
         >
           <FlagIcon
             className={`size-4 shrink-0 ${priorityTones[item.code ?? 0]?.text ?? "text-neutral-400"}`}

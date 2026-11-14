@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Task } from "../../types";
-import Modal from "../../../../shared/Modal/Modal";
+import Modal from "../../../../shared/components/Modal/Modal";
 import { ganttControl } from "./GanttControl";
 
 export default function GanttTreeMoveDialog({

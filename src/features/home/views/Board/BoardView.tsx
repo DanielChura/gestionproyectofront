@@ -1,6 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { sessionVersion } from "../../../auth/api";
+import { createTaskSync, TaskSyncContext } from "../../utils/useTaskSync";
 import type { Dispatch, SetStateAction } from "react";
-import PlusIcon from "../../../../shared/Icons/PlusIcon";
+import PlusIcon from "../../../../shared/icons/PlusIcon";
 import ProjectToolbar from "../../shared/ProjectToolbar";
 import TaskDialog from "../../shared/task-dialog/TaskDialog";
 import TaskStatusConfiguration from "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration";
@@ -10,8 +12,12 @@ import type {
   TaskActionKind,
   TaskDialogController,
 } from "../../types";
-import { taskHierarchy } from "../../utils/taskHierarchy";
-import BoardFilters from "./components/BoardFilters";
+import TaskGroupExpansionFilter from "../../components/filters/TaskGroupExpansionFilter";
+import TaskGroupingFilter from "../../components/filters/TaskGroupingFilter";
+import TaskSearchFilter from "../../components/filters/TaskSearchFilter";
+import MyTasksToggle from "../../shared/MyTasksToggle";
+import { useMyTasksFilter } from "../../hooks/useMyTasksFilter";
+import { useTaskGrouping } from "../../hooks/useTaskGrouping";
 import TaskBoard from "./components/TaskBoard";
 import { useBoard } from "./hooks/useBoard";
 
@@ -32,10 +38,13 @@ export default function BoardView({
     tasks,
     catalogs,
     search,
+    preferences,
+    setPreferences,
     setSearch,
     setAction,
     changeState,
     patchTask,
+    acceptTask,
     action,
     busy,
     saveTask,
@@ -45,11 +54,41 @@ export default function BoardView({
     configuredStates,
   } = useBoard(project, onProjectChange, initialCreate, onCreateHandled);
 
-  const boardTasks = useMemo(() => {
-    if (!search.trim()) return tasks;
-    const visible = taskHierarchy(tasks, search).visible;
-    return tasks.filter((task) => visible.has(task.id));
-  }, [tasks, search]);
+  const epoch = sessionVersion();
+  const taskSync = useMemo(
+    () => createTaskSync(project.id, epoch),
+    [project.id, epoch],
+  );
+
+  const myTasks = useMyTasksFilter(tasks);
+  const states = project.task_states?.states ?? [];
+  const boardPreferences = useMemo(
+    () => ({ ...preferences, separatePeople: true, separateLabels: true }),
+    [preferences],
+  );
+  const { groups } = useTaskGrouping(
+    myTasks.tasks,
+    search,
+    states,
+    catalogs.priorities,
+    boardPreferences,
+  );
+
+  const [expandedParents, setExpandedParents] = useState<Set<number>>(
+    new Set(),
+  );
+  const parentIds = useMemo(() => {
+    const ids = new Set(myTasks.tasks.map((task) => task.id));
+    return new Set(
+      myTasks.tasks.flatMap((task) =>
+        task.parent_id !== null && ids.has(task.parent_id)
+          ? [task.parent_id]
+          : [],
+      ),
+    );
+  }, [myTasks.tasks]);
+  const allExpanded =
+    parentIds.size > 0 && [...parentIds].every((id) => expandedParents.has(id));
 
   const canConfigure =
     project.permissions.manage && project.task_states.can_configure;
@@ -75,49 +114,78 @@ export default function BoardView({
     if (kind === "create") {
       setAction({ kind: "create", stateCode: extra?.stateCode });
     } else {
-      setAction({ kind: kind === "detail" ? "edit" : kind, taskId: id });
+      setAction({ kind, taskId: id });
     }
+  }
+
+  function toggleParent(id: number) {
+    setExpandedParents((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   }
 
   return (
     <section aria-label="Tablero" className="flex min-h-0 flex-1 flex-col">
       <ProjectToolbar
         action={
-          (canConfigure || canCreate) && (
-            <div className="flex items-center gap-2">
-              {canConfigure && (
-                <TaskStatusSettingsControl
-                  onClick={() => setConfiguringStates(true)}
-                />
-              )}
-              {canCreate && (
-                <button
-                  type="button"
-                  aria-label="Crear nueva tarea"
-                  onClick={() => setAction({ kind: "create" })}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-800 px-3 py-1.5 text-xs text-neutral-100 hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
-                >
-                  <PlusIcon className="size-4" />
-                  Agregar tarea
-                </button>
-              )}
-            </div>
-          )
+          <div className="flex items-center gap-2">
+            <MyTasksToggle
+              user={myTasks.user}
+              active={myTasks.mine}
+              onToggle={myTasks.toggleMine}
+            />
+            {canCreate && (
+              <button
+                type="button"
+                aria-label="Crear nueva tarea"
+                onClick={() => setAction({ kind: "create" })}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-900 px-2.5 py-1 text-xs font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+              >
+                <PlusIcon className="size-4" />
+                Agregar tarea
+              </button>
+            )}
+          </div>
         }
       >
-        <BoardFilters value={search} onChange={setSearch} />
+        <TaskGroupingFilter
+          preferences={preferences}
+          onChange={setPreferences}
+        />
+        <TaskGroupExpansionFilter
+          expanded={allExpanded}
+          disabled={parentIds.size === 0}
+          onToggle={() =>
+            setExpandedParents(allExpanded ? new Set() : new Set(parentIds))
+          }
+        />
+        <TaskSearchFilter mode="button" value={search} onChange={setSearch} />
+        {canConfigure && (
+          <TaskStatusSettingsControl
+            onClick={() => setConfiguringStates(true)}
+          />
+        )}
       </ProjectToolbar>
 
       <TaskBoard
         project={project}
-        tasks={boardTasks}
+        tasks={myTasks.tasks}
+        groups={groups}
+        preferences={preferences}
         catalogs={catalogs}
+        expandedParents={expandedParents}
+        onToggleParent={toggleParent}
         onAction={handleAction}
         onState={changeState}
         onPatch={patchTask}
       />
 
-      <TaskDialog controller={dialog} />
+      <TaskSyncContext.Provider value={taskSync}>
+        <TaskDialog controller={dialog} onUpdated={acceptTask} />
+      </TaskSyncContext.Provider>
       {configuringStates && (
         <TaskStatusConfiguration
           project={project}

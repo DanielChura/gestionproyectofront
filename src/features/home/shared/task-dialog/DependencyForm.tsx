@@ -56,7 +56,7 @@ export default function DependencyForm({
       <div className="grid min-w-0 content-start gap-1.5">
         <label
           htmlFor="dependency-source"
-          className="text-xs font-medium text-neutral-700 dark:text-neutral-300"
+          className="text-xs  text-neutral-700 dark:text-neutral-300"
         >
           Tarea predecesora
         </label>
@@ -74,7 +74,7 @@ export default function DependencyForm({
           ))}
         </select>
         <button
-          className="mt-2 inline-flex cursor-pointer items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
+          className="mt-2 inline-flex cursor-pointer items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
           disabled={busy || !selected}
           type="submit"
         >
@@ -84,7 +84,7 @@ export default function DependencyForm({
 
       {task.dependencies.length > 0 && (
         <div className="grid min-w-0 content-start gap-1.5">
-          <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+          <p className="text-xs  text-neutral-700 dark:text-neutral-300">
             Dependencias actuales
           </p>
           <ul className="m-0 space-y-1.5 p-0 list-none">
@@ -104,7 +104,7 @@ export default function DependencyForm({
                     type="button"
                     disabled={busy}
                     onClick={() => void change(dependencyId, true)}
-                    className="cursor-pointer text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50"
+                    className="cursor-pointer text-xs  text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50"
                   >
                     Eliminar
                   </button>

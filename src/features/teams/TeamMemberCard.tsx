@@ -1,5 +1,5 @@
-import ClockIcon from "../../shared/Icons/ClockIcon";
-import TrashIcon from "../../shared/Icons/TrashIcon";
+import ClockIcon from "../../shared/icons/ClockIcon";
+import TrashIcon from "../../shared/icons/TrashIcon";
 import { avatarFor } from "../../shared/Avatar";
 import { initialColor } from "../../utils/initialColor";
 import type { TeamMember } from "../../core/interfaces/organization.interface";
@@ -25,10 +25,10 @@ export default function TeamMemberCard({
         <div
           className={`relative flex aspect-square w-full items-center justify-center rounded-xl ${initialColor(member.worker_name)} text-white`}
         >
-          <span className="text-4xl font-medium tracking-tight">
+          <span className="text-4xl  tracking-tight">
             {avatarFor(member.worker_name)}
           </span>
-          <div className="absolute right-2 top-2 flex items-center gap-0.5 rounded-lg bg-white p-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 dark:bg-neutral-900">
+          <div className="absolute right-2 top-2 flex items-center gap-1 rounded-lg bg-white p-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 dark:bg-neutral-900">
             <button
               type="button"
               disabled={!canManage || busy}
@@ -45,9 +45,7 @@ export default function TeamMemberCard({
 
       <div className="flex flex-col gap-4 p-4 text-neutral-600 dark:text-neutral-200">
         <div className="flex items-center justify-between gap-2">
-          <p className="m-0 max-w-50 truncate text-xs font-medium">
-            {member.worker_name}
-          </p>
+          <p className="m-0 max-w-50 truncate text-xs ">{member.worker_name}</p>
           <span
             title={isActive ? "Activo" : "Inactivo"}
             className={`size-2 shrink-0 rounded-full ${

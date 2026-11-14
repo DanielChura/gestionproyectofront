@@ -25,7 +25,7 @@ function AuthFrame({ title, intro, children }: AuthFrameProps) {
           alt="GM Ingenieros y Consultores"
         />
         <div className="my-5">
-          <h1 id="auth-title" className="m-0 text-neutral-900 text-2xl font-">
+          <h1 id="auth-title" className="m-0 text-neutral-900 text-2xl ">
             {title}
           </h1>
           <p className="mb-0 text-neutral-600 text-sm leading-relaxed">

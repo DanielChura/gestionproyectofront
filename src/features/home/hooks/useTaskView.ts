@@ -19,6 +19,7 @@ export function useTaskView(
   onProjectChange: Dispatch<SetStateAction<Project | null>>,
   initialCreate?: number,
   onCreateHandled?: () => void,
+  initialTaskId?: number,
 ) {
   const { tasks, setTasks, refetch, acceptTask, loading, error } =
     useProjectTasks(project.id);
@@ -26,7 +27,9 @@ export function useTaskView(
   const [action, setAction] = useState<TaskAction | null>(() =>
     initialCreate !== undefined && project.permissions.create_tasks
       ? { kind: "create" }
-      : null,
+      : initialTaskId !== undefined
+        ? { kind: "detail", taskId: initialTaskId }
+        : null,
   );
   const [configuringStates, setConfiguringStates] = useState(false);
 
@@ -119,6 +122,17 @@ export function useTaskView(
       active = false;
     };
   }, [initialCreate, onCreateHandled, project.permissions.create_tasks]);
+
+  useEffect(() => {
+    if (initialTaskId === undefined) return;
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) setAction({ kind: "detail", taskId: initialTaskId });
+    });
+    return () => {
+      active = false;
+    };
+  }, [initialTaskId]);
 
   return {
     tasks,

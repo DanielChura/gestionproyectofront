@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useRecoveryRequests } from "./useRecoveryRequests";
-import UserIcon from "../../../shared/Icons/UserIcon";
-import AtIcon from "../../../shared/Icons/AtIcon";
-import ClockIcon from "../../../shared/Icons/ClockIcon";
-import DotsIcon from "../../../shared/Icons/DotsIcon";
-import SearchIcon from "../../../shared/Icons/SearchIcon";
-import Input from "../../../shared/Input/Input";
+import UserIcon from "../../../shared/icons/UserIcon";
+import AtIcon from "../../../shared/icons/AtIcon";
+import ClockIcon from "../../../shared/icons/ClockIcon";
+import DotsIcon from "../../../shared/icons/DotsIcon";
+import SearchIcon from "../../../shared/icons/SearchIcon";
+import Input from "../../../shared/components/Input/Input";
 
 export default function RecoveryRequestsPage() {
   const [searchInput, setSearchInput] = useState("");
@@ -47,7 +47,7 @@ export default function RecoveryRequestsPage() {
       >
         <h2 className="m-0 mr-auto text-sm  text-neutral-800 dark:text-neutral-100">
           Solicitudes{" "}
-          <span className="font-normal text-neutral-600 dark:text-neutral-400">
+          <span className=" text-neutral-600 dark:text-neutral-400">
             ({requests.length})
           </span>
         </h2>

@@ -1,7 +1,7 @@
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import ChevronDownIcon from "../../../../shared/Icons/ChevronIcon";
-import PlusIcon from "../../../../shared/Icons/PlusIcon";
+import ChevronDownIcon from "../../../../shared/icons/ChevronIcon";
+import PlusIcon from "../../../../shared/icons/PlusIcon";
 import ProjectToolbar from "../../shared/ProjectToolbar";
 import TaskDialog from "../../shared/task-dialog/TaskDialog";
 import TaskStatusConfiguration from "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration";
@@ -16,19 +16,24 @@ import type {
 import TaskGroupExpansionFilter from "../../components/filters/TaskGroupExpansionFilter";
 import TaskGroupingFilter from "../../components/filters/TaskGroupingFilter";
 import TaskSearchFilter from "../../components/filters/TaskSearchFilter";
-import QuickTaskRow from "./components/QuickTaskRow";
+import MyTasksToggle from "../../shared/MyTasksToggle";
+import QuickTaskRow from "../../shared/QuickTaskRow";
 import TaskGroupLabel from "./components/TaskGroupLabel";
 import TaskRow from "./components/TaskTable/TaskRow";
 import TaskTable from "./components/TaskTable/TaskTable";
 import type { TaskChanges, TaskRowModel } from "./components/TaskTable/types";
 import { useList } from "./hooks/useList";
-import { useTaskGrouping } from "./hooks/useTaskGrouping";
+import { useMyTasksFilter } from "../../hooks/useMyTasksFilter";
+import { useTaskGrouping } from "../../hooks/useTaskGrouping";
+import { sessionVersion } from "../../../auth/api";
+import { createTaskSync, TaskSyncContext } from "../../utils/useTaskSync";
 
 interface ListViewProps {
   project: Project;
   onProjectChange: Dispatch<SetStateAction<Project | null>>;
   initialCreate?: number;
   onCreateHandled?: () => void;
+  initialTaskId?: number;
 }
 
 export default function ListView({
@@ -36,6 +41,7 @@ export default function ListView({
   onProjectChange,
   initialCreate,
   onCreateHandled,
+  initialTaskId,
 }: ListViewProps) {
   const {
     tasks,
@@ -57,7 +63,19 @@ export default function ListView({
     setSearch,
     setPreferences,
     groupControls,
-  } = useList(project, onProjectChange, initialCreate, onCreateHandled);
+  } = useList(
+    project,
+    onProjectChange,
+    initialCreate,
+    onCreateHandled,
+    initialTaskId,
+  );
+
+  const epoch = sessionVersion();
+  const taskSync = useMemo(
+    () => createTaskSync(project.id, epoch),
+    [project.id, epoch],
+  );
 
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
@@ -82,13 +100,20 @@ export default function ListView({
     [tasks],
   );
 
+  const myTasks = useMyTasksFilter(tasks);
+
   const states = project.task_states?.states;
   const { hierarchy, groups } = useTaskGrouping(
-    tasks,
+    myTasks.tasks,
     search,
     states ?? [],
     catalogs.priorities,
     preferences,
+  );
+
+  const visibleGroups = useMemo(
+    () => groups.filter((group) => group.members.size > 0),
+    [groups],
   );
 
   const changes: TaskChanges = { onPatch: patchTask, onState: changeState };
@@ -109,9 +134,9 @@ export default function ListView({
     configuredStates,
   };
 
-  const groupsRef = useRef(groups);
-  groupsRef.current = groups;
-  const groupKeys = groups.map((group) => group.key).join("|");
+  const groupsRef = useRef(visibleGroups);
+  groupsRef.current = visibleGroups;
+  const groupKeys = visibleGroups.map((group) => group.key).join("|");
 
   useEffect(() => {
     const currentGroups = groupsRef.current;
@@ -140,17 +165,17 @@ export default function ListView({
 
   const canCreateIn = (code: string) =>
     project.permissions.create_tasks &&
-    ((states ?? []).some((state) => state.code === code)) &&
+    (states ?? []).some((state) => state.code === code) &&
     (project.permissions.manage ||
-      ((states ?? []).some(
+      (states ?? []).some(
         (state) =>
           state.code === code &&
           (state.category === "not_started" ||
             (!state.category && code === "PENDIENTE")),
-      )));
+      ));
 
   function onAction(kind: TaskActionKind, id: number) {
-    setAction({ kind: kind === "detail" ? "edit" : kind, taskId: id });
+    setAction({ kind, taskId: id });
   }
 
   function toggle(task: Task, context: boolean, contextKey: string) {
@@ -226,17 +251,16 @@ export default function ListView({
       <ProjectToolbar
         action={
           <div className="flex items-center gap-2">
-            <TaskSearchFilter value={search} onChange={setSearch} />
-            {canConfigure && (
-              <TaskStatusSettingsControl
-                onClick={() => setConfiguringStates(true)}
-              />
-            )}
+            <MyTasksToggle
+              user={myTasks.user}
+              active={myTasks.mine}
+              onToggle={myTasks.toggleMine}
+            />
             {canCreate && (
               <button
                 type="button"
                 onClick={() => setAction({ kind: "create" })}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-800 dark:bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-100 dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-900 px-2.5 py-1 text-xs font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
               >
                 <PlusIcon className="size-4" />
                 Agregar tarea
@@ -252,9 +276,14 @@ export default function ListView({
         <TaskGroupExpansionFilter
           expanded={groupControls?.expanded ?? false}
           disabled={groupControls?.disabled ?? true}
-          controls={groupControls?.controls ?? ""}
           onToggle={() => groupControls?.toggle()}
         />
+        <TaskSearchFilter mode="button" value={search} onChange={setSearch} />
+        {canConfigure && (
+          <TaskStatusSettingsControl
+            onClick={() => setConfiguringStates(true)}
+          />
+        )}
       </ProjectToolbar>
 
       {hierarchy.roots.length === 0 && !search.trim() && (
@@ -268,7 +297,7 @@ export default function ListView({
         ref={region}
         className="relative min-h-0 flex-1 overflow-y-auto overflow-x-auto pb-6"
       >
-        {groups.map((group, index) => {
+        {visibleGroups.map((group, index) => {
           const open = !collapsed.has(group.key);
           const groupId = `${listId}-group-${index}`;
           const groupState = group.stateCode
@@ -280,14 +309,14 @@ export default function ListView({
 
           return (
             <section
-              className="relative mb-2"
+              className="relative mb-8"
               key={group.key}
               data-group-key={group.key}
             >
               <h2 className="sticky top-0 z-10 mb-1 px-3 py-1 text-xs">
                 <button
                   type="button"
-                  className="sticky left-0 inline-flex cursor-pointer items-center gap-2 text-xs text-neutral-800 dark:text-neutral-100"
+                  className="sticky left-0 inline-flex cursor-pointer items-center gap-2 text-xs text-neutral-400"
                   aria-expanded={open}
                   aria-controls={groupId}
                   onClick={() =>
@@ -312,7 +341,7 @@ export default function ListView({
                           group.stateColor ??
                           "#525252",
                       }}
-                      className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-white"
+                      className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs  text-white"
                     >
                       <TaskGroupLabel
                         group={group}
@@ -382,7 +411,9 @@ export default function ListView({
         })}
       </div>
 
-      <TaskDialog controller={dialog} />
+      <TaskSyncContext.Provider value={taskSync}>
+        <TaskDialog controller={dialog} onUpdated={acceptTask} />
+      </TaskSyncContext.Provider>
       {configuringStates && (
         <TaskStatusConfiguration
           project={project}

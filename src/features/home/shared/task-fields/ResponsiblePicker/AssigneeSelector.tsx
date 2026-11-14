@@ -62,7 +62,7 @@ export default function AssigneeSelector({
             key={key}
             type="button"
             aria-pressed={source === key}
-            className="flex-1 cursor-pointer rounded-lg px-2 py-1.5 font-medium text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 aria-pressed:bg-neutral-800 aria-pressed:text-neutral-100 dark:aria-pressed:bg-neutral-100 dark:aria-pressed:text-neutral-900"
+            className="flex-1 cursor-pointer rounded-lg px-2 py-1.5  text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 aria-pressed:bg-neutral-800 aria-pressed:text-neutral-100 dark:aria-pressed:bg-neutral-100 dark:aria-pressed:text-neutral-900"
             onClick={() => {
               setSource(key);
               setQuery("");
@@ -76,7 +76,7 @@ export default function AssigneeSelector({
         <>
           <label
             htmlFor={`${id}-team`}
-            className="text-xs font-medium text-neutral-700 dark:text-neutral-300"
+            className="text-xs  text-neutral-700 dark:text-neutral-300"
           >
             Equipo del área
           </label>
@@ -111,7 +111,7 @@ export default function AssigneeSelector({
       )}
       <label
         htmlFor={id}
-        className="text-xs font-medium text-neutral-700 dark:text-neutral-300"
+        className="text-xs  text-neutral-700 dark:text-neutral-300"
       >
         Buscar integrante del proyecto
       </label>
@@ -133,7 +133,7 @@ export default function AssigneeSelector({
         <button
           type="button"
           aria-pressed={!value.length}
-          className="w-full cursor-pointer px-3 py-2 text-left text-xs font-medium text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 aria-pressed:text-neutral-900 dark:aria-pressed:text-neutral-100"
+          className="w-full cursor-pointer px-3 py-2 text-left text-xs  text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 aria-pressed:text-neutral-900 dark:aria-pressed:text-neutral-100"
           onClick={() => onChange([])}
         >
           Sin responsable
@@ -157,14 +157,14 @@ export default function AssigneeSelector({
             <span className="min-w-0 flex-1 truncate">
               {person.name}
               {!person.eligible && (
-                <small className="block text-xs text-neutral-500">
+                <small className="block text-xs text-neutral-500 dark:text-neutral-400">
                   {person.reason}
                 </small>
               )}
             </span>
             <span
               aria-hidden="true"
-              className="font-semibold text-neutral-800 dark:text-neutral-200"
+              className=" text-neutral-800 dark:text-neutral-200"
             >
               {value.includes(person.id) ? "✓" : ""}
             </span>

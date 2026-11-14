@@ -3,7 +3,7 @@ import type { GanttScale } from "./ganttViewport";
 import { normalizeGanttScale } from "./ganttViewport";
 import TaskProperty from "../../shared/task-fields/TaskProperty";
 import { ganttControl } from "./GanttControl";
-import ChevronIcon from "../../../../shared/Icons/ChevronIcon";
+import ChevronIcon from "../../../../shared/icons/ChevronIcon";
 
 const choices: { id: GanttScale; label: string }[] = [
   { id: "day", label: "Día" },

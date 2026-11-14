@@ -1,5 +1,5 @@
-import { getIcon } from "../../../../../shared/Icons/icon-catalog";
-import UserIcon from "../../../../../shared/Icons/UserIcon";
+import { getIcon } from "../../../../../shared/icons/icon-catalog";
+import UserIcon from "../../../../../shared/icons/UserIcon";
 
 import type {
   ProjectTaskState,
@@ -23,7 +23,7 @@ export default function TaskGroupLabel({
     const Icon = getIcon(state?.tema?.icono);
 
     return (
-      <span className="inline-flex items-center gap-1.5 font-medium text-white">
+      <span className="inline-flex items-center gap-1.5  text-white">
         <Icon className="size-3.5" fill />
         <span className="truncate">{group.name}</span>
       </span>

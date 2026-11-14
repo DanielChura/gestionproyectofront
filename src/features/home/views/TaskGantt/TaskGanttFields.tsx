@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { useGanttLayout } from "./useGanttLayout";
 import { ganttColumnChoices } from "./useGanttLayout";
-import XIcon from "../../../../shared/Icons/XIcon";
+import XIcon from "../../../../shared/icons/XIcon";
 import { GanttIconButton, ganttControl } from "./GanttControl";
 
 export default function TaskGanttFields({
@@ -45,7 +45,7 @@ export default function TaskGanttFields({
       }}
     >
       <div className="flex items-center justify-between gap-2">
-        <h3 id="gantt-fields-title" className="m-0 text-sm font-medium">
+        <h3 id="gantt-fields-title" className="m-0 text-sm ">
           Campos
         </h3>
         <GanttIconButton label="Cerrar campos" onClick={onClose}>

@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { Line, Pie } from "react-chartjs-2";
-import CalendarIcon from "../../../../../shared/Icons/CalendarIcon";
+import CalendarIcon from "../../../../../shared/icons/CalendarIcon";
 
 ChartJS.register(
   ArcElement,

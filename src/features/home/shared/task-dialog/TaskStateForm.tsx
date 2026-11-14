@@ -47,7 +47,7 @@ export default function TaskStateForm({
       onSubmit={submit}
       actions={
         <button
-          className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
+          className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
           disabled={busy || !target}
           type="submit"
         >
@@ -58,7 +58,7 @@ export default function TaskStateForm({
       <div className="grid min-w-0 content-start gap-1.5">
         <label
           htmlFor="task-target"
-          className="text-xs font-medium text-neutral-700 dark:text-neutral-300"
+          className="text-xs  text-neutral-700 dark:text-neutral-300"
         >
           Nuevo estado
         </label>

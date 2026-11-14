@@ -145,6 +145,17 @@ export async function createProject(
   return data;
 }
 
+export async function updateProject(
+  projectId: number,
+  payload: Partial<CreateProjectPayload>,
+): Promise<Project> {
+  const { data } = await httpClient.patch<Project>(
+    `projects/${projectId}/`,
+    payload,
+  );
+  return data;
+}
+
 export async function getProjectTeamCandidates(
   areaId: number,
 ): Promise<TeamOption[]> {

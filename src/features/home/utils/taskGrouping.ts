@@ -16,6 +16,13 @@ const compareNames = new Intl.Collator("es", {
   sensitivity: "base",
 });
 
+export const defaultTaskGroupingPreferences: TaskGroupingPreferences = {
+  mode: "state",
+  order: "asc",
+  separatePeople: false,
+  separateLabels: false,
+};
+
 export function projectToday(now = new Date()): string {
   const parts = new Intl.DateTimeFormat("en", {
     timeZone: "America/Lima",

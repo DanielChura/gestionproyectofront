@@ -5,9 +5,9 @@ import type {
   WorkerUpdateData,
 } from "../../../core/interfaces/worker.interface";
 import type { Area } from "../../../core/interfaces/organization.interface";
-import Form from "../../../shared/Form/Form";
-import Input from "../../../shared/Input/Input";
-import Select from "../../../shared/Select/Select";
+import Form from "../../../shared/components/Form/Form";
+import Input from "../../../shared/components/Input/Input";
+import Select from "../../../shared/components/Select/Select";
 
 interface TextField {
   name: Exclude<keyof WorkerFormState, "active">;

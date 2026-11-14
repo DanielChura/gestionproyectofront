@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Avatar from "../../../../../../../shared/Avatar";
-import UserIcon from "../../../../../../../shared/Icons/UserIcon";
+import UserIcon from "../../../../../../../shared/icons/UserIcon";
 import AssigneeSelector from "../../../../../shared/task-fields/ResponsiblePicker/AssigneeSelector";
 import { taskAssignees } from "../../../../../utils/taskAssignees";
 import type { TaskFieldView } from "../types";
@@ -47,7 +47,11 @@ export default function TaskAssigneeCell({ view }: { view: TaskFieldView }) {
               {people
                 .slice(0, 3)
                 .map((person: { id: number; name: string }) => (
-                  <Avatar key={person.id} name={person.name} className="rounded-full" />
+                  <Avatar
+                    key={person.id}
+                    name={person.name}
+                    className="rounded-full"
+                  />
                 ))}
               {people.length > 3 && (
                 <span className="text-xs text-neutral-500">

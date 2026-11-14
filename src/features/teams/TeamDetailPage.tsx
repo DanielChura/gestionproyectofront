@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router";
 import NotAvailable from "../layout/NotAvailable/NotAvailable";
-import Button from "../../shared/Button/Button";
-import PlusIcon from "../../shared/Icons/PlusIcon";
-import BuildingIcon from "../../shared/Icons/BuildingIcon";
-import UserIcon from "../../shared/Icons/UserIcon";
-import ChevronDownIcon from "../../shared/Icons/ChevronIcon";
+import Button from "../../shared/components/Button/Button";
+import PlusIcon from "../../shared/icons/PlusIcon";
+import BuildingIcon from "../../shared/icons/BuildingIcon";
+import UserIcon from "../../shared/icons/UserIcon";
+import ChevronDownIcon from "../../shared/icons/ChevronIcon";
 import Avatar from "../../shared/Avatar";
 import TeamMembersModal from "../organizations/Teams/TeamMembersModal";
 import { useTeamDetail } from "../organizations/Teams/useTeamDetail";
@@ -15,7 +15,9 @@ interface TeamDetailPageProps {
   canManage?: boolean;
 }
 
-export default function TeamDetailPage({ canManage = false }: TeamDetailPageProps) {
+export default function TeamDetailPage({
+  canManage = false,
+}: TeamDetailPageProps) {
   const { teamId } = useParams();
   const [adding, setAdding] = useState(false);
   const { team, members, removing, refetch, removeMember } = useTeamDetail(
@@ -43,11 +45,11 @@ export default function TeamDetailPage({ canManage = false }: TeamDetailPageProp
             <Avatar name={team.name} className="size-8 rounded-lg text-xs" />
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="m-0 truncate text-sm font-medium text-neutral-800 dark:text-neutral-100">
+                <h1 className="m-0 truncate text-sm  text-neutral-800 dark:text-neutral-100">
                   {team.name}
                 </h1>
                 <span
-                  className={`inline-flex items-center gap-1.5 text-xs font-medium ${
+                  className={`inline-flex items-center gap-1.5 text-xs  ${
                     team.active
                       ? "text-emerald-600 dark:text-emerald-400"
                       : "text-neutral-500 dark:text-neutral-400"

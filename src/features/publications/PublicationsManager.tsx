@@ -1,11 +1,11 @@
 import { useState } from "react";
-import ChevronDownIcon from "../../shared/Icons/ChevronIcon";
-import EditIcon from "../../shared/Icons/EditIcon";
-import PlusIcon from "../../shared/Icons/PlusIcon";
-import SearchIcon from "../../shared/Icons/SearchIcon";
+import ChevronDownIcon from "../../shared/icons/ChevronIcon";
+import EditIcon from "../../shared/icons/EditIcon";
+import PlusIcon from "../../shared/icons/PlusIcon";
+import SearchIcon from "../../shared/icons/SearchIcon";
 import { useToast } from "../../hooks/useToast";
-import Button from "../../shared/Button/Button";
-import SecondaryButton from "../../shared/Button/SecondaryButton";
+import Button from "../../shared/components/Button/Button";
+import SecondaryButton from "../../shared/components/Button/SecondaryButton";
 import type {
   Publication,
   PublicationCreateData,
@@ -158,7 +158,7 @@ export default function PublicationsManager() {
       >
         <h2 className="m-0 mr-auto text-sm  text-neutral-800 dark:text-neutral-100">
           Publicaciones{" "}
-          <span className="font-normal text-neutral-600 dark:text-neutral-400">
+          <span className=" text-neutral-600 dark:text-neutral-400">
             ({data.length})
           </span>
         </h2>
@@ -302,53 +302,54 @@ export default function PublicationsManager() {
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(data) ? (
-                  data.map((publication) => {
-                  const editable = canWrite && publication.permissions.edit;
-                  return (
-                    <tr
-                      key={publication.id}
-                      className="border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                    >
-                      <td className="px-3 py-2.5  text-neutral-800 dark:text-neutral-100">
-                        {publication.title}
-                      </td>
-                      <td className="px-3 py-2.5">
-                        <span className="line-clamp-1">
-                          {publication.project.name}
-                        </span>
-                      </td>
-                      <td className="px-3 py-2.5">
-                        {publication.available_vacancies} /{" "}
-                        {publication.vacancies}
-                      </td>
-                      <td className="px-3 py-2.5">
-                        {Number(publication.weekly_hours)} h
-                      </td>
-                      <td
-                        className={`px-3 py-2.5  ${STATE_TEXT[publication.state]}`}
-                      >
-                        {PUBLICATION_STATE_LABELS[publication.state]}
-                      </td>
-                      <td className="px-3 py-2.5">
-                        {formatPublicationDate(publication.closing_date)}
-                      </td>
-                      <td className="px-3 py-2.5">
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => openEdit(publication)}
-                            disabled={!editable}
-                            aria-label={`Editar ${publication.title}`}
-                            className="cursor-pointer rounded-lg p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+                {Array.isArray(data)
+                  ? data.map((publication) => {
+                      const editable = canWrite && publication.permissions.edit;
+                      return (
+                        <tr
+                          key={publication.id}
+                          className="border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                        >
+                          <td className="px-3 py-2.5  text-neutral-800 dark:text-neutral-100">
+                            {publication.title}
+                          </td>
+                          <td className="px-3 py-2.5">
+                            <span className="line-clamp-1">
+                              {publication.project.name}
+                            </span>
+                          </td>
+                          <td className="px-3 py-2.5">
+                            {publication.available_vacancies} /{" "}
+                            {publication.vacancies}
+                          </td>
+                          <td className="px-3 py-2.5">
+                            {Number(publication.weekly_hours)} h
+                          </td>
+                          <td
+                            className={`px-3 py-2.5  ${STATE_TEXT[publication.state]}`}
                           >
-                            <EditIcon className="size-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })) : null}
+                            {PUBLICATION_STATE_LABELS[publication.state]}
+                          </td>
+                          <td className="px-3 py-2.5">
+                            {formatPublicationDate(publication.closing_date)}
+                          </td>
+                          <td className="px-3 py-2.5">
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => openEdit(publication)}
+                                disabled={!editable}
+                                aria-label={`Editar ${publication.title}`}
+                                className="cursor-pointer rounded-lg p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+                              >
+                                <EditIcon className="size-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  : null}
               </tbody>
             </table>
           </div>

@@ -6,20 +6,19 @@ import type {
   TaskGroupControls,
   TaskGroupingPreferences,
 } from "../../../types";
+import { defaultTaskGroupingPreferences } from "../../../utils/taskGrouping";
 
 export function useList(
   project: Project,
   onProjectChange: Dispatch<SetStateAction<Project | null>>,
   initialCreate?: number,
   onCreateHandled?: () => void,
+  initialTaskId?: number,
 ) {
   const [search, setSearch] = useState("");
-  const [preferences, setPreferences] = useState<TaskGroupingPreferences>({
-    mode: "state",
-    order: "asc",
-    separatePeople: false,
-    separateLabels: false,
-  });
+  const [preferences, setPreferences] = useState<TaskGroupingPreferences>(
+    defaultTaskGroupingPreferences,
+  );
   const [groupControls, setGroupControls] = useState<TaskGroupControls | null>(
     null,
   );
@@ -28,6 +27,7 @@ export function useList(
     onProjectChange,
     initialCreate,
     onCreateHandled,
+    initialTaskId,
   );
 
   return {

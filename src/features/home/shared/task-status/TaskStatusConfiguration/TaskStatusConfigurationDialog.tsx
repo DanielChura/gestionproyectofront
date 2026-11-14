@@ -1,13 +1,13 @@
 import { useEffect, useId, useRef, useState } from "react";
-import ChevronDownIcon from "../../../../../shared/Icons/ChevronIcon";
-import DotsIcon from "../../../../../shared/Icons/DotsIcon";
-import InfoIcon from "../../../../../shared/Icons/InfoIcon";
-import PlusIcon from "../../../../../shared/Icons/PlusIcon";
-import Modal from "../../../../../shared/Modal/Modal";
-import CheckIcon from "../../../../../shared/Icons/CheckIcon";
-import SettingsIcon from "../../../../../shared/Icons/SettingsIcon";
+import ChevronDownIcon from "../../../../../shared/icons/ChevronIcon";
+import DotsIcon from "../../../../../shared/icons/DotsIcon";
+import InfoIcon from "../../../../../shared/icons/InfoIcon";
+import PlusIcon from "../../../../../shared/icons/PlusIcon";
+import Modal from "../../../../../shared/components/Modal/Modal";
+import CheckIcon from "../../../../../shared/icons/CheckIcon";
+import SettingsIcon from "../../../../../shared/icons/SettingsIcon";
 import { categoryValue, stateCategories } from "../../../utils/stateGroups";
-import StateIcon from "../StateIcon";
+import { getIcon } from "../../../../../shared/icons/icon-catalog";
 import type {
   Project,
   ProjectTaskConfiguration,
@@ -181,7 +181,7 @@ export default function TaskStatusConfiguration({
             <aside className="relative border-r border-neutral-200 p-5 max-sm:shrink-0 max-sm:border-r-0 max-sm:border-b max-sm:p-4 dark:border-neutral-800">
               <label
                 id={`${id}-template-label`}
-                className="mb-2 block text-xs font-medium text-neutral-700 dark:text-neutral-300"
+                className="mb-2 block text-xs  text-neutral-700 dark:text-neutral-300"
               >
                 Plantilla de estado
               </label>
@@ -213,7 +213,7 @@ export default function TaskStatusConfiguration({
                   aria-expanded={templateOpen}
                   aria-controls={`${id}-templates`}
                   onClick={() => setTemplateOpen(!templateOpen)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-left text-xs font-medium text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                  className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-left text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                 >
                   <span id={`${id}-selected-template`} className="truncate">
                     {editor.selected?.name ?? "Personalizado"}
@@ -249,7 +249,7 @@ export default function TaskStatusConfiguration({
                             key={item.id}
                             type="button"
                             aria-pressed={editor.selected?.id === item.id}
-                            className="flex w-full cursor-pointer items-center justify-between gap-2 px-3 py-2 text-left text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800 aria-pressed:font-semibold"
+                            className="flex w-full cursor-pointer items-center justify-between gap-2 px-3 py-2 text-left text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800 aria-pressed:"
                             onClick={() => {
                               if (editor.select(item)) {
                                 setTemplateOpen(false);
@@ -278,7 +278,7 @@ export default function TaskStatusConfiguration({
                     </div>
                     <button
                       type="button"
-                      className="flex w-full cursor-pointer items-center gap-2 border-t border-neutral-200 px-3 py-2 text-left text-xs font-medium text-neutral-800 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                      className="flex w-full cursor-pointer items-center gap-2 border-t border-neutral-200 px-3 py-2 text-left text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800"
                       onClick={() => {
                         if (editor.select(null)) {
                           setTemplateOpen(false);
@@ -304,7 +304,7 @@ export default function TaskStatusConfiguration({
                 return (
                   <section key={category.value} aria-label={category.label}>
                     <header className="mb-2 flex items-center justify-between gap-2 text-neutral-600 dark:text-neutral-400">
-                      <h3 className="m-0 flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
+                      <h3 className="m-0 flex items-center gap-1 text-xs  uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
                         {category.label}
                         <span className="group relative inline-flex">
                           <button
@@ -330,7 +330,7 @@ export default function TaskStatusConfiguration({
                             id={`${id}-${category.value}-help`}
                             role="tooltip"
                             hidden={dismissedHelp === category.value}
-                            className="invisible absolute left-0 top-full z-10 w-48 rounded-lg border border-neutral-200 bg-white p-2 text-xs font-normal text-neutral-800 group-hover:visible group-focus-within:visible dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
+                            className="invisible absolute left-0 top-full z-10 w-48 rounded-lg border border-neutral-200 bg-white p-2 text-xs  text-neutral-800 group-hover:visible group-focus-within:visible dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
                           >
                             {category.help}
                           </span>
@@ -426,13 +426,16 @@ export default function TaskStatusConfiguration({
                           <span
                             aria-hidden="true"
                             className="inline-flex shrink-0"
+                            style={
+                              category.color
+                                ? { color: category.color }
+                                : undefined
+                            }
                           >
-                            <StateIcon
-                              code={state.code}
-                              name={state.name}
-                              category={category.value}
-                              color={category.color}
-                            />
+                            {(() => {
+                              const Icon = getIcon(state.tema?.icono);
+                              return <Icon className="size-4" fill />;
+                            })()}
                           </span>
                           {editing?.code === state.code ? (
                             <input
@@ -629,7 +632,7 @@ export default function TaskStatusConfiguration({
                           ? `${id}-category-${category.value}`
                           : undefined
                       }
-                      className="mt-2 flex w-full cursor-pointer items-center gap-2 rounded-lg border border-dashed border-neutral-300 px-3 py-2 text-left text-xs font-medium text-neutral-600 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800/50"
+                      className="mt-2 flex w-full cursor-pointer items-center gap-2 rounded-lg border border-dashed border-neutral-300 px-3 py-2 text-left text-xs  text-neutral-600 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800/50"
                       onClick={() => add(category.value)}
                     >
                       <PlusIcon className="size-4" />
@@ -654,7 +657,7 @@ export default function TaskStatusConfiguration({
               </p>
               <button
                 type="button"
-                className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                 disabled={editor.busy}
                 onClick={editor.retry}
               >
@@ -672,7 +675,7 @@ export default function TaskStatusConfiguration({
               <button
                 type="button"
                 disabled={editor.loading || editor.busy || !allowed}
-                className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                 onClick={() => setSavingName("")}
               >
                 Guardar como plantilla
@@ -685,7 +688,7 @@ export default function TaskStatusConfiguration({
                 </p>
                 <button
                   type="button"
-                  className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                  className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                   onClick={editor.close}
                 >
                   Cancelar
@@ -695,7 +698,7 @@ export default function TaskStatusConfiguration({
             <button
               type="button"
               disabled={editor.loading || editor.busy || !allowed}
-              className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+              className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
               onClick={() => {
                 void editor.apply();
               }}
@@ -730,7 +733,7 @@ export default function TaskStatusConfiguration({
             >
               <label
                 htmlFor={`${id}-name`}
-                className="text-xs font-medium text-neutral-700 dark:text-neutral-300"
+                className="text-xs  text-neutral-700 dark:text-neutral-300"
               >
                 Nombre
               </label>
@@ -761,7 +764,7 @@ export default function TaskStatusConfiguration({
                 <button
                   type="button"
                   disabled={editor.busy}
-                  className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                  className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                   onClick={() => setSavingName(null)}
                 >
                   Cancelar
@@ -769,7 +772,7 @@ export default function TaskStatusConfiguration({
                 <button
                   type="submit"
                   disabled={editor.busy || !savingName.trim()}
-                  className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+                  className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
                 >
                   Guardar
                 </button>

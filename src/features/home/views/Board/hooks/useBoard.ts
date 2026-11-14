@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useTaskView } from "../../../hooks/useTaskView";
-import type { Project } from "../../../types";
+import type { Project, TaskGroupingPreferences } from "../../../types";
+import { defaultTaskGroupingPreferences } from "../../../utils/taskGrouping";
 
 export function useBoard(
   project: Project,
@@ -10,6 +11,9 @@ export function useBoard(
   onCreateHandled?: () => void,
 ) {
   const [search, setSearch] = useState("");
+  const [preferences, setPreferences] = useState<TaskGroupingPreferences>(
+    defaultTaskGroupingPreferences,
+  );
   const taskView = useTaskView(
     project,
     onProjectChange,
@@ -17,5 +21,5 @@ export function useBoard(
     onCreateHandled,
   );
 
-  return { ...taskView, search, setSearch };
+  return { ...taskView, search, setSearch, preferences, setPreferences };
 }

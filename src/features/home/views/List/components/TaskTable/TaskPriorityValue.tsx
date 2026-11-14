@@ -1,5 +1,5 @@
-import FlagIcon from "../../../../../../shared/Icons/FlagIcon";
-import { priorityTones } from "../../../../shared/task-fields/priorityTones";
+import FlagIcon from "../../../../../../shared/icons/FlagIcon";
+import { priorityTones } from "../../../../../../shared/priorityTones";
 
 export default function TaskPriorityValue({
   priority,

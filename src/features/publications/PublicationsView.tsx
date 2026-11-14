@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import SearchIcon from "../../shared/Icons/SearchIcon";
+import SearchIcon from "../../shared/icons/SearchIcon";
 import PublicationBoard from "./components/PublicationBoard";
 import PublicationDetail from "./components/PublicationDetail";
 import { useToast } from "../../hooks/useToast";
@@ -75,7 +75,7 @@ export default function PublicationsView() {
       )}
 
       <section aria-label="Publicaciones" aria-busy={loading}>
-        <p className="mb-4 text-xs font-normal text-neutral-500 dark:text-neutral-400">
+        <p className="mb-4 text-xs  text-neutral-500 dark:text-neutral-400">
           {data.length} {data.length === 1 ? "publicación" : "publicaciones"}
         </p>
 

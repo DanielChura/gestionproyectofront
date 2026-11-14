@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import Form from "../../../shared/Form/Form";
-import Input from "../../../shared/Input/Input";
+import Form from "../../../shared/components/Form/Form";
+import Input from "../../../shared/components/Input/Input";
 
 interface PublishModalProps {
   projectName: string;
@@ -34,14 +34,20 @@ export default function PublishModal({
       onSubmit={handleSubmit}
     >
       <div className="col-span-2">
-        <label className="mb-1 block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+        <label className="mb-1 block text-xs  text-neutral-700 dark:text-neutral-300">
           Título de la publicación
         </label>
-        <Input required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ej. Lanzamiento de la versión 2.0" autoFocus />
+        <Input
+          required
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Ej. Lanzamiento de la versión 2.0"
+          autoFocus
+        />
       </div>
 
       <div className="col-span-2">
-        <label className="mb-1 block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+        <label className="mb-1 block text-xs  text-neutral-700 dark:text-neutral-300">
           Contenido
         </label>
         <textarea

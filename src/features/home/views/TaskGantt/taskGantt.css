@@ -526,7 +526,7 @@
 }
 .gm-task-gantt .gm-gantt-link:is(:focus, :focus-visible) {
   outline: none !important;
-  stroke-width: 2;
+  strokewidth: 2;
 }
 .gm-gantt-range :is(button, input) {
   color: var(--color-neutral-800);
@@ -897,8 +897,8 @@ body:has(.gm-task-list[data-moving="true"]) > [role="tooltip"] {
 }
 
 .gm-gantt-link {
-  stroke-width: 1.25;
-  stroke-linejoin: round;
+  strokewidth: 1.25;
+  strokelinejoin: round;
   stroke-linecap: round;
 }
 .gm-gantt-link-preview {

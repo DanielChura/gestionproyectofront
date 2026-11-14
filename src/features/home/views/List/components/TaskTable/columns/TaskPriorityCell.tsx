@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import FlagIcon from "../../../../../../../shared/Icons/FlagIcon";
+import FlagIcon from "../../../../../../../shared/icons/FlagIcon";
 import type { TaskFieldView } from "../types";
-import { priorityTones } from "../../../../../shared/task-fields/priorityTones";
+import { priorityTones } from "../../../../../../../shared/priorityTones";
 
 export default function TaskPriorityCell({ view }: { view: TaskFieldView }) {
   const { task, catalogs, onPatch } = view;
@@ -57,7 +57,7 @@ export default function TaskPriorityCell({ view }: { view: TaskFieldView }) {
                 }}
                 className={`flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
                   task.priority === item.code
-                    ? "bg-neutral-50 font-medium text-neutral-900 dark:bg-neutral-700/50 dark:text-neutral-100"
+                    ? "bg-neutral-50  text-neutral-900 dark:bg-neutral-700/50 dark:text-neutral-100"
                     : "text-neutral-700 dark:text-neutral-300"
                 }`}
               >

@@ -1,6 +1,7 @@
 import Avatar from "../../shared/Avatar";
-import Button from "../../shared/Button/Button";
-import Input from "../../shared/Input/Input";
+import Button from "../../shared/components/Button/Button";
+import Input from "../../shared/components/Input/Input";
+
 import SettingsSection from "./SettingsSection";
 import type { SettingsController } from "./useSettings";
 
@@ -14,7 +15,10 @@ export default function ProfileSettings({
       title="Perfil"
       description="Tu información personal y los ajustes de seguridad de tu cuenta."
     >
-      <form className="grid gap-3 sm:grid-cols-2" onSubmit={settings.saveProfile}>
+      <form
+        className="grid gap-3 sm:grid-cols-2"
+        onSubmit={settings.saveProfile}
+      >
         <div className="flex items-center gap-3 sm:col-span-2">
           {settings.profile && (
             <Avatar

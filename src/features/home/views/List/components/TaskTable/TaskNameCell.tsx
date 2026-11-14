@@ -1,5 +1,5 @@
-import ChevronDownIcon from "../../../../../../shared/Icons/ChevronIcon";
-import { getIcon } from "../../../../../../shared/Icons/icon-catalog";
+import ChevronDownIcon from "../../../../../../shared/icons/ChevronIcon";
+import { getIcon } from "../../../../../../shared/icons/icon-catalog";
 import type { TaskRowModel } from "./types";
 
 export default function TaskNameCell({

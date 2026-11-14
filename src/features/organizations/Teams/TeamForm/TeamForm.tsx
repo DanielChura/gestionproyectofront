@@ -1,7 +1,7 @@
 import { useTeamForm } from "./useTeamForm";
-import Form from "../../../../shared/Form/Form";
-import Input from "../../../../shared/Input/Input";
-import Select from "../../../../shared/Select/Select";
+import Form from "../../../../shared/components/Form/Form";
+import Input from "../../../../shared/components/Input/Input";
+import Select from "../../../../shared/components/Select/Select";
 import type { TeamFormState } from "./useTeamForm";
 import type {
   TeamWriteData,

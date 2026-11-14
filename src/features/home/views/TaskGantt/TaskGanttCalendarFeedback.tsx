@@ -24,12 +24,16 @@ export default function TaskGanttCalendarFeedback({
           className="border-t border-neutral-200 py-2 dark:border-neutral-700"
           aria-busy={operation.status === "pending"}
         >
-          <h3 className="m-0 text-xs font-medium text-neutral-800 dark:text-neutral-200">
+          <h3 className="m-0 text-xs  text-neutral-800 dark:text-neutral-200">
             {operation.name}
           </h3>
           {operation.status !== "success" && (
             <p className="my-2">
-              Propuesta: {operation.proposal.schedule?.precision === "hour" ? scheduleLabel(operation.proposal) : `${formatTaskDate(operation.proposal.start_date)} — ${formatTaskDate(operation.proposal.due_date)}`}.
+              Propuesta:{" "}
+              {operation.proposal.schedule?.precision === "hour"
+                ? scheduleLabel(operation.proposal)
+                : `${formatTaskDate(operation.proposal.start_date)} — ${formatTaskDate(operation.proposal.due_date)}`}
+              .
             </p>
           )}
           {operation.status === "pending" && (
@@ -40,7 +44,10 @@ export default function TaskGanttCalendarFeedback({
           {operation.status === "success" && (
             <p role="status" className="m-0">
               Calendario confirmado:{" "}
-              {operation.current?.schedule?.precision === "hour" ? scheduleLabel(operation.current) : `${formatTaskDate(operation.current?.start_date)} — ${formatTaskDate(operation.current?.due_date)}`}.
+              {operation.current?.schedule?.precision === "hour"
+                ? scheduleLabel(operation.current)
+                : `${formatTaskDate(operation.current?.start_date)} — ${formatTaskDate(operation.current?.due_date)}`}
+              .
             </p>
           )}
           {operation.error && (

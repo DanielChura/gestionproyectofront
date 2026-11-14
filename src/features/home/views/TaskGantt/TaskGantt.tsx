@@ -8,8 +8,8 @@ import GanttDependencyUndo from "./GanttDependencyUndo";
 import type { RemovedGanttLink } from "./GanttDependencyUndo";
 import { useGanttPan } from "./useGanttPan";
 import { useGanttTreeMove } from "./useGanttTreeMove";
-import EditIcon from "../../../../shared/Icons/EditIcon";
-import PlusIcon from "../../../../shared/Icons/PlusIcon";
+import EditIcon from "../../../../shared/icons/EditIcon";
+import PlusIcon from "../../../../shared/icons/PlusIcon";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import {
   createContext,
@@ -46,7 +46,7 @@ import { createTaskSync, TaskSyncContext } from "../../utils/useTaskSync";
 import { GanttIconButton } from "./GanttControl";
 import "@svar-ui/react-gantt/all.css";
 import "./taskGantt.css";
-import ChevronIcon from "../../../../shared/Icons/ChevronIcon";
+import ChevronIcon from "../../../../shared/icons/ChevronIcon";
 import { StateBadge, StateIcon } from "../../shared/TaskCell";
 
 interface GanttActions {
@@ -331,10 +331,10 @@ export default function TaskGantt(props: TaskGanttProps) {
   const [removedLinks, setRemovedLinks] = useState<RemovedGanttLink[]>([]);
   const [localProtected, setLocalProtected] = useState(false);
   const protectedView = props.protection?.active ?? localProtected;
-  const taskSync = useMemo(() => createTaskSync(props.project.id, sessionVersion()), [
-    props.project.id,
-    sessionVersion(),
-  ]);
+  const taskSync = useMemo(
+    () => createTaskSync(props.project.id, sessionVersion()),
+    [props.project.id, sessionVersion()],
+  );
   const setProtectedView = props.protection?.setActive ?? setLocalProtected;
   const [linkOperation, setLinkOperation] = useState<{
     source: number;
@@ -512,286 +512,291 @@ export default function TaskGantt(props: TaskGanttProps) {
         <GanttGestureContext.Provider value={calendar.preview?.id ?? null}>
           <TaskActions.Provider value={actions}>
             <FieldsActions.Provider value={fieldsActions}>
-            <div className="sr-only">
-              <h2 className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-                Ventana de tareas
-              </h2>
-              <p className="m-0 text-xs text-neutral-600 dark:text-neutral-300">
-                {tasks.some((task) => task.permissions.edit)
-                  ? "Arrastre y ajuste de fechas"
-                  : "Solo lectura"}
-              </p>
-            </div>
-            <TaskGanttToolbar
-              controls={controls}
-              onRefresh={props.onRetry}
-              loading={props.loading}
-              createAction={props.createAction}
-              protectedView={protectedView}
-              onProtect={() => {
-                calendar.gesture.cancel();
-                if (!linkBusy) setLinkOperation(null);
-                setProtectedView(!protectedView);
-              }}
-            />
-            {controls.rows.length === 0 &&
-              tasks.length > 0 &&
-              !props.loading && (
-                <p
-                  role="status"
-                  className="py-3 text-xs text-neutral-800 dark:text-neutral-200"
-                >
-                  No hay tareas que coincidan con los filtros.
+              <div className="sr-only">
+                <h2 className="text-sm  text-neutral-800 dark:text-neutral-200">
+                  Ventana de tareas
+                </h2>
+                <p className="m-0 text-xs text-neutral-600 dark:text-neutral-300">
+                  {tasks.some((task) => task.permissions.edit)
+                    ? "Arrastre y ajuste de fechas"
+                    : "Solo lectura"}
+                </p>
+              </div>
+              <TaskGanttToolbar
+                controls={controls}
+                onRefresh={props.onRetry}
+                loading={props.loading}
+                createAction={props.createAction}
+                protectedView={protectedView}
+                onProtect={() => {
+                  calendar.gesture.cancel();
+                  if (!linkBusy) setLinkOperation(null);
+                  setProtectedView(!protectedView);
+                }}
+              />
+              {controls.rows.length === 0 &&
+                tasks.length > 0 &&
+                !props.loading && (
+                  <p
+                    role="status"
+                    className="py-3 text-xs text-neutral-800 dark:text-neutral-200"
+                  >
+                    No hay tareas que coincidan con los filtros.
+                  </p>
+                )}
+              {tasks.some((task) => task.due_date === null) && (
+                <p className="sr-only">
+                  Las tareas sin fecha límite conservan su inicio en la tabla y
+                  no tienen barra temporal.
                 </p>
               )}
-            {tasks.some((task) => task.due_date === null) && (
-              <p className="sr-only">
-                Las tareas sin fecha límite conservan su inicio en la tabla y no
-                tienen barra temporal.
-              </p>
-            )}
-            <div
-              ref={container}
-              className="gm-gantt-body relative flex min-w-0 items-stretch"
-            >
               <div
-                ref={(node) => {
-                  canvasRef.current = node;
-                  captureSurface(node);
-                }}
-                className="gm-gantt-canvas min-w-0 flex-1 overscroll-x-contain overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2"
-                inert={fieldsOpen && overlay}
-                tabIndex={0}
-                role="region"
-                aria-label="Calendario de tareas; tabla y línea de tiempo"
-                onWheelCapture={(event) => {
-                  if (event.deltaX || event.shiftKey)
-                    controls.manualNavigation();
-                }}
+                ref={container}
+                className="gm-gantt-body relative flex min-w-0 items-stretch"
               >
-                <GanttProjectRow
-                  project={props.project}
-                  tasks={tasks}
-                  width={boundaryWidth}
-                  controls={controls}
-                />
+                <div
+                  ref={(node) => {
+                    canvasRef.current = node;
+                    captureSurface(node);
+                  }}
+                  className="gm-gantt-canvas min-w-0 flex-1 overscroll-x-contain overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2"
+                  inert={fieldsOpen && overlay}
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Calendario de tareas; tabla y línea de tiempo"
+                  onWheelCapture={(event) => {
+                    if (event.deltaX || event.shiftKey)
+                      controls.manualNavigation();
+                  }}
+                >
+                  <GanttProjectRow
+                    project={props.project}
+                    tasks={tasks}
+                    width={boundaryWidth}
+                    controls={controls}
+                  />
 
-                <div style={{ minWidth }}>
-                  <div
-                    className="gm-task-gantt relative"
-                    data-calendar-dragging={
-                      Boolean(calendar.preview) || undefined
-                    }
-                    data-protected={protectedView || undefined}
-                    data-panning={panning || undefined}
-                    data-gantt-scale={viewport.scale}
-                    data-gantt-zoom={viewport.zoomLevel}
-                    data-gantt-window-start={viewport.start.getTime()}
-                    data-gantt-window-end={viewport.end.getTime()}
-                    onPointerDownCapture={(event) => {
-                      if (!panDown(event) && !protectedView)
-                        calendar.onPointerDownCapture(event);
-                    }}
-                    onPointerDown={rowDown}
-                    onClickCapture={pointer.onClickCapture}
-                    onDragStartCapture={pointer.onDragStart}
-                  >
+                  <div style={{ minWidth }}>
                     <div
-                      className="gm-gantt-header-tools absolute z-10 rounded-lg bg-white dark:bg-neutral-900"
-                      style={{
-                        left: boundaryWidth - 34,
-                        top: Math.max(0, (scales.length * 28 - 28) / 2),
+                      className="gm-task-gantt relative"
+                      data-calendar-dragging={
+                        Boolean(calendar.preview) || undefined
+                      }
+                      data-protected={protectedView || undefined}
+                      data-panning={panning || undefined}
+                      data-gantt-scale={viewport.scale}
+                      data-gantt-zoom={viewport.zoomLevel}
+                      data-gantt-window-start={viewport.start.getTime()}
+                      data-gantt-window-end={viewport.end.getTime()}
+                      onPointerDownCapture={(event) => {
+                        if (!panDown(event) && !protectedView)
+                          calendar.onPointerDownCapture(event);
                       }}
+                      onPointerDown={rowDown}
+                      onClickCapture={pointer.onClickCapture}
+                      onDragStartCapture={pointer.onDragStart}
                     >
-                      <FieldsHeader />
+                      <div
+                        className="gm-gantt-header-tools absolute z-10 rounded-lg bg-white dark:bg-neutral-900"
+                        style={{
+                          left: boundaryWidth - 34,
+                          top: Math.max(0, (scales.length * 28 - 28) / 2),
+                        }}
+                      >
+                        <FieldsHeader />
+                      </div>
+                      <div className="gm-gantt-native">
+                        <Locale words={localeWords}>
+                          <Willow fonts={false}>
+                            <Gantt
+                              tasks={rows}
+                              taskTypes={taskTypes}
+                              links={links}
+                              columns={visibleColumns}
+                              scales={scales}
+                              selected={selected}
+                              start={viewport.start}
+                              end={viewport.end}
+                              autoScale={false}
+                              durationUnit="day"
+                              lengthUnit="day"
+                              inclusiveEnd
+                              cellWidth={viewportCellWidth(viewport)}
+                              cellHeight={40}
+                              scaleHeight={28}
+                              gridWidth={gridWidth}
+                              highlightTime={weekends}
+                              displayMode={["grid", "chart"]}
+                              taskTemplate={TaskGanttBar}
+                              readonly
+                              ref={attach}
+                              onOpenTask={controls.onOpenTask}
+                              onSelectTask={controls.onSelectTask}
+                            />
+                          </Willow>
+                        </Locale>
+                      </div>
+                      <GanttSplitter
+                        width={boundaryWidth}
+                        available={layout.available}
+                        onResize={resizeGrid}
+                        onCommit={layout.setPreferredWidth}
+                      />
+                      <TaskGanttScene
+                        api={controls.api}
+                        tasks={tasks}
+                        dependencies={controls.dependencies}
+                        today={controls.today}
+                        unit={viewportUnit(viewport)}
+                        navigationKey={`${viewport.scale}:${viewport.zoomLevel}:${JSON.stringify(controls.filters)}`}
+                        calendar={calendar}
+                        canCreate={
+                          !props.actionsDisabled &&
+                          props.project.permissions.create_tasks
+                        }
+                        onCreateAt={(start) => setDialog({ start })}
+                        protectedView={protectedView}
+                        onDates={(task, initial) => {
+                          setRangeInitial(initial);
+                          setRangeTask(task);
+                        }}
+                        onOpen={onOpenTask}
+                        onNavigate={controls.manualNavigation}
+                        navigation={controls.navigation}
+                        onLocate={controls.locate}
+                        canLink={
+                          !protectedView && !props.actionsDisabled && !linkBusy
+                        }
+                        onLink={(source, target, type) => {
+                          if (!protectedView && !linkBusy)
+                            setLinkOperation({ source, target, type });
+                        }}
+                        onInspect={(source, target) => {
+                          if (!protectedView && !linkBusy)
+                            setLinkOperation({ source, target });
+                        }}
+                      />
                     </div>
-                    <div className="gm-gantt-native">
-                      <Locale words={localeWords}>
-                        <Willow fonts={false}>
-                          <Gantt
-                            tasks={rows}
-                            taskTypes={taskTypes}
-                            links={links}
-                            columns={visibleColumns}
-                            scales={scales}
-                            selected={selected}
-                            start={viewport.start}
-                            end={viewport.end}
-                            autoScale={false}
-                            durationUnit="day"
-                            lengthUnit="day"
-                            inclusiveEnd
-                            cellWidth={viewportCellWidth(viewport)}
-                            cellHeight={40}
-                            scaleHeight={28}
-                            gridWidth={gridWidth}
-                            highlightTime={weekends}
-                            displayMode={["grid", "chart"]}
-                            taskTemplate={TaskGanttBar}
-                            readonly
-                            ref={attach}
-                            onOpenTask={controls.onOpenTask}
-                            onSelectTask={controls.onSelectTask}
-                          />
-                        </Willow>
-                      </Locale>
-                    </div>
-                    <GanttSplitter
-                      width={boundaryWidth}
-                      available={layout.available}
-                      onResize={resizeGrid}
-                      onCommit={layout.setPreferredWidth}
-                    />
-                    <TaskGanttScene
-                      api={controls.api}
-                      tasks={tasks}
-                      dependencies={controls.dependencies}
-                      today={controls.today}
-                      unit={viewportUnit(viewport)}
-                      navigationKey={`${viewport.scale}:${viewport.zoomLevel}:${JSON.stringify(controls.filters)}`}
-                      calendar={calendar}
-                      canCreate={
-                        !props.actionsDisabled &&
-                        props.project.permissions.create_tasks
-                      }
-                      onCreateAt={(start) => setDialog({ start })}
-                      protectedView={protectedView}
-                      onDates={(task, initial) => {
-                        setRangeInitial(initial);
-                        setRangeTask(task);
-                      }}
-                      onOpen={onOpenTask}
-                      onNavigate={controls.manualNavigation}
-                      navigation={controls.navigation}
-                      onLocate={controls.locate}
-                      canLink={
-                        !protectedView && !props.actionsDisabled && !linkBusy
-                      }
-                      onLink={(source, target, type) => {
-                        if (!protectedView && !linkBusy)
-                          setLinkOperation({ source, target, type });
-                      }}
-                      onInspect={(source, target) => {
-                        if (!protectedView && !linkBusy)
-                          setLinkOperation({ source, target });
-                      }}
-                    />
                   </div>
                 </div>
-              </div>
-              {fieldsOpen && (
-                <TaskGanttFields
-                  layout={layout}
-                  overlay={overlay}
-                  onClose={() => setFieldsOpen(false)}
-                />
-              )}
-            </div>
-            <TaskGanttCalendarFeedback calendar={calendar} />
-            {movement.drop && (
-              <div
-                className="gm-gantt-tree-insertion"
-                style={{
-                  left: movement.drop.left,
-                  top: movement.drop.top,
-                  width: movement.drop.width,
-                }}
-                aria-hidden="true"
-              />
-            )}
-            {(movement.error || movement.busy) && (
-              <div role="status" className="text-xs">
-                {movement.error || "Guardando orden…"}
-                {movement.error && (
-                  <button type="button" onClick={() => void movement.refresh()}>
-                    Consultar tareas
-                  </button>
+                {fieldsOpen && (
+                  <TaskGanttFields
+                    layout={layout}
+                    overlay={overlay}
+                    onClose={() => setFieldsOpen(false)}
+                  />
                 )}
               </div>
-            )}
-            {moveDialog !== null && byId.has(moveDialog) && (
-              <GanttTreeMoveDialog
-                task={byId.get(moveDialog)!}
-                tasks={tasks}
-                visible={controls.projection.visible}
-                filtered={filtered}
-                onMove={(parent, before) => {
-                  const task = byId.get(moveDialog)!;
-                  setMoveDialog(null);
-                  movement.propose(task, task.state_code, before, parent);
-                }}
-                onClose={() => setMoveDialog(null)}
-              />
-            )}
-            {dialog && (
-              <GanttTaskNameDialog
-                key={String(dialog.task?.id) + ":" + String(dialog.parent?.id)}
-                project={props.project}
-                task={dialog.task}
-                parent={dialog.parent}
-                initialStart={dialog.start}
-                onConsult={props.onMoved}
-                onSaved={(saved) => {
-                  props.onCreated(saved);
-                  if (saved.parent_id !== null)
-                    controls.toggleBranch(saved.parent_id, true);
-                }}
-                onClose={() => setDialog(null)}
-              />
-            )}
-            {rangeTask && (
-              <GanttRangeDialog
-                key={rangeTask.id}
-                task={rangeTask}
-                initial={rangeInitial}
-                props={props}
-                onClose={() => setRangeTask(null)}
-              />
-            )}
-            <div className="fixed bottom-4 left-4 z-60 grid max-h-[70vh] gap-2 overflow-y-auto">
-              {removedLinks.map((removed) => (
-                <GanttDependencyUndo
-                  key={
-                    removed.source +
-                    ":" +
-                    removed.target +
-                    ":" +
-                    removed.expires
-                  }
-                  props={props}
-                  removed={removed}
-                  onClose={() =>
-                    setRemovedLinks((current) =>
-                      current.filter((item) => item !== removed),
-                    )
-                  }
+              <TaskGanttCalendarFeedback calendar={calendar} />
+              {movement.drop && (
+                <div
+                  className="gm-gantt-tree-insertion"
+                  style={{
+                    left: movement.drop.left,
+                    top: movement.drop.top,
+                    width: movement.drop.width,
+                  }}
+                  aria-hidden="true"
                 />
-              ))}
-            </div>
-            {linkOperation && (
-              <GanttDependencyOperation
-                key={`${linkOperation.source}:${linkOperation.target}`}
-                props={props}
-                onRemoved={(source, target, type) =>
-                  setRemovedLinks((current) => [
-                    ...current,
-                    { source, target, type, expires: Date.now() + 10000 },
-                  ])
-                }
-                initialType={linkOperation.type}
-                sourceId={linkOperation.source}
-                targetId={linkOperation.target}
-                onBusyChange={setLinkBusy}
-                onClose={() => {
-                  setLinkOperation(null);
-                  setLinkBusy(false);
-                }}
-              />
-            )}
-          </FieldsActions.Provider>
-        </TaskActions.Provider>
-      </GanttGestureContext.Provider>
-    </GanttCalendarContext.Provider>
+              )}
+              {(movement.error || movement.busy) && (
+                <div role="status" className="text-xs">
+                  {movement.error || "Guardando orden…"}
+                  {movement.error && (
+                    <button
+                      type="button"
+                      onClick={() => void movement.refresh()}
+                    >
+                      Consultar tareas
+                    </button>
+                  )}
+                </div>
+              )}
+              {moveDialog !== null && byId.has(moveDialog) && (
+                <GanttTreeMoveDialog
+                  task={byId.get(moveDialog)!}
+                  tasks={tasks}
+                  visible={controls.projection.visible}
+                  filtered={filtered}
+                  onMove={(parent, before) => {
+                    const task = byId.get(moveDialog)!;
+                    setMoveDialog(null);
+                    movement.propose(task, task.state_code, before, parent);
+                  }}
+                  onClose={() => setMoveDialog(null)}
+                />
+              )}
+              {dialog && (
+                <GanttTaskNameDialog
+                  key={
+                    String(dialog.task?.id) + ":" + String(dialog.parent?.id)
+                  }
+                  project={props.project}
+                  task={dialog.task}
+                  parent={dialog.parent}
+                  initialStart={dialog.start}
+                  onConsult={props.onMoved}
+                  onSaved={(saved) => {
+                    props.onCreated(saved);
+                    if (saved.parent_id !== null)
+                      controls.toggleBranch(saved.parent_id, true);
+                  }}
+                  onClose={() => setDialog(null)}
+                />
+              )}
+              {rangeTask && (
+                <GanttRangeDialog
+                  key={rangeTask.id}
+                  task={rangeTask}
+                  initial={rangeInitial}
+                  props={props}
+                  onClose={() => setRangeTask(null)}
+                />
+              )}
+              <div className="fixed bottom-4 left-4 z-60 grid max-h-[70vh] gap-2 overflow-y-auto">
+                {removedLinks.map((removed) => (
+                  <GanttDependencyUndo
+                    key={
+                      removed.source +
+                      ":" +
+                      removed.target +
+                      ":" +
+                      removed.expires
+                    }
+                    props={props}
+                    removed={removed}
+                    onClose={() =>
+                      setRemovedLinks((current) =>
+                        current.filter((item) => item !== removed),
+                      )
+                    }
+                  />
+                ))}
+              </div>
+              {linkOperation && (
+                <GanttDependencyOperation
+                  key={`${linkOperation.source}:${linkOperation.target}`}
+                  props={props}
+                  onRemoved={(source, target, type) =>
+                    setRemovedLinks((current) => [
+                      ...current,
+                      { source, target, type, expires: Date.now() + 10000 },
+                    ])
+                  }
+                  initialType={linkOperation.type}
+                  sourceId={linkOperation.source}
+                  targetId={linkOperation.target}
+                  onBusyChange={setLinkBusy}
+                  onClose={() => {
+                    setLinkOperation(null);
+                    setLinkBusy(false);
+                  }}
+                />
+              )}
+            </FieldsActions.Provider>
+          </TaskActions.Provider>
+        </GanttGestureContext.Provider>
+      </GanttCalendarContext.Provider>
     </TaskSyncContext.Provider>
   );
 }

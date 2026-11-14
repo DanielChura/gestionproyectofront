@@ -1,8 +1,8 @@
-import EmptyState from "../../shared/EmptyState/EmptyState";
-import EmptyFilters from "../../shared/EmptyFilters/EmptyFilters";
-import Input from "../../shared/Input/Input";
-import Select from "../../shared/Select/Select";
-import SearchIcon from "../../shared/Icons/SearchIcon";
+import EmptyState from "../../shared/states/EmptyState/EmptyState";
+import EmptyFilters from "../../shared/states/EmptyFilters/EmptyFilters";
+import Input from "../../shared/components/Input/Input";
+import Select from "../../shared/components/Select/Select";
+import SearchIcon from "../../shared/icons/SearchIcon";
 import WorkerCard from "./WorkerCard";
 import type { Area } from "../../core/interfaces/organization.interface";
 import type { Worker } from "../../core/interfaces/worker.interface";

@@ -1,7 +1,7 @@
 import { useId } from "react";
 import type { Project } from "../../../../../core/interfaces/task.interface";
 import TaskProperty from "../TaskProperty";
-import UserIcon from "../../../../../shared/Icons/UserIcon";
+import UserIcon from "../../../../../shared/icons/UserIcon";
 import AssigneeSelector from "./AssigneeSelector";
 
 export default function ResponsiblePicker({
@@ -50,7 +50,7 @@ export default function ResponsiblePicker({
           />
           <button
             type="button"
-            className="mt-3 inline-flex cursor-pointer items-center justify-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+            className="mt-3 inline-flex cursor-pointer items-center justify-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
             onClick={close}
           >
             Listo

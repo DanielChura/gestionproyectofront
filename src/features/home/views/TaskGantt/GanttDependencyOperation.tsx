@@ -2,7 +2,7 @@ import type { DependencyType } from "../../types";
 import type { TaskGanttProps } from "./types";
 import { useGanttLinks } from "./useGanttLinks";
 import { ganttControl } from "./GanttControl";
-import Modal from "../../../../shared/Modal/Modal";
+import Modal from "../../../../shared/components/Modal/Modal";
 import { useTaskSync } from "../../utils/useTaskSync";
 import { useEffect, useState } from "react";
 import DependencyTypeSelect from "../../shared/task-fields/DependencyTypeSelect";

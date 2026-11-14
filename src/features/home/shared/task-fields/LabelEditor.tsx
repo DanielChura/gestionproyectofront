@@ -28,12 +28,12 @@ export default function LabelEditor({
 
   return (
     <fieldset className="m-0 grid min-w-0 gap-2 border-0 p-0">
-      <legend className="mb-1 text-xs font-semibold text-neutral-800 dark:text-neutral-100">
+      <legend className="mb-1 text-xs  text-neutral-800 dark:text-neutral-100">
         {title}
       </legend>
       <label
         htmlFor={id}
-        className="text-xs font-medium text-neutral-700 dark:text-neutral-300"
+        className="text-xs  text-neutral-700 dark:text-neutral-300"
       >
         Buscar especialidades
       </label>

@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from "react";
-import LogoutIcon from "../../../shared/Icons/LogoutIcon";
-import SettingsIcon from "../../../shared/Icons/SettingsIcon";
+import LogoutIcon from "../../../shared/icons/LogoutIcon";
+import SettingsIcon from "../../../shared/icons/SettingsIcon";
 import Avatar from "../../../shared/Avatar";
 import type { SessionUser } from "../../auth/api";
 import { roleLabel } from "../../auth/roles";
@@ -29,9 +29,9 @@ function ProfileMenu({ user, onLogout, isCollapsed }: ProfileMenuProps) {
         aria-label="Abrir menú de perfil"
         aria-haspopup="menu"
         aria-expanded={open}
-        className={`flex min-w-0 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer ${
+        className={`flex min-w-0 cursor-pointer ${
           isCollapsed
-            ? "justify-center p-0"
+            ? "justify-center"
             : "w-full items-start gap-2.5 p-1 text-left"
         }`}
       >

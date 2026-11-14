@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Form from "../../../shared/Form/Form";
-import Input from "../../../shared/Input/Input";
+import Form from "../../../shared/components/Form/Form";
+import Input from "../../../shared/components/Input/Input";
 import { addTeamMember } from "../../../core/services/organizationService";
 import { listWorkers } from "../../../core/services/workerService";
 import type { Team } from "../../../core/interfaces/organization.interface";

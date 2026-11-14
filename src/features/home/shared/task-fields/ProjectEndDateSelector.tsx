@@ -1,14 +1,14 @@
 import { useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import TaskProperty from "./TaskProperty";
-import CalendarIcon from "../../../../shared/Icons/CalendarIcon";
+import CalendarIcon from "../../../../shared/icons/CalendarIcon";
 import { projectToday } from "../../utils/taskGrouping";
 import {
   calendarDate as readDate,
   calendarDateKey as dateKey,
   addCalendarDays,
 } from "../../utils/calendarDate";
-import ChevronIcon from "../../../../shared/Icons/ChevronIcon";
+import ChevronIcon from "../../../../shared/icons/ChevronIcon";
 
 const styles = {
   calendar: "grid gap-2",
@@ -16,9 +16,9 @@ const styles = {
     "m-0 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400 [&_span]:whitespace-nowrap",
   heading:
     "flex items-center justify-between gap-2 [&_strong]:text-[13px] [&_strong]:capitalize [&_button]:grid [&_button]:size-8 [&_button]:place-items-center [&_button]:rounded-lg [&_button]:border [&_button]:border-transparent [&_button]:bg-white dark:[&_button]:bg-neutral-900 [&_button]:p-0 [&_button]:text-neutral-900 dark:[&_button]:text-neutral-100 [&_button]:cursor-pointer [&_button:hover:enabled]:bg-neutral-100",
-  week: "grid grid-cols-7 gap-0.5 [&>span]:grid [&>span]:min-h-7 [&>span]:place-items-center [&>span]:text-[11px] [&>span]:text-neutral-600",
+  week: "grid grid-cols-7 gap-1 [&>span]:grid [&>span]:min-h-7 [&>span]:place-items-center [&>span]:text-[11px] [&>span]:text-neutral-600 dark:[&>span]:text-neutral-400",
   day: "min-h-8 min-w-0 cursor-pointer rounded-lg border border-transparent bg-white p-1 text-[13px] text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100 tabular-nums aria-[current=date]:underline aria-[current=date]:underline-offset-2 aria-selected:bg-neutral-100 dark:aria-selected:bg-neutral-700 dark:aria-selected:text-neutral-100 dark:aria-selected:border-neutral-400 aria-selected:border-neutral-700 aria-selected:hover:enabled:bg-neutral-100 disabled:opacity-45 disabled:cursor-default",
-  outside: "text-neutral-500",
+  outside: "text-neutral-500 dark:text-neutral-400",
   actions:
     "flex items-center justify-between gap-2 border-t border-neutral-200 pt-2 [&_button]:min-h-8 [&_button]:rounded-lg [&_button]:border [&_button]:border-neutral-200 [&_button]:bg-neutral-100 dark:[&_button]:bg-neutral-800 [&_button]:px-2 [&_button]:py-1 [&_button]:text-xs [&_button]:cursor-pointer [&_button:hover:enabled]:bg-neutral-100",
 };

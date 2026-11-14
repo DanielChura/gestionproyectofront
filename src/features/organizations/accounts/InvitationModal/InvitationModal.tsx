@@ -2,9 +2,9 @@ import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ApiError, apiRequest, errorText, type Area } from "../../../auth/api";
 import { useToast } from "../../../../hooks/useToast";
-import Form from "../../../../shared/Form/Form";
-import Input from "../../../../shared/Input/Input";
-import Select from "../../../../shared/Select/Select";
+import Form from "../../../../shared/components/Form/Form";
+import Input from "../../../../shared/components/Input/Input";
+import Select from "../../../../shared/components/Select/Select";
 import { accountRoles } from "../../../auth/roles";
 
 interface InvitationModalProps {

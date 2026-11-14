@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import CalendarIcon from "../../../shared/Icons/CalendarIcon";
-import ClockIcon from "../../../shared/Icons/ClockIcon";
-import DotsIcon from "../../../shared/Icons/DotsIcon";
-import UserIcon from "../../../shared/Icons/UserIcon";
+import CalendarIcon from "../../../shared/icons/CalendarIcon";
+import ClockIcon from "../../../shared/icons/ClockIcon";
+import DotsIcon from "../../../shared/icons/DotsIcon";
+import UserIcon from "../../../shared/icons/UserIcon";
 import type { Publication } from "../../../core/interfaces/publication.interface";
 import {
   formatPublicationDate,
@@ -115,7 +115,7 @@ export default function PublicationBoard({
                 </div>
               </div>
 
-              <div className="flex flex-col gap-0.5">
+              <div className="flex flex-col gap-1">
                 <h3 className="line-clamp-1 text-sm  text-neutral-800 dark:text-neutral-100">
                   {publication.title}
                 </h3>

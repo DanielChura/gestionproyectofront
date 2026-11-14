@@ -1,8 +1,8 @@
-import ActivityIcon from "../../../../../shared/Icons/ActivityIcon";
-import AlertIcon from "../../../../../shared/Icons/AlertIcon";
-import ClockIcon from "../../../../../shared/Icons/ClockIcon";
-import HourglassIcon from "../../../../../shared/Icons/HourglassIcon";
-import CheckIcon from "../../../../../shared/Icons/CheckIcon";
+import ActivityIcon from "../../../../../shared/icons/ActivityIcon";
+import AlertIcon from "../../../../../shared/icons/AlertIcon";
+import ClockIcon from "../../../../../shared/icons/ClockIcon";
+import HourglassIcon from "../../../../../shared/icons/HourglassIcon";
+import CheckIcon from "../../../../../shared/icons/CheckIcon";
 
 function formatMinutes(minutes: number): string {
   if (!minutes || minutes <= 0) return "0h";
@@ -71,7 +71,7 @@ export default function ProjectKpis({ summary }: Props) {
           <div className="flex items-center gap-1.5 text-xl  text-neutral-800 dark:text-neutral-100">
             <ActivityIcon className="size-4 shrink-0 text-green-600 dark:text-green-400" />
             {completionPercent}%
-            <small className="text-xs font-normal text-neutral-500">
+            <small className="text-xs  text-neutral-500">
               ({summary.completed_tasks}/{summary.total_tasks} tareas)
             </small>
           </div>
@@ -96,7 +96,7 @@ export default function ProjectKpis({ summary }: Props) {
           <div className="flex items-center gap-1.5 text-xl  text-neutral-800 dark:text-neutral-100">
             <ClockIcon className="size-4 shrink-0 text-blue-600 dark:text-blue-400" />
             {summary.in_progress_tasks}
-            <small className="text-xs font-normal text-neutral-500">
+            <small className="text-xs  text-neutral-500">
               ({activePercent}% del total)
             </small>
           </div>
@@ -138,7 +138,7 @@ export default function ProjectKpis({ summary }: Props) {
               <CheckIcon className="size-4 shrink-0 text-green-600 dark:text-green-400" />
             )}
             {overdueCount}
-            <small className="text-xs font-normal text-neutral-500">
+            <small className="text-xs  text-neutral-500">
               {overdueCount === 1 ? "vencida" : "vencidas"}
             </small>
           </div>
@@ -167,7 +167,7 @@ export default function ProjectKpis({ summary }: Props) {
           <div className="flex items-center gap-1.5 text-xl  text-neutral-800 dark:text-neutral-100">
             <HourglassIcon className="size-4 shrink-0 text-blue-600 dark:text-blue-400" />
             {formatMinutes(summary.estimated_minutes_completed)}
-            <small className="text-xs font-normal text-neutral-500">
+            <small className="text-xs  text-neutral-500">
               de {formatMinutes(summary.estimated_minutes_total)}
             </small>
           </div>

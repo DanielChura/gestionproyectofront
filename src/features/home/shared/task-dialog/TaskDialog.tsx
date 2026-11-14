@@ -2,11 +2,11 @@ import TaskDetailController from "../task-detail/TaskDetailController";
 import TaskEditDialog from "./TaskEditDialog";
 import type { Task } from "../../types";
 import type { ReactNode } from "react";
-import Modal from "../../../../shared/Modal/Modal";
 import type { TaskAction, TaskDialogController } from "../../types";
 import TaskForm from "../task-form/TaskForm";
 import DependencyForm from "./DependencyForm";
 import TaskStateForm from "./TaskStateForm";
+import XIcon from "../../../../shared/icons/XIcon";
 
 function dialogTitle(action: TaskAction, taskName?: string) {
   switch (action.kind) {
@@ -74,67 +74,78 @@ export default function TaskDialog({
       />
     );
 
-  const composed = action.kind === "create" || action.kind === "child";
-
-  function form() {
-    if (!action) return null;
-
-    if (action.kind === "create") {
-      return (
-        <TaskForm
-          project={project}
-          catalogs={catalogs}
-          initialState={action.stateCode}
-          onSubmit={saveTask}
-          onConfigured={configuredStates}
-          onClose={close}
-        />
-      );
-    }
-
-    if (!activeTask) return null;
-
-    if (action.kind === "child") {
-      return (
-        <TaskForm
-          project={project}
-          catalogs={catalogs}
-          parent={activeTask}
-          onSubmit={saveTask}
-          onConfigured={configuredStates}
-          onClose={close}
-        />
-      );
-    }
-
-    if (action.kind === "state") {
-      return (
-        <TaskStateForm
-          task={activeTask}
-          states={project.task_states.states}
-          onSubmit={(data) => changeState(activeTask, data)}
-        />
-      );
-    }
-
+  if (action.kind === "create" || action.kind === "child")
     return (
-      <DependencyForm
-        task={activeTask}
-        tasks={tasks}
-        onChange={changeDependency}
+      <TaskForm
+        key={project.id + ":" + (activeTask?.id ?? "new")}
+        project={project}
+        catalogs={catalogs}
+        task={undefined}
+        parent={action.kind === "child" ? activeTask : undefined}
+        initialState={action.kind === "create" ? action.stateCode : undefined}
+        onSubmit={saveTask}
+        onConfigured={configuredStates}
+        onClose={close}
       />
     );
-  }
 
-  return (
-    <Modal
-      busy={busy}
-      title={dialogTitle(action, activeTask?.name)}
-      taskComposer={composed}
-      onClose={close}
-    >
-      {form()}
-      {feedback}
-    </Modal>
-  );
+  if (action.kind === "state" && activeTask)
+    return (
+      <div className="bg-modal">
+        <dialog
+          open
+          className="m-0 flex max-h-dvh w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white p-0 text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+        >
+          <header className="flex shrink-0 items-center justify-between gap-4 border-b border-neutral-200 px-6 py-3 dark:border-neutral-800">
+            <h2 className="m-0 text-sm font-medium">
+              {dialogTitle(action, activeTask.name)}
+            </h2>
+            <button
+              type="button"
+              className="cursor-pointer rounded-full p-1.5 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+              onClick={close}
+            >
+              <XIcon className="size-4" />
+            </button>
+          </header>
+          <TaskStateForm
+            task={activeTask}
+            states={project.task_states.states}
+            onSubmit={(data) => changeState(activeTask, data)}
+          />
+          {feedback}
+        </dialog>
+      </div>
+    );
+
+  if (activeTask)
+    return (
+      <div className="bg-modal">
+        <dialog
+          open
+          className="m-0 flex max-h-dvh w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white p-0 text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+        >
+          <header className="flex shrink-0 items-center justify-between gap-4 border-b border-neutral-200 px-6 py-3 dark:border-neutral-800">
+            <h2 className="m-0 text-sm font-medium">
+              {dialogTitle(action, activeTask.name)}
+            </h2>
+            <button
+              type="button"
+              className="cursor-pointer rounded-full p-1.5 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+              onClick={close}
+            >
+              <XIcon className="size-4" />
+            </button>
+          </header>
+          <DependencyForm
+            task={activeTask}
+            tasks={tasks}
+            onChange={changeDependency}
+          />
+          {feedback}
+        </dialog>
+      </div>
+    );
+
+  return null;
 }

@@ -33,6 +33,8 @@ import TeamsIcon from "./TeamsIcon";
 import XIcon from "./XIcon";
 import VectorIcon from "./VectorIcon";
 import TablerIcon from "./TablerIcon";
+import CircleHalfIcon from "./CircleHalfIcon";
+import CircleDashedIcon from "./CircleDashedIcon";
 
 export interface IconProps {
   className?: string;
@@ -47,10 +49,12 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
   calendar: CalendarIcon,
   search: SearchIcon,
   plus: PlusIcon,
+  "circle-half": CircleHalfIcon,
   trash: TrashIcon,
   "chevron-down": ChevronDownIcon,
   "arrow-left": ArrowLeftIcon,
   "arrow-right": ArrowRightIcon,
+  "circle-dashed": CircleDashedIcon,
   star: StarIcon,
   edit: EditIcon,
   setting: SettingIcon,

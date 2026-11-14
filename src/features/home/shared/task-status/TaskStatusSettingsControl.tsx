@@ -1,4 +1,4 @@
-import DotsIcon from "../../../../shared/Icons/DotsIcon";
+import DotsIcon from "../../../../shared/icons/DotsIcon";
 
 export default function TaskStatusSettingsControl({
   onClick,
@@ -9,10 +9,11 @@ export default function TaskStatusSettingsControl({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700/50"
+      aria-label="Ajustes"
+      title="Ajustes"
+      className="inline-flex cursor-pointer items-center justify-center rounded-lg p-1.5 text-neutral-500 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
     >
       <DotsIcon className="size-4" />
-      <span>Ajustes</span>
     </button>
   );
 }

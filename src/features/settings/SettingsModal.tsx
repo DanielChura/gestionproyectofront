@@ -1,4 +1,4 @@
-import Modal from "../../shared/Modal/Modal";
+import Modal from "../../shared/components/Modal/Modal";
 import AppearanceSettings from "./AppearanceSettings";
 import ProfileSettings from "./ProfileSettings";
 import SpecialtiesSettings from "./SpecialtiesSettings";

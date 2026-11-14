@@ -1,7 +1,9 @@
 import { useState } from "react";
-import type { Task, TaskIdentity, TaskDialogController } from "../../types";
-import TaskDetailDialog from "./TaskDetailDialog";
-import TaskEditDialog from "../task-dialog/TaskEditDialog";
+import type { Task, TaskDialogController, TaskIdentity } from "../../types";
+import TaskDetailModal from "./TaskDetailModal";
+import type { TaskDetailModel } from "./TaskDetailModal";
+import { useTaskDetail } from "./useTaskDetail";
+
 export default function TaskDetailController({
   controller,
   taskId,
@@ -15,27 +17,15 @@ export default function TaskDetailController({
     projectId: controller.project.id,
     taskId,
   });
-  const [editing, setEditing] = useState<Task | null>(null);
-  return (
-    <>
-      <TaskDetailDialog
-        target={target}
-        project={controller.project}
-        catalogs={controller.catalogs}
-        onUpdated={onUpdated}
-        onNavigate={setTarget}
-        onClose={controller.close}
-        onEdit={setEditing}
-      />
-      {editing && (
-        <TaskEditDialog
-          key={editing.id}
-          controller={controller}
-          task={editing}
-          onUpdated={onUpdated}
-          onClose={() => setEditing(null)}
-        />
-      )}
-    </>
-  );
+  const detail = useTaskDetail(target, onUpdated);
+  const model: TaskDetailModel = {
+    ...detail,
+    target,
+    project: controller.project,
+    catalogs: controller.catalogs,
+    onNavigate: setTarget,
+    onClose: controller.close,
+  };
+
+  return <TaskDetailModal model={model} />;
 }

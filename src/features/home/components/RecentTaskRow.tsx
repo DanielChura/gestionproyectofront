@@ -1,11 +1,17 @@
-import CheckIcon from "../../../shared/Icons/CheckIcon";
+import CheckIcon from "../../../shared/icons/CheckIcon";
 import type { Task } from "../../../core/interfaces/task.interface";
 
 const priorityLabels: Record<number, { label: string; color: string }> = {
   1: { label: "Urgente", color: "text-red-500 bg-red-50 dark:bg-red-950/40" },
-  2: { label: "Alta", color: "text-amber-500 bg-amber-50 dark:bg-amber-950/40" },
+  2: {
+    label: "Alta",
+    color: "text-amber-500 bg-amber-50 dark:bg-amber-950/40",
+  },
   3: { label: "Normal", color: "text-sky-500 bg-sky-50 dark:bg-sky-950/40" },
-  4: { label: "Baja", color: "text-neutral-500 bg-neutral-100 dark:bg-neutral-800" },
+  4: {
+    label: "Baja",
+    color: "text-neutral-500 bg-neutral-100 dark:bg-neutral-800",
+  },
 };
 
 export default function RecentTaskRow({ task }: { task: Task }) {
@@ -25,19 +31,23 @@ export default function RecentTaskRow({ task }: { task: Task }) {
           >
             {isDone && <CheckIcon className="size-3" />}
           </span>
-          <span className={`truncate font-medium ${isDone ? "line-through text-neutral-400" : "text-neutral-800 dark:text-neutral-200"}`}>
+          <span
+            className={`truncate  ${isDone ? "line-through text-neutral-400" : "text-neutral-800 dark:text-neutral-200"}`}
+          >
             {task.name}
           </span>
         </div>
       </td>
       <td className="px-3 py-2 text-xs">
-        <span className="rounded bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+        <span className="rounded bg-neutral-100 px-2 py-0.5 text-xs  text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
           {task.state_name || "Sin estado"}
         </span>
       </td>
       <td className="px-3 py-2 text-xs">
         {priorityInfo ? (
-          <span className={`rounded px-2 py-0.5 text-xs font-medium ${priorityInfo.color}`}>
+          <span
+            className={`rounded px-2 py-0.5 text-xs  ${priorityInfo.color}`}
+          >
             {priorityInfo.label}
           </span>
         ) : (
@@ -53,4 +63,3 @@ export default function RecentTaskRow({ task }: { task: Task }) {
     </tr>
   );
 }
-

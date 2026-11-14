@@ -1,13 +1,18 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import Form from "../../../shared/Form/Form";
-import Input from "../../../shared/Input/Input";
+import Form from "../../../shared/components/Form/Form";
+import Input from "../../../shared/components/Input/Input";
 
 interface CreateTaskModalProps {
   projectName: string;
   submitting: boolean;
   onClose: () => void;
-  onSubmit: (payload: { name: string; description: string; priority: number; due_date?: string }) => Promise<unknown>;
+  onSubmit: (payload: {
+    name: string;
+    description: string;
+    priority: number;
+    due_date?: string;
+  }) => Promise<unknown>;
 }
 
 export default function CreateTaskModal({
@@ -24,7 +29,12 @@ export default function CreateTaskModal({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!name.trim()) return;
-    void onSubmit({ name: name.trim(), description: description.trim(), priority, due_date: dueDate || undefined });
+    void onSubmit({
+      name: name.trim(),
+      description: description.trim(),
+      priority,
+      due_date: dueDate || undefined,
+    });
   };
 
   return (
@@ -36,14 +46,20 @@ export default function CreateTaskModal({
       onSubmit={handleSubmit}
     >
       <div className="col-span-2">
-        <label className="mb-1 block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+        <label className="mb-1 block text-xs  text-neutral-700 dark:text-neutral-300">
           Nombre de la tarea
         </label>
-        <Input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej. Rediseñar cabecera" autoFocus />
+        <Input
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ej. Rediseñar cabecera"
+          autoFocus
+        />
       </div>
 
       <div className="col-span-2">
-        <label className="mb-1 block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+        <label className="mb-1 block text-xs  text-neutral-700 dark:text-neutral-300">
           Descripción
         </label>
         <textarea
@@ -56,13 +72,13 @@ export default function CreateTaskModal({
       </div>
 
       <div>
-        <label className="mb-1 block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+        <label className="mb-1 block text-xs  text-neutral-700 dark:text-neutral-300">
           Prioridad
         </label>
         <select
           value={priority}
           onChange={(e) => setPriority(Number(e.target.value))}
-          className="w-full cursor-pointer rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs font-medium text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+          className="w-full cursor-pointer rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs  text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
         >
           <option value={1}>Urgente</option>
           <option value={2}>Alta</option>
@@ -72,10 +88,14 @@ export default function CreateTaskModal({
       </div>
 
       <div>
-        <label className="mb-1 block text-xs font-medium text-neutral-700 dark:text-neutral-300">
+        <label className="mb-1 block text-xs  text-neutral-700 dark:text-neutral-300">
           Fecha límite
         </label>
-        <Input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+        <Input
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
       </div>
     </Form>
   );

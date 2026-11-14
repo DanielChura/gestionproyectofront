@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
-import PlusIcon from "../../../shared/Icons/PlusIcon";
-import TrashIcon from "../../../shared/Icons/TrashIcon";
-import Form from "../../../shared/Form/Form";
-import Input from "../../../shared/Input/Input";
-import Select from "../../../shared/Select/Select";
+import PlusIcon from "../../../shared/icons/PlusIcon";
+import TrashIcon from "../../../shared/icons/TrashIcon";
+import Form from "../../../shared/components/Form/Form";
+import Input from "../../../shared/components/Input/Input";
+import Select from "../../../shared/components/Select/Select";
 import { useToast } from "../../../hooks/useToast";
 import { publicationErrorText } from "../../../core/services/publicationService";
 import {

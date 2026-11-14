@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Modal from "../../../../shared/Modal/Modal";
+import Modal from "../../../../shared/components/Modal/Modal";
 
 import { useTaskCalendarEdit } from "../../utils/useTaskCalendarEdit";
 import { useTaskSync } from "../../utils/useTaskSync";

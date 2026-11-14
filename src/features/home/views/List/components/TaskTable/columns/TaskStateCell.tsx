@@ -3,7 +3,7 @@ import type { TaskFieldView } from "../types";
 import {
   getIcon,
   iconMap,
-} from "../../../../../../../shared/Icons/icon-catalog";
+} from "../../../../../../../shared/icons/icon-catalog";
 
 export default function TaskStateCell({ view }: { view: TaskFieldView }) {
   const { task, project, onState } = view;
@@ -34,11 +34,9 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
             backgroundColor: tone ?? "#525252",
             color: "#fff",
           }}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-xs "
         >
-          <IconComponent
-            className="size-4"
-          />
+          <IconComponent className="size-4" />
           <span className="truncate">{task.state_name}</span>
         </button>
 
@@ -57,13 +55,11 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
                   }}
                   className={`flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
                     isSelected
-                      ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
+                      ? "bg-neutral-100  text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
                       : "text-neutral-700 dark:text-neutral-300"
                   }`}
                 >
-                  <IconComponent
-                    className="size-4"
-                  />
+                  <IconComponent className="size-4" />
                   <span
                     style={{
                       backgroundColor: state.tema?.color

@@ -7,7 +7,7 @@ import { errorText } from "../../../../auth/api";
 export function useProjectCharts(projectId: number) {
   const { addToast } = useToast();
 
-  const { data = null, error } = useQuery<ProjectChartsResponse>({
+  const { data = null, error, isLoading } = useQuery<ProjectChartsResponse>({
     queryKey: ["projectCharts", projectId],
     queryFn: async () => {
       try {
@@ -26,5 +26,5 @@ export function useProjectCharts(projectId: number) {
     staleTime: 1000 * 60 * 5,
   });
 
-  return { data, error: error ? errorText(error) : "" };
+  return { data, isLoading, error: error ? errorText(error) : "" };
 }

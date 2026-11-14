@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes, ComponentType, ReactNode } from "react";
-import type { IconProps } from "../../../../shared/Icons/types";
+import type { IconProps } from "../../../../shared/icons/types";
 import { useTaskProperty } from "./useTaskProperty";
 
 interface Props {
@@ -11,7 +11,6 @@ interface Props {
   disabled?: boolean;
   cell?: boolean;
   compact?: boolean;
-  board?: boolean;
   selected?: boolean;
   appearance?: string;
   fitViewport?: boolean;
@@ -34,7 +33,6 @@ export default function TaskProperty(props: Props) {
     disabled,
     cell,
     compact,
-    board,
     selected,
     triggers,
     content,
@@ -86,13 +84,13 @@ export default function TaskProperty(props: Props) {
             {...triggerProps}
             className={
               triggerClassName ??
-              `inline-flex min-w-0 cursor-pointer items-center gap-1.5 rounded-lg border border-transparent px-2 py-1.5 text-xs text-neutral-800 hover:border-neutral-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 disabled:cursor-default dark:text-neutral-200 dark:hover:border-neutral-600 dark:focus-visible:outline-neutral-300 ${cell ? "w-full" : "max-w-full"} ${compact ? "justify-center" : ""} ${board ? "hover:bg-neutral-100 dark:hover:bg-neutral-800" : ""}`
+              `inline-flex min-w-0 cursor-pointer items-center gap-1.5 rounded-lg border border-transparent px-2 py-1.5 text-xs text-neutral-800 hover:border-neutral-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 disabled:cursor-default dark:text-neutral-200 dark:hover:border-neutral-600 dark:focus-visible:outline-neutral-300 ${cell ? "w-full" : "max-w-full"} ${compact ? "justify-center" : ""}`
             }
             disabled={disabled}
             aria-label={item.label}
             aria-expanded={open}
             aria-controls={panelId}
-            aria-pressed={compact || board ? selected : undefined}
+            aria-pressed={compact ? selected : undefined}
             aria-invalid={Boolean(error) || undefined}
             aria-describedby={error ? `${id}-error` : undefined}
             onClick={(event) => {

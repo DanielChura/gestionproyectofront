@@ -15,6 +15,8 @@ import type {
   ProjectCatalogs,
   Task,
   TaskActionKind,
+  TaskGroupingPreferences,
+  TaskListGroup,
   TaskStatePayload,
 } from "../../../types";
 import TaskBoardCard, { type TaskCardView } from "./TaskBoardCard";
@@ -23,7 +25,11 @@ import TaskBoardColumn from "./TaskBoardColumn";
 interface TaskBoardProps {
   project: Project;
   tasks: Task[];
+  groups: TaskListGroup[];
+  preferences: TaskGroupingPreferences;
   catalogs: ProjectCatalogs;
+  expandedParents: Set<number>;
+  onToggleParent: (id: number) => void;
   onAction: (
     kind: TaskActionKind | "create",
     id: number,
@@ -36,7 +42,11 @@ interface TaskBoardProps {
 export default function TaskBoard({
   project,
   tasks,
+  groups,
+  preferences,
   catalogs,
+  expandedParents,
+  onToggleParent,
   onAction,
   onState,
   onPatch,
@@ -45,34 +55,17 @@ export default function TaskBoard({
   const [activeId, setActiveId] = useState<number | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const [expandedParents, setExpandedParents] = useState<Set<number>>(
-    new Set(),
-  );
-
-  const toggleParent = (id: number) =>
-    setExpandedParents((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
 
   const states = project.task_states.states;
-  const byState = new Map(states.map((state) => [state.code, [] as Task[]]));
-  for (const task of tasks) {
-    const bucket = byState.get(task.state_code);
-    if (bucket) bucket.push(task);
-    else if (states[0]) byState.get(states[0].code)?.push(task);
-  }
-
-  const visibleStates =
-    activeId === null
-      ? states.filter((state) => (byState.get(state.code)?.length ?? 0) > 0)
-      : states;
+  const stateByCode = useMemo(
+    () => new Map(states.map((state) => [state.code, state])),
+    [states],
+  );
+  const stateGrouping = preferences.mode === "state";
 
   const taskById = useMemo(
     () => new Map(tasks.map((task) => [task.id, task])),
@@ -91,6 +84,17 @@ export default function TaskBoard({
     return map;
   }, [tasks, taskById]);
 
+  const byGroup = useMemo(
+    () =>
+      new Map(
+        groups.map((group) => [
+          group.key,
+          tasks.filter((task) => group.members.has(task.id)),
+        ]),
+      ),
+    [groups, tasks],
+  );
+
   const activeTask = activeId != null ? (taskById.get(activeId) ?? null) : null;
   const activeParent =
     activeTask?.parent_id != null
@@ -104,7 +108,7 @@ export default function TaskBoard({
     expandedParents,
     onAction: (...args) => onAction(...args),
     onPatch,
-    onToggleChildren: toggleParent,
+    onToggleChildren: onToggleParent,
   };
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -117,7 +121,7 @@ export default function TaskBoard({
       const { active, over } = event;
       setActiveId(null);
       setOverId(null);
-      if (!over) return;
+      if (!stateGrouping || !over) return;
       const taskId = Number(active.id);
       const target = String(over.id);
       const task = taskById.get(taskId);
@@ -133,7 +137,7 @@ export default function TaskBoard({
         setError(String(failure));
       }
     },
-    [taskById, onState],
+    [stateGrouping, taskById, onState],
   );
 
   const handleBoardWheel = (event: WheelEvent<HTMLDivElement>) => {
@@ -178,16 +182,31 @@ export default function TaskBoard({
           onWheel={handleBoardWheel}
           className="flex min-h-0 flex-1 items-start gap-3 overflow-x-scroll"
         >
-          {visibleStates.map((state) => (
-            <TaskBoardColumn
-              key={state.code}
-              state={state}
-              tasks={byState.get(state.code) ?? []}
-              taskById={taskById}
-              view={view}
-              isOver={overId === state.code}
-            />
-          ))}
+          {groups.map((group) => {
+            const state = group.stateCode
+              ? stateByCode.get(group.stateCode)
+              : undefined;
+            return (
+              <TaskBoardColumn
+                key={group.key}
+                group={group}
+                state={state}
+                mode={preferences.mode}
+                tasks={byGroup.get(group.key) ?? []}
+                taskById={taskById}
+                view={view}
+                isOver={Boolean(
+                  stateGrouping && state && overId === state.code,
+                )}
+                droppable={stateGrouping && Boolean(state)}
+                canCreate={
+                  stateGrouping &&
+                  Boolean(state) &&
+                  project.permissions.create_tasks
+                }
+              />
+            );
+          })}
         </div>
 
         <DragOverlay>

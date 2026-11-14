@@ -1,9 +1,9 @@
 import { useState } from "react";
-import EmptyState from "../../shared/EmptyState/EmptyState";
-import EmptyFilters from "../../shared/EmptyFilters/EmptyFilters";
-import Input from "../../shared/Input/Input";
-import Select from "../../shared/Select/Select";
-import SearchIcon from "../../shared/Icons/SearchIcon";
+import EmptyState from "../../shared/states/EmptyState/EmptyState";
+import EmptyFilters from "../../shared/states/EmptyFilters/EmptyFilters";
+import Input from "../../shared/components/Input/Input";
+import Select from "../../shared/components/Select/Select";
+import SearchIcon from "../../shared/icons/SearchIcon";
 import TeamMemberCard from "./TeamMemberCard";
 import type { TeamMember } from "../../core/interfaces/organization.interface";
 
@@ -39,7 +39,7 @@ export default function TeamMembersPanel({
       <div className="flex flex-wrap items-center gap-2 pb-4">
         <h2 className="m-0 mr-auto text-sm text-neutral-800 dark:text-neutral-100">
           Integrantes{" "}
-          <span className="font-normal text-neutral-500 dark:text-neutral-400">
+          <span className=" text-neutral-500 dark:text-neutral-400">
             ({visible.length})
           </span>
         </h2>

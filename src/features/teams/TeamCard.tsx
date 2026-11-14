@@ -1,11 +1,11 @@
 import { Link } from "react-router";
-import ChevronDownIcon from "../../shared/Icons/ChevronIcon";
-import PlusIcon from "../../shared/Icons/PlusIcon";
+import ChevronDownIcon from "../../shared/icons/ChevronIcon";
+import PlusIcon from "../../shared/icons/PlusIcon";
 import { avatarFor } from "../../shared/Avatar";
 import { initialColor } from "../../utils/initialColor";
 import type { Team } from "../../core/interfaces/organization.interface";
-import BuildingIcon from "../../shared/Icons/BuildingIcon";
-import UserIcon from "../../shared/Icons/UserIcon";
+import BuildingIcon from "../../shared/icons/BuildingIcon";
+import UserIcon from "../../shared/icons/UserIcon";
 
 interface TeamCardProps {
   team: Team;
@@ -26,10 +26,8 @@ export default function TeamCard({
         <div
           className={`relative flex aspect-square w-full items-center justify-center rounded-xl ${initialColor(team.name)} text-white`}
         >
-          <span className="text-4xl font-medium tracking-tight">
-            {initials}
-          </span>
-          <div className="absolute right-2 top-2 flex items-center gap-0.5 rounded-lg bg-white p-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 dark:bg-neutral-900">
+          <span className="text-4xl  tracking-tight">{initials}</span>
+          <div className="absolute right-2 top-2 flex items-center gap-1 rounded-lg bg-white p-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 dark:bg-neutral-900">
             <Link
               to={`/equipos/${team.id}`}
               aria-label={`Ver ${team.name}`}
@@ -54,9 +52,7 @@ export default function TeamCard({
 
       <div className="flex flex-col gap-4 p-4 text-neutral-600 dark:text-neutral-200">
         <div className="flex items-center justify-between gap-2">
-          <p className="m-0 max-w-50 truncate text-xs font-medium">
-            {team.name}
-          </p>
+          <p className="m-0 max-w-50 truncate text-xs ">{team.name}</p>
           <span
             title={team.active ? "Activo" : "Inactivo"}
             className={`size-2 shrink-0 rounded-full ${

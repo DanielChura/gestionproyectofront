@@ -18,7 +18,7 @@ import { LoadingProvider } from "./context/LoadingContext";
 import { ToastProvider } from "./context/ToastContext";
 import { useLoading } from "./hooks/useLoading";
 import AppShell from "./features/layout/AppShell/AppShell";
-import { Toast } from "./shared/Toast/Toast";
+import { Toast } from "./shared/components/Toast/Toast";
 
 const queryClient = new QueryClient({
   defaultOptions: {
