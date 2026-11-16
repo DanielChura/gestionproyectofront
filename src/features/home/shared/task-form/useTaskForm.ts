@@ -123,25 +123,17 @@ export function useTaskForm({
     setError("");
     const invalid: FieldErrors = {};
     if (!name.trim()) invalid["task-name"] = "Indica el nombre de la tarea.";
-    if (!task && startDate < creationMin) {
+    if (!task && startDate && startDate < creationMin) {
       invalid["task-start"] = "Las tareas nuevas deben iniciar hoy o después.";
-    }
-    if (!task && !dueDate) {
-      addToast({
-        icon: "alert",
-        title: "Validación",
-        message: "Indica la fecha límite de la tarea.",
-      });
-      return;
     }
     if (!task && dueDate && dueDate < creationMin) {
       invalid["task-due"] =
         "La fecha límite de una tarea nueva no puede preceder a hoy.";
     }
     if (
-      !startDate ||
-      (project.start_date && startDate < project.start_date) ||
-      (lastDate && startDate > lastDate)
+      startDate &&
+      ((project.start_date && startDate < project.start_date) ||
+        (lastDate && startDate > lastDate))
     ) {
       invalid["task-start"] =
         "El inicio debe quedar dentro del periodo permitido.";
@@ -154,7 +146,7 @@ export function useTaskForm({
         "La fecha límite debe quedar dentro del periodo permitido.";
     }
     if (
-      priority === null ||
+      priority !== null &&
       !catalogs.priorities.some((p) => p.code === priority)
     ) {
       invalid["task-priority"] = "Selecciona una prioridad del catálogo.";
@@ -168,18 +160,6 @@ export function useTaskForm({
     }
     if (Object.keys(invalid).length > 0) {
       setFieldErrors(invalid);
-      return;
-    }
-    if (
-      canAssign &&
-      responsible.length === 0 &&
-      project.participants.length > 0
-    ) {
-      addToast({
-        icon: "alert",
-        title: "Validación",
-        message: "Selecciona al menos un responsable de la tarea.",
-      });
       return;
     }
     if (
@@ -205,7 +185,9 @@ export function useTaskForm({
     if (!task || project.permissions.manage) {
       data.description = description.trim();
     }
-    if (canAssign) data.responsible_ids = responsible;
+    if (canAssign && responsible.length > 0) {
+      data.responsible_ids = responsible.map(Number);
+    }
     setBusy(true);
     submitting.current = true;
     try {

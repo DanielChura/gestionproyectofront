@@ -13,14 +13,17 @@ export default function AssigneeSelector({
   onChange: (value: number[]) => void;
 }) {
   function toggle(id: number) {
+    const numId = Number(id);
+    const current = value.map(Number);
     onChange(
-      value.includes(id)
-        ? value.filter((item) => item !== id)
-        : [...value, id],
+      current.includes(numId)
+        ? current.filter((item) => item !== numId)
+        : [...current, numId],
     );
   }
 
-  const none = value.length === 0;
+  const numericValues = value.map(Number);
+  const none = numericValues.length === 0;
 
   return (
     <div className="grid w-full gap-0.5">
@@ -39,7 +42,7 @@ export default function AssigneeSelector({
         {none && <SuccessIcon className="size-3.5 shrink-0" />}
       </button>
       {project.participants.map((person) => {
-        const selected = value.includes(person.id);
+        const selected = numericValues.includes(Number(person.id));
         return (
           <button
             type="button"
