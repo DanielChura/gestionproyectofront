@@ -17,6 +17,7 @@ import type {
   TaskActionKind,
   TaskGroupingPreferences,
   TaskListGroup,
+  TaskPatchPayload,
   TaskStatePayload,
 } from "../../../types";
 import TaskBoardCard, { type TaskCardView } from "./TaskBoardCard";
@@ -36,7 +37,7 @@ interface TaskBoardProps {
     extra?: { stateCode?: string },
   ) => void;
   onState: (task: Task, data: TaskStatePayload) => Promise<void>;
-  onPatch: (task: Task, data: Partial<EditTaskPayload>) => Promise<void>;
+  onPatch: (task: Task, data: TaskPatchPayload) => Promise<void>;
 }
 
 export default function TaskBoard({

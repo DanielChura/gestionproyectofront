@@ -5,7 +5,7 @@ export function GlobalLoading() {
 
   if (!isLoading) return null;
 
-  const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const isDark = document.documentElement.classList.contains("dark");
 
   return (
     <aside

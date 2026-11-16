@@ -65,7 +65,7 @@ export default function TaskNameCell({
             <button
               type="button"
               data-task-drag-surface
-              className="cursor-pointer truncate text-left text-sm text-neutral-800 dark:text-neutral-100"
+              className="cursor-pointer truncate text-left text-sm font-medium text-neutral-800 dark:text-neutral-100"
               title={task.name}
               onClick={onOpen}
             >

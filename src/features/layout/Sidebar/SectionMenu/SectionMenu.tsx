@@ -42,7 +42,7 @@ export default function SectionMenu({
         aria-label={`Opciones de ${activeModule.label}`}
         className="min-h-0 flex-1 overflow-y-auto px-3"
       >
-        {isHome && <HomeMenu items={items} pathname={pathname} />}
+        {isHome && <HomeMenu items={items} pathname={pathname} canManage={canManage} />}
         {isTeams && (
           <TeamsMenu items={items} pathname={pathname} canManage={canManage} />
         )}

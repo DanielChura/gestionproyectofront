@@ -44,7 +44,7 @@ export default function ResponsiblePicker({
       {(close) => (
         <>
           <AssigneeSelector
-            project={{ id: projectId, participants, assignment_teams: teams }}
+            project={{ participants }}
             value={value}
             onChange={onChange}
           />

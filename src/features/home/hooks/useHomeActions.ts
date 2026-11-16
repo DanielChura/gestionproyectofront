@@ -4,6 +4,7 @@ import { createTask } from "../../../core/services/taskService";
 import { createPublication } from "../../../core/services/publicationService";
 import { useToast } from "../../../hooks/useToast";
 import type { ProjectSummary } from "../../../core/interfaces/project.interface";
+import type { TaskFormPayload } from "../../../core/interfaces/task.interface";
 
 export function useHomeActions(project: ProjectSummary | null) {
   const [isTaskOpen, setTaskOpen] = useState(false);
@@ -12,22 +13,9 @@ export function useHomeActions(project: ProjectSummary | null) {
   const queryClient = useQueryClient();
 
   const taskMutation = useMutation({
-    mutationFn: async (payload: {
-      name: string;
-      description: string;
-      priority: number;
-      due_date?: string;
-    }) => {
+    mutationFn: async (payload: TaskFormPayload) => {
       if (!project) throw new Error("No hay proyecto activo");
-      return createTask(project.id, {
-        name: payload.name,
-        description: payload.description,
-        priority: payload.priority,
-        due_date: payload.due_date || null,
-        parent_id: null,
-        state_code: "PENDIENTE",
-        reason: "",
-      });
+      return createTask(project.id, payload as never);
     },
     onSuccess: () => {
       if (project) {

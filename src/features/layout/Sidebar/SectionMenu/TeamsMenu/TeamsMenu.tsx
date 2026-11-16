@@ -18,14 +18,22 @@ export default function TeamsMenu({
 }: TeamsMenuProps) {
   return (
     <>
-      {canManage && (
-        <div className="mb-1 flex flex-col gap-1">
+      <div className="mb-1 flex flex-col gap-1">
+        {canManage ? (
           <Link to="/equipos/todos?nuevo=equipo" className="badge">
             <PlusIcon className="size-4 shrink-0" />
             <span className="min-w-0 flex-1 truncate">Crear equipo</span>
           </Link>
-        </div>
-      )}
+        ) : (
+          <span
+            title="Solo administradores"
+            className="badge cursor-not-allowed opacity-30"
+          >
+            <PlusIcon className="size-4 shrink-0" />
+            <span className="min-w-0 flex-1 truncate">Crear equipo</span>
+          </span>
+        )}
+      </div>
 
       <MenuLinks items={items} pathname={pathname} />
 

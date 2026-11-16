@@ -1,4 +1,3 @@
-import { useTaskScheduleForm } from "../../utils/useTaskScheduleForm";
 import { useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { errorText } from "../../../auth/api";
 import { useToast } from "../../../../hooks/useToast";
@@ -12,7 +11,6 @@ import type {
   ProjectTaskConfiguration,
   Task,
   TaskFormPayload,
-  TaskSchedule,
 } from "../../../../core/interfaces/task.interface";
 import type { ProjectCatalogs } from "../../../../core/interfaces/project.interface";
 import { taskCreationStart } from "../task-fields/taskDates";
@@ -80,7 +78,6 @@ export function useTaskForm({
     task ? taskAssignees(task).map((person) => person.id) : [],
   );
   const [labels, setLabels] = useState<Label[]>(task?.labels ?? []);
-  const scheduleEditor = useTaskScheduleForm(task);
   const [configuring, setConfiguring] = useState(false);
   const [busy, setBusy] = useState(false);
   const [uncertainCreation, setUncertainCreation] = useState(false);
@@ -198,16 +195,6 @@ export function useTaskForm({
       return;
     }
 
-    let schedule: TaskSchedule | undefined;
-    try {
-      schedule = scheduleEditor.value(startDate, dueDate);
-    } catch (failure) {
-      setFieldErrors((current) => ({
-        ...current,
-        "task-schedule": errorText(failure),
-      }));
-      return;
-    }
     const data: EditTaskPayload = {
       name: name.trim(),
       priority,
@@ -215,15 +202,12 @@ export function useTaskForm({
       start_date: startDate,
       ...labelSelection(labels),
     };
-    if (schedule) {
-      delete data.start_date;
-      delete data.due_date;
-      data.schedule = schedule;
-    }
     if (!task || project.permissions.manage) {
       data.description = description.trim();
     }
     if (canAssign) data.responsible_ids = responsible;
+    setBusy(true);
+    submitting.current = true;
     try {
       await onSubmit(
         task
@@ -236,11 +220,18 @@ export function useTaskForm({
             },
       );
     } catch (failure) {
+      const status = (failure as { status?: number } | null)?.status;
+      if (status === 503 || status === 0 || status === undefined) {
+        setUncertainCreation(true);
+      }
       addToast({
         icon: "error",
         title: "No se pudo guardar la tarea",
         message: errorText(failure) || "No se pudo guardar la tarea.",
       });
+    } finally {
+      submitting.current = false;
+      setBusy(false);
     }
   }
 
@@ -286,7 +277,6 @@ export function useTaskForm({
     setResponsible,
     labels,
     setLabels,
-    scheduleEditor,
     configuring,
     setConfiguring,
     busy,

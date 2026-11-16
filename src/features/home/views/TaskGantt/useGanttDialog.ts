@@ -1,6 +1,6 @@
 import type { Project, TaskDialogController } from "../../types";
 import type { useTaskView } from "../../hooks/useTaskView";
-import { useTaskEdit } from "../../shared/task-dialog/useTaskEdit";
+import { useTaskEdit } from "../../shared/task-form/useTaskEdit";
 
 export function useGanttDialog(
   project: Project,

@@ -1,5 +1,5 @@
 import type { Task, TaskDialogController } from "../../types";
-import TaskForm from "../task-form/TaskForm";
+import TaskForm from "./TaskForm";
 import CalendarEditFeedback from "../CalendarEditFeedback";
 import { useTaskEdit } from "./useTaskEdit";
 

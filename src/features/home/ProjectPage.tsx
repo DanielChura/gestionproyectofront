@@ -1,8 +1,9 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useProject } from "./hooks/useProject";
 import { useProjectTaskCount } from "./hooks/useProjectTasks";
 import ProjectHeader from "./components/ProjectHeader";
+import ShareProjectModal from "./components/ShareProjectModal";
 import ProjectTaskWorkspace from "./components/ProjectTaskWorkspace";
 import ListView from "./views/List/ListView";
 import BoardView from "./views/Board/BoardView";
@@ -13,7 +14,8 @@ export default function ProjectPage() {
   const { projectId } = useParams();
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
-  const { project, setProject, toggleFavorite, updateMemberRole, favoritePending, favoriteError } =
+  const [sharing, setSharing] = useState(false);
+  const { project, setProject, toggleFavorite, updateMemberRole, addParticipants, favoritePending, favoriteError } =
     useProject(Number(projectId));
 
   const params = new URLSearchParams(search);
@@ -53,6 +55,7 @@ export default function ProjectPage() {
           project={project}
           viewKey={viewKey}
           onToggleFavorite={toggleFavorite}
+          onShare={() => setSharing(true)}
           status={{ taskCount, pending: favoritePending, error: favoriteError }}
         />
 
@@ -79,6 +82,14 @@ export default function ProjectPage() {
               onCreateHandled={handleCreate}
             />
           )}
+
+        {sharing && (
+          <ShareProjectModal
+            project={project}
+            onClose={() => setSharing(false)}
+            onAddParticipants={addParticipants}
+          />
+        )}
       </main>
     </ProjectTaskWorkspace>
   );

@@ -9,7 +9,13 @@ export default function TaskStartDateCell({ view }: { view: TaskFieldView }) {
         type="date"
         value={task.start_date ?? ""}
         onChange={(event) => {
-          void onPatch(task, { start_date: event.target.value || undefined });
+          const value = event.target.value;
+          if (!value) return;
+          void onPatch(task, {
+            start_date: value,
+            expected_calendar_revision: String(task.calendar_revision || 1),
+            calendar_intent_id: crypto.randomUUID(),
+          }).catch(() => {});
         }}
         className="cursor-pointer rounded-lg px-2 py-1 text-xs text-neutral-800 hover:bg-neutral-100 focus:outline-none dark:text-neutral-100 dark:[color-scheme:dark] dark:hover:bg-neutral-800"
       />

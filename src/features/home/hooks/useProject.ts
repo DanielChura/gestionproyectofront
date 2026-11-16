@@ -6,6 +6,7 @@ import type {
   ProjectMemberRole,
 } from "../../../core/interfaces/task.interface";
 import {
+  addProjectParticipants,
   getProject,
   setProjectFavorite,
 } from "../../../core/services/projectService";
@@ -104,12 +105,42 @@ export function useProject(projectId: number) {
     [projectId, setProject, addToast],
   );
 
+  const addParticipants = useCallback(
+    async (payload: {
+      participant_source: "workers" | "teams";
+      worker_ids?: number[];
+      team_ids?: number[];
+    }) => {
+      try {
+        const updated = await addProjectParticipants(projectId, payload);
+        setProject(updated);
+        void queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+        void queryClient.invalidateQueries({ queryKey: ["projects"] });
+        addToast({
+          icon: "success",
+          title: "Integrantes añadidos",
+          message: "Los nuevos integrantes fueron incorporados al proyecto.",
+        });
+        return true;
+      } catch (err) {
+        addToast({
+          icon: "error",
+          title: "No se pudieron añadir integrantes",
+          message: errorText(err),
+        });
+        return false;
+      }
+    },
+    [projectId, setProject, queryClient, addToast],
+  );
+
   return {
     project,
     refetch,
     setProject,
     toggleFavorite,
     updateMemberRole,
+    addParticipants,
     favoritePending,
     favoriteError,
   };

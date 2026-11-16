@@ -1,13 +1,14 @@
 import type {
   EditTaskPayload,
   Project,
+  TaskPatchPayload,
   ProjectCatalogs,
   Task,
   TaskStatePayload,
 } from "../../../../types";
 
 export interface TaskChanges {
-  onPatch: (task: Task, data: Partial<EditTaskPayload>) => Promise<void>;
+  onPatch: (task: Task, data: TaskPatchPayload) => Promise<void>;
   onState: (task: Task, data: TaskStatePayload) => Promise<void>;
 }
 

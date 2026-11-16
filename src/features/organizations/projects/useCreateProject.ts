@@ -4,22 +4,31 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createProject,
   getProject,
+  getProjectTeamCandidates,
+  getWorkerCandidates,
   updateProject,
 } from "../../../core/services/projectService";
 import { listAreas } from "../../../core/services/organizationService";
 import type { Area } from "../../../core/interfaces/organization.interface";
 import type {
   CreateProjectPayload,
-  ProjectMode,
+  TeamOption,
+  WorkerCandidate,
 } from "../../../core/interfaces/task.interface";
 import { useToast } from "../../../hooks/useToast";
+import type { ParticipantSource, ParticipantsPickerState } from "./types";
 
-export function useCreateProject(projectId?: number) {
+export function useCreateProject(projectId?: number, onClose?: () => void) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [mode, setMode] = useState<ProjectMode>("available");
-  const [areaIds, setAreaIds] = useState<number[]>([]);
+  const [areaId, setAreaId] = useState<number | null>(null);
   const [endDate, setEndDate] = useState("");
+  const [participantSource, setParticipantSource] =
+    useState<ParticipantSource>("workers");
+  const [selectedWorkerIds, setSelectedWorkerIds] = useState<number[]>([]);
+  const [selectedTeamIds, setSelectedTeamIds] = useState<number[]>([]);
+  const [workerSearch, setWorkerSearch] = useState("");
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { addToast } = useToast();
@@ -31,6 +40,19 @@ export function useCreateProject(projectId?: number) {
     queryFn: listAreas,
     select: (data) =>
       Array.isArray(data) ? data.filter((area) => area.active) : [],
+  });
+
+  const { data: workerCandidates = [] } = useQuery<WorkerCandidate[]>({
+    queryKey: ["workerCandidates", areaId, workerSearch],
+    queryFn: () => getWorkerCandidates(areaId ? [areaId] : [], workerSearch),
+    enabled: Boolean(areaId) && participantSource === "workers",
+  });
+
+  const { data: teamCandidates = [] } = useQuery<TeamOption[]>({
+    queryKey: ["teamCandidates", areaId],
+    queryFn: () =>
+      areaId ? getProjectTeamCandidates(areaId) : Promise.resolve([]),
+    enabled: Boolean(areaId) && participantSource === "teams",
   });
 
   useEffect(() => {
@@ -46,8 +68,7 @@ export function useCreateProject(projectId?: number) {
         if (!active) return;
         setName(project.name);
         setDescription(project.description || "");
-        setMode(project.available ? "available" : "assigned");
-        setAreaIds(project.areas?.map((area) => area.id) ?? []);
+        setAreaId(project.areas?.[0]?.id ?? null);
         setEndDate(project.end_date ? project.end_date.slice(0, 10) : "");
       })
       .catch(() => {
@@ -64,8 +85,27 @@ export function useCreateProject(projectId?: number) {
     };
   }, [projectId, queryClient, addToast]);
 
-  const toggleArea = (id: number) => {
-    setAreaIds((prev) =>
+  const handleAreaChange = (newAreaId: number | null) => {
+    setAreaId(newAreaId);
+    setSelectedWorkerIds([]);
+    setSelectedTeamIds([]);
+    setWorkerSearch("");
+  };
+
+  const handleSourceChange = (newSource: ParticipantSource) => {
+    setParticipantSource(newSource);
+    setSelectedWorkerIds([]);
+    setSelectedTeamIds([]);
+  };
+
+  const toggleWorker = (id: number) => {
+    setSelectedWorkerIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
+  };
+
+  const toggleTeam = (id: number) => {
+    setSelectedTeamIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
@@ -95,6 +135,7 @@ export function useCreateProject(projectId?: number) {
           ? `Los cambios en "${payload.name}" fueron guardados.`
           : `El proyecto "${project.name}" se creó correctamente.`,
       });
+      onClose?.();
       navigate(`/proyectos/${project.id}`);
     },
     onError: () => {
@@ -112,15 +153,45 @@ export function useCreateProject(projectId?: number) {
     e.preventDefault();
     if (!name.trim() || saveMutation.isPending) return;
 
+    if (!areaId) {
+      addToast({
+        icon: "error",
+        title: "Área requerida",
+        message: "Por favor selecciona un área operativa para el proyecto.",
+      });
+      return;
+    }
+
+    const hasParticipants =
+      participantSource === "workers"
+        ? selectedWorkerIds.length > 0
+        : selectedTeamIds.length > 0;
+
     saveMutation.mutate({
       name: name.trim(),
       description: description.trim(),
-      mode,
-      area_ids: areaIds,
+      area_ids: [areaId],
       end_date: endDate ? endDate : null,
-      worker_ids: [],
+      mode: hasParticipants ? "assigned" : "available",
+      participant_source: participantSource,
+      worker_ids: participantSource === "workers" ? selectedWorkerIds : [],
+      team_ids: participantSource === "teams" ? selectedTeamIds : [],
       worker_contribute: false,
     });
+  };
+
+  const picker: ParticipantsPickerState = {
+    areaId,
+    source: participantSource,
+    onSourceChange: handleSourceChange,
+    workers: workerCandidates,
+    teams: teamCandidates,
+    selectedWorkerIds,
+    selectedTeamIds,
+    onToggleWorker: toggleWorker,
+    onToggleTeam: toggleTeam,
+    search: workerSearch,
+    onSearchChange: setWorkerSearch,
   };
 
   return {
@@ -128,15 +199,14 @@ export function useCreateProject(projectId?: number) {
     setName,
     description,
     setDescription,
-    mode,
-    setMode,
-    areaIds,
-    toggleArea,
+    areaId,
+    handleAreaChange,
     endDate,
     setEndDate,
     areas,
     submitting: saveMutation.isPending,
     isEditing,
     handleSubmit,
+    picker,
   };
 }

@@ -111,10 +111,37 @@ export function useTaskMutations({
       setBusy(true);
       setError("");
       try {
-        const updated = await apiUpdateTask(projectId, task.id, data);
+        const payload: Partial<EditTaskPayload> & Record<string, unknown> = { ...data };
+        if (
+          ("start_date" in payload || "due_date" in payload || "schedule" in payload) &&
+          !payload.calendar_intent_id
+        ) {
+          payload.calendar_intent_id = crypto.randomUUID();
+          payload.expected_calendar_revision = Number(task.calendar_revision || 1);
+        }
+        const updated = await apiUpdateTask(projectId, task.id, payload);
         onTaskSaved(updated);
         return updated;
-      } catch (err) {
+      } catch (err: unknown) {
+        const failure = err as { status?: number; payload?: { code?: string } };
+        if (failure?.status === 409 && failure?.payload?.code === "calendar_revision_conflict") {
+          try {
+            const fresh = await apiGetTaskDetail({ projectId, taskId: task.id });
+            if (fresh?.task) {
+              onTaskSaved(fresh.task);
+              const retryPayload = {
+                ...data,
+                expected_calendar_revision: Number(fresh.task.calendar_revision || 1),
+                calendar_intent_id: crypto.randomUUID(),
+              };
+              const updated = await apiUpdateTask(projectId, task.id, retryPayload);
+              onTaskSaved(updated);
+              return updated;
+            }
+          } catch {
+            // Fallthrough to toast
+          }
+        }
         const message = errorText(err);
         setError(message);
         addToast({

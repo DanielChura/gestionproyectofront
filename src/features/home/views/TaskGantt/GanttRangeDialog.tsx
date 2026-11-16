@@ -12,8 +12,6 @@ import { taskCreationDay } from "../../shared/task-fields/taskDates";
 import { ganttControl } from "./GanttControl";
 import Calendar from "../../shared/task-fields/Calendar";
 import CalendarEditFeedback from "../../shared/CalendarEditFeedback";
-import { useTaskScheduleForm } from "../../utils/useTaskScheduleForm";
-import TaskScheduleFields from "../../shared/task-form/TaskScheduleFields";
 
 export default function GanttRangeDialog({
   task,
@@ -26,7 +24,6 @@ export default function GanttRangeDialog({
   props: TaskGanttProps;
   onClose: () => void;
 }) {
-  const schedule = useTaskScheduleForm(task);
   const [start, setStart] = useState(
       initial?.start_date ?? task.start_date ?? "",
     ),
@@ -58,7 +55,7 @@ export default function GanttRangeDialog({
   }, []);
   async function save() {
     if (pending.current || editor.blocked) return;
-    if (schedule.precision === "day" && (!start || (end && end < start))) {
+    if (!start || (end && end < start)) {
       setError("Indica un inicio y un límite igual o posterior.");
       return;
     }
@@ -67,11 +64,8 @@ export default function GanttRangeDialog({
     setError("");
     setErrors({});
     try {
-      const window = schedule.value(start, end);
       await editor.save(
-        window
-          ? { schedule: window }
-          : { start_date: start, due_date: end || null },
+        { start_date: start, due_date: end || null },
         async (payload) => {
           const saved = await sync.patch(task.id, payload);
           if (alive.current && sync.isCurrent()) props.onCreated(saved);
@@ -106,10 +100,7 @@ export default function GanttRangeDialog({
         <p className="m-0 truncate" title={task.name}>
           {task.name}
         </p>
-        <TaskScheduleFields editor={schedule} />
-        {schedule.precision === "day" && (
-          <>
-            <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2">
               <label className="grid gap-1">
                 Fecha de inicio
                 <input
@@ -163,12 +154,9 @@ export default function GanttRangeDialog({
                 close={() => setField("end")}
               />
             </fieldset>
-          </>
-        )}
-        {(error || errors.start || errors.end || errors.schedule) && (
+        {(error || errors.start || errors.end) && (
           <p role="alert" className="m-0 text-red-700 dark:text-red-300">
-            {errors.start || errors.end || errors.schedule || error}
-          </p>
+            {errors.start || errors.end || error}          </p>
         )}
         <CalendarEditFeedback
           editor={editor}

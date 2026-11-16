@@ -159,7 +159,7 @@ const { default: TaskList } = await load(
     "../../../../shared/icons/ChevronIcon": { default: Icon },
     "../../../../shared/icons/PlusIcon": { default: Icon },
     "../../shared/ProjectToolbar": { default: Toolbar },
-    "../../shared/task-dialog/TaskDialog": { default: () => null },
+    "../../shared/task-form/TaskDialog": { default: () => null },
     "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration":
       {
         default: () => null,
@@ -448,7 +448,7 @@ test("empty List preserves the colleague empty view through Workspace without ex
           "../../../../shared/icons/ChevronIcon": { default: Icon },
           "../../../../shared/icons/PlusIcon": { default: Icon },
           "../../shared/ProjectToolbar": { default: Toolbar },
-          "../../shared/task-dialog/TaskDialog": { default: () => null },
+          "../../shared/task-form/TaskDialog": { default: () => null },
           "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration":
             {
               default: () => null,

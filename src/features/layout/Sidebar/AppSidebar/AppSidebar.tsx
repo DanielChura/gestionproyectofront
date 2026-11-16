@@ -21,7 +21,6 @@ export default function AppSidebar({
   onSectionSelect,
 }: AppSidebarProps) {
   const canManage = user?.permissions.manage_accounts ?? false;
-  const visibleModules = modules.filter((m) => !m.requiresAdmin || canManage);
 
   return (
     <aside className="flex w-16 shrink-0 flex-col items-center gap-2 rounded-lg bg-neutral-950 p-2 max-md:w-full max-md:flex-row max-md:justify-between">
@@ -38,9 +37,23 @@ export default function AppSidebar({
         aria-label="Secciones principales"
         className="flex w-full min-h-0 flex-1 flex-col items-center gap-1 overflow-y-auto overflow-x-hidden pt-1 max-md:flex-row max-md:justify-center max-md:overflow-visible max-md:pt-0"
       >
-        {visibleModules.map((module) => {
+        {modules.map((module) => {
           const Icon = module.Icon;
           const active = activePath === module.path;
+          const disabled = !!module.requiresAdmin && !canManage;
+
+          if (disabled) {
+            return (
+              <span
+                key={module.path}
+                title="Solo administradores"
+                className="sidebar-item cursor-not-allowed opacity-30"
+              >
+                <Icon className="size-5 shrink-0" fill={false} />
+                <span className="max-w-full min-w-0 truncate">{module.label}</span>
+              </span>
+            );
+          }
 
           return (
             <Link

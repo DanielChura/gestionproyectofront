@@ -27,7 +27,7 @@ export default function Form({
       <div
         className={`w-full ${
           size === "lg" ? "max-w-2xl" : "max-w-lg"
-        } max-h-[90vh] overflow-y-auto bg-white dark:bg-neutral-900 rounded-xl`}
+        } max-h-[90vh] overflow-y-auto bg-white dark:bg-neutral-950 rounded-xl`}
       >
         <header className="flex items-center justify-between px-5 py-4 border-b border-neutral-200 dark:border-neutral-800 mb-2">
           <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100 font-medium">

@@ -59,7 +59,7 @@ function ToastItem({
           <XIcon className="size-4" />
         </button>
       </div>
-      <p className="m-0 mt-2 pl-6 text-xs text-neutral-600">{toast.message}</p>
+      <p className="m-0 mt-2 pl-6 text-xs text-neutral-500">{toast.message}</p>
     </div>
   );
 }

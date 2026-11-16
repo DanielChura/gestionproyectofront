@@ -159,7 +159,7 @@ test("List state cells render backend hex colors and Tailwind tokens through the
   const { default: Cell } = await load("src/features/home/views/List/components/TaskTable/columns/TaskStateCell.tsx", {
     react: React, "react/jsx-runtime": jsx,
     "../../../../../utils/themePresentation": theme,
-    "../../../../../../../shared/icons/icon-catalog": { DynamicIcon: ({ name }) => React.createElement("svg", { "data-icon": name }) },
+    "../../../../../../../shared/icons/icon-catalog": { DynamicIcon: ({ name }) => React.createElement("svg", { "data-icon": name }), getIcon: () => () => React.createElement("svg", { "data-icon": "circle-dot" }) },
   });
   for (const [color, expected] of [["sky-600", "var(--color-sky-600)"], ["#16a34a", "#16a34a"]]) {
     const markup = renderToStaticMarkup(React.createElement("table", null, React.createElement("tbody", null, React.createElement("tr", null, React.createElement(Cell, { view: { task: { state_name: "Current", state_tema: { color, icono: "CircleDotIcon" } }, project: { task_states: { states: [] } } } })))));
@@ -293,6 +293,7 @@ test("the colleague's blocked/cancelled creation reason survives the scheduling 
     "../../utils/labelSelection": { labelSelection: () => ({}) },
     "../../utils/taskAssignees": { taskAssignees: () => [] },
     "../task-fields/taskDates": { taskCreationStart: () => "2026-11-14" },
+    "../../../../hooks/useToast": { useToast: () => ({ addToast() {} }) },
   });
   const params = {
     project: { start_date: "2026-11-01", end_date: "2026-12-15", permissions: { manage: true }, task_states: { states: [{ code: "BLOQUEADA" }], can_configure: true } },

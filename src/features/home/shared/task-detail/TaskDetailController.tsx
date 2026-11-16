@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Task, TaskDialogController, TaskIdentity } from "../../types";
-import TaskEditDialog from "../task-dialog/TaskEditDialog";
+import TaskEditDialog from "../task-form/TaskEditDialog";
 import TaskDetailModal from "./TaskDetailModal";
 import type { TaskDetailModel } from "./TaskDetailModal";
 import { useTaskDetail } from "./useTaskDetail";

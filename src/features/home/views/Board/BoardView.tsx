@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import PlusIcon from "../../../../shared/icons/PlusIcon";
 import ProjectToolbar from "../../shared/ProjectToolbar";
-import TaskDialog from "../../shared/task-dialog/TaskDialog";
+import TaskDialog from "../../shared/task-form/TaskDialog";
 import TaskStatusConfiguration from "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration";
 import TaskStatusSettingsControl from "../../shared/task-status/TaskStatusSettingsControl";
 import type {

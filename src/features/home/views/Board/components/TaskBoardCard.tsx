@@ -2,6 +2,7 @@ import { useDraggable } from "@dnd-kit/core";
 import type {
   EditTaskPayload,
   Project,
+  TaskPatchPayload,
   ProjectCatalogs,
   Task,
   TaskActionKind,
@@ -22,7 +23,7 @@ export interface TaskCardView {
     id: number,
     extra?: Record<string, unknown>,
   ) => void;
-  onPatch: (task: Task, data: Partial<EditTaskPayload>) => Promise<void>;
+  onPatch: (task: Task, data: TaskPatchPayload) => Promise<void>;
   onToggleChildren: (id: number) => void;
 }
 

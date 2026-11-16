@@ -1,4 +1,4 @@
-import type { EditTaskPayload, Project, Task } from "../../types";
+import type { Project, Task, TaskPatchPayload } from "../../types";
 import CalendarIcon from "../../../../shared/icons/CalendarIcon";
 import Calendar from "../task-fields/Calendar";
 import TaskDateValue from "../task-fields/TaskDateValue";
@@ -13,7 +13,7 @@ export default function DueDatePopup({
   project: Project;
   task: Task;
   parent?: Task;
-  onPatch: (task: Task, data: Partial<EditTaskPayload>) => Promise<void>;
+  onPatch: (task: Task, data: TaskPatchPayload) => Promise<void>;
 }) {
   const { panel, trigger, open, setOpen } = usePopup();
 
@@ -47,7 +47,11 @@ export default function DueDatePopup({
             }
             max={parent?.due_date ?? project.end_date ?? undefined}
             onChange={(value) => {
-              void onPatch(task, { due_date: value || null }).catch(() => {});
+              void onPatch(task, {
+                due_date: value || null,
+                expected_calendar_revision: String(task.calendar_revision || 1),
+                calendar_intent_id: crypto.randomUUID(),
+              }).catch(() => {});
               setOpen(false);
             }}
             close={() => setOpen(false)}

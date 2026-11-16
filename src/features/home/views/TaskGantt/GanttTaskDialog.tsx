@@ -1,6 +1,6 @@
 import type { Project } from "../../types";
 import type { useTaskView } from "../../hooks/useTaskView";
-import TaskDialog from "../../shared/task-dialog/TaskDialog";
+import TaskDialog from "../../shared/task-form/TaskDialog";
 export default function GanttTaskDialog({
   project,
   view,

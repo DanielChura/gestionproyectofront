@@ -3,7 +3,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import ChevronDownIcon from "../../../../shared/icons/ChevronIcon";
 import PlusIcon from "../../../../shared/icons/PlusIcon";
 import ProjectToolbar from "../../shared/ProjectToolbar";
-import TaskDialog from "../../shared/task-dialog/TaskDialog";
+import TaskDialog from "../../shared/task-form/TaskDialog";
 import TaskStatusConfiguration from "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration";
 import TaskStatusSettingsControl from "../../shared/task-status/TaskStatusSettingsControl";
 import type {
@@ -129,7 +129,9 @@ export default function ListView({
   };
 
   const groupsRef = useRef(visibleGroups);
-  useEffect(() => { groupsRef.current = visibleGroups; });
+  useEffect(() => {
+    groupsRef.current = visibleGroups;
+  });
   const groupKeys = visibleGroups.map((group) => group.key).join("|");
 
   useEffect(() => {
@@ -288,7 +290,6 @@ export default function ListView({
         </p>
       )}
 
-      {error && <p role="alert" className="px-3 text-xs text-red-600 dark:text-red-400">{error} <button type="button" className="cursor-pointer underline" onClick={() => void refetch()}>Actualizar lista</button></p>}
       <div
         ref={region}
         className="relative min-h-0 flex-1 overflow-y-auto overflow-x-auto pb-6"
@@ -407,7 +408,7 @@ export default function ListView({
         })}
       </div>
 
-        <TaskDialog controller={dialog} onUpdated={acceptTask} />
+      <TaskDialog controller={dialog} onUpdated={acceptTask} />
 
       {configuringStates && (
         <TaskStatusConfiguration

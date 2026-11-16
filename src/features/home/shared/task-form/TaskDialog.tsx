@@ -4,7 +4,7 @@ import TaskEditDialog from "./TaskEditDialog";
 import type { Task } from "../../types";
 import type { ReactNode } from "react";
 import type { TaskAction, TaskDialogController } from "../../types";
-import TaskForm from "../task-form/TaskForm";
+import TaskForm from "./TaskForm";
 import DependencyForm from "./DependencyForm";
 import TaskStateForm from "./TaskStateForm";
 import XIcon from "../../../../shared/icons/XIcon";

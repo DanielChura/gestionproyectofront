@@ -1,11 +1,16 @@
 import type { ReactNode } from "react";
 import Modal from "../../../../shared/components/Modal/Modal";
 import { useTaskForm } from "./useTaskForm";
-import TaskScheduleFields from "./TaskScheduleFields";
+
 import LabelList from "../LabelList";
 import TaskStatusConfiguration from "../task-status/TaskStatusConfiguration/TaskStatusConfiguration";
 import TaskProperties from "./TaskProperties";
-import type { Project, ProjectTaskConfiguration, Task, TaskFormPayload } from "../../../../core/interfaces/task.interface";
+import type {
+  Project,
+  ProjectTaskConfiguration,
+  Task,
+  TaskFormPayload,
+} from "../../../../core/interfaces/task.interface";
 import type { ProjectCatalogs } from "../../../../core/interfaces/project.interface";
 interface TaskFormProps {
   project: Project;
@@ -32,7 +37,50 @@ export default function TaskForm({
   onCheckCreation,
   feedback,
 }: TaskFormProps) {
-  const { reason,setReason,name,setName,description,setDescription,stateCode,setStateCode,priority,setPriority,dueDate,setDueDate,startDate,setStartDate,responsible,setResponsible,labels,setLabels,scheduleEditor,configuring,setConfiguring,busy,uncertainCreation,checking,error,fieldErrors,formRef,canAssign,canConfigure,creationMin,clearError,submit,configured,handleCheckCreation } = useTaskForm({ project, catalogs, task, parent, initialState, onSubmit, onConfigured, onCheckCreation });
+  const {
+    reason,
+    setReason,
+    name,
+    setName,
+    description,
+    setDescription,
+    stateCode,
+    setStateCode,
+    priority,
+    setPriority,
+    dueDate,
+    setDueDate,
+    startDate,
+    setStartDate,
+    responsible,
+    setResponsible,
+    labels,
+    setLabels,
+    configuring,
+    setConfiguring,
+    busy,
+    uncertainCreation,
+    checking,
+    error,
+    fieldErrors,
+    formRef,
+    canAssign,
+    canConfigure,
+    creationMin,
+    clearError,
+    submit,
+    configured,
+    handleCheckCreation,
+  } = useTaskForm({
+    project,
+    catalogs,
+    task,
+    parent,
+    initialState,
+    onSubmit,
+    onConfigured,
+    onCheckCreation,
+  });
   function fieldError(id: string) {
     return fieldErrors[id] ? (
       <p
@@ -45,12 +93,22 @@ export default function TaskForm({
     ) : null;
   }
 
-
   return (
-    <Modal title={task ? "Editar datos de tarea" : parent ? "Nueva subtarea" : "Nueva tarea"} onClose={onClose} busy={busy} taskComposer>
+    <Modal
+      title={
+        task
+          ? "Editar datos de tarea"
+          : parent
+            ? "Nueva subtarea"
+            : "Nueva tarea"
+      }
+      onClose={onClose}
+      busy={busy}
+      taskComposer
+    >
       <form
         ref={formRef}
-        className="flex min-h-0 flex-col text-neutral-800 dark:text-neutral-100"
+        className="flex min-h-0 flex-col text-neutral-800 dark:text-neutral-100 dark:bg-neutral-950"
         noValidate
         autoComplete="off"
         aria-busy={busy}
@@ -73,7 +131,7 @@ export default function TaskForm({
                 id="task-name"
                 name="name"
                 data-initial-focus
-                className="w-full rounded-lg border-b border-neutral-200 bg-transparent px-1 py-1.5 text-lg font-medium text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none aria-invalid:border-red-600 dark:border-neutral-700 dark:text-neutral-100"
+                className="w-full rounded-lg border border-neutral-200 bg-transparent px-2 py-1.5 text-lg font-medium text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none aria-invalid:border-red-600 dark:border-neutral-700 dark:text-neutral-100"
                 required
                 maxLength={180}
                 value={name}
@@ -81,7 +139,7 @@ export default function TaskForm({
                 aria-describedby={
                   fieldErrors["task-name"] ? "task-name-error" : undefined
                 }
-                placeholder="Nombre de tarea…"
+                placeholder="Escribe el nombre de la Tarea"
                 onChange={(event) => {
                   setName(event.target.value);
                   clearError("task-name");
@@ -99,7 +157,7 @@ export default function TaskForm({
                 rows={3}
                 maxLength={10000}
                 value={description}
-                className="w-full resize-y rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none aria-invalid:border-red-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+                className="w-full resize-y rounded-lg border border-neutral-200 px-2 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none aria-invalid:border-red-600 dark:border-neutral-700 dark:text-neutral-100"
                 aria-invalid={Boolean(fieldErrors["task-description"])}
                 aria-describedby={
                   fieldErrors["task-description"]
@@ -115,31 +173,34 @@ export default function TaskForm({
               />
               {fieldError("task-description")}
             </div>
-            <div tabIndex={-1} aria-invalid={Boolean(fieldErrors["task-schedule"])} aria-describedby={fieldErrors["task-schedule"] ? "task-schedule-error" : undefined} onChangeCapture={() => clearError("task-schedule")}>
-              <TaskScheduleFields editor={scheduleEditor} />
-              {fieldError("task-schedule")}
-            </div>
             {!task && ["BLOQUEADA", "CANCELADA"].includes(stateCode) && (
               <div className="grid gap-1">
-                <label htmlFor="task-reason" className="text-xs text-neutral-700 dark:text-neutral-300">Motivo obligatorio</label>
+                <label
+                  htmlFor="task-reason"
+                  className="text-xs text-neutral-700 dark:text-neutral-300"
+                >
+                  Motivo obligatorio
+                </label>
                 <input
                   id="task-reason"
                   value={reason}
-                  onChange={event => {
+                  onChange={(event) => {
                     setReason(event.target.value);
                     clearError("task-reason");
                   }}
                   maxLength={500}
                   required
                   aria-invalid={Boolean(fieldErrors["task-reason"])}
-                  aria-describedby={fieldErrors["task-reason"] ? "task-reason-error" : undefined}
+                  aria-describedby={
+                    fieldErrors["task-reason"] ? "task-reason-error" : undefined
+                  }
                   className="rounded-lg border border-neutral-200 bg-transparent px-3 py-1.5 text-xs focus:border-neutral-400 focus:outline-none dark:border-neutral-700"
                 />
                 {fieldError("task-reason")}
               </div>
             )}
             <TaskProperties
-              hideCalendar={scheduleEditor.precision === "hour"}
+              hideCalendar={false}
               project={project}
               catalogs={catalogs}
               task={task}
@@ -196,32 +257,10 @@ export default function TaskForm({
                 Se creará pendiente y asignada a ti.
               </p>
             )}
-            {canAssign && project.participants.length === 0 && (
-              <p className="m-0 text-xs text-neutral-500">
-                Sin participantes elegibles. Puedes crearla pendiente y
-                asignarla posteriormente.
-              </p>
-            )}
-
           </fieldset>
         </div>
-        <footer className="shrink-0 border-t border-neutral-200 bg-white px-6 py-3 max-sm:px-4 dark:border-neutral-800 dark:bg-neutral-900">
-          {error && (
-            <p
-              className="mb-2 text-xs text-red-600 dark:text-red-400"
-              role="alert"
-              tabIndex={-1}
-              data-general-error
-            >
-              {error}
-            </p>
-          )}
-          <div className="flex items-center justify-between gap-3 max-sm:flex-wrap">
-            <p className="m-0 text-xs text-neutral-500">
-              {task
-                ? `Creada el ${new Date(task.created_at).toLocaleString("es-PE")}`
-                : "La fecha de creación se registra al guardar."}
-            </p>
+        <footer className="shrink-0 border-t border-neutral-200 bg-white px-6 py-3 max-sm:px-4 dark:border-neutral-800 dark:bg-neutral-950">
+          <div className="flex items-center justify-end gap-3 max-sm:flex-wrap">
             <div className="flex shrink-0 items-center gap-2 max-sm:ml-auto">
               {uncertainCreation && onCheckCreation && (
                 <button

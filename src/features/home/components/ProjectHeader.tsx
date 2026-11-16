@@ -8,6 +8,7 @@ import FileIcon from "../../../shared/icons/FileIcon";
 import FolderIcon from "../../../shared/icons/FolderIcon";
 import StackIcon from "../../../shared/icons/StackIcon";
 import StarIcon from "../../../shared/icons/StarIcon";
+import TeamsIcon from "../../../shared/icons/TeamsIcon";
 import { projectPath } from "../../../routes";
 import type { Project } from "../../../core/interfaces/task.interface";
 
@@ -27,6 +28,7 @@ interface ProjectHeaderProps {
   project: Project;
   viewKey: string;
   onToggleFavorite: () => void;
+  onShare?: () => void;
   status?: {
     taskCount?: number;
     filteredCount?: number | null;
@@ -39,6 +41,7 @@ export default function ProjectHeader({
   project,
   viewKey,
   onToggleFavorite,
+  onShare,
   status = {},
 }: ProjectHeaderProps) {
   const areaName = project.areas?.[0]?.name ?? "Área no disponible";
@@ -53,7 +56,7 @@ export default function ProjectHeader({
           filtered={status.filteredCount}
         />
       )}
-      <div className="flex min-w-0 items-center px-4 py-2.5">
+      <div className="flex min-w-0 items-center justify-between gap-3 px-4 py-2.5">
         <nav aria-label="Ruta de navegación" className="min-w-0 text-sm">
           <ol className="flex min-w-0 items-center gap-1.5 sm:gap-2">
             <li className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
@@ -101,6 +104,16 @@ export default function ProjectHeader({
             </li>
           </ol>
         </nav>
+        {onShare && (
+          <button
+            type="button"
+            onClick={onShare}
+            className="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-100 shrink-0"
+          >
+            <TeamsIcon className="size-3.5" />
+            <span>Compartir</span>
+          </button>
+        )}
       </div>
 
       {status.error && (

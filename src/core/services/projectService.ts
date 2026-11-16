@@ -145,6 +145,21 @@ export async function createProject(
   return data;
 }
 
+export async function addProjectParticipants(
+  projectId: number,
+  payload: {
+    participant_source: "workers" | "teams";
+    worker_ids?: number[];
+    team_ids?: number[];
+  },
+): Promise<Project> {
+  const { data } = await httpClient.post<Project>(
+    `projects/${projectId}/members/`,
+    payload,
+  );
+  return data;
+}
+
 export async function updateProject(
   projectId: number,
   payload: Partial<CreateProjectPayload>,

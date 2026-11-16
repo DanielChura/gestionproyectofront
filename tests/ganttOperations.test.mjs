@@ -89,7 +89,6 @@ function hooks() {
 const GANTT_BASE = "../src/features/home/views/TaskGantt/";
 const SHARED_ROOTS = [
   "../src/features/home/shared/task-form/",
-  "../src/features/home/shared/task-dialog/",
   "../src/features/home/shared/task-fields/",
   "../src/features/home/shared/task-status/TaskStatusConfiguration/",
   "../src/features/home/shared/",
@@ -237,6 +236,7 @@ async function formHarness(onSubmit, onCheckCreation) {
     "./TaskScheduleFields": { default: Empty },
     "./useTaskScheduleForm": { useTaskScheduleForm: () => ({ precision: "day", value: () => undefined }) },
     "./taskDates": { taskCreationStart: () => "2026-10-31" },
+    "../../../../hooks/useToast": { useToast: () => ({ addToast() {} }) },
   };
   const formHook = await load("useTaskForm.ts", dependencies);
   const { default: Form } = await load("TaskForm/TaskForm.tsx", {
