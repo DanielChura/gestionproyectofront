@@ -23,6 +23,7 @@ import type {
   WorkerCandidate,
   TaskStatusTemplate,
   TeamOption,
+  ProjectMemberRole,
 } from "./types";
 
 async function projectRequest<T>(
@@ -108,6 +109,17 @@ export function removeTaskRelation(
 
 export function getProject(projectId: number): Promise<Project> {
   return projectRequest(`${projectId}/`);
+}
+
+export function setProjectMemberRole(
+  projectId: number,
+  workerId: number,
+  role: ProjectMemberRole,
+): Promise<Project["participants"]> {
+  return projectRequest(`${projectId}/members/${workerId}/role/`, {
+    method: "PUT",
+    data: { role },
+  });
 }
 
 export function setProjectFavorite(

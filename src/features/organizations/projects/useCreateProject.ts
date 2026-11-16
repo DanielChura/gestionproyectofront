@@ -54,7 +54,7 @@ export function useCreateProject(projectId?: number) {
         if (!active) return;
         addToast({
           icon: "error",
-          title: "Error",
+          title: "No se pudo cargar el proyecto",
           message: "No se pudo cargar el proyecto a editar.",
         });
       });
@@ -100,7 +100,9 @@ export function useCreateProject(projectId?: number) {
     onError: () => {
       addToast({
         icon: "error",
-        title: "Error",
+        title: isEditing
+          ? "No se pudo actualizar el proyecto"
+          : "No se pudo crear el proyecto",
         message: "No fue posible procesar el proyecto.",
       });
     },

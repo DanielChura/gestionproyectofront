@@ -1,11 +1,12 @@
 import { useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Dispatch, SetStateAction } from "react";
-import type { Project } from "../../../core/interfaces/task.interface";
-import {
-  getProject,
-  setProjectFavorite,
-} from "../../../core/services/projectService";
+import type {
+  Project,
+  ProjectMemberRole,
+} from "../../../core/interfaces/task.interface";
+import { getProject, setProjectFavorite } from "../../../core/services/projectService";
+import { setProjectMemberRole } from "../services";
 import { errorText } from "../../auth/api";
 import { useToast } from "../../../hooks/useToast";
 
@@ -64,5 +65,37 @@ export function useProject(projectId: number) {
     }
   }, [project, projectId, setProject, queryClient, addToast]);
 
-  return { project, refetch, setProject, toggleFavorite };
+  const updateMemberRole = useCallback(
+    async (workerId: number, role: ProjectMemberRole) => {
+      try {
+        const participants = await setProjectMemberRole(
+          projectId,
+          workerId,
+          role,
+        );
+        setProject((prev) => (prev ? { ...prev, participants } : prev));
+        addToast({
+          icon: "success",
+          title: "Rol actualizado",
+          message: "El rol del integrante se actualizó correctamente.",
+        });
+      } catch (err) {
+        addToast({
+          icon: "error",
+          title: "No se pudo actualizar el rol",
+          message: errorText(err),
+        });
+        throw err;
+      }
+    },
+    [projectId, setProject, addToast],
+  );
+
+  return {
+    project,
+    refetch,
+    setProject,
+    toggleFavorite,
+    updateMemberRole,
+  };
 }

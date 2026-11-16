@@ -25,10 +25,11 @@ export default function AccountsPage() {
   const [appliedActive, setAppliedActive] = useState<boolean | undefined>(
     undefined,
   );
-  const { accounts, areas, busy, resendInvitation, reload } = useAccounts({
-    search: appliedSearch || undefined,
-    active: appliedActive,
-  });
+  const { accounts, areas, busy, resendInvitation, unlockAccount, reload } =
+    useAccounts({
+      search: appliedSearch || undefined,
+      active: appliedActive,
+    });
   const [inviting, setInviting] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const hasFilters = appliedSearch !== "" || appliedActive !== undefined;
@@ -195,14 +196,24 @@ export default function AccountsPage() {
                     </span>
                   </td>
                   <td className="px-3 py-2.5">
-                    <SecondaryButton
-                      type="button"
-                      disabled={busy || account.active}
-                      onClick={() => resendInvitation(account.id)}
-                      className="px-2 py-1.5 whitespace-nowrap"
-                    >
-                      Reenviar invitación
-                    </SecondaryButton>
+                    <div className="flex flex-wrap items-center gap-1">
+                      <SecondaryButton
+                        type="button"
+                        disabled={busy || account.active}
+                        onClick={() => resendInvitation(account.id)}
+                        className="px-2 py-1.5 whitespace-nowrap"
+                      >
+                        Reenviar invitación
+                      </SecondaryButton>
+                      <SecondaryButton
+                        type="button"
+                        disabled={busy}
+                        onClick={() => unlockAccount(account.id)}
+                        className="px-2 py-1.5 whitespace-nowrap"
+                      >
+                        Desbloquear
+                      </SecondaryButton>
+                    </div>
                   </td>
                 </tr>
               ))}

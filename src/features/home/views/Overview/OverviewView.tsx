@@ -1,11 +1,27 @@
 import OverviewSkeleton from "./components/OverviewSkeleton";
 import ProjectChartsSection from "./components/ProjectChartsSection";
 import ProjectKpis from "./components/ProjectKpis";
+import ProjectMemberRoles from "./components/ProjectMemberRoles";
 import ProjectTeamTable from "./components/ProjectTeamTable";
 import { useProjectCharts } from "./hooks/useOverview";
+import type {
+  Project,
+  ProjectMemberRole,
+} from "../../../../core/interfaces/task.interface";
 
-export default function OverviewView({ projectId }: { projectId: number }) {
-  const { data, isLoading } = useProjectCharts(projectId);
+interface OverviewViewProps {
+  project: Project;
+  onMemberRoleChange: (
+    workerId: number,
+    role: ProjectMemberRole,
+  ) => Promise<void>;
+}
+
+export default function OverviewView({
+  project,
+  onMemberRoleChange,
+}: OverviewViewProps) {
+  const { data, isLoading } = useProjectCharts(project.id);
 
   return (
     <section
@@ -22,6 +38,12 @@ export default function OverviewView({ projectId }: { projectId: number }) {
           <ProjectChartsSection
             charts={data.charts}
             totalTasks={data.summary.total_tasks || 1}
+          />
+
+          <ProjectMemberRoles
+            participants={project.participants}
+            canManage={project.permissions.manage}
+            onChange={onMemberRoleChange}
           />
 
           <ProjectTeamTable people={data.tables?.people} />

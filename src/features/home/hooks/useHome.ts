@@ -77,7 +77,7 @@ export function useHome() {
       addToast({ icon: "success", title: "Tarea creada", message: "La tarea se añadió correctamente." });
     },
     onError: () => {
-      addToast({ icon: "error", title: "Error", message: "No se pudo crear la tarea." });
+      addToast({ icon: "error", title: "No se pudo crear la tarea", message: "Revisa los datos e inténtalo de nuevo." });
     },
   });
 
@@ -102,7 +102,7 @@ export function useHome() {
       addToast({ icon: "success", title: "Publicado", message: "La publicación se creó con éxito." });
     },
     onError: () => {
-      addToast({ icon: "error", title: "Error", message: "No se pudo crear la publicación." });
+      addToast({ icon: "error", title: "No se pudo crear la publicación", message: "Revisa los datos e inténtalo de nuevo." });
     },
   });
 

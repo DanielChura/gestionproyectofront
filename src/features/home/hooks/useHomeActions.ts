@@ -43,8 +43,8 @@ export function useHomeActions(project: ProjectSummary | null) {
     onError: () => {
       addToast({
         icon: "error",
-        title: "Error",
-        message: "No se pudo crear la tarea.",
+        title: "No se pudo crear la tarea",
+        message: "Revisa los datos e inténtalo de nuevo.",
       });
     },
   });
@@ -77,8 +77,8 @@ export function useHomeActions(project: ProjectSummary | null) {
     onError: () => {
       addToast({
         icon: "error",
-        title: "Error",
-        message: "No se pudo crear la publicación.",
+        title: "No se pudo crear la publicación",
+        message: "Revisa los datos e inténtalo de nuevo.",
       });
     },
   });

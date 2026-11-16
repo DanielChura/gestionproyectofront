@@ -6,6 +6,7 @@ import Form from "../../../../shared/components/Form/Form";
 import Input from "../../../../shared/components/Input/Input";
 import Select from "../../../../shared/components/Select/Select";
 import { accountRoles } from "../../../auth/roles";
+import { GMAIL_PATTERN, GMAIL_TITLE } from "../../../../utils/gmail";
 
 interface InvitationModalProps {
   areas: Area[];
@@ -153,6 +154,8 @@ export default function InvitationModal({
           autoComplete="email"
           required
           maxLength={254}
+          pattern={GMAIL_PATTERN}
+          title={GMAIL_TITLE}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />

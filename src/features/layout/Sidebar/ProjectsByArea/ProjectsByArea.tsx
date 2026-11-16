@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router";
 import Avatar from "../../../../shared/Avatar";
 import ChevronDownIcon from "../../../../shared/icons/ChevronIcon";
-import ProjectsIcon from "../../../../shared/icons/ProjectsIcon";
-import { projectPath } from "../../../../routes";
+import ProjectLink from "./ProjectLink";
 import { useProjectsByArea } from "./useProjectsByArea";
 
 interface ProjectsByAreaProps {
@@ -11,8 +9,25 @@ interface ProjectsByAreaProps {
 }
 
 export default function ProjectsByArea({ currentPath }: ProjectsByAreaProps) {
-  const { groups } = useProjectsByArea();
+  const { groups, projects, grouped } = useProjectsByArea();
   const [collapsed, setCollapsed] = useState<Record<number, boolean>>({});
+
+  if (!grouped) {
+    if (projects.length === 0) return null;
+
+    return (
+      <ul
+        className="m-0 flex list-none flex-col gap-1 p-0"
+        aria-label="Mis proyectos"
+      >
+        {projects.map((project) => (
+          <li key={project.id} className="min-w-0">
+            <ProjectLink project={project} currentPath={currentPath} />
+          </li>
+        ))}
+      </ul>
+    );
+  }
 
   if (groups.length === 0) return null;
 
@@ -56,32 +71,11 @@ export default function ProjectsByArea({ currentPath }: ProjectsByAreaProps) {
                   </li>
                 )}
 
-                {area.projects.map((project) => {
-                  const path = projectPath(project.id);
-                  const active =
-                    currentPath === path || currentPath.startsWith(`${path}/`);
-
-                  return (
-                    <li key={project.id} className="min-w-0">
-                      <Link
-                        to={path}
-                        aria-current={active ? "page" : undefined}
-                        title={project.name}
-                        className={`badge min-w-0 ${
-                          active ? "text-neutral-800 dark:text-neutral-100" : ""
-                        }`}
-                      >
-                        <ProjectsIcon
-                          className="size-4 shrink-0"
-                          fill={active}
-                        />
-                        <span className="min-w-0 flex-1 truncate">
-                          {project.name}
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
+                {area.projects.map((project) => (
+                  <li key={project.id} className="min-w-0">
+                    <ProjectLink project={project} currentPath={currentPath} />
+                  </li>
+                ))}
               </ul>
             )}
           </li>

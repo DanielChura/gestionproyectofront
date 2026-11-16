@@ -11,7 +11,7 @@ import WorkersGrid from "./WorkersGrid";
 import TeamsGrid from "./TeamsGrid";
 import type { Worker } from "../../core/interfaces/worker.interface";
 
-const emptyTeam: TeamFormState = { area: "", name: "", active: true };
+const emptyTeam: TeamFormState = { area: "", name: "", active: false };
 
 const emptyWorker: Worker = {
   id: 0,
@@ -89,7 +89,11 @@ export default function TeamsPage({ canManage = false }: TeamsPageProps) {
           areas={people.areas}
           filters={people.teamFilters}
           onFilters={people.setTeamFilters}
-          actions={{ canManage, onAddMember: people.setMemberTeam }}
+          actions={{
+            canManage,
+            onAddMember: people.setMemberTeam,
+            onEdit: people.setEditingTeam,
+          }}
         />
       ) : (
         <WorkersGrid
@@ -117,14 +121,26 @@ export default function TeamsPage({ canManage = false }: TeamsPageProps) {
         />
       )}
 
-      {people.creatingTeam && (
+      {(people.creatingTeam || people.editingTeam) && (
         <TeamForm
-          title="Nuevo equipo"
-          submitLabel="Crear"
-          initialData={emptyTeam}
+          key={people.editingTeam?.id ?? "nuevo"}
+          title={people.editingTeam ? "Editar equipo" : "Nuevo equipo"}
+          submitLabel={people.editingTeam ? "Guardar" : "Crear"}
+          initialData={
+            people.editingTeam
+              ? {
+                  area: String(people.editingTeam.area),
+                  name: people.editingTeam.name,
+                  active: people.editingTeam.active,
+                }
+              : emptyTeam
+          }
           areas={people.areas}
           submitting={people.savingTeam}
-          onClose={() => people.setCreatingTeam(false)}
+          onClose={() => {
+            people.setCreatingTeam(false);
+            people.setEditingTeam(null);
+          }}
           onSubmit={people.saveTeam}
         />
       )}

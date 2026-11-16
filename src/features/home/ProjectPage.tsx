@@ -11,7 +11,9 @@ export default function ProjectPage() {
   const { projectId } = useParams();
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
-  const { project, setProject, toggleFavorite } = useProject(Number(projectId));
+  const { project, setProject, toggleFavorite, updateMemberRole } = useProject(
+    Number(projectId),
+  );
 
   const params = new URLSearchParams(search);
   const viewKey = params.get("vista") ?? "lista";
@@ -39,7 +41,12 @@ export default function ProjectPage() {
       {viewKey === "tablero" && (
         <BoardView project={project} onProjectChange={setProject} />
       )}
-      {viewKey === "overview" && <OverviewView projectId={project.id} />}
+      {viewKey === "overview" && (
+        <OverviewView
+          project={project}
+          onMemberRoleChange={updateMemberRole}
+        />
+      )}
       {viewKey === "gantt" && (
         <GanttView project={project} onProjectChange={setProject} />
       )}

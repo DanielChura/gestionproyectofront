@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import ChevronDownIcon from "../../shared/icons/ChevronIcon";
+import EditIcon from "../../shared/icons/EditIcon";
 import PlusIcon from "../../shared/icons/PlusIcon";
 import { avatarFor } from "../../shared/Avatar";
 import { initialColor } from "../../utils/initialColor";
@@ -11,12 +12,14 @@ interface TeamCardProps {
   team: Team;
   canManage: boolean;
   onAddMember: (team: Team) => void;
+  onEdit: (team: Team) => void;
 }
 
 export default function TeamCard({
   team,
   canManage,
   onAddMember,
+  onEdit,
 }: TeamCardProps) {
   const initials = avatarFor(team.name);
 
@@ -36,6 +39,16 @@ export default function TeamCard({
             >
               <ChevronDownIcon className="size-4 -rotate-90" />
             </Link>
+            <button
+              type="button"
+              disabled={!canManage}
+              onClick={() => onEdit(team)}
+              aria-label={`Editar ${team.name}`}
+              title={canManage ? "Editar equipo" : "Solo administradores"}
+              className="inline-flex cursor-pointer items-center justify-center rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-40 dark:text-neutral-200 dark:hover:bg-neutral-800"
+            >
+              <EditIcon className="size-4" />
+            </button>
             <button
               type="button"
               disabled={!canManage}

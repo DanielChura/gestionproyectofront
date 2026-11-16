@@ -93,8 +93,8 @@ export function useStructure() {
     onError: () => {
       addToast({
         icon: "error",
-        title: "Error",
-        message: "No se pudo guardar el área.",
+        title: "No se pudo guardar el área",
+        message: "Revisa los datos e inténtalo de nuevo.",
       });
     },
   });
@@ -112,8 +112,8 @@ export function useStructure() {
     onError: () => {
       addToast({
         icon: "error",
-        title: "Error",
-        message: "No se pudo crear la especialidad.",
+        title: "No se pudo crear la especialidad",
+        message: "Revisa los datos e inténtalo de nuevo.",
       });
     },
   });

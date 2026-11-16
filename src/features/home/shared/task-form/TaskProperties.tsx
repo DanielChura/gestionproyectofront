@@ -67,7 +67,7 @@ export default function TaskProperties({
 }: TaskPropertiesProps) {
   const [stateSearch, setStateSearch] = useState("");
   const canAssign =
-    project.permissions.manage && (!task || task.permissions.assign);
+    project.permissions.assign_tasks && (!task || task.permissions.assign);
   const canConfigure =
     project.permissions.manage && project.task_states.can_configure;
   const selectedState = task?.state_code ?? stateCode;

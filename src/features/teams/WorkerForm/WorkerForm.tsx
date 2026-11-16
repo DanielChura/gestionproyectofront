@@ -8,6 +8,7 @@ import type { Area } from "../../../core/interfaces/organization.interface";
 import Form from "../../../shared/components/Form/Form";
 import Input from "../../../shared/components/Input/Input";
 import Select from "../../../shared/components/Select/Select";
+import { GMAIL_PATTERN, GMAIL_TITLE } from "../../../utils/gmail";
 
 interface TextField {
   name: Exclude<keyof WorkerFormState, "active">;
@@ -77,6 +78,8 @@ function WorkerForm({
             onChange={(e) => updateField(field.name, e.target.value)}
             min={field.min}
             max={field.max}
+            pattern={field.type === "email" ? GMAIL_PATTERN : undefined}
+            title={field.type === "email" ? GMAIL_TITLE : undefined}
             required
           />
         </div>

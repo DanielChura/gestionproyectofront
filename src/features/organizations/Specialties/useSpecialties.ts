@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router";
 import {
   createSpecialty,
   listSpecialties,
-  removeSpecialty,
   updateSpecialty,
 } from "../../../core/services/organizationService";
 import type {
@@ -90,29 +89,6 @@ export const useSpecialties = () => {
     }
   };
 
-  const deleteSpecialty = async (specialty: Specialty) => {
-    if (
-      !window.confirm(`¿Deseas eliminar la especialidad "${specialty.name}"?`)
-    ) {
-      return;
-    }
-    try {
-      await removeSpecialty(specialty.id);
-      addToast({
-        icon: "info",
-        title: "Especialidad eliminada",
-        message: `La especialidad "${specialty.name}" fue eliminada.`,
-      });
-      await fetch();
-    } catch {
-      addToast({
-        icon: "error",
-        title: "Error al eliminar",
-        message: "No fue posible eliminar la especialidad seleccionada.",
-      });
-    }
-  };
-
   const resetFilters = () => {
     setSearch("");
     setSort("asc");
@@ -131,7 +107,6 @@ export const useSpecialties = () => {
     setModal,
     submitting,
     saveSpecialty,
-    deleteSpecialty,
     refetch: fetch,
   };
 };

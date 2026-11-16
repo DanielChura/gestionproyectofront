@@ -121,8 +121,8 @@ export const useAreas = () => {
     } catch {
       addToast({
         icon: "error",
-        title: "Error",
-        message: "No se pudo cambiar el estado del área.",
+        title: "No se pudo cambiar el estado del área",
+        message: "Revisa la conexión e inténtalo de nuevo.",
       });
     }
   };

@@ -65,7 +65,7 @@ export function useTaskForm({
   const [configuring, setConfiguring] = useState(false);
 
   const canAssign =
-    project.permissions.manage && (!task || task.permissions.assign);
+    project.permissions.assign_tasks && (!task || task.permissions.assign);
   const canConfigure =
     project.permissions.manage && project.task_states.can_configure;
 
@@ -85,6 +85,14 @@ export function useTaskForm({
         icon: "alert",
         title: "Validación",
         message: "Las tareas nuevas deben iniciar hoy o después.",
+      });
+      return;
+    }
+    if (!task && !dueDate) {
+      addToast({
+        icon: "alert",
+        title: "Validación",
+        message: "Indica la fecha límite de la tarea.",
       });
       return;
     }
@@ -120,13 +128,21 @@ export function useTaskForm({
       return;
     }
     if (
-      priority !== null &&
+      priority === null ||
       !catalogs.priorities.some((p) => p.code === priority)
     ) {
       addToast({
         icon: "alert",
         title: "Validación",
         message: "Selecciona una prioridad del catálogo.",
+      });
+      return;
+    }
+    if (canAssign && responsible.length === 0 && project.participants.length > 0) {
+      addToast({
+        icon: "alert",
+        title: "Validación",
+        message: "Selecciona al menos un responsable de la tarea.",
       });
       return;
     }
@@ -168,7 +184,7 @@ export function useTaskForm({
     } catch (failure) {
       addToast({
         icon: "error",
-        title: "Error",
+        title: "No se pudo guardar la tarea",
         message: errorText(failure) || "No se pudo guardar la tarea.",
       });
     }

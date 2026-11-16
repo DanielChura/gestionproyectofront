@@ -16,6 +16,7 @@ interface TeamsGridProps {
   actions: {
     canManage: boolean;
     onAddMember: (team: Team) => void;
+    onEdit: (team: Team) => void;
   };
 }
 
@@ -104,6 +105,7 @@ export default function TeamsGrid({
               team={team}
               canManage={actions.canManage}
               onAddMember={actions.onAddMember}
+              onEdit={actions.onEdit}
             />
           ))}
         </div>

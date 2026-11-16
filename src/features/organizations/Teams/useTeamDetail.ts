@@ -5,9 +5,12 @@ import {
   removeTeamMember,
 } from "../../../core/services/organizationService";
 import type { Team, TeamMember } from "../../../core/interfaces/organization.interface";
+import { useToast } from "../../../hooks/useToast";
+import { errorText } from "../../auth/api";
 
 export function useTeamDetail(teamId: number) {
   const queryClient = useQueryClient();
+  const { addToast } = useToast();
   const enabled = Number.isInteger(teamId) && teamId > 0;
 
   const teamQuery = useQuery<Team>({
@@ -29,6 +32,13 @@ export function useTeamDetail(teamId: number) {
         queryKey: ["teamMembers", teamId],
       });
       await queryClient.invalidateQueries({ queryKey: ["teams"] });
+    },
+    onError: (error) => {
+      addToast({
+        icon: "error",
+        title: "No se pudo retirar al integrante",
+        message: errorText(error),
+      });
     },
   });
 

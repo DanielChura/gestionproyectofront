@@ -83,6 +83,28 @@ export function useAccounts(filters: AccountFilters = {}) {
     },
   });
 
+  const unlockMutation = useMutation({
+    mutationFn: (accountId: number) =>
+      apiRequest<DetailResult>(`admin/accounts/${accountId}/unlock/`, {
+        method: "POST",
+      }),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      addToast({
+        icon: "success",
+        title: "Cuenta desbloqueada",
+        message: result.detail,
+      });
+    },
+    onError: (failure) => {
+      addToast({
+        icon: "error",
+        title: "No se pudo desbloquear",
+        message: errorText(failure),
+      });
+    },
+  });
+
   const visibleAccounts = useMemo(() => {
     const term = search.trim().toLowerCase();
     return accounts.filter((account) => {
@@ -102,8 +124,9 @@ export function useAccounts(filters: AccountFilters = {}) {
   return {
     accounts: visibleAccounts,
     areas,
-    busy: resendMutation.isPending,
+    busy: resendMutation.isPending || unlockMutation.isPending,
     resendInvitation: resendMutation.mutateAsync,
+    unlockAccount: unlockMutation.mutateAsync,
     reload,
   };
 }

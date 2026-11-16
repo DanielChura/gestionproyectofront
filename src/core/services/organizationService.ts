@@ -36,10 +36,6 @@ export async function updateArea(
   return data;
 }
 
-export async function removeArea(id: number): Promise<void> {
-  await httpClient.delete(`organization/areas/${id}/`);
-}
-
 export async function listSpecialties(): Promise<Specialty[]> {
   const { data } = await httpClient.get<Specialty[]>(
     "organization/specialties/",
@@ -73,10 +69,6 @@ export async function updateSpecialty(
     payload,
   );
   return data;
-}
-
-export async function removeSpecialty(id: number): Promise<void> {
-  await httpClient.delete(`organization/specialties/${id}/`);
 }
 
 export async function listTeams(): Promise<Team[]> {

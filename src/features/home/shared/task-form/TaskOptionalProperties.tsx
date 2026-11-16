@@ -34,7 +34,7 @@ export default function TaskOptionalProperties({
   min,
   max,
   readOnlyResponsible = "Tú",
-  canAssign = project.permissions.manage,
+  canAssign = project.permissions.assign_tasks,
 }: {
   project: Project;
   catalogs: ProjectCatalogs;

@@ -4,7 +4,10 @@ import { listAreas } from "../../../../core/services/organizationService";
 import { useAuth } from "../../../../hooks/useAuth";
 import { useProjects } from "../../../home/hooks/useProjects";
 import type { Area } from "../../../../core/interfaces/organization.interface";
-import type { ProjectAreaGroup } from "../../../../core/interfaces/project.interface";
+import type {
+  ProjectAreaGroup,
+  ProjectSummary,
+} from "../../../../core/interfaces/project.interface";
 
 const NO_AREA_NAME = "Sin área";
 
@@ -49,5 +52,11 @@ export function useProjectsByArea() {
     });
   }, [areas, projects, showAllAreas]);
 
-  return { groups };
+  const flat = useMemo<ProjectSummary[]>(
+    () =>
+      [...projects].sort((a, b) => a.name.localeCompare(b.name, "es")),
+    [projects],
+  );
+
+  return { groups, projects: flat, grouped: showAllAreas };
 }

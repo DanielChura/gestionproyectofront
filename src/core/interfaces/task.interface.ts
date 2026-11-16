@@ -93,10 +93,12 @@ export interface CreateProjectPayload {
   worker_contribute: boolean;
 }
 
+export type ProjectMemberRole = "COLABORADOR" | "RESPONSABLE" | "REVISOR";
+
 export interface Project extends ProjectSummary {
   assignment_teams?: TeamOption[];
   is_favorite: boolean;
-  participants: { id: number; name: string }[];
+  participants: { id: number; name: string; role: ProjectMemberRole }[];
   requirements: ProjectRequirement[];
   task_states: ProjectTaskConfiguration;
 }

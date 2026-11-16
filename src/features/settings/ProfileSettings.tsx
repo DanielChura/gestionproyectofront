@@ -4,6 +4,7 @@ import Input from "../../shared/components/Input/Input";
 
 import SettingsSection from "./SettingsSection";
 import type { SettingsController } from "./useSettings";
+import { GMAIL_PATTERN, GMAIL_TITLE } from "../../utils/gmail";
 
 export default function ProfileSettings({
   settings,
@@ -80,6 +81,8 @@ export default function ProfileSettings({
             autoComplete="email"
             maxLength={254}
             required
+            pattern={GMAIL_PATTERN}
+            title={GMAIL_TITLE}
             value={settings.email}
             onChange={(event) => settings.updateEmail(event.target.value)}
           />

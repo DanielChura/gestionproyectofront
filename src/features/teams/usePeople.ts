@@ -4,6 +4,7 @@ import {
   createTeam,
   listAreas,
   listTeams,
+  updateTeam,
 } from "../../core/services/organizationService";
 import { listWorkers, updateWorker } from "../../core/services/workerService";
 import type { Area, Team, TeamWriteData } from "../../core/interfaces/organization.interface";
@@ -13,6 +14,7 @@ import type {
   WorkerUpdateData,
 } from "../../core/interfaces/worker.interface";
 import { useToast } from "../../hooks/useToast";
+import { errorText } from "../auth/api";
 
 export function usePeople() {
   const [workerFilters, setWorkerFilters] = useState<WorkerListFilters>({
@@ -29,6 +31,7 @@ export function usePeople() {
   });
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [creatingTeam, setCreatingTeam] = useState(false);
+  const [editingTeam, setEditingTeam] = useState<Team | null>(null);
   const [memberTeam, setMemberTeam] = useState<Team | null>(null);
 
   const queryClient = useQueryClient();
@@ -74,21 +77,27 @@ export function usePeople() {
   });
 
   const teamMutation = useMutation({
-    mutationFn: (data: TeamWriteData) => createTeam(data),
-    onSuccess: async () => {
+    mutationFn: ({ id, data }: { id?: number; data: TeamWriteData }) =>
+      id ? updateTeam(id, data) : createTeam(data),
+    onSuccess: async (_team, variables) => {
       await queryClient.invalidateQueries({ queryKey: ["teams"] });
       setCreatingTeam(false);
+      setEditingTeam(null);
       addToast({
         icon: "success",
-        title: "Equipo creado",
-        message: "El equipo se registró correctamente.",
+        title: variables.id ? "Equipo actualizado" : "Equipo creado",
+        message: variables.id
+          ? "Los datos del equipo se guardaron correctamente."
+          : "El equipo se registró correctamente.",
       });
     },
-    onError: () => {
+    onError: (error, variables) => {
       addToast({
         icon: "error",
-        title: "No se pudo crear el equipo",
-        message: "Revisa los datos e inténtalo de nuevo.",
+        title: variables.id
+          ? "No se pudo actualizar el equipo"
+          : "No se pudo crear el equipo",
+        message: errorText(error),
       });
     },
   });
@@ -149,6 +158,10 @@ export function usePeople() {
     workerMutation.mutate({ id: editingWorker.id, data });
   };
 
+  const saveTeam = (data: TeamWriteData) => {
+    teamMutation.mutate({ id: editingTeam?.id, data });
+  };
+
   const refreshTeams = () => {
     void queryClient.invalidateQueries({ queryKey: ["teams"] });
   };
@@ -168,12 +181,14 @@ export function usePeople() {
     setEditingWorker,
     creatingTeam,
     setCreatingTeam,
+    editingTeam,
+    setEditingTeam,
     memberTeam,
     setMemberTeam,
     refreshTeams,
     savingWorker: workerMutation.isPending,
     savingTeam: teamMutation.isPending,
     saveWorker,
-    saveTeam: teamMutation.mutate,
+    saveTeam,
   };
 }

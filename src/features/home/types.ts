@@ -20,6 +20,7 @@ export type {
 
 export type {
   Project,
+  ProjectMemberRole,
   Task,
   TaskAction,
   TaskActionKind,

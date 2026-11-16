@@ -16,7 +16,11 @@ export interface ProjectSummary {
   worker_edit: boolean;
   worker_state: boolean;
   worker_create: boolean;
-  permissions: { manage: boolean; create_tasks: boolean };
+  permissions: {
+    manage: boolean;
+    create_tasks: boolean;
+    assign_tasks: boolean;
+  };
 }
 
 export interface ProjectAreaGroup extends ProjectArea {
