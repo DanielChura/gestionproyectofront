@@ -40,7 +40,10 @@ export const stateCategories: {
   },
 ];
 
-export function categoryValue(state: { code: string; category?: StateCategory }): StateCategory {
+export function categoryValue(state: {
+  code: string;
+  category?: StateCategory;
+}): StateCategory {
   return (
     state.category ??
     (state.code === "PENDIENTE"

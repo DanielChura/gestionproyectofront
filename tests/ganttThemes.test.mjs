@@ -15,10 +15,7 @@ async function load(url) {
   return mod;
 }
 const presentation = await load(
-  new URL(
-    "../src/features/home/utils/themePresentation.ts",
-    import.meta.url,
-  ),
+  new URL("../src/features/home/utils/themePresentation.ts", import.meta.url),
 );
 await presentation.evaluate();
 const state = await load(

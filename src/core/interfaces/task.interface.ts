@@ -251,11 +251,7 @@ export interface TaskAssignee {
 }
 
 export type TaskGroupingMode =
-  | "state"
-  | "assignees"
-  | "priority"
-  | "labels"
-  | "due_date";
+  "state" | "assignees" | "priority" | "labels" | "due_date";
 
 export type TaskGroupOrder = "asc" | "desc";
 
@@ -303,11 +299,7 @@ export interface TaskStatePayload {
 }
 
 export type TaskActionKind =
-  | "edit"
-  | "state"
-  | "child"
-  | "dependencies"
-  | "detail";
+  "edit" | "state" | "child" | "dependencies" | "detail";
 
 export type TaskAction =
   | { kind: "create"; stateCode?: string }

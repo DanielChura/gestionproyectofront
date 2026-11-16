@@ -17,7 +17,8 @@ export interface AccountFilters {
   active?: boolean;
 }
 
-type PaginatedResponse<T> = T[] | { results?: T[]; next_cursor?: string | null };
+type PaginatedResponse<T> =
+  T[] | { results?: T[]; next_cursor?: string | null };
 
 async function fetchAllAccounts(): Promise<Account[]> {
   const accounts: Account[] = [];
@@ -25,7 +26,9 @@ async function fetchAllAccounts(): Promise<Account[]> {
   for (let page = 0; page < 100; page += 1) {
     const query = new URLSearchParams({ page_size: "50" });
     if (cursor) query.set("cursor", cursor);
-    const data = await apiRequest<PaginatedResponse<Account>>(`admin/accounts/?${query.toString()}`);
+    const data = await apiRequest<PaginatedResponse<Account>>(
+      `admin/accounts/?${query.toString()}`,
+    );
     const rows = Array.isArray(data)
       ? data
       : Array.isArray(data?.results)
@@ -57,18 +60,23 @@ export function useAccounts(filters: AccountFilters = {}) {
   const { addToast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: accounts = [], refetch: refetchAccounts } = useQuery<Account[]>({
-    queryKey: ["accounts"],
-    queryFn: fetchAllAccounts,
-  });
+  const { data: accounts = [], refetch: refetchAccounts } = useQuery<Account[]>(
+    {
+      queryKey: ["accounts"],
+      queryFn: fetchAllAccounts,
+    },
+  );
 
   const { data: areas = [], refetch: refetchAreas } = useActiveAreas();
 
   const resendMutation = useMutation({
     mutationFn: (accountId: number) =>
-      apiRequest<DetailResult>(`admin/accounts/${accountId}/resend-invitation/`, {
-        method: "POST",
-      }),
+      apiRequest<DetailResult>(
+        `admin/accounts/${accountId}/resend-invitation/`,
+        {
+          method: "POST",
+        },
+      ),
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       addToast({

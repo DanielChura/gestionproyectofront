@@ -4,7 +4,10 @@ import {
   listTeamMembers,
   removeTeamMember,
 } from "../../../core/services/organizationService";
-import type { Team, TeamMember } from "../../../core/interfaces/organization.interface";
+import type {
+  Team,
+  TeamMember,
+} from "../../../core/interfaces/organization.interface";
 import { useToast } from "../../../hooks/useToast";
 import { errorText } from "../../auth/api";
 

@@ -484,7 +484,7 @@ try {
         exact: true,
       });
       await page.keyboard.press("Escape");
-  await close.waitFor({ state: "detached" });
+      await close.waitFor({ state: "detached" });
       const after = await current(initial.id);
       assert.equal(after.start_date, before.start_date);
       assert.equal(after.calendar_revision, before.calendar_revision);
@@ -566,13 +566,26 @@ try {
       await shield().click();
       const handle = bar(initial.id).locator("[data-gantt-calendar-mode=end]");
       await handle.waitFor();
-      const dayWidth = await page.evaluate(async ({ start, end }) => {
-        const { viewportGeometry } = await import("/src/features/home/views/TaskGantt/ganttViewport.ts");
-        const data = globalThis.document.querySelector(".gm-task-gantt").dataset;
-        const geometry = viewportGeometry({ start: new Date(Number(data.ganttWindowStart)), end: new Date(Number(data.ganttWindowEnd)), scale: data.ganttScale, zoomLevel: Number(data.ganttZoom) });
-        const date = value => { const [y,m,d] = value.split("-").map(Number); return new Date(y,m-1,d); };
-        return geometry.toX(date(end)) - geometry.toX(date(start));
-      }, { start: shift(before.due_date, -1), end: before.due_date });
+      const dayWidth = await page.evaluate(
+        async ({ start, end }) => {
+          const { viewportGeometry } =
+            await import("/src/features/home/views/TaskGantt/ganttViewport.ts");
+          const data =
+            globalThis.document.querySelector(".gm-task-gantt").dataset;
+          const geometry = viewportGeometry({
+            start: new Date(Number(data.ganttWindowStart)),
+            end: new Date(Number(data.ganttWindowEnd)),
+            scale: data.ganttScale,
+            zoomLevel: Number(data.ganttZoom),
+          });
+          const date = (value) => {
+            const [y, m, d] = value.split("-").map(Number);
+            return new Date(y, m - 1, d);
+          };
+          return geometry.toX(date(end)) - geometry.toX(date(start));
+        },
+        { start: shift(before.due_date, -1), end: before.due_date },
+      );
       const box = await handle.boundingBox();
       assert.ok(box);
       const reply = page.waitForResponse(
@@ -669,14 +682,26 @@ try {
           await screenshot(`03-resumen-${theme}-${width}`);
         }
       await page.setViewportSize({ width: 1600, height: 1000 });
-      const toggle = page.getByRole("button", { name: "Ocultar menú lateral", exact: true });
+      const toggle = page.getByRole("button", {
+        name: "Ocultar menú lateral",
+        exact: true,
+      });
       await toggle.click();
-      assert.equal(await page.getByRole("button", { name: "Mostrar menú lateral", exact: true }).getAttribute("aria-expanded"), "false");
+      assert.equal(
+        await page
+          .getByRole("button", { name: "Mostrar menú lateral", exact: true })
+          .getAttribute("aria-expanded"),
+        "false",
+      );
       await settled();
-      const compact = await page.getByLabel("Resumen del proyecto", { exact: true }).boundingBox();
+      const compact = await page
+        .getByLabel("Resumen del proyecto", { exact: true })
+        .boundingBox();
       assert.ok(compact.height <= 48);
       await screenshot("04-sidebar-contraido");
-      await page.getByRole("button", { name: "Mostrar menú lateral", exact: true }).click();
+      await page
+        .getByRole("button", { name: "Mostrar menú lateral", exact: true })
+        .click();
       assert.equal(await toggle.getAttribute("aria-expanded"), "true");
       assert.deepEqual(errors, []);
     },

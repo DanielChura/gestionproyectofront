@@ -10,8 +10,13 @@ import type {
   TeamWriteData,
 } from "../interfaces/organization.interface";
 
-export async function getActiveAreaOptions(signal?: AbortSignal): Promise<Pick<Area, "id" | "name">[]> {
-  const { data } = await httpClient.get<Pick<Area, "id" | "name">[]>("auth/admin/areas/", { signal });
+export async function getActiveAreaOptions(
+  signal?: AbortSignal,
+): Promise<Pick<Area, "id" | "name">[]> {
+  const { data } = await httpClient.get<Pick<Area, "id" | "name">[]>(
+    "auth/admin/areas/",
+    { signal },
+  );
   return data;
 }
 

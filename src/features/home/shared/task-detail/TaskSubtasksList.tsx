@@ -62,7 +62,9 @@ export default function TaskSubtasksList({
               item.priority && priorityTones[item.priority]
                 ? priorityTones[item.priority].text
                 : "text-neutral-400";
-            const color = themeColor(item.state_tema?.color ?? item.state_color) ?? "#737373";
+            const color =
+              themeColor(item.state_tema?.color ?? item.state_color) ??
+              "#737373";
 
             return (
               <button
@@ -106,27 +108,28 @@ export default function TaskSubtasksList({
             );
           })}
 
-          {parent.permissions.create_child && (adding ? (
-            <QuickTaskRow
-              project={project}
-              catalogs={catalogs}
-              parent={parent}
-              onCreated={(created) => {
-                onSubtaskCreated(created);
-                setAdding(false);
-              }}
-              onClose={() => setAdding(false)}
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={() => setAdding(true)}
-              className="flex cursor-pointer items-center gap-2 rounded-lg py-1.5 pl-4 pr-2 text-xs text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-            >
-              <PlusIcon className="size-3.5" />
-              <span>Añadir subtarea</span>
-            </button>
-          ))}
+          {parent.permissions.create_child &&
+            (adding ? (
+              <QuickTaskRow
+                project={project}
+                catalogs={catalogs}
+                parent={parent}
+                onCreated={(created) => {
+                  onSubtaskCreated(created);
+                  setAdding(false);
+                }}
+                onClose={() => setAdding(false)}
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setAdding(true)}
+                className="flex cursor-pointer items-center gap-2 rounded-lg py-1.5 pl-4 pr-2 text-xs text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                <PlusIcon className="size-3.5" />
+                <span>Añadir subtarea</span>
+              </button>
+            ))}
         </div>
       )}
     </section>

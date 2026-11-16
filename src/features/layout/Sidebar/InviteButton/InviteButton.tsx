@@ -4,7 +4,8 @@ import UserPlusIcon from "../../../../shared/icons/UserPlusIcon";
 import { useActiveAreas } from "../../../organizations/accounts/useAccounts";
 
 const InvitationModal = lazy(
-  () => import("../../../organizations/accounts/InvitationModal/InvitationModal"),
+  () =>
+    import("../../../organizations/accounts/InvitationModal/InvitationModal"),
 );
 
 export default function InviteButton() {

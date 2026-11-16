@@ -38,12 +38,8 @@ async function load(path, dependencies = {}) {
   return module.namespace;
 }
 
-const hierarchy = await load(
-  "../src/features/home/utils/taskHierarchy.ts",
-);
-const assignees = await load(
-  "../src/features/home/utils/taskAssignees.ts",
-);
+const hierarchy = await load("../src/features/home/utils/taskHierarchy.ts");
+const assignees = await load("../src/features/home/utils/taskAssignees.ts");
 const themePresentation = await load(
   "../src/features/home/utils/themePresentation.ts",
 );
@@ -87,10 +83,13 @@ const expansion = await load(
     "../../../shared/icons/ChevronDownIcon": { default: Icon },
   },
 );
-const { default: ProjectTitle } = await load("../src/features/home/components/ProjectTitle.tsx", {
-  "../../../shared/icons/CalendarIcon": { default: Icon },
-  "../utils/taskHierarchy": hierarchy,
-});
+const { default: ProjectTitle } = await load(
+  "../src/features/home/components/ProjectTitle.tsx",
+  {
+    "../../../shared/icons/CalendarIcon": { default: Icon },
+    "../utils/taskHierarchy": hierarchy,
+  },
+);
 let favoriteState = {};
 const { default: ProjectHeader } = await load(
   "../src/features/home/components/ProjectHeader.tsx",
@@ -184,9 +183,23 @@ const { default: TaskList } = await load(
       default: ({ children }) => React.createElement("table", null, children),
     },
     "../../hooks/useTaskGrouping": groupingHook,
-    "./hooks/useListMovement": { useListMovement: () => ({ movement: { dragging: null, drop: null, busy: false, error: movementError, refresh() {}, permitted: () => true }, pointerDrag: {} }) },
+    "./hooks/useListMovement": {
+      useListMovement: () => ({
+        movement: {
+          dragging: null,
+          drop: null,
+          busy: false,
+          error: movementError,
+          refresh() {},
+          permitted: () => true,
+        },
+        pointerDrag: {},
+      }),
+    },
     "../../shared/MyTasksToggle": { default: () => null },
-    "../../hooks/useMyTasksFilter": { useMyTasksFilter: tasks => ({ tasks, mine: false, toggleMine() {} }) },
+    "../../hooks/useMyTasksFilter": {
+      useMyTasksFilter: (tasks) => ({ tasks, mine: false, toggleMine() {} }),
+    },
     "./hooks/useList": {
       useList: (project) => ({
         tasks: mockTasks,
@@ -277,7 +290,10 @@ test("favorite is after the last breadcrumb level in every existing view", () =>
       breadcrumb,
       /<button[^>]*aria-pressed="false"[\s\S]*?<\/button><\/li><\/ol><\/nav>$/,
     );
-    assert.equal((markup.match(/<h1\b/g) ?? []).length, key === "gantt" ? 1 : 0);
+    assert.equal(
+      (markup.match(/<h1\b/g) ?? []).length,
+      key === "gantt" ? 1 : 0,
+    );
     assert.match(breadcrumb, /href="\/proyectos\/42"/);
     assert.doesNotMatch(breadcrumb, /href="[^"]*area/);
   }
@@ -305,7 +321,10 @@ test("Gantt title and period precede breadcrumbs while other views preserve the 
   for (const view of ["lista", "tablero", "gantt"]) {
     const markup = header(view);
     assert.ok(
-      view === "gantt" ? markup.indexOf("<h1") < markup.indexOf('aria-label="Ruta de navegación"') : !markup.includes("<h1"),
+      view === "gantt"
+        ? markup.indexOf("<h1") <
+            markup.indexOf('aria-label="Ruta de navegación"')
+        : !markup.includes("<h1"),
     );
     assert.equal(
       (markup.match(/aria-label="Periodo del proyecto"/g) ?? []).length,
@@ -416,7 +435,9 @@ test("empty List preserves the colleague empty view through Workspace without ex
       "./components/ProjectHeader": { default: Empty },
       "./views/Overview/OverviewView": { default: Empty },
       "./views/TaskGantt/GanttView": { default: Empty },
-      "./components/ProjectTaskWorkspace": { default: ({ children }) => children },
+      "./components/ProjectTaskWorkspace": {
+        default: ({ children }) => children,
+      },
       "../auth/api": { sessionVersion: () => 0 },
       "./views/Board/BoardView": {
         default: () =>
@@ -478,10 +499,28 @@ test("empty List preserves the colleague empty view through Workspace without ex
               React.createElement("table", null, children),
           },
           "../../hooks/useTaskGrouping": groupingHook,
-          "./hooks/useListMovement": { useListMovement: () => ({ movement: { dragging: null, drop: null, busy: false, error: movementError, refresh() {}, permitted: () => true }, pointerDrag: {} }) },
-    "../../shared/MyTasksToggle": { default: () => null },
-    "../../hooks/useMyTasksFilter": { useMyTasksFilter: tasks => ({ tasks, mine: false, toggleMine() {} }) },
-    "./hooks/useList": {
+          "./hooks/useListMovement": {
+            useListMovement: () => ({
+              movement: {
+                dragging: null,
+                drop: null,
+                busy: false,
+                error: movementError,
+                refresh() {},
+                permitted: () => true,
+              },
+              pointerDrag: {},
+            }),
+          },
+          "../../shared/MyTasksToggle": { default: () => null },
+          "../../hooks/useMyTasksFilter": {
+            useMyTasksFilter: (tasks) => ({
+              tasks,
+              mine: false,
+              toggleMine() {},
+            }),
+          },
+          "./hooks/useList": {
             useList: () => ({
               tasks: [],
               catalogs: { priorities: [] },
@@ -621,7 +660,15 @@ test("historical dates use creation-day warnings without turning every past date
 });
 
 test("List keeps save feedback out of the rows and ignores detached creation after unmount", () => {
-  mockTasks = [{ id: 1, name: "Task", parent_id: null, state_code: "PENDIENTE", labels: [] }];
+  mockTasks = [
+    {
+      id: 1,
+      name: "Task",
+      parent_id: null,
+      state_code: "PENDIENTE",
+      labels: [],
+    },
+  ];
   listDraftGroup = "state:PENDIENTE";
   listEffects.length = 0;
   acceptedTasks.length = 0;

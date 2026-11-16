@@ -6,7 +6,11 @@ import { sessionVersion } from "../../auth/api";
 import { StaleTaskResponse } from "../utils/useTaskSync";
 import { reconcileTasks } from "../utils/taskCollection";
 
-export function projectTaskQuery(projectId: number, queryClient: QueryClient, onError?: (error: unknown) => void) {
+export function projectTaskQuery(
+  projectId: number,
+  queryClient: QueryClient,
+  onError?: (error: unknown) => void,
+) {
   return queryOptions({
     queryKey: ["tasks", projectId],
     queryFn: async () => {

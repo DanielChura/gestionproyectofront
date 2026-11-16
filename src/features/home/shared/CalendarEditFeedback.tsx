@@ -76,14 +76,16 @@ export default function CalendarEditFeedback({
       {editor.current && (
         <div className="grid gap-2">
           <p className="m-0">
-            {editor.current.schedule?.precision === "hour" ? scheduleLabel(editor.current) : `Inicio vigente: ${formatTaskDate(editor.current.start_date)}. Límite vigente: ${formatTaskDate(editor.current.due_date)}.`} Revisión{" "}
-            {editor.current.calendar_revision}.
+            {editor.current.schedule?.precision === "hour"
+              ? scheduleLabel(editor.current)
+              : `Inicio vigente: ${formatTaskDate(editor.current.start_date)}. Límite vigente: ${formatTaskDate(editor.current.due_date)}.`}{" "}
+            Revisión {editor.current.calendar_revision}.
           </p>
           {editor.problem !== "pending" && (
             <>
               <p className="m-0">
-                El borrador se conserva. Preparar una intención nueva no
-                guarda; revisa los campos y pulsa Guardar.
+                El borrador se conserva. Preparar una intención nueva no guarda;
+                revisa los campos y pulsa Guardar.
               </p>
               <button
                 type="button"

@@ -94,8 +94,7 @@ export function useTaskMove(
       if (!activeDrag.current || !node) return;
       const bounds = node.getBoundingClientRect(),
         { x, y } = point.current;
-      const delta =
-        y < bounds.top + 36 ? -10 : y > bounds.bottom - 36 ? 10 : 0;
+      const delta = y < bounds.top + 36 ? -10 : y > bounds.bottom - 36 ? 10 : 0;
       const horizontal =
         x < bounds.left + 24 ? -8 : x > bounds.right - 24 ? 8 : 0;
       if (y >= bounds.top - 20 && y <= bounds.bottom + 20) {
@@ -112,18 +111,18 @@ export function useTaskMove(
     if (hierarchy)
       return Boolean(
         onConfirmed &&
-          task.move_revision &&
-          task.permissions.edit &&
-          task.state_code === state,
+        task.move_revision &&
+        task.permissions.edit &&
+        task.state_code === state,
       );
     return Boolean(
       onConfirmed &&
-        task.move_revision &&
-        task.permissions.state &&
-        (task.state_code === state ||
-          (task.move_targets
-            ? task.move_targets.includes(state)
-            : task.transitions.some((item) => item.target === state))),
+      task.move_revision &&
+      task.permissions.state &&
+      (task.state_code === state ||
+        (task.move_targets
+          ? task.move_targets.includes(state)
+          : task.transitions.some((item) => item.target === state))),
     );
   }
 
@@ -168,7 +167,8 @@ export function useTaskMove(
           !permitted(task, intent.state) ||
           (intent.before !== null &&
             (!anchor ||
-              anchor.parent_id !== (hierarchy ? intent.parent : task.parent_id) ||
+              anchor.parent_id !==
+                (hierarchy ? intent.parent : task.parent_id) ||
               (!hierarchy && anchor.state_code !== intent.state)))
         ) {
           throw new Error(

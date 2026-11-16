@@ -98,7 +98,11 @@ export function useQuickTask(
           ambiguous.current = true;
           setUncertain(true);
         }
-        setError(ambiguous.current ? "No se pudo confirmar la creación. Conserva el borrador y consulta las tareas." : errorText(failure));
+        setError(
+          ambiguous.current
+            ? "No se pudo confirmar la creación. Conserva el borrador y consulta las tareas."
+            : errorText(failure),
+        );
       }
       return false;
     } finally {

@@ -22,9 +22,7 @@ export function useSettings() {
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
 
   const nameParts = (profileState.profile?.name ?? "").trim().split(/\s+/u);
-  const currentFirstName = firstNameTouched
-    ? firstName
-    : (nameParts[0] ?? "");
+  const currentFirstName = firstNameTouched ? firstName : (nameParts[0] ?? "");
   const currentLastName = lastNameTouched
     ? lastName
     : nameParts.slice(1).join(" ");

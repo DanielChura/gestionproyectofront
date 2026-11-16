@@ -79,7 +79,9 @@ export default function ProjectParticipantsPicker({ picker }: Props) {
       <div className="max-h-36 overflow-y-auto space-y-1 rounded-lg border border-neutral-200 dark:border-neutral-700 p-1">
         {isWorkers ? (
           workers.length === 0 ? (
-            <p className="p-2 text-xs text-neutral-400">Sin personas disponibles.</p>
+            <p className="p-2 text-xs text-neutral-400">
+              Sin personas disponibles.
+            </p>
           ) : (
             workers.map((worker) => (
               <label
@@ -96,13 +98,17 @@ export default function ProjectParticipantsPicker({ picker }: Props) {
                   <span>{worker.name}</span>
                 </div>
                 {worker.project_count > 0 && (
-                  <span className="text-xs text-neutral-400">{worker.project_count} proy.</span>
+                  <span className="text-xs text-neutral-400">
+                    {worker.project_count} proy.
+                  </span>
                 )}
               </label>
             ))
           )
         ) : teams.length === 0 ? (
-          <p className="p-2 text-xs text-neutral-400">Sin equipos disponibles.</p>
+          <p className="p-2 text-xs text-neutral-400">
+            Sin equipos disponibles.
+          </p>
         ) : (
           teams.map((team) => (
             <label
@@ -119,7 +125,8 @@ export default function ProjectParticipantsPicker({ picker }: Props) {
                 <span>{team.name}</span>
               </div>
               <span className="text-xs text-neutral-400">
-                {team.eligible_count} {team.eligible_count === 1 ? "miembro" : "miembros"}
+                {team.eligible_count}{" "}
+                {team.eligible_count === 1 ? "miembro" : "miembros"}
               </span>
             </label>
           ))

@@ -446,9 +446,7 @@ try {
         })
         .waitFor();
       await snap("detalle");
-      await page
-        .getByRole("button", { name: "Cerrar modal" })
-        .click();
+      await page.getByRole("button", { name: "Cerrar modal" }).click();
       await row(qa.context.other)
         .getByRole("button", { name: /^Prioridad ·/ })
         .click();

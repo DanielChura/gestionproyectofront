@@ -9,13 +9,21 @@ import type { CalendarProblem } from "../../utils/useTaskCalendarEdit";
 import type { TaskSync } from "../../utils/useTaskSync";
 import type { Task } from "../../types";
 
-export type GanttDateChanges = { start_date?: string; due_date?: string; schedule?: import("../../types").TaskSchedule };
+export type GanttDateChanges = {
+  start_date?: string;
+  due_date?: string;
+  schedule?: import("../../types").TaskSchedule;
+};
 export interface GanttCalendarOperation {
   id: number;
   name: string;
   base: Task;
   changes: GanttDateChanges;
-  proposal: { start_date: string; due_date: string | null; schedule?: Task["schedule"] };
+  proposal: {
+    start_date: string;
+    due_date: string | null;
+    schedule?: Task["schedule"];
+  };
   status: "pending" | "error" | "prepared" | "success";
   problem: CalendarProblem | null;
   error: string;
@@ -54,7 +62,9 @@ export function createGanttCalendarOperations(
       sync.isCurrent() &&
       !sync.hasPendingCalendar(task.id) &&
       current.permissions.edit &&
-      (!operation || operation.status === "success" || operation.status === "error" && operation.problem === null)
+      (!operation ||
+        operation.status === "success" ||
+        (operation.status === "error" && operation.problem === null))
     );
   }
   async function send(entry: GanttCalendarOperation) {

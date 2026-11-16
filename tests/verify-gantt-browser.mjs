@@ -119,7 +119,10 @@ try {
     baselineTasks = tasks.body;
     await admin.page.getByRole("link", { name: "Gantt", exact: true }).click();
     await admin.page
-      .getByRole("button", { name: "Abrir tarea Un dÃ­a Gantt QA", exact: true })
+      .getByRole("button", {
+        name: "Abrir tarea Un dÃ­a Gantt QA",
+        exact: true,
+      })
       .waitFor();
     assert.ok(ganttAssets().length > 0);
     await admin.page.screenshot({
@@ -416,7 +419,9 @@ try {
         .getByRole("link", { name: "Gantt", exact: true })
         .click();
       await pending;
-      await client.page.getByText("Cargando Ganttâ€¦", { exact: true }).waitFor();
+      await client.page
+        .getByText("Cargando Ganttâ€¦", { exact: true })
+        .waitFor();
       await client.page
         .getByRole("link", { name: "Lista", exact: true })
         .click();

@@ -15,8 +15,15 @@ export default function ProjectPage() {
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
   const [sharing, setSharing] = useState(false);
-  const { project, setProject, toggleFavorite, updateMemberRole, addParticipants, favoritePending, favoriteError } =
-    useProject(Number(projectId));
+  const {
+    project,
+    setProject,
+    toggleFavorite,
+    updateMemberRole,
+    addParticipants,
+    favoritePending,
+    favoriteError,
+  } = useProject(Number(projectId));
 
   const params = new URLSearchParams(search);
   const viewKey = params.get("vista") ?? "lista";

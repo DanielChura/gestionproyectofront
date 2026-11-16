@@ -53,8 +53,7 @@ export function useProjectsByArea() {
   }, [areas, projects, showAllAreas]);
 
   const flat = useMemo<ProjectSummary[]>(
-    () =>
-      [...projects].sort((a, b) => a.name.localeCompare(b.name, "es")),
+    () => [...projects].sort((a, b) => a.name.localeCompare(b.name, "es")),
     [projects],
   );
 

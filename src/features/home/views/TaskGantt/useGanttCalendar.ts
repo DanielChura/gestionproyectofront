@@ -62,9 +62,17 @@ export function useGanttCalendar(
   function onPointerDownCapture(event: PointerEvent<HTMLDivElement>) {
     const api = widget.current;
     if (!api || !(event.target instanceof Element)) return;
-    const surface = event.target.closest("[data-gantt-calendar-task],[data-gantt-edit-task]");
+    const surface = event.target.closest(
+      "[data-gantt-calendar-task],[data-gantt-edit-task]",
+    );
     if (!(surface instanceof HTMLElement)) return;
-    const task = tasks.find((item) => item.id === Number(surface.dataset.ganttCalendarTask ?? surface.dataset.ganttEditTask));
+    const task = tasks.find(
+      (item) =>
+        item.id ===
+        Number(
+          surface.dataset.ganttCalendarTask ?? surface.dataset.ganttEditTask,
+        ),
+    );
     if (!task) return;
     const mode =
       event.target

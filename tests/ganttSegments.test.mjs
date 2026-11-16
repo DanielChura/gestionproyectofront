@@ -11,10 +11,7 @@ async function load(name, dependencies, globals = {}) {
   const context = vm.createContext({ Date, ...globals });
   const compiled = ts.transpileModule(
     readFileSync(
-      new URL(
-        "../src/features/home/views/TaskGantt/" + name,
-        import.meta.url,
-      ),
+      new URL("../src/features/home/views/TaskGantt/" + name, import.meta.url),
       "utf8",
     ),
     {
@@ -56,7 +53,10 @@ test("upper creation uses the shared task controller and stays available indepen
   };
   const { default: View } = await load("GanttView.tsx", {
     "../../../auth/api": { sessionVersion: () => 1 },
-    "../../utils/useTaskSync": { createTaskSync: () => ({}), TaskSyncContext: React.createContext(null) },
+    "../../utils/useTaskSync": {
+      createTaskSync: () => ({}),
+      TaskSyncContext: React.createContext(null),
+    },
     "../../hooks/useTaskView": { useTaskView: () => view },
     "./GanttTaskDialog": {
       default: (props) => {
@@ -213,7 +213,9 @@ class Surface {
   closest() {
     return null;
   }
-  querySelector() { return null; }
+  querySelector() {
+    return null;
+  }
   getBoundingClientRect() {
     return { left: 0, top: 0 };
   }
@@ -238,8 +240,19 @@ async function panHarness() {
     "useGanttPan.ts",
     {
       "./ganttSceneGeometry": await load("ganttSceneGeometry.ts", {}),
-      "./useGanttVerticalScroll": { useGanttVerticalScroll: () => ({ height: 400, top: 0, maximum: 0, step() {} }) },
-      "./ganttGeometry": { positionDate() { throw new Error("unexpected navigation adapter call"); } },
+      "./useGanttVerticalScroll": {
+        useGanttVerticalScroll: () => ({
+          height: 400,
+          top: 0,
+          maximum: 0,
+          step() {},
+        }),
+      },
+      "./ganttGeometry": {
+        positionDate() {
+          throw new Error("unexpected navigation adapter call");
+        },
+      },
       react: {
         ...React,
         useCallback: (fn) => fn,

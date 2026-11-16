@@ -41,7 +41,11 @@ export default function StructureModals({
           submitLabel={areaModal.mode === "create" ? "Crear área" : "Guardar"}
           initialData={
             areaModal.mode === "edit"
-              ? { code: areaModal.area.code, name: areaModal.area.name, active: areaModal.area.active }
+              ? {
+                  code: areaModal.area.code,
+                  name: areaModal.area.name,
+                  active: areaModal.area.active,
+                }
               : emptyArea
           }
           submitting={submitting}

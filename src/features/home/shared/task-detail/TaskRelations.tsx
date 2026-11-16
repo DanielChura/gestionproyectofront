@@ -55,7 +55,13 @@ function RelationPicker({
       <p className="m-0 text-xs font-medium text-neutral-800 dark:text-neutral-100">
         {labels[kind]}
       </p>
-      {kind !== "custom" && <DependencyTypeSelect value={picker.dependencyType} onChange={picker.setDependencyType} disabled={busy} />}
+      {kind !== "custom" && (
+        <DependencyTypeSelect
+          value={picker.dependencyType}
+          onChange={picker.setDependencyType}
+          disabled={busy}
+        />
+      )}
       {kind === "custom" && (
         <>
           <label htmlFor={`${id}-name`}>Nombre de relación</label>
@@ -156,11 +162,21 @@ function RelationPicker({
               key={task.id}
               data-candidate
               type="button"
-              disabled={busy || (kind === "custom" ? !picker.name.trim() : !picker.dependencyType)}
+              disabled={
+                busy ||
+                (kind === "custom"
+                  ? !picker.name.trim()
+                  : !picker.dependencyType)
+              }
               aria-label={`Vincular ${task.name}`}
               className={`${button} flex w-full items-center gap-2 disabled:opacity-50`}
               onClick={() => {
-                void onLink(kind, task.id, picker.name, picker.dependencyType || undefined).then((saved) => {
+                void onLink(
+                  kind,
+                  task.id,
+                  picker.name,
+                  picker.dependencyType || undefined,
+                ).then((saved) => {
                   if (saved) close();
                 });
               }}
@@ -390,8 +406,16 @@ export default function TaskRelations({
             >
               {relation.target_name}
             </button>
-            {relation.kind !== "custom" && <span>{relation.dependency_type ?? "Legado informativo"}</span>}
-            {task.permissions.dependencies && relation.kind !== "custom" && <DependencyConversion relation={relation} busy={mutation.busy || mutation.uncertain} onConvert={mutation.convert} />}
+            {relation.kind !== "custom" && (
+              <span>{relation.dependency_type ?? "Legado informativo"}</span>
+            )}
+            {task.permissions.dependencies && relation.kind !== "custom" && (
+              <DependencyConversion
+                relation={relation}
+                busy={mutation.busy || mutation.uncertain}
+                onConvert={mutation.convert}
+              />
+            )}
             {task.permissions.relations &&
               (removing === relation.id ? (
                 <>

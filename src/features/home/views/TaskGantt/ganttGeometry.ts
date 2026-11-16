@@ -3,7 +3,11 @@ import type { IApi } from "@svar-ui/react-gantt";
 
 export type GanttState = ReturnType<IApi["getState"]>;
 
-type GeometryState = { cellWidth?: number; _weekStart?: GanttState["_weekStart"]; _scales?: { start: Date; minUnit: string } | null };
+type GeometryState = {
+  cellWidth?: number;
+  _weekStart?: GanttState["_weekStart"];
+  _scales?: { start: Date; minUnit: string } | null;
+};
 
 export interface TimelineGeometry {
   toX: (date: Date) => number;
@@ -18,28 +22,49 @@ export function timelineGeometry(state: GeometryState): TimelineGeometry {
   const start = scales.start;
   const toX = (date: Date) => {
     if (unit === "hour")
-      return (getDiffer("minute")(date, start) / 60 + date.getSeconds() / 3600 + date.getMilliseconds() / 3600000) * width;
+      return (
+        (getDiffer("minute")(date, start) / 60 +
+          date.getSeconds() / 3600 +
+          date.getMilliseconds() / 3600000) *
+        width
+      );
     const day = new Date(date);
     day.setHours(0, 0, 0, 0);
     const next = getAdder("day")(day, 1);
-    const fraction = (date.getTime() - day.getTime()) / (next.getTime() - day.getTime());
+    const fraction =
+      (date.getTime() - day.getTime()) / (next.getTime() - day.getTime());
     const first = getUnitStart(unit, day, state._weekStart ?? 1);
     const through = getAdder(unit)(first, 1);
     const count = getDiffer(unit)(first, start);
-    return (count + (getDiffer("day")(day, first) + fraction) / getDiffer("day")(through, first)) * width;
+    return (
+      (count +
+        (getDiffer("day")(day, first) + fraction) /
+          getDiffer("day")(through, first)) *
+      width
+    );
   };
   const fromX = (x: number) => {
-    const cell = x / width, count = Math.floor(cell);
+    const cell = x / width,
+      count = Math.floor(cell);
     const first = getAdder(unit)(start, count);
     const next = getAdder(unit)(first, 1);
     if (unit === "hour")
-      return new Date(Math.round(first.getTime() + (cell - count) * (next.getTime() - first.getTime())));
+      return new Date(
+        Math.round(
+          first.getTime() + (cell - count) * (next.getTime() - first.getTime()),
+        ),
+      );
     const days = getDiffer("day")(next, first);
     const partial = (cell - count) * days;
     const whole = Math.floor(partial + 1e-10);
     const day = getAdder("day")(first, whole);
     const end = getAdder("day")(day, 1);
-    return new Date(Math.round(day.getTime() + Math.max(0, partial - whole) * (end.getTime() - day.getTime())));
+    return new Date(
+      Math.round(
+        day.getTime() +
+          Math.max(0, partial - whole) * (end.getTime() - day.getTime()),
+      ),
+    );
   };
   return { toX, fromX };
 }
@@ -50,8 +75,15 @@ export function datePosition(date: Date, state: GanttState): number {
 export function positionDate(x: number, state: GanttState): Date {
   return timelineGeometry(state).fromX(x);
 }
-export function calendarScrollLeft(date: Date, state: GanttState, center = false): number {
-  return Math.max(0, datePosition(date, state) - (center ? (state._chartWidth ?? 0) / 2 : 0));
+export function calendarScrollLeft(
+  date: Date,
+  state: GanttState,
+  center = false,
+): number {
+  return Math.max(
+    0,
+    datePosition(date, state) - (center ? (state._chartWidth ?? 0) / 2 : 0),
+  );
 }
 
 export function isoWeekLabel(date: Date): string {
@@ -77,17 +109,40 @@ export function isoWeekLabel(date: Date): string {
 export function headerGeometry(state: GanttState) {
   const scales = state._scales;
   if (!scales) return [];
-  const geometry = timelineGeometry(state), width = state._chartWidth ?? scales.width;
+  const geometry = timelineGeometry(state),
+    width = state._chartWidth ?? scales.width;
   const fullDate = new Intl.DateTimeFormat("es-PE", { dateStyle: "full" });
   return scales.rows.map((row, index) => ({
     height: row.height,
     top: index * row.height,
     cells: row.cells.flatMap((cell, position) => {
       const end = row.cells[position + 1]?.date ?? scales.end;
-      const x = geometry.toX(cell.date) - state.scrollLeft, right = geometry.toX(end) - state.scrollLeft;
+      const x = geometry.toX(cell.date) - state.scrollLeft,
+        right = geometry.toX(end) - state.scrollLeft;
       if (right <= 0 || x >= width) return [];
       const left = Math.max(0, x);
-      return [{ key: cell.date.getTime(), full: x >= 0 && right <= width, left, width: Math.min(right, width) - left, label: cell.value, start: geometry.fromX(state.scrollLeft + left).getTime(), end: geometry.fromX(state.scrollLeft + Math.min(right, width)).getTime(), weekend: ["day", "hour"].includes(cell.unit) && [0, 6].includes(cell.date.getDay()), title: cell.unit === "week" ? isoWeekLabel(cell.date) : fullDate.format(cell.date) + (cell.unit === "hour" ? ` · ${cell.value}` : ""), css: cell.css }];
+      return [
+        {
+          key: cell.date.getTime(),
+          full: x >= 0 && right <= width,
+          left,
+          width: Math.min(right, width) - left,
+          label: cell.value,
+          start: geometry.fromX(state.scrollLeft + left).getTime(),
+          end: geometry
+            .fromX(state.scrollLeft + Math.min(right, width))
+            .getTime(),
+          weekend:
+            ["day", "hour"].includes(cell.unit) &&
+            [0, 6].includes(cell.date.getDay()),
+          title:
+            cell.unit === "week"
+              ? isoWeekLabel(cell.date)
+              : fullDate.format(cell.date) +
+                (cell.unit === "hour" ? ` · ${cell.value}` : ""),
+          css: cell.css,
+        },
+      ];
     }),
   }));
 }

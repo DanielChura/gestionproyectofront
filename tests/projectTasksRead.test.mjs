@@ -12,10 +12,7 @@ async function harness() {
     context = vm.createContext({});
   const taskCode = ts.transpileModule(
     readFileSync(
-      new URL(
-        "../src/features/home/utils/taskCollection.ts",
-        import.meta.url,
-      ),
+      new URL("../src/features/home/utils/taskCollection.ts", import.meta.url),
       "utf8",
     ),
     {
@@ -48,27 +45,40 @@ async function harness() {
     "../utils/useTaskSync": { StaleTaskResponse: class extends Error {} },
     "../utils/taskCollection": collection.namespace,
   };
-  deps["@tanstack/react-query"].queryOptions = options => options;
+  deps["@tanstack/react-query"].queryOptions = (options) => options;
   const queryCode = ts.transpileModule(
-    readFileSync(new URL("../src/features/home/hooks/projectTaskQuery.ts", import.meta.url), "utf8"),
-    { compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 } },
+    readFileSync(
+      new URL(
+        "../src/features/home/hooks/projectTaskQuery.ts",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+    {
+      compilerOptions: {
+        module: ts.ModuleKind.ES2022,
+        target: ts.ScriptTarget.ES2022,
+      },
+    },
   ).outputText;
   const queryModule = new vm.SourceTextModule(queryCode, { context });
-  await queryModule.link(name => {
+  await queryModule.link((name) => {
     const values = deps[name];
     assert.ok(values, name);
-    return new vm.SyntheticModule(Object.keys(values), function () {
-      for (const [key, value] of Object.entries(values)) this.setExport(key, value);
-    }, { context });
+    return new vm.SyntheticModule(
+      Object.keys(values),
+      function () {
+        for (const [key, value] of Object.entries(values))
+          this.setExport(key, value);
+      },
+      { context },
+    );
   });
   await queryModule.evaluate();
   deps["./projectTaskQuery"] = queryModule.namespace;
   const code = ts.transpileModule(
     readFileSync(
-      new URL(
-        "../src/features/home/hooks/useProjectTasks.ts",
-        import.meta.url,
-      ),
+      new URL("../src/features/home/hooks/useProjectTasks.ts", import.meta.url),
       "utf8",
     ),
     {

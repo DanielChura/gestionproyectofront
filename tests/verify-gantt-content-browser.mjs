@@ -402,8 +402,9 @@ try {
               .first();
             await dateCell.waitFor();
             await client.tab.waitForFunction((day) => {
-              const rows =
-                  globalThis.document.querySelectorAll(".gm-gantt-time-header > [role=row]"),
+              const rows = globalThis.document.querySelectorAll(
+                  ".gm-gantt-time-header > [role=row]",
+                ),
                 marker = globalThis.document.querySelector(".gm-gantt-today");
               const cell = [
                 ...rows[rows.length - 1].querySelectorAll(".wx-cell"),
@@ -443,7 +444,9 @@ try {
                   '[aria-label="Navegación temporal de Gantt"]',
                 )?.textContent,
                 cells: [
-                  ...globalThis.document.querySelectorAll(".gm-gantt-time-header [role=columnheader]"),
+                  ...globalThis.document.querySelectorAll(
+                    ".gm-gantt-time-header [role=columnheader]",
+                  ),
                 ].map((node) => ({
                   text: node.textContent,
                   left: node.getBoundingClientRect().x,

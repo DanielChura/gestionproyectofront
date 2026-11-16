@@ -213,7 +213,7 @@ try {
     JSON.stringify(
       {
         date: new Date().toISOString(),
-          browser: browser.version(),
+        browser: browser.version(),
         environment:
           "Chrome + frontend actual; solo colección GET de 2000 tareas interceptada y sintética; no acredita persistencia ni permisos del servidor",
         results,

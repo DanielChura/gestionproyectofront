@@ -52,7 +52,6 @@ export default function BoardView({
     configuredStates,
   } = useBoard(project, onProjectChange, initialCreate, onCreateHandled);
 
-
   const myTasks = useMyTasksFilter(tasks);
   const states = project.task_states?.states ?? [];
   const boardPreferences = useMemo(

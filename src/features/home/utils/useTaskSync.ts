@@ -100,7 +100,9 @@ export function createTaskSync(projectId: number, epoch: number) {
     const existing = key ? pending.get(key) : undefined;
     if (existing) {
       if (existing.fingerprint === fingerprint) return existing.operation;
-      const error = new ApiError("La intención pendiente tiene otro contenido.");
+      const error = new ApiError(
+        "La intención pendiente tiene otro contenido.",
+      );
       error.status = 409;
       error.payload = { code: "calendar_intent_reused" };
       return Promise.reject(error);

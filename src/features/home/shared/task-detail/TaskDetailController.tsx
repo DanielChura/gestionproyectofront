@@ -33,6 +33,14 @@ export default function TaskDetailController({
     onClose: controller.close,
   };
 
-  if (editing && detail.task) return <TaskEditDialog controller={controller} task={detail.task} onUpdated={detail.acceptTask} onClose={() => setEditing(false)} />;
+  if (editing && detail.task)
+    return (
+      <TaskEditDialog
+        controller={controller}
+        task={detail.task}
+        onUpdated={detail.acceptTask}
+        onClose={() => setEditing(false)}
+      />
+    );
   return <TaskDetailModal model={model} />;
 }

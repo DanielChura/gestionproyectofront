@@ -34,7 +34,9 @@ export default function AreaProjectsToolbar({
           placeholder="Buscar proyectos..."
           style="small"
           className="!pl-8"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onSearchChange(e.target.value)
+          }
         />
       </div>
 
@@ -42,7 +44,9 @@ export default function AreaProjectsToolbar({
         value={modeFilter}
         style="small"
         aria-label="Filtrar por modo"
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onModeFilterChange(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+          onModeFilterChange(e.target.value)
+        }
       >
         <option value="">Todos los modos</option>
         <option value="available">Disponible</option>

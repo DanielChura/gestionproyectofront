@@ -24,7 +24,9 @@ export default function ResponsiblePicker({
   const instance = useId();
   const id = compact ? `${instance}-responsible` : "task-responsible";
   const numericValues = value.map(Number);
-  const selected = participants.filter((worker) => numericValues.includes(Number(worker.id)));
+  const selected = participants.filter((worker) =>
+    numericValues.includes(Number(worker.id)),
+  );
 
   return (
     <TaskProperty

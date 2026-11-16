@@ -203,10 +203,7 @@ async function setup(options = {}) {
 test("calendar components round trip in distinct zones, leap years, month/year boundaries and DST", () => {
   const code = ts.transpileModule(
     readFileSync(
-      new URL(
-        "../src/features/home/utils/calendarDate.ts",
-        import.meta.url,
-      ),
+      new URL("../src/features/home/utils/calendarDate.ts", import.meta.url),
       "utf8",
     ),
     {

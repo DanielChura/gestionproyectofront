@@ -357,7 +357,14 @@ test("diagram subscriptions coalesce public geometry changes and fully detach on
         jsxs: (type, props) => ({ type, props }),
       },
       "./ganttCalendar": { toGanttWindow: () => ({}) },
-      "./ganttDependencyRouting": { routeGanttDependencies: () => ({ routes: [], obstacles: [], nodes: 0, unrouted: 0 }) },
+      "./ganttDependencyRouting": {
+        routeGanttDependencies: () => ({
+          routes: [],
+          obstacles: [],
+          nodes: 0,
+          unrouted: 0,
+        }),
+      },
       "./ganttSceneGeometry": {
         ganttBarGeometry: () => null,
         hasGanttInterval: () => false,
@@ -371,7 +378,9 @@ test("diagram subscriptions coalesce public geometry changes and fully detach on
       "./GanttTimeHeader": { default: () => null },
       "./GanttTimeGrid": { default: () => null },
       "./GanttDependencyLayer": { default: () => null },
-      "./useGanttChartLayout": { useGanttChartLayout: () => ({ left: 404, width: 800, grid: null }) },
+      "./useGanttChartLayout": {
+        useGanttChartLayout: () => ({ left: 404, width: 800, grid: null }),
+      },
       "./ganttBarPresentation": { applyGanttBarPresentation() {} },
       "./ganttRangeLabel": { ganttRangeLabel: () => "" },
       "../../utils/taskSchedule": { scheduleLabel: () => "" },
@@ -399,7 +408,11 @@ test("diagram subscriptions coalesce public geometry changes and fully detach on
     dependencies: [],
     today: "2026-11-04",
     selected: null,
-    calendar: { preview: null, snapshot: new Map(), operations: { canStart: () => true } },
+    calendar: {
+      preview: null,
+      snapshot: new Map(),
+      operations: { canStart: () => true },
+    },
   });
   assert.ok(actions.size > 0 && subscribed.size > 0);
   for (const action of actions.values()) {

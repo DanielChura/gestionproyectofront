@@ -12,9 +12,7 @@ import type {
 import { useToast } from "../../../hooks/useToast";
 
 export type AreaModalState =
-  | { mode: "create" }
-  | { mode: "edit"; area: Area }
-  | null;
+  { mode: "create" } | { mode: "edit"; area: Area } | null;
 
 export const useAreas = () => {
   const [data, setData] = useState<Area[]>([]);
@@ -45,11 +43,13 @@ export const useAreas = () => {
     void Promise.resolve().then(() => {
       if (!active) return;
       setModal({ mode: "create" });
-    const next = new URLSearchParams(searchParams);
-    next.delete("nuevo");
-    setSearchParams(next, { replace: true });
+      const next = new URLSearchParams(searchParams);
+      next.delete("nuevo");
+      setSearchParams(next, { replace: true });
     });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [searchParams, setSearchParams]);
 
   const filteredAreas = useMemo(() => {

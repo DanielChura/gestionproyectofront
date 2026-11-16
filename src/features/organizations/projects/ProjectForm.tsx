@@ -33,13 +33,18 @@ export default function ProjectForm({ projectId, onClose }: ProjectFormProps) {
       onSubmit={handleSubmit}
     >
       <div className="col-span-2 grid gap-1.5">
-        <label htmlFor="project-name" className="text-xs text-neutral-800 dark:text-neutral-100">
+        <label
+          htmlFor="project-name"
+          className="text-xs text-neutral-800 dark:text-neutral-100"
+        >
           Nombre del proyecto *
         </label>
         <Input
           id="project-name"
           value={name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setName(e.target.value)
+          }
           placeholder="Ej: Migración Cloud 2026"
           required
           autoFocus
@@ -47,13 +52,18 @@ export default function ProjectForm({ projectId, onClose }: ProjectFormProps) {
       </div>
 
       <div className="col-span-2 grid gap-1.5">
-        <label htmlFor="project-description" className="text-xs text-neutral-800 dark:text-neutral-100">
+        <label
+          htmlFor="project-description"
+          className="text-xs text-neutral-800 dark:text-neutral-100"
+        >
           Descripción
         </label>
         <textarea
           id="project-description"
           value={description}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+            setDescription(e.target.value)
+          }
           rows={2}
           placeholder="Objetivos y alcance del proyecto"
           className="w-full resize-none rounded-md border border-neutral-200 px-3 py-1.5 text-sm text-neutral-600 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:text-neutral-200 dark:placeholder:text-neutral-500"
@@ -61,7 +71,10 @@ export default function ProjectForm({ projectId, onClose }: ProjectFormProps) {
       </div>
 
       <div className="grid gap-1.5">
-        <label htmlFor="project-area" className="text-xs text-neutral-800 dark:text-neutral-100">
+        <label
+          htmlFor="project-area"
+          className="text-xs text-neutral-800 dark:text-neutral-100"
+        >
           Área operativa *
         </label>
         <Select
@@ -82,14 +95,19 @@ export default function ProjectForm({ projectId, onClose }: ProjectFormProps) {
       </div>
 
       <div className="grid gap-1.5">
-        <label htmlFor="project-end-date" className="text-xs text-neutral-800 dark:text-neutral-100">
+        <label
+          htmlFor="project-end-date"
+          className="text-xs text-neutral-800 dark:text-neutral-100"
+        >
           Fecha de finalización
         </label>
         <Input
           id="project-end-date"
           type="date"
           value={endDate}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setEndDate(e.target.value)
+          }
         />
       </div>
 

@@ -39,19 +39,40 @@ export function useGanttPan(
         ))
     )
       return false;
-    if (!protectedView && event.target instanceof Element && event.target.closest(".wx-bar,button,.gm-gantt-links,[data-link-source]")) return false;
+    if (
+      !protectedView &&
+      event.target instanceof Element &&
+      event.target.closest(".wx-bar,button,.gm-gantt-links,[data-link-source]")
+    )
+      return false;
     const state = api.getState(),
       bounds = event.currentTarget.getBoundingClientRect();
-    const chartLeft = event.currentTarget.querySelector(".wx-chart")?.getBoundingClientRect().left ?? bounds.left + state.gridWidth + 4;
+    const chartLeft =
+      event.currentTarget.querySelector(".wx-chart")?.getBoundingClientRect()
+        .left ?? bounds.left + state.gridWidth + 4;
     if (
       event.clientX < chartLeft ||
       event.clientY >= bounds.bottom - (state._scrollSize ?? 10)
     )
       return false;
     if (!protectedView && !event.altKey) {
-      const index = Math.floor((event.clientY - bounds.top - (state._scales?.height ?? 56) + state.scrollTop) / (state.cellHeight ?? 40));
+      const index = Math.floor(
+        (event.clientY -
+          bounds.top -
+          (state._scales?.height ?? 56) +
+          state.scrollTop) /
+          (state.cellHeight ?? 40),
+      );
       const row = state._tasks[index];
-      if (row?.gmEditable && !hasGanttInterval({ start_date: row.gmStartDate, due_date: row.gmDueDate, schedule: row.gmSchedule })) return false;
+      if (
+        row?.gmEditable &&
+        !hasGanttInterval({
+          start_date: row.gmStartDate,
+          due_date: row.gmDueDate,
+          schedule: row.gmSchedule,
+        })
+      )
+        return false;
     }
     cleanup.current?.();
     clickCleanup.current?.();
@@ -59,7 +80,9 @@ export function useGanttPan(
       id = event.pointerId,
       origin = event.clientX,
       left = state.scrollLeft;
-    const anchor = navigation ? positionDate(left + origin - chartLeft, state) : null;
+    const anchor = navigation
+      ? positionDate(left + origin - chartLeft, state)
+      : null;
     let moved = false,
       ended = false;
     const clearClick = () => {
@@ -119,7 +142,9 @@ export function useGanttPan(
       next.stopPropagation();
       if (anchor && navigation) {
         const current = node.getBoundingClientRect();
-        const left = node.querySelector(".wx-chart")?.getBoundingClientRect().left ?? current.left + api.getState().gridWidth + 4;
+        const left =
+          node.querySelector(".wx-chart")?.getBoundingClientRect().left ??
+          current.left + api.getState().gridWidth + 4;
         navigation.toDate(anchor, next.clientX - left);
       } else void api.exec("scroll-chart", { left: Math.max(0, left - delta) });
     };

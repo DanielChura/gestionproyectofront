@@ -28,8 +28,18 @@ export function useGanttLayout(api: IApi | null = null) {
         node.style.setProperty(
           "--gm-gantt-height",
           `${Math.min(
-            Math.max(120, window.innerHeight - (viewport.querySelector(".gm-task-gantt") ?? node).getBoundingClientRect().top - 62),
-            (api?.getState()._scales?.height ?? 56) + (api?.getState()._tasks.length ?? 0) * (api?.getState().cellHeight ?? 40) + 12,
+            Math.max(
+              120,
+              window.innerHeight -
+                (
+                  viewport.querySelector(".gm-task-gantt") ?? node
+                ).getBoundingClientRect().top -
+                62,
+            ),
+            (api?.getState()._scales?.height ?? 56) +
+              (api?.getState()._tasks.length ?? 0) *
+                (api?.getState().cellHeight ?? 40) +
+              12,
           )}px`,
         );
       });

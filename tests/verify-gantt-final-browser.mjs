@@ -1,7 +1,4 @@
-import {
-  chooseGanttPeriod,
-  showGanttRange,
-} from "./ganttBrowserControls.mjs";
+import { chooseGanttPeriod, showGanttRange } from "./ganttBrowserControls.mjs";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
@@ -291,7 +288,10 @@ try {
       await snap("leap-calendar");
       await showGanttRange(page, "2026-12-28", "2027-01-03");
       await settle();
-      assert.match(await page.locator(".gm-gantt-time-header").innerText(), /2026/);
+      assert.match(
+        await page.locator(".gm-gantt-time-header").innerText(),
+        /2026/,
+      );
       await snap("iso-cross-year");
       assert.equal(requests.filter((r) => r.method !== "GET").length, before);
       await openGantt();
@@ -363,8 +363,8 @@ try {
     async () => {
       let point = await schedulingPoint(seed.open.id);
       await page.mouse.move(point.x, point.y);
-    await snap("programming-hover");
-    await page.mouse.click(point.x, point.y);
+      await snap("programming-hover");
+      await page.mouse.click(point.x, point.y);
       await page
         .getByRole("dialog", { name: "Definir fechas", exact: true })
         .waitFor();
@@ -526,7 +526,7 @@ try {
           { steps: 10 },
         );
         await snap("connection-preview");
-      if (cancel) await page.keyboard.press("Escape");
+        if (cancel) await page.keyboard.press("Escape");
         await page.mouse.up();
       }
       const count = requests.filter((r) => r.method !== "GET").length;
@@ -597,9 +597,13 @@ try {
         (await detail(seed.target.id)).dependencies.includes(seed.root.id),
       );
       await connect(seed.root.id, seed.closed.id, "end");
-      await modal.getByRole("button", { name: "Confirmar vínculo", exact: true }).click();
+      await modal
+        .getByRole("button", { name: "Confirmar vínculo", exact: true })
+        .click();
       await modal.waitFor({ state: "hidden" });
-      assert.ok((await detail(seed.closed.id)).dependencies.includes(seed.root.id));
+      assert.ok(
+        (await detail(seed.closed.id)).dependencies.includes(seed.root.id),
+      );
       await snap("dependencies-real");
     },
   );
@@ -804,7 +808,7 @@ try {
     JSON.stringify(
       {
         date: new Date().toISOString(),
-          browser: browser.version(),
+        browser: browser.version(),
         environment: "Chrome + frontend actual + Django + MySQL QA aislado",
         projectId,
         results,

@@ -28,9 +28,17 @@ function nextDay(date: Date, offset: number): Date {
 
 export function toGanttWindow(window: DomainWindow): WidgetWindow {
   if (window.schedule?.precision === "hour") {
-    const start = new Date(window.schedule.start), end = window.schedule.end ? new Date(window.schedule.end) : undefined;
-    const metadata = { gmStartDate: window.start_date, gmDueDate: window.due_date, gmSchedule: window.schedule };
-    if (!Number.isFinite(start.getTime()) || end && end.getTime() - start.getTime() < 3600000)
+    const start = new Date(window.schedule.start),
+      end = window.schedule.end ? new Date(window.schedule.end) : undefined;
+    const metadata = {
+      gmStartDate: window.start_date,
+      gmDueDate: window.due_date,
+      gmSchedule: window.schedule,
+    };
+    if (
+      !Number.isFinite(start.getTime()) ||
+      (end && end.getTime() - start.getTime() < 3600000)
+    )
       throw new Error("El intervalo horario no es válido.");
     return end ? { ...metadata, start, end } : metadata;
   }
@@ -48,10 +56,29 @@ export function toGanttWindow(window: DomainWindow): WidgetWindow {
 
 export function fromGanttWindow(window: WidgetWindow): DomainWindow {
   if (window.gmSchedule?.precision === "hour") {
-    if (window.gmSchedule.end === null) return { start_date: window.gmStartDate, due_date: null, schedule: window.gmSchedule };
-    if (!window.start || !window.end || window.end.getTime() - window.start.getTime() < 3600000)
+    if (window.gmSchedule.end === null)
+      return {
+        start_date: window.gmStartDate,
+        due_date: null,
+        schedule: window.gmSchedule,
+      };
+    if (
+      !window.start ||
+      !window.end ||
+      window.end.getTime() - window.start.getTime() < 3600000
+    )
       throw new Error("El intervalo mínimo es una hora.");
-    return { start_date: scheduleInput(window.start.toISOString()).split("T")[0], due_date: scheduleInput(new Date(window.end.getTime() - 1).toISOString()).split("T")[0], schedule: { ...window.gmSchedule, start: window.start.toISOString(), end: window.end.toISOString() } };
+    return {
+      start_date: scheduleInput(window.start.toISOString()).split("T")[0],
+      due_date: scheduleInput(
+        new Date(window.end.getTime() - 1).toISOString(),
+      ).split("T")[0],
+      schedule: {
+        ...window.gmSchedule,
+        start: window.start.toISOString(),
+        end: window.end.toISOString(),
+      },
+    };
   }
   if (window.gmDueDate === null) {
     if (
@@ -81,7 +108,10 @@ export function fromGanttWindow(window: WidgetWindow): DomainWindow {
   return { start_date, due_date };
 }
 
-export function toGanttRows(tasks: Task[], states: ProjectTaskState[] = []): GanttRow[] {
+export function toGanttRows(
+  tasks: Task[],
+  states: ProjectTaskState[] = [],
+): GanttRow[] {
   const ids = new Set(tasks.map((task) => task.id));
   if (ids.size !== tasks.length)
     throw new Error("Se recibieron tareas duplicadas.");

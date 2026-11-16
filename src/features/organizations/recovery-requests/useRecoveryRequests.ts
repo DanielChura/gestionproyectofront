@@ -8,7 +8,8 @@ import {
 } from "../../auth/api";
 import { useToast } from "../../../hooks/useToast";
 
-type PaginatedResponse<T> = T[] | { results?: T[]; next_cursor?: string | null };
+type PaginatedResponse<T> =
+  T[] | { results?: T[]; next_cursor?: string | null };
 
 async function fetchAllRecoveryRequests(): Promise<RecoveryRequest[]> {
   const requests: RecoveryRequest[] = [];

@@ -405,13 +405,25 @@ try {
       await bar(task.id).waitFor();
     },
   );
-  await check("Escala Día legible y guardado DATE en ancho estrecho", async () => {
-    await open(); await chooseGanttPeriod(page, "day");
-    await page.setViewportSize({ width: 900, height: 950 }); await settle();
-    assert.match(await page.locator(".gm-task-gantt .gm-gantt-time-header").innerText(), /(?:00|03|06|09|12|15|18|21):00/);
-    assert.equal(await page.getByText("Solo días (DATE)", { exact: true }).count(), 0);
-    await snap("day-readable"); await page.setViewportSize({ width: 1600, height: 950 });
-  });
+  await check(
+    "Escala Día legible y guardado DATE en ancho estrecho",
+    async () => {
+      await open();
+      await chooseGanttPeriod(page, "day");
+      await page.setViewportSize({ width: 900, height: 950 });
+      await settle();
+      assert.match(
+        await page.locator(".gm-task-gantt .gm-gantt-time-header").innerText(),
+        /(?:00|03|06|09|12|15|18|21):00/,
+      );
+      assert.equal(
+        await page.getByText("Solo días (DATE)", { exact: true }).count(),
+        0,
+      );
+      await snap("day-readable");
+      await page.setViewportSize({ width: 1600, height: 950 });
+    },
+  );
   assert.deepEqual(errors, []);
 } catch (e) {
   await snap("failure");
@@ -422,7 +434,7 @@ try {
     JSON.stringify(
       {
         date: new Date().toISOString(),
-          browser: browser.version(),
+        browser: browser.version(),
         environment:
           "Chrome + frontend actual + Django + MySQL QA aislado; demoras/abortos controlados de transporte",
         projectId,

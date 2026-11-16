@@ -2,8 +2,15 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Form from "../../../shared/components/Form/Form";
 import Input from "../../../shared/components/Input/Input";
-import { getProjectTeamCandidates, getWorkerCandidates } from "../../../core/services/projectService";
-import type { Project, TeamOption, WorkerCandidate } from "../../../core/interfaces/task.interface";
+import {
+  getProjectTeamCandidates,
+  getWorkerCandidates,
+} from "../../../core/services/projectService";
+import type {
+  Project,
+  TeamOption,
+  WorkerCandidate,
+} from "../../../core/interfaces/task.interface";
 
 interface ShareProjectModalProps {
   project: Project;
@@ -15,7 +22,11 @@ interface ShareProjectModalProps {
   }) => Promise<boolean>;
 }
 
-export default function ShareProjectModal({ project, onClose, onAddParticipants }: ShareProjectModalProps) {
+export default function ShareProjectModal({
+  project,
+  onClose,
+  onAddParticipants,
+}: ShareProjectModalProps) {
   const [source, setSource] = useState<"workers" | "teams">("workers");
   const [selectedWorkers, setSelectedWorkers] = useState<number[]>([]);
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
@@ -33,17 +44,24 @@ export default function ShareProjectModal({ project, onClose, onAddParticipants 
 
   const { data: teams = [] } = useQuery<TeamOption[]>({
     queryKey: ["teamCandidates", areaId],
-    queryFn: () => (areaId ? getProjectTeamCandidates(areaId) : Promise.resolve([])),
+    queryFn: () =>
+      areaId ? getProjectTeamCandidates(areaId) : Promise.resolve([]),
     enabled: Boolean(areaId) && source === "teams",
   });
 
-  const availableWorkers = rawWorkers.filter((w) => !currentMemberIds.has(w.id));
+  const availableWorkers = rawWorkers.filter(
+    (w) => !currentMemberIds.has(w.id),
+  );
 
   const toggleWorker = (id: number) =>
-    setSelectedWorkers((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
+    setSelectedWorkers((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
 
   const toggleTeam = (id: number) =>
-    setSelectedTeams((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
+    setSelectedTeams((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,46 +79,94 @@ export default function ShareProjectModal({ project, onClose, onAddParticipants 
   const isWorkers = source === "workers";
 
   return (
-    <Form title="Compartir proyecto" submitLabel="Añadir integrantes" size="md" submitting={submitting} onClose={onClose} onSubmit={handleSubmit}>
+    <Form
+      title="Compartir proyecto"
+      submitLabel="Añadir integrantes"
+      size="md"
+      submitting={submitting}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+    >
       <div className="col-span-2 flex rounded-lg bg-neutral-100 dark:bg-neutral-800 p-0.5 text-xs">
-        <button type="button" onClick={() => { setSource("workers"); setSelectedTeams([]); }} className={`flex-1 py-1 rounded-md font-medium cursor-pointer ${isWorkers ? "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100" : "text-neutral-500"}`}>
+        <button
+          type="button"
+          onClick={() => {
+            setSource("workers");
+            setSelectedTeams([]);
+          }}
+          className={`flex-1 py-1 rounded-md font-medium cursor-pointer ${isWorkers ? "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100" : "text-neutral-500"}`}
+        >
           Personas
         </button>
-        <button type="button" onClick={() => { setSource("teams"); setSelectedWorkers([]); }} className={`flex-1 py-1 rounded-md font-medium cursor-pointer ${!isWorkers ? "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100" : "text-neutral-500"}`}>
+        <button
+          type="button"
+          onClick={() => {
+            setSource("teams");
+            setSelectedWorkers([]);
+          }}
+          className={`flex-1 py-1 rounded-md font-medium cursor-pointer ${!isWorkers ? "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100" : "text-neutral-500"}`}
+        >
           Equipos
         </button>
       </div>
 
       {isWorkers && (
         <div className="col-span-2">
-          <Input style="small" placeholder="Buscar por nombre..." value={search} onChange={(e) => setSearch(e.target.value)} />
+          <Input
+            style="small"
+            placeholder="Buscar por nombre..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
       )}
 
       <div className="col-span-2 max-h-48 overflow-y-auto space-y-1 rounded-lg border border-neutral-200 dark:border-neutral-700 p-1">
         {isWorkers ? (
           availableWorkers.length === 0 ? (
-            <p className="p-2 text-xs text-neutral-400">Sin personas adicionales disponibles.</p>
+            <p className="p-2 text-xs text-neutral-400">
+              Sin personas adicionales disponibles.
+            </p>
           ) : (
             availableWorkers.map((w) => (
-              <label key={w.id} className="flex cursor-pointer items-center justify-between rounded-md px-2 py-1.5 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              <label
+                key={w.id}
+                className="flex cursor-pointer items-center justify-between rounded-md px-2 py-1.5 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
                 <div className="flex items-center gap-2">
-                  <input type="checkbox" checked={selectedWorkers.includes(w.id)} onChange={() => toggleWorker(w.id)} className="cursor-pointer" />
+                  <input
+                    type="checkbox"
+                    checked={selectedWorkers.includes(w.id)}
+                    onChange={() => toggleWorker(w.id)}
+                    className="cursor-pointer"
+                  />
                   <span>{w.name}</span>
                 </div>
               </label>
             ))
           )
         ) : teams.length === 0 ? (
-          <p className="p-2 text-xs text-neutral-400">Sin equipos disponibles.</p>
+          <p className="p-2 text-xs text-neutral-400">
+            Sin equipos disponibles.
+          </p>
         ) : (
           teams.map((t) => (
-            <label key={t.id} className="flex cursor-pointer items-center justify-between rounded-md px-2 py-1.5 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800">
+            <label
+              key={t.id}
+              className="flex cursor-pointer items-center justify-between rounded-md px-2 py-1.5 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            >
               <div className="flex items-center gap-2">
-                <input type="checkbox" checked={selectedTeams.includes(t.id)} onChange={() => toggleTeam(t.id)} className="cursor-pointer" />
+                <input
+                  type="checkbox"
+                  checked={selectedTeams.includes(t.id)}
+                  onChange={() => toggleTeam(t.id)}
+                  className="cursor-pointer"
+                />
                 <span>{t.name}</span>
               </div>
-              <span className="text-xs text-neutral-400">{t.eligible_count} miembros</span>
+              <span className="text-xs text-neutral-400">
+                {t.eligible_count} miembros
+              </span>
             </label>
           ))
         )}

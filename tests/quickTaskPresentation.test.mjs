@@ -195,24 +195,66 @@ test("task saves announce through the shared overlay", async () => {
 });
 
 for (const phase of ["mutation", "read"])
-  test("dependency reconciliation discards a previous project/session after late " + phase, async () => {
-    let active = true, resolve, reads = 0, saved = 0, writes = 0;
-    const pending = new Promise(done => { resolve = done; });
-    const sync = { ...taskSyncFixture(), guard() { if (!active) throw new Error("stale"); } };
-    const { useTaskMutations } = await load("../src/features/home/hooks/useTaskMutations.ts", {
-      react: { ...React, useCallback: fn => fn, useState: value => [value, () => {}] },
-      "../utils/useTaskSync": { useTaskSync: () => sync },
-      "../../../hooks/useToast": { useToast: () => ({ addToast() {} }) },
-      "../../auth/api": { errorText: String },
-      "../../../core/services/taskService": {
-        async changeDependency() { writes++; if (phase === "mutation") await pending; },
-        async getTaskDetail() { reads++; if (phase === "read") await pending; return { task: { id: 9 } }; },
-        createTask() {}, updateTask() {}, changeTaskState() {}, moveTask() {},
-      },
-    });
-    const mutations = useTaskMutations({ projectId: 42, onTaskSaved: () => { saved++; } });
-    const operation = mutations.changeDependency(9, 8, false, "SS");
-    await Promise.resolve(); await Promise.resolve(); active = false; resolve();
-    await assert.rejects(operation, /stale/);
-    assert.equal(writes, 1); assert.equal(saved, 0); assert.equal(reads, phase === "read" ? 1 : 0);
-  });
+  test(
+    "dependency reconciliation discards a previous project/session after late " +
+      phase,
+    async () => {
+      let active = true,
+        resolve,
+        reads = 0,
+        saved = 0,
+        writes = 0;
+      const pending = new Promise((done) => {
+        resolve = done;
+      });
+      const sync = {
+        ...taskSyncFixture(),
+        guard() {
+          if (!active) throw new Error("stale");
+        },
+      };
+      const { useTaskMutations } = await load(
+        "../src/features/home/hooks/useTaskMutations.ts",
+        {
+          react: {
+            ...React,
+            useCallback: (fn) => fn,
+            useState: (value) => [value, () => {}],
+          },
+          "../utils/useTaskSync": { useTaskSync: () => sync },
+          "../../../hooks/useToast": { useToast: () => ({ addToast() {} }) },
+          "../../auth/api": { errorText: String },
+          "../../../core/services/taskService": {
+            async changeDependency() {
+              writes++;
+              if (phase === "mutation") await pending;
+            },
+            async getTaskDetail() {
+              reads++;
+              if (phase === "read") await pending;
+              return { task: { id: 9 } };
+            },
+            createTask() {},
+            updateTask() {},
+            changeTaskState() {},
+            moveTask() {},
+          },
+        },
+      );
+      const mutations = useTaskMutations({
+        projectId: 42,
+        onTaskSaved: () => {
+          saved++;
+        },
+      });
+      const operation = mutations.changeDependency(9, 8, false, "SS");
+      await Promise.resolve();
+      await Promise.resolve();
+      active = false;
+      resolve();
+      await assert.rejects(operation, /stale/);
+      assert.equal(writes, 1);
+      assert.equal(saved, 0);
+      assert.equal(reads, phase === "read" ? 1 : 0);
+    },
+  );

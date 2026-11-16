@@ -114,7 +114,9 @@ export function useProject(projectId: number) {
       try {
         const updated = await addProjectParticipants(projectId, payload);
         setProject(updated);
-        void queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+        void queryClient.invalidateQueries({
+          queryKey: ["project", projectId],
+        });
         void queryClient.invalidateQueries({ queryKey: ["projects"] });
         addToast({
           icon: "success",

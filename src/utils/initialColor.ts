@@ -32,8 +32,9 @@ function colorIndex(value: string): number {
     .charAt(0);
   const offset = initial ? initial.charCodeAt(0) - 97 : 0;
 
-  return ((offset % avatarColors.length) + avatarColors.length) %
-    avatarColors.length;
+  return (
+    ((offset % avatarColors.length) + avatarColors.length) % avatarColors.length
+  );
 }
 
 export function initialColor(value: string): string {

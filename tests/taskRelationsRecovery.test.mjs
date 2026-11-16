@@ -29,10 +29,7 @@ async function fixture(send = async () => undefined) {
     searchRelatedTasks: async () => undefined,
   };
   const source = readFileSync(
-    new URL(
-      "../src/features/home/hooks/useTaskRelations.ts",
-      import.meta.url,
-    ),
+    new URL("../src/features/home/hooks/useTaskRelations.ts", import.meta.url),
     "utf8",
   );
   const module = new vm.SourceTextModule(
@@ -116,10 +113,27 @@ test("pending and ambiguous relations never send duplicates; unmount rejects lat
 
 test("delete captures the server receipt and restore sends it once without substituting a type", async () => {
   const calls = [];
-  const env = await fixture(async (...args) => { calls.push(args); return { token: "signed-deletion", expires: 10000 }; });
-  assert.equal(await env.mutation.unlink({ kind: "blocks", target_id: 9, predecessor_id: 7, successor_id: 9 }), true);
+  const env = await fixture(async (...args) => {
+    calls.push(args);
+    return { token: "signed-deletion", expires: 10000 };
+  });
+  assert.equal(
+    await env.mutation.unlink({
+      kind: "blocks",
+      target_id: 9,
+      predecessor_id: 7,
+      successor_id: 9,
+    }),
+    true,
+  );
   assert.equal(env.mutation.undoReceipt.current.token, "signed-deletion");
-  assert.equal(await env.mutation.restore(9, env.mutation.undoReceipt.current.token), true);
-  assert.deepEqual(calls, [[1, 9, 7, true], [1, 9, 7, false, undefined, "signed-deletion"]]);
+  assert.equal(
+    await env.mutation.restore(9, env.mutation.undoReceipt.current.token),
+    true,
+  );
+  assert.deepEqual(calls, [
+    [1, 9, 7, true],
+    [1, 9, 7, false, undefined, "signed-deletion"],
+  ]);
   assert.equal(env.changed, 2);
 });

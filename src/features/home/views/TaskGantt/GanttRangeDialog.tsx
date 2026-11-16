@@ -101,62 +101,59 @@ export default function GanttRangeDialog({
           {task.name}
         </p>
         <div className="grid grid-cols-2 gap-2">
-              <label className="grid gap-1">
-                Fecha de inicio
-                <input
-                  data-initial-focus
-                  name="start_date"
-                  type="date"
-                  value={start}
-                  required
-                  min={minimum}
-                  max={end || maximum}
-                  onFocus={() => setField("start")}
-                  onChange={(event) => setStart(event.target.value)}
-                  disabled={busy}
-                  className={
-                    ganttControl + " min-w-0 border-neutral-300! px-1!"
-                  }
-                />
-              </label>
-              <label className="grid gap-1">
-                Fecha límite
-                <input
-                  name="due_date"
-                  type="date"
-                  value={end}
-                  min={start || minimum}
-                  max={maximum}
-                  onFocus={() => setField("end")}
-                  onChange={(event) => setEnd(event.target.value)}
-                  disabled={busy}
-                  className={
-                    ganttControl + " min-w-0 border-neutral-300! px-1!"
-                  }
-                />
-              </label>
-            </div>
-            <fieldset disabled={busy} className="min-w-0">
-              <Calendar
-                key={field}
-                warningBefore={taskCreationDay(task.created_at)}
-                label={field === "start" ? "Fecha de inicio" : "Fecha límite"}
-                value={field === "start" ? start : end}
-                optional={field === "end"}
-                min={field === "start" ? minimum : start || minimum}
-                max={field === "start" ? end || maximum : maximum}
-                onChange={(value) => {
-                  if (field === "start") {
-                    setStart(value);
-                    setField("end");
-                  } else setEnd(value);
-                }}
-                close={() => setField("end")}
-              />
-            </fieldset>
+          <label className="grid gap-1">
+            Fecha de inicio
+            <input
+              data-initial-focus
+              name="start_date"
+              type="date"
+              value={start}
+              required
+              min={minimum}
+              max={end || maximum}
+              onFocus={() => setField("start")}
+              onChange={(event) => setStart(event.target.value)}
+              disabled={busy}
+              className={ganttControl + " min-w-0 border-neutral-300! px-1!"}
+            />
+          </label>
+          <label className="grid gap-1">
+            Fecha límite
+            <input
+              name="due_date"
+              type="date"
+              value={end}
+              min={start || minimum}
+              max={maximum}
+              onFocus={() => setField("end")}
+              onChange={(event) => setEnd(event.target.value)}
+              disabled={busy}
+              className={ganttControl + " min-w-0 border-neutral-300! px-1!"}
+            />
+          </label>
+        </div>
+        <fieldset disabled={busy} className="min-w-0">
+          <Calendar
+            key={field}
+            warningBefore={taskCreationDay(task.created_at)}
+            label={field === "start" ? "Fecha de inicio" : "Fecha límite"}
+            value={field === "start" ? start : end}
+            optional={field === "end"}
+            min={field === "start" ? minimum : start || minimum}
+            max={field === "start" ? end || maximum : maximum}
+            onChange={(value) => {
+              if (field === "start") {
+                setStart(value);
+                setField("end");
+              } else setEnd(value);
+            }}
+            close={() => setField("end")}
+          />
+        </fieldset>
         {(error || errors.start || errors.end) && (
           <p role="alert" className="m-0 text-red-700 dark:text-red-300">
-            {errors.start || errors.end || error}          </p>
+            {errors.start || errors.end || error}{" "}
+          </p>
         )}
         <CalendarEditFeedback
           editor={editor}

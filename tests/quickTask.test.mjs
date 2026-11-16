@@ -29,11 +29,13 @@ async function load(path, dependencies = {}) {
   return module.namespace;
 }
 const avatar = await load("../src/shared/avatarUtils.ts");
-const { stateInk } = await load(
-  "../src/features/home/utils/stateInk.ts",
+const { stateInk } = await load("../src/features/home/utils/stateInk.ts");
+const state = await load(
+  "../src/features/home/views/List/utils/quickTaskState.ts",
 );
-const state = await load("../src/features/home/views/List/utils/quickTaskState.ts");
-const labelSelection = await load("../src/features/home/utils/labelSelection.ts");
+const labelSelection = await load(
+  "../src/features/home/utils/labelSelection.ts",
+);
 const project = {
   id: 42,
   permissions: { manage: true, create_tasks: true },

@@ -126,13 +126,11 @@ async function fit() {
     const chart = globalThis.document.querySelector(".gm-task-gantt .wx-chart");
     return chart && chart.scrollWidth <= chart.clientWidth + 1;
   });
-  return page
-    .locator(".gm-task-gantt .wx-chart")
-    .evaluate((node) => ({
-      width: node.clientWidth,
-      content: node.scrollWidth,
-      left: node.scrollLeft,
-    }));
+  return page.locator(".gm-task-gantt .wx-chart").evaluate((node) => ({
+    width: node.clientWidth,
+    content: node.scrollWidth,
+    left: node.scrollLeft,
+  }));
 }
 async function fields() {
   await page
@@ -339,7 +337,10 @@ try {
         results.push({ scale, interval });
       }
       await page.getByRole("button", { name: /^Periodo de Gantt:/ }).click();
-      assert.deepEqual(await page.getByRole("menuitemradio").allTextContents(), ["Día", "Semana", "Mes", "Trimestre", "Año"]);
+      assert.deepEqual(
+        await page.getByRole("menuitemradio").allTextContents(),
+        ["Día", "Semana", "Mes", "Trimestre", "Año"],
+      );
       await page.keyboard.press("Escape");
       await chooseGanttPeriod(page, "day");
       await page.getByRole("button", { name: "Hoy", exact: true }).click();

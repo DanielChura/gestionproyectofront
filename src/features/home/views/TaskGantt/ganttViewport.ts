@@ -57,14 +57,28 @@ export function viewportUnit(view: GanttViewport): GanttUnit {
 }
 
 export function centeredViewport(
-  date: Date, scale: GanttScale = "day", level = 5, width = 1000,
+  date: Date,
+  scale: GanttScale = "day",
+  level = 5,
+  width = 1000,
 ): GanttViewport {
-  const period = normalizeGanttScale(scale), zoom = zoomLevel(level);
+  const period = normalizeGanttScale(scale),
+    zoom = zoomLevel(level);
   const definition = ganttZoom[period];
-  const cells = Math.max(64, Math.min(2048, Math.ceil(width / definition.widths[zoom - 1]) * 7));
+  const cells = Math.max(
+    64,
+    Math.min(2048, Math.ceil(width / definition.widths[zoom - 1]) * 7),
+  );
   const anchor = getUnitStart(definition.unit, date, 1);
   const start = getAdder(definition.unit)(anchor, -Math.floor(cells / 2));
-  return { start, end: getAdder(definition.unit)(start, cells), scale: period, unit: period, step: 1, zoomLevel: zoom };
+  return {
+    start,
+    end: getAdder(definition.unit)(start, cells),
+    scale: period,
+    unit: period,
+    step: 1,
+    zoomLevel: zoom,
+  };
 }
 
 export function taskTimelineBounds(
@@ -94,7 +108,8 @@ export function fitTimelineViewport(
       "El fin del intervalo debe ser igual o posterior al inicio.",
     );
   const available = Math.max(1, width);
-  let scale: GanttScale = "year", level = 1;
+  let scale: GanttScale = "year",
+    level = 1;
   for (const candidate of units) {
     const visual = ganttZoom[candidate];
     const start = getUnitStart(visual.unit, from, 1);
@@ -102,19 +117,30 @@ export function fitTimelineViewport(
     const count = Math.max(1, getDiffer(visual.unit)(end, start));
     if (count * visual.widths[0] <= available) {
       scale = candidate;
-      level = visual.widths.reduce((best, cell, index) => count * cell <= available ? index + 1 : best, 1);
+      level = visual.widths.reduce(
+        (best, cell, index) => (count * cell <= available ? index + 1 : best),
+        1,
+      );
       break;
     }
   }
-  const middle = new Date(from.getTime() + (shiftGanttDay(through, 1).getTime() - from.getTime()) / 2);
+  const middle = new Date(
+    from.getTime() + (shiftGanttDay(through, 1).getTime() - from.getTime()) / 2,
+  );
   const firstUnit = getUnitStart(scale, from, 1);
   let lastUnit = getAdder(scale)(getUnitStart(scale, through, 1), 1);
-  const visual = ganttZoom[scale].unit, cellWidth = ganttZoom[scale].widths[level - 1];
-  const missing = Math.ceil(available / cellWidth) - getDiffer(visual)(lastUnit, firstUnit);
+  const visual = ganttZoom[scale].unit,
+    cellWidth = ganttZoom[scale].widths[level - 1];
+  const missing =
+    Math.ceil(available / cellWidth) - getDiffer(visual)(lastUnit, firstUnit);
   if (missing > 0) lastUnit = getAdder(visual)(lastUnit, missing);
   const count = getDiffer(ganttZoom[scale].unit)(lastUnit, firstUnit);
   const bounded = centeredViewport(middle, scale, level, available);
-  return { ...bounded, ...(count <= 1024 ? { start: firstUnit, end: lastUnit } : {}), frame: { first, last } };
+  return {
+    ...bounded,
+    ...(count <= 1024 ? { start: firstUnit, end: lastUnit } : {}),
+    frame: { first, last },
+  };
 }
 
 export function fitProjectViewport(
@@ -127,19 +153,41 @@ export function fitProjectViewport(
 }
 
 export function viewportCellWidth(view: GanttViewport): number {
-  return view.cellWidth ?? ganttZoom[viewportUnit(view)].widths[zoomLevel(view.zoomLevel) - 1];
+  return (
+    view.cellWidth ??
+    ganttZoom[viewportUnit(view)].widths[zoomLevel(view.zoomLevel) - 1]
+  );
 }
 export function viewportGeometry(view: GanttViewport) {
-  return timelineGeometry({ cellWidth: viewportCellWidth(view), _weekStart: 1, _scales: { start: view.start, minUnit: ganttZoom[viewportUnit(view)].unit } });
+  return timelineGeometry({
+    cellWidth: viewportCellWidth(view),
+    _weekStart: 1,
+    _scales: { start: view.start, minUnit: ganttZoom[viewportUnit(view)].unit },
+  });
 }
 export function viewportAnchor(view: GanttViewport, left: number): Date {
   return viewportGeometry(view).fromX(left);
 }
-export function pageViewport(view: GanttViewport, direction: number, width: number, anchor = view.start) {
+export function pageViewport(
+  view: GanttViewport,
+  direction: number,
+  width: number,
+  anchor = view.start,
+) {
   const visual = ganttZoom[viewportUnit(view)].unit;
-  const count = direction * Math.max(1, Math.floor(width * 0.8 / viewportCellWidth(view)));
+  const count =
+    direction *
+    Math.max(1, Math.floor((width * 0.8) / viewportCellWidth(view)));
   const shift = getAdder(visual);
-  return { viewport: { ...view, start: shift(view.start, count), end: shift(view.end, count), frame: undefined }, date: shift(anchor, count) };
+  return {
+    viewport: {
+      ...view,
+      start: shift(view.start, count),
+      end: shift(view.end, count),
+      frame: undefined,
+    },
+    date: shift(anchor, count),
+  };
 }
 
 export function viewportContains(view: GanttViewport, date: string): boolean {
@@ -171,10 +219,16 @@ export function viewportScales(view: GanttViewport): IScaleConfig[] {
   if (unit === "month")
     return [
       { unit: "month", step: 1, format: (date) => months.format(date) },
-      { unit: "week", step: 1, format: (date) => {
-        const detail = isoWeekLabel(date), monday = getUnitStart("week", date, 1), sunday = getAdder("day")(monday, 6);
-        return `${detail.match(/S\d+/)?.[0]} · ${monday.getDate()}–${sunday.getDate()}`;
-      } },
+      {
+        unit: "week",
+        step: 1,
+        format: (date) => {
+          const detail = isoWeekLabel(date),
+            monday = getUnitStart("week", date, 1),
+            sunday = getAdder("day")(monday, 6);
+          return `${detail.match(/S\d+/)?.[0]} · ${monday.getDate()}–${sunday.getDate()}`;
+        },
+      },
     ];
   if (unit === "quarter")
     return [

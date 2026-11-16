@@ -1,9 +1,24 @@
-.gm-task-gantt .gm-gantt-row-overlay[data-connection-visible] .gm-gantt-bar-control, .gm-task-gantt .gm-gantt-bar-control:is(:hover,:focus-visible) { opacity: 1; }
-@media (hover:none) { .gm-task-gantt .gm-gantt-bar-control { opacity: 1; } }
+.gm-task-gantt
+  .gm-gantt-row-overlay[data-connection-visible]
+  .gm-gantt-bar-control,
+.gm-task-gantt .gm-gantt-bar-control:is(:hover, :focus-visible) {
+  opacity: 1;
+}
+@media (hover: none) {
+  .gm-task-gantt .gm-gantt-bar-control {
+    opacity: 1;
+  }
+}
 
-.gm-task-gantt .gm-gantt-link:is(:hover, :focus-visible, [data-related]) { stroke: currentColor; stroke-width: 2; }
+.gm-task-gantt .gm-gantt-link:is(:hover, :focus-visible, [data-related]) {
+  stroke: currentColor;
+  stroke-width: 2;
+}
 
-.gm-task-gantt .gm-gantt-bar[data-gantt-hairline] { border-inline-width: 0; border-radius: 1px; }
+.gm-task-gantt .gm-gantt-bar[data-gantt-hairline] {
+  border-inline-width: 0;
+  border-radius: 1px;
+}
 
 .gm-task-gantt {
   block-size: var(--gm-gantt-height, 60vh);

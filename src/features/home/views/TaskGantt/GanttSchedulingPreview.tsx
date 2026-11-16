@@ -21,7 +21,12 @@ export default function GanttSchedulingPreview({
     >
       <span role="tooltip">
         {dragging && preview.proposal
-          ? preview.proposal.schedule ? scheduleLabel({ schedule: preview.proposal.schedule }) : ganttRangeLabel(preview.proposal.start_date, preview.proposal.due_date)
+          ? preview.proposal.schedule
+            ? scheduleLabel({ schedule: preview.proposal.schedule })
+            : ganttRangeLabel(
+                preview.proposal.start_date,
+                preview.proposal.due_date,
+              )
           : "Arrastra para programar; clic para completar fechas"}
       </span>
     </div>

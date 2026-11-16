@@ -12,9 +12,7 @@ import type {
 import { useToast } from "../../../hooks/useToast";
 
 export type SpecialtyModalState =
-  | { mode: "create" }
-  | { mode: "edit"; specialty: Specialty }
-  | null;
+  { mode: "create" } | { mode: "edit"; specialty: Specialty } | null;
 
 export const useSpecialties = () => {
   const [data, setData] = useState<Specialty[]>([]);
@@ -44,11 +42,13 @@ export const useSpecialties = () => {
     void Promise.resolve().then(() => {
       if (!active) return;
       setModal({ mode: "create" });
-    const next = new URLSearchParams(searchParams);
-    next.delete("nuevo");
-    setSearchParams(next, { replace: true });
+      const next = new URLSearchParams(searchParams);
+      next.delete("nuevo");
+      setSearchParams(next, { replace: true });
     });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [searchParams, setSearchParams]);
 
   const filteredSpecialties = useMemo(() => {

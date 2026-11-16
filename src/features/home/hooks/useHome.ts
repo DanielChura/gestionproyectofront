@@ -15,12 +15,18 @@ export function useHome() {
   const { addToast } = useToast();
   const queryClient = useQueryClient();
 
-  const [requestedProjectId, setSelectedProjectId] = useState<number | null>(null);
+  const [requestedProjectId, setSelectedProjectId] = useState<number | null>(
+    null,
+  );
   const [taskSearch, setTaskSearch] = useState("");
   const [isCreateTaskOpen, setCreateTaskOpen] = useState(false);
   const [isPublishOpen, setPublishOpen] = useState(false);
 
-  const selectedProjectId = projects.some(project => project.id === requestedProjectId) ? requestedProjectId : (projects[0]?.id ?? null);
+  const selectedProjectId = projects.some(
+    (project) => project.id === requestedProjectId,
+  )
+    ? requestedProjectId
+    : (projects[0]?.id ?? null);
 
   useEffect(() => {
     const handleOpenTask = () => setCreateTaskOpen(true);
@@ -34,7 +40,11 @@ export function useHome() {
   }, []);
 
   const activeProject = useMemo(() => {
-    return projects.find((p: ProjectSummary) => p.id === selectedProjectId) ?? projects[0] ?? null;
+    return (
+      projects.find((p: ProjectSummary) => p.id === selectedProjectId) ??
+      projects[0] ??
+      null
+    );
   }, [projects, selectedProjectId]);
 
   const { tasks } = useProjectTasks(activeProject?.id ?? 0);
@@ -47,13 +57,20 @@ export function useHome() {
 
   const taskStats = useMemo(() => {
     const total = tasks.length;
-    const completed = tasks.filter((t: Task) => t.state_code === "COMPLETADA").length;
+    const completed = tasks.filter(
+      (t: Task) => t.state_code === "COMPLETADA",
+    ).length;
     const pending = total - completed;
     return { total, completed, pending };
   }, [tasks]);
 
   const createTaskMutation = useMutation({
-    mutationFn: async (payload: { name: string; description: string; priority: number; due_date?: string }) => {
+    mutationFn: async (payload: {
+      name: string;
+      description: string;
+      priority: number;
+      due_date?: string;
+    }) => {
       if (!activeProject) throw new Error("No hay proyecto activo");
       return await createTask(activeProject.id, {
         name: payload.name,
@@ -67,13 +84,23 @@ export function useHome() {
     },
     onSuccess: () => {
       if (activeProject) {
-        queryClient.invalidateQueries({ queryKey: ["tasks", activeProject.id] });
+        queryClient.invalidateQueries({
+          queryKey: ["tasks", activeProject.id],
+        });
       }
       setCreateTaskOpen(false);
-      addToast({ icon: "success", title: "Tarea creada", message: "La tarea se añadió correctamente." });
+      addToast({
+        icon: "success",
+        title: "Tarea creada",
+        message: "La tarea se añadió correctamente.",
+      });
     },
     onError: () => {
-      addToast({ icon: "error", title: "No se pudo crear la tarea", message: "Revisa los datos e inténtalo de nuevo." });
+      addToast({
+        icon: "error",
+        title: "No se pudo crear la tarea",
+        message: "Revisa los datos e inténtalo de nuevo.",
+      });
     },
   });
 
@@ -95,10 +122,18 @@ export function useHome() {
     },
     onSuccess: () => {
       setPublishOpen(false);
-      addToast({ icon: "success", title: "Publicado", message: "La publicación se creó con éxito." });
+      addToast({
+        icon: "success",
+        title: "Publicado",
+        message: "La publicación se creó con éxito.",
+      });
     },
     onError: () => {
-      addToast({ icon: "error", title: "No se pudo crear la publicación", message: "Revisa los datos e inténtalo de nuevo." });
+      addToast({
+        icon: "error",
+        title: "No se pudo crear la publicación",
+        message: "Revisa los datos e inténtalo de nuevo.",
+      });
     },
   });
 

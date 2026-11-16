@@ -88,7 +88,9 @@ export default function TaskDialog({
         parent={action.kind === "child" ? activeTask : undefined}
         initialState={action.kind === "create" ? action.stateCode : undefined}
         onSubmit={saveTask}
-        onCheckCreation={() => queryClient.refetchQueries({ queryKey: ["tasks", project.id] })}
+        onCheckCreation={() =>
+          queryClient.refetchQueries({ queryKey: ["tasks", project.id] })
+        }
         feedback={feedback}
         onConfigured={configuredStates}
         onClose={close}

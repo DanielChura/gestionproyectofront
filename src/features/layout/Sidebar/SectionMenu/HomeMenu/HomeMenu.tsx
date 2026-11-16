@@ -17,7 +17,11 @@ interface HomeMenuProps {
   canManage: boolean;
 }
 
-export default function HomeMenu({ items, pathname, canManage }: HomeMenuProps) {
+export default function HomeMenu({
+  items,
+  pathname,
+  canManage,
+}: HomeMenuProps) {
   const { activeProject, actions } = useHomeMenu(pathname);
   const { project } = useProject(activeProject?.id ?? 0);
   const { catalogs } = useProjectCatalogs();

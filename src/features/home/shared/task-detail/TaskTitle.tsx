@@ -24,7 +24,14 @@ export default function TaskTitle({
     const trimmed = value.trim();
     if (trimmed && trimmed !== task.name) {
       pending.current = true;
-      try { await onPatch({ name: trimmed }); setEditing(false); } catch { setEditing(true); } finally { pending.current = false; }
+      try {
+        await onPatch({ name: trimmed });
+        setEditing(false);
+      } catch {
+        setEditing(true);
+      } finally {
+        pending.current = false;
+      }
     } else {
       setValue(task.name);
       setEditing(false);

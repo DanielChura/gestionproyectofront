@@ -139,8 +139,10 @@ export function useStructure() {
       })
       .sort((a, b) => {
         if (sort === "desc") return b.name.localeCompare(a.name);
-        if (sort === "recent") return (b.start_date || "").localeCompare(a.start_date || "");
-        if (sort === "oldest") return (a.start_date || "").localeCompare(b.start_date || "");
+        if (sort === "recent")
+          return (b.start_date || "").localeCompare(a.start_date || "");
+        if (sort === "oldest")
+          return (a.start_date || "").localeCompare(b.start_date || "");
         return a.name.localeCompare(b.name);
       });
   }, [projects, selectedAreaId, search, modeFilter, sort]);

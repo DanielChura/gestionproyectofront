@@ -8,11 +8,7 @@ import { getTaskDetail } from "../services";
 import { taskPatchSignature } from "./taskPatch";
 
 export type CalendarProblem =
-  | "revision"
-  | "key"
-  | "expired"
-  | "pending"
-  | "ambiguous";
+  "revision" | "key" | "expired" | "pending" | "ambiguous";
 
 type CalendarBase = Pick<
   Task,

@@ -131,7 +131,10 @@ async function load(file, dependencies = {}) {
   await module.link((name) => {
     const lookup = { "react/jsx-runtime": runtime, ...dependencies };
     const normalizedName = name
-      .replace(/^(\.\.\/)+(utils\/)?useTaskScheduleForm$/, "./useTaskScheduleForm")
+      .replace(
+        /^(\.\.\/)+(utils\/)?useTaskScheduleForm$/,
+        "./useTaskScheduleForm",
+      )
       .replace(/^(\.\.\/)+auth\/api$/, "../../auth/api")
       .replace(/^(\.\.\/)+(utils\/)?useTaskSync$/, "../useTaskSync")
       .replace(
@@ -234,7 +237,9 @@ async function formHarness(onSubmit, onCheckCreation) {
     "../taskAssignees": { taskAssignees: () => [] },
     "./TaskProperties": { default: Empty },
     "./TaskScheduleFields": { default: Empty },
-    "./useTaskScheduleForm": { useTaskScheduleForm: () => ({ precision: "day", value: () => undefined }) },
+    "./useTaskScheduleForm": {
+      useTaskScheduleForm: () => ({ precision: "day", value: () => undefined }),
+    },
     "./taskDates": { taskCreationStart: () => "2026-10-31" },
     "../../../../hooks/useToast": { useToast: () => ({ addToast() {} }) },
   };

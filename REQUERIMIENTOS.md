@@ -72,7 +72,7 @@ Reporta: archivos modificados, IDs que cambiaron de estado y pendientes con su m
 | ✅     | RF-PUB-01 | Convocatorias de proyectos     | Publicación vinculada a un proyecto con cupos, fecha de cierre y requisitos. Se cierra automáticamente al llegar a 0 vacantes o al vencer la fecha. |                                                                                                                     |
 | ✅     | RF-PUB-02 | Postulación instantánea        | El trabajador se postula con 1 clic como miembro estándar. Se bloquea si ya pertenece al proyecto y entra directo al sidebar.                       |                                                                                                                     |
 | ✅     | RF-PRJ-01 | Visualización en sidebar       | El admin ve todos los proyectos ordenados por área. Los trabajadores solo ven sus proyectos asignados en lista plana.                               |                                                                                                                     |
-| ✅     | RF-PRJ-02 | Creación y campos de tarea     | El nombre es el único campo obligatorio. Fecha de inicio, fecha límite, prioridad, asignación y descripción son opcionales. |                                                                                                                     |
+| ✅     | RF-PRJ-02 | Creación y campos de tarea     | El nombre es el único campo obligatorio. Fecha de inicio, fecha límite, prioridad, asignación y descripción son opcionales.                         |                                                                                                                     |
 | ✅     | RF-PRJ-03 | Asignación según rol           | Admin y coordinador eligen a cualquier integrante del proyecto. El trabajador estándar solo puede auto-asignarse.                                   |                                                                                                                     |
 | ✅     | RF-PRJ-04 | Vistas estilo ClickUp          | Tablero kanban con arrastre restringido por rol, cronograma Gantt automático por fechas y dashboard Overview con KPIs.                              |                                                                                                                     |
 | ✅     | RF-CFG-01 | Configuración de perfil        | Edición de datos personales, cambio de contraseña, apariencia visual, correo @gmail.com y marcado de especialidades del catálogo.                   |                                                                                                                     |
@@ -98,22 +98,22 @@ Reporta: archivos modificados, IDs que cambiaron de estado y pendientes con su m
 
 ## Tabla 4: Reglas de negocio y excepciones operativas
 
-| Estado | ID    | Regla                  | Condición operativa y manejo de excepciones                                                                                          | Notas |
-| ------ | ----- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----- |
-| ✅     | RN-01 | Dominio Gmail          | Todo correo ingresado por invitación, registro o cambio de perfil debe pertenecer a @gmail.com.                                      |       |
-| ✅     | RN-02 | Bloqueo de borrado     | Áreas y especialidades no se pueden eliminar bajo ningún caso. Solo se permite crear y renombrar.                                    |       |
-| ✅     | RN-03 | Límite de reenvíos     | Máximo 5 envíos diarios por cuenta de enlaces de activación o solicitudes de recuperación de contraseña.                             |       |
-| ✅     | RN-04 | Bloqueo por intentos   | La cuenta se bloquea por 24 horas o hasta intervención del admin tras 5 intentos fallidos consecutivos de login.                     |       |
-| ✅     | RN-05 | Vigencia de tokens     | Todo enlace de invitación o restablecimiento caduca automáticamente a las 24 horas de su emisión.                                    |       |
-| ✅     | RN-06 | Mínimo en equipos      | Un equipo debe tener al menos 2 integrantes activos. El sistema bloquea guardados con 0 o 1 miembro.                                 |       |
-| ✅     | RN-07 | Salida de equipos      | Desvincular a un trabajador de un equipo no lo elimina de proyectos activos. Solo bloquea su entrada a futuros proyectos del equipo. |       |
-| ✅     | RN-08 | Tareas de inactivos    | Al inactivar a un trabajador se bloquea su cuenta, pero se mantienen sus tareas para reasignación manual por el admin.               |       |
-| ✅     | RN-09 | Auto-cierre de ofertas | La convocatoria pasa a cerrada y se oculta a los trabajadores si las vacantes llegan a 0 o se vence la fecha.                        |       |
-| ✅     | RN-10 | Postulación única      | El sistema bloquea el botón de postulación si el trabajador ya es integrante activo del proyecto.                                    |       |
-| ✅     | RN-11 | Auto-asignación        | Las tareas creadas por un trabajador estándar no tienen selector de responsable y se asignan a su propio usuario.                    |       |
-| ✅     | RN-12 | Control de fases       | En el kanban, el trabajador estándar solo mueve sus propias tareas. Coordinador y admin mueven cualquier tarea.                      |       |
+| Estado | ID    | Regla                  | Condición operativa y manejo de excepciones                                                                                                | Notas |
+| ------ | ----- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| ✅     | RN-01 | Dominio Gmail          | Todo correo ingresado por invitación, registro o cambio de perfil debe pertenecer a @gmail.com.                                            |       |
+| ✅     | RN-02 | Bloqueo de borrado     | Áreas y especialidades no se pueden eliminar bajo ningún caso. Solo se permite crear y renombrar.                                          |       |
+| ✅     | RN-03 | Límite de reenvíos     | Máximo 5 envíos diarios por cuenta de enlaces de activación o solicitudes de recuperación de contraseña.                                   |       |
+| ✅     | RN-04 | Bloqueo por intentos   | La cuenta se bloquea por 24 horas o hasta intervención del admin tras 5 intentos fallidos consecutivos de login.                           |       |
+| ✅     | RN-05 | Vigencia de tokens     | Todo enlace de invitación o restablecimiento caduca automáticamente a las 24 horas de su emisión.                                          |       |
+| ✅     | RN-06 | Mínimo en equipos      | Un equipo debe tener al menos 2 integrantes activos. El sistema bloquea guardados con 0 o 1 miembro.                                       |       |
+| ✅     | RN-07 | Salida de equipos      | Desvincular a un trabajador de un equipo no lo elimina de proyectos activos. Solo bloquea su entrada a futuros proyectos del equipo.       |       |
+| ✅     | RN-08 | Tareas de inactivos    | Al inactivar a un trabajador se bloquea su cuenta, pero se mantienen sus tareas para reasignación manual por el admin.                     |       |
+| ✅     | RN-09 | Auto-cierre de ofertas | La convocatoria pasa a cerrada y se oculta a los trabajadores si las vacantes llegan a 0 o se vence la fecha.                              |       |
+| ✅     | RN-10 | Postulación única      | El sistema bloquea el botón de postulación si el trabajador ya es integrante activo del proyecto.                                          |       |
+| ✅     | RN-11 | Auto-asignación        | Las tareas creadas por un trabajador estándar no tienen selector de responsable y se asignan a su propio usuario.                          |       |
+| ✅     | RN-12 | Control de fases       | En el kanban, el trabajador estándar solo mueve sus propias tareas. Coordinador y admin mueven cualquier tarea.                            |       |
 | ✅     | RN-13 | Integridad de Gantt    | Al crear una tarea, solo el nombre es obligatorio. Fechas, prioridad y asignación son opcionales con defaults para permitir creación ágil. |       |
-| ✅     | RN-14 | Catálogo cerrado       | El trabajador no puede escribir especialidades libres en su perfil. Solo puede marcar las creadas por el administrador.              |       |
+| ✅     | RN-14 | Catálogo cerrado       | El trabajador no puede escribir especialidades libres en su perfil. Solo puede marcar las creadas por el administrador.                    |       |
 
 ---
 

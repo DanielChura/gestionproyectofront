@@ -55,7 +55,9 @@ export default function GanttProjectRow({
               aria-label={`Avance de ${project.name}`}
             />
           )}
-          <span className="shrink-0 px-1 font-medium tabular-nums">{label}</span>
+          <span className="shrink-0 px-1 font-medium tabular-nums">
+            {label}
+          </span>
         </div>
         <GanttIconButton label="Siguiente" onClick={() => controls.page(1)}>
           <ChevronIcon className="size-4 -rotate-90" />

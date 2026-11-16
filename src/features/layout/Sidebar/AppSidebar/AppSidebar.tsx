@@ -50,7 +50,9 @@ export default function AppSidebar({
                 className="sidebar-item cursor-not-allowed opacity-30"
               >
                 <Icon className="size-5 shrink-0" fill={false} />
-                <span className="max-w-full min-w-0 truncate">{module.label}</span>
+                <span className="max-w-full min-w-0 truncate">
+                  {module.label}
+                </span>
               </span>
             );
           }

@@ -22,7 +22,8 @@ interface Options {
 }
 
 export function createGanttPointerGesture(options: Options) {
-  const previews = new WeakSet<object>(), layouts = new WeakSet<object>();
+  const previews = new WeakSet<object>(),
+    layouts = new WeakSet<object>();
   let activeId: number | null = null;
   let enabled = true;
   let writable = true;
@@ -31,7 +32,7 @@ export function createGanttPointerGesture(options: Options) {
     reapply: (() => void) | null = null;
   let clearClick: (() => void) | null = null;
   function allowPreview(event: object): boolean {
-    return layouts.delete(event) || writable && previews.delete(event);
+    return layouts.delete(event) || (writable && previews.delete(event));
   }
   function blockResidualClick(pointerId: number) {
     clearClick?.();
@@ -94,7 +95,11 @@ export function createGanttPointerGesture(options: Options) {
       lastLeft = left,
       lastWidth = width;
     let stopScroll: (() => void) | undefined;
-    let proposal: ReturnType<typeof fromGanttWindow> = { start_date: base.start_date, due_date: base.due_date, ...(base.schedule ? { schedule: base.schedule } : {}) };
+    let proposal: ReturnType<typeof fromGanttWindow> = {
+      start_date: base.start_date,
+      due_date: base.due_date,
+      ...(base.schedule ? { schedule: base.schedule } : {}),
+    };
     const emit = (x: number, w: number) => {
       if (!active || !started) return;
       const message = { id: base.id, left: x, width: w, inProgress: true };
@@ -134,8 +139,15 @@ export function createGanttPointerGesture(options: Options) {
       }
       pointX = x;
       const current = api.getState();
-      const dx = pointX - originX + current.scrollLeft - datePosition(originalLeft, current);
-      const boundary = datePosition(mode === "end" ? window.end! : window.start!, current);
+      const dx =
+        pointX -
+        originX +
+        current.scrollLeft -
+        datePosition(originalLeft, current);
+      const boundary = datePosition(
+        mode === "end" ? window.end! : window.start!,
+        current,
+      );
       if (!started && Math.abs(dx) < 6) return;
       const dates = gestureWindow(
         window.start!,
@@ -163,12 +175,22 @@ export function createGanttPointerGesture(options: Options) {
         document.getSelection()?.removeAllRanges();
         node.addEventListener("lostpointercapture", pointerCancel);
         node.setPointerCapture?.(pointerId);
-        const chart = node.closest?.(".wx-chart") ?? node.closest?.(".gm-task-gantt")?.querySelector(".wx-chart");
-        if (chart) stopScroll = ganttEdgeScroll(api, () => chart.getBoundingClientRect(), () => pointX, () => update(pointX), navigate);
+        const chart =
+          node.closest?.(".wx-chart") ??
+          node.closest?.(".gm-task-gantt")?.querySelector(".wx-chart");
+        if (chart)
+          stopScroll = ganttEdgeScroll(
+            api,
+            () => chart.getBoundingClientRect(),
+            () => pointX,
+            () => update(pointX),
+            navigate,
+          );
       }
       const changed =
         firstPreview ||
-        JSON.stringify(proposal.schedule) !== JSON.stringify(candidate.schedule) ||
+        JSON.stringify(proposal.schedule) !==
+          JSON.stringify(candidate.schedule) ||
         proposal.start_date !== candidate.start_date ||
         proposal.due_date !== candidate.due_date;
       proposal = candidate;
@@ -192,15 +214,20 @@ export function createGanttPointerGesture(options: Options) {
       update(next.clientX);
       if (!active) return;
       const changes: GanttDateChanges =
-        proposal.schedule?.precision === "hour" ? { schedule: proposal.schedule } : mode === "move"
-          ? { start_date: proposal.start_date, due_date: proposal.due_date! }
-          : mode === "start"
-            ? { start_date: proposal.start_date }
-            : { due_date: proposal.due_date! };
+        proposal.schedule?.precision === "hour"
+          ? { schedule: proposal.schedule }
+          : mode === "move"
+            ? { start_date: proposal.start_date, due_date: proposal.due_date! }
+            : mode === "start"
+              ? { start_date: proposal.start_date }
+              : { due_date: proposal.due_date! };
       const shouldCommit =
         active &&
         started &&
-        ((base.schedule?.precision === "hour" && JSON.stringify(proposal.schedule) !== JSON.stringify(base.schedule)) || proposal.start_date !== base.start_date ||
+        ((base.schedule?.precision === "hour" &&
+          JSON.stringify(proposal.schedule) !==
+            JSON.stringify(base.schedule)) ||
+          proposal.start_date !== base.start_date ||
           proposal.due_date !== base.due_date);
       remove();
       if (started && enabled) {
@@ -243,7 +270,9 @@ export function createGanttPointerGesture(options: Options) {
       layouts.add(message);
       void api.exec("drag-task", message);
     },
-    setNavigation: (next: (pixels: number) => void) => { navigate = next; },
+    setNavigation: (next: (pixels: number) => void) => {
+      navigate = next;
+    },
     allowPreview,
     setWritable: (value: boolean) => {
       writable = value;

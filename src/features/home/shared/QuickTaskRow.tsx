@@ -153,9 +153,7 @@ export default function QuickTaskRow({
         className="m-0 flex min-w-0 flex-1 items-center gap-2 border-0 p-0"
       >
         <CheckIcon className="size-3.5 shrink-0 text-emerald-500" />
-        <div
-          className="min-w-0 flex-1"
-        >
+        <div className="min-w-0 flex-1">
           <div className="flex min-w-0 items-center gap-2">
             <label htmlFor={`${id}-name`} className="sr-only">
               Nombre de la tarea

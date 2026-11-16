@@ -88,42 +88,44 @@ export default function TaskOptionalProperties({
         </TaskProperty>
       )}
       {!hideCalendar && (
-      <TaskProperty
-        id={id("due")}
-        label={`Fecha límite${isPastTaskDate(dueDate) ? " · Fecha anterior a hoy" : ""}`}
-        value={dueDate ? formatTaskDate(dueDate) : "Sin fecha límite"}
-        icon={CalendarIcon}
-        compact={compact}
-        selected={Boolean(dueDate)}
-        content={
-          compact ? (
-            <span
-              className={
-                isPastTaskDate(dueDate) ? "text-red-600 dark:text-red-400" : ""
-              }
-            >
-              <CalendarIcon className="size-4" />
-            </span>
-          ) : (
-            <>
-              <CalendarIcon className="size-4" />
-              <TaskDateValue value={dueDate} />
-            </>
-          )
-        }
-        error={errors["task-due"]}
-      >
-        {(close) => (
-          <Calendar
-            value={dueDate}
-            min={min ?? project.start_date ?? undefined}
-            max={max ?? project.end_date ?? undefined}
-            label="Fecha límite"
-            onChange={onDate}
-            close={close}
-          />
-        )}
-      </TaskProperty>
+        <TaskProperty
+          id={id("due")}
+          label={`Fecha límite${isPastTaskDate(dueDate) ? " · Fecha anterior a hoy" : ""}`}
+          value={dueDate ? formatTaskDate(dueDate) : "Sin fecha límite"}
+          icon={CalendarIcon}
+          compact={compact}
+          selected={Boolean(dueDate)}
+          content={
+            compact ? (
+              <span
+                className={
+                  isPastTaskDate(dueDate)
+                    ? "text-red-600 dark:text-red-400"
+                    : ""
+                }
+              >
+                <CalendarIcon className="size-4" />
+              </span>
+            ) : (
+              <>
+                <CalendarIcon className="size-4" />
+                <TaskDateValue value={dueDate} />
+              </>
+            )
+          }
+          error={errors["task-due"]}
+        >
+          {(close) => (
+            <Calendar
+              value={dueDate}
+              min={min ?? project.start_date ?? undefined}
+              max={max ?? project.end_date ?? undefined}
+              label="Fecha límite"
+              onChange={onDate}
+              close={close}
+            />
+          )}
+        </TaskProperty>
       )}
       <TaskProperty
         id={id("priority")}

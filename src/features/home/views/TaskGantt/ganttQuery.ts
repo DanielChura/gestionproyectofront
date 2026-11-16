@@ -72,7 +72,14 @@ export function ganttDependencies(tasks: Task[]): GanttDependency[] {
       const predecessor = byId.get(id);
       if (!predecessor || predecessor.id === successor.id) continue;
       const key = `${id}:${successor.id}`;
-      edges.set(key, { id: key, predecessor, successor, type: successor.dependency_links?.find(link => link.predecessor_id === id)?.type ?? null });
+      edges.set(key, {
+        id: key,
+        predecessor,
+        successor,
+        type:
+          successor.dependency_links?.find((link) => link.predecessor_id === id)
+            ?.type ?? null,
+      });
     }
   return [...edges.values()];
 }

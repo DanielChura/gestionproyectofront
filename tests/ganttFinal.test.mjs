@@ -179,8 +179,13 @@ test("programming normalizes reverse gestures with hourly Day precision and cale
     const same = snap.programRange(a, a, s);
     if (unit === "day") {
       assert.equal(forward.schedule.precision, "hour");
-      assert.ok(Date.parse(forward.schedule.end) > Date.parse(forward.schedule.start));
-      assert.equal(Date.parse(same.schedule.end) - Date.parse(same.schedule.start), 3600000);
+      assert.ok(
+        Date.parse(forward.schedule.end) > Date.parse(forward.schedule.start),
+      );
+      assert.equal(
+        Date.parse(same.schedule.end) - Date.parse(same.schedule.start),
+        3600000,
+      );
     } else {
       assert.ok(forward.start_date <= forward.due_date);
       assert.equal(same.start_date, same.due_date);

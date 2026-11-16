@@ -64,9 +64,10 @@ export const useProfile = () => {
   return {
     profile,
     specialties,
-    catalog: catalog?.filter(
-      (item) => !specialties.some((mine) => mine.id === item.id),
-    ) ?? [],
+    catalog:
+      catalog?.filter(
+        (item) => !specialties.some((mine) => mine.id === item.id),
+      ) ?? [],
     loading,
     error,
     saving,

@@ -111,30 +111,48 @@ export function useTaskMutations({
       setBusy(true);
       setError("");
       try {
-        const payload: Partial<EditTaskPayload> & Record<string, unknown> = { ...data };
+        const payload: Partial<EditTaskPayload> & Record<string, unknown> = {
+          ...data,
+        };
         if (
-          ("start_date" in payload || "due_date" in payload || "schedule" in payload) &&
+          ("start_date" in payload ||
+            "due_date" in payload ||
+            "schedule" in payload) &&
           !payload.calendar_intent_id
         ) {
           payload.calendar_intent_id = crypto.randomUUID();
-          payload.expected_calendar_revision = Number(task.calendar_revision || 1);
+          payload.expected_calendar_revision = Number(
+            task.calendar_revision || 1,
+          );
         }
         const updated = await apiUpdateTask(projectId, task.id, payload);
         onTaskSaved(updated);
         return updated;
       } catch (err: unknown) {
         const failure = err as { status?: number; payload?: { code?: string } };
-        if (failure?.status === 409 && failure?.payload?.code === "calendar_revision_conflict") {
+        if (
+          failure?.status === 409 &&
+          failure?.payload?.code === "calendar_revision_conflict"
+        ) {
           try {
-            const fresh = await apiGetTaskDetail({ projectId, taskId: task.id });
+            const fresh = await apiGetTaskDetail({
+              projectId,
+              taskId: task.id,
+            });
             if (fresh?.task) {
               onTaskSaved(fresh.task);
               const retryPayload = {
                 ...data,
-                expected_calendar_revision: Number(fresh.task.calendar_revision || 1),
+                expected_calendar_revision: Number(
+                  fresh.task.calendar_revision || 1,
+                ),
                 calendar_intent_id: crypto.randomUUID(),
               };
-              const updated = await apiUpdateTask(projectId, task.id, retryPayload);
+              const updated = await apiUpdateTask(
+                projectId,
+                task.id,
+                retryPayload,
+              );
               onTaskSaved(updated);
               return updated;
             }
@@ -158,15 +176,28 @@ export function useTaskMutations({
   );
 
   const changeDependency = useCallback(
-    async (taskId: number, predecessorId: number, remove: boolean, type?: import("../types").DependencyType) => {
+    async (
+      taskId: number,
+      predecessorId: number,
+      remove: boolean,
+      type?: import("../types").DependencyType,
+    ) => {
       setBusy(true);
       setError("");
       try {
         const ticket = sync.token();
         sync.guard(ticket);
-        await apiChangeDependency(projectId, taskId, predecessorId, remove, type);
+        await apiChangeDependency(
+          projectId,
+          taskId,
+          predecessorId,
+          remove,
+          type,
+        );
         sync.guard(ticket);
-        const detail = await sync.read(() => apiGetTaskDetail({ projectId, taskId }));
+        const detail = await sync.read(() =>
+          apiGetTaskDetail({ projectId, taskId }),
+        );
         sync.guard(ticket);
         onTaskSaved(sync.confirm(detail.task));
         addToast({

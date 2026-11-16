@@ -69,11 +69,19 @@ export async function showGanttRange(page, first, last) {
         target = await cell.first().boundingBox();
       assert.ok(bounds && target);
       await chart.evaluate(async (node, first) => {
-        const { viewportGeometry } = await import("/src/features/home/views/TaskGantt/ganttViewport.ts");
-        const view = globalThis.document.querySelector(".gm-task-gantt").dataset;
+        const { viewportGeometry } =
+          await import("/src/features/home/views/TaskGantt/ganttViewport.ts");
+        const view =
+          globalThis.document.querySelector(".gm-task-gantt").dataset;
         const [year, month, day] = first.split("-").map(Number);
-        const geometry = viewportGeometry({ start: new Date(Number(view.ganttWindowStart)), end: new Date(Number(view.ganttWindowEnd)), scale: view.ganttScale, zoomLevel: Number(view.ganttZoom) });
-        node.scrollLeft = geometry.toX(new Date(year, month - 1, day)) - node.clientWidth / 2;
+        const geometry = viewportGeometry({
+          start: new Date(Number(view.ganttWindowStart)),
+          end: new Date(Number(view.ganttWindowEnd)),
+          scale: view.ganttScale,
+          zoomLevel: Number(view.ganttZoom),
+        });
+        node.scrollLeft =
+          geometry.toX(new Date(year, month - 1, day)) - node.clientWidth / 2;
       }, first);
       break;
     }
@@ -156,12 +164,14 @@ export async function selectGanttTask(
     const before = await vertical.evaluate((element) => element.scrollTop);
     if (Math.abs(before - top) > 1) await page.mouse.wheel(0, top - before);
     await settle();
-    const actualTop = await vertical.evaluate(element => element.scrollTop);
+    const actualTop = await vertical.evaluate((element) => element.scrollTop);
     await page.waitForFunction((top) => {
       const region = globalThis.document.querySelector(
         ".gm-task-gantt .wx-chart",
       );
-      const table = globalThis.document.querySelector(".gm-task-gantt .wx-table");
+      const table = globalThis.document.querySelector(
+        ".gm-task-gantt .wx-table",
+      );
       const offset = Math.max(0, Math.floor(top / 40) - 1) * 40 - top;
       return (
         Math.abs(region.scrollTop - top) <= 1 &&

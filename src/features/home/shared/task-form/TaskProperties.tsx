@@ -194,36 +194,36 @@ export default function TaskProperties({
         )}
       </TaskProperty>
       {!hideCalendar && (
-      <TaskProperty
-        id="task-start"
-        label="Fecha de inicio"
-        value={formatTaskDate(startDate)}
-        icon={CalendarIcon}
-        error={errors["task-start"]}
-        content={
-          <>
-            <CalendarIcon className="size-4" />
-            <TaskDateValue value={startDate} />
-          </>
-        }
-      >
-        {(close) => (
-          <Calendar
-            label="Fecha de inicio"
-            optional={false}
-            value={startDate}
-            min={
-              creationMin ??
-              parent?.start_date ??
-              project.start_date ??
-              undefined
-            }
-            max={dueDate || parent?.due_date || project.end_date || undefined}
-            onChange={onStartDate}
-            close={close}
-          />
-        )}
-      </TaskProperty>
+        <TaskProperty
+          id="task-start"
+          label="Fecha de inicio"
+          value={formatTaskDate(startDate)}
+          icon={CalendarIcon}
+          error={errors["task-start"]}
+          content={
+            <>
+              <CalendarIcon className="size-4" />
+              <TaskDateValue value={startDate} />
+            </>
+          }
+        >
+          {(close) => (
+            <Calendar
+              label="Fecha de inicio"
+              optional={false}
+              value={startDate}
+              min={
+                creationMin ??
+                parent?.start_date ??
+                project.start_date ??
+                undefined
+              }
+              max={dueDate || parent?.due_date || project.end_date || undefined}
+              onChange={onStartDate}
+              close={close}
+            />
+          )}
+        </TaskProperty>
       )}
       <TaskOptionalProperties
         hideCalendar={hideCalendar}

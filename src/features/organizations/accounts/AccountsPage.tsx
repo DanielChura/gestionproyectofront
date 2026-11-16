@@ -39,11 +39,13 @@ export default function AccountsPage() {
     void Promise.resolve().then(() => {
       if (!active) return;
       setInviting(true);
-    const next = new URLSearchParams(searchParams);
-    next.delete("nuevo");
-    setSearchParams(next, { replace: true });
+      const next = new URLSearchParams(searchParams);
+      next.delete("nuevo");
+      setSearchParams(next, { replace: true });
     });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [searchParams, setSearchParams]);
 
   const applyFilters = (e: React.FormEvent) => {

@@ -3,15 +3,23 @@ import type { ReactNode } from "react";
 import { sessionVersion } from "../../auth/api";
 import { createTaskSync, TaskSyncContext } from "../utils/useTaskSync";
 
-export default function ProjectTaskWorkspace({ projectId, children }: {
+export default function ProjectTaskWorkspace({
+  projectId,
+  children,
+}: {
   projectId: number;
   children: ReactNode;
 }) {
   const epoch = sessionVersion();
-  const sync = useMemo(() => createTaskSync(projectId, epoch), [projectId, epoch]);
+  const sync = useMemo(
+    () => createTaskSync(projectId, epoch),
+    [projectId, epoch],
+  );
   useEffect(() => {
     sync.activate();
     return () => sync.dispose();
   }, [sync]);
-  return <TaskSyncContext.Provider value={sync}>{children}</TaskSyncContext.Provider>;
+  return (
+    <TaskSyncContext.Provider value={sync}>{children}</TaskSyncContext.Provider>
+  );
 }

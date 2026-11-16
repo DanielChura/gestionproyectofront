@@ -7,7 +7,11 @@ import {
   updateTeam,
 } from "../../core/services/organizationService";
 import { listWorkers, updateWorker } from "../../core/services/workerService";
-import type { Area, Team, TeamWriteData } from "../../core/interfaces/organization.interface";
+import type {
+  Area,
+  Team,
+  TeamWriteData,
+} from "../../core/interfaces/organization.interface";
 import type { TeamFilters, WorkerListFilters } from "./types";
 import type {
   Worker,
@@ -138,8 +142,7 @@ export function usePeople() {
     return teams
       .filter(
         (team) =>
-          (teamFilters.area === "" ||
-            team.area === Number(teamFilters.area)) &&
+          (teamFilters.area === "" || team.area === Number(teamFilters.area)) &&
           (query === "" ||
             team.name.toLocaleLowerCase("es").includes(query) ||
             team.area_name.toLocaleLowerCase("es").includes(query)) &&

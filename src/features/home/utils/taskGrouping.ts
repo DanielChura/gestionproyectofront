@@ -188,7 +188,11 @@ export function groupTasks(
 
   for (const task of byId.values()) {
     if (!hierarchy.visible.has(task.id)) continue;
-    for (const descriptor of descriptors(preferences.mode === "state" ? (hierarchy.rootById.get(task.id) ?? task) : task)) {
+    for (const descriptor of descriptors(
+      preferences.mode === "state"
+        ? (hierarchy.rootById.get(task.id) ?? task)
+        : task,
+    )) {
       const key = `${preferences.mode}:${descriptor.key}`;
       let group = groups.get(key);
       if (!group) {

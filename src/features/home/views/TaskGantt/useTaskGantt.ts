@@ -151,11 +151,19 @@ export function useTaskGantt(
     void widget.current?.exec("select-task", { id, show: "y" });
     navigation.toDate(toGanttWindow(task).start ?? ganttDay(task.start_date));
   }
-  function changeScale(scale: GanttScale) { navigation.changeScale(scale); }
-  function zoom(direction: number) { navigation.zoom(direction); }
-  function goToday() { navigation.toDate(ganttDay(projectToday())); }
+  function changeScale(scale: GanttScale) {
+    navigation.changeScale(scale);
+  }
+  function zoom(direction: number) {
+    navigation.zoom(direction);
+  }
+  function goToday() {
+    navigation.toDate(ganttDay(projectToday()));
+  }
   function page(direction: number) {
-    navigation.scrollBy(direction * (widget.current?.getState()._chartWidth ?? 360) * 0.8);
+    navigation.scrollBy(
+      direction * (widget.current?.getState()._chartWidth ?? 360) * 0.8,
+    );
   }
   function fitProject() {
     const bounds = taskTimelineBounds(tasks, today);

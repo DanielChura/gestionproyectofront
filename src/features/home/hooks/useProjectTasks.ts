@@ -14,9 +14,15 @@ export function useProjectTasks(projectId: number) {
     data: tasks = [],
     isFetching,
     error,
-  } = useQuery(projectTaskQuery(projectId, queryClient, (error) => {
-    addToast({ icon: "error", title: "Error al cargar tareas", message: errorText(error) });
-  }));
+  } = useQuery(
+    projectTaskQuery(projectId, queryClient, (error) => {
+      addToast({
+        icon: "error",
+        title: "Error al cargar tareas",
+        message: errorText(error),
+      });
+    }),
+  );
 
   const setTasks = useCallback(
     (updater: Task[] | ((current: Task[]) => Task[])) => {
