@@ -100,13 +100,13 @@ async function dragCancel(sample) {
 try {
   await page.goto(origin);
   await page
-    .getByLabel("Correo electrónico", { exact: true })
+    .getByLabel("Correo electrÃ³nico", { exact: true })
     .fill(secrets.admin.email);
   await page
-    .getByLabel("Contraseña", { exact: true })
+    .getByLabel("ContraseÃ±a", { exact: true })
     .fill(secrets.admin.password);
   await page.getByRole("button", { name: "Ingresar", exact: true }).click();
-  await page.getByRole("button", { name: "Abrir menú de perfil" }).waitFor();
+  await page.getByRole("button", { name: "Abrir menÃº de perfil" }).waitFor();
   const cdp = await context.newCDPSession(page);
   await cdp.send("Performance.enable");
   await cdp.send("Profiler.enable");
@@ -117,7 +117,7 @@ try {
         const mountedMs = await load(sample);
         const collection = await page.evaluate(async (id) => {
           const { toGanttRows } =
-            await import("/src/features/projects/TaskGantt/ganttCalendar.ts");
+            await import("/src/features/home/views/TaskGantt/ganttCalendar.ts");
           const entries = performance
             .getEntriesByType("resource")
             .filter((entry) =>
@@ -152,7 +152,7 @@ try {
         await cdp.send("Profiler.stopPreciseCoverage");
         const calls = {};
         for (const script of coverage.result.filter((script) =>
-          script.url.includes("/src/features/projects/TaskGantt/"),
+          script.url.includes("/src/features/home/views/TaskGantt/"),
         )) {
           for (const fn of script.functions)
             if (
@@ -242,9 +242,9 @@ try {
         assert.equal(listing, sample.size);
         const measured = await page.evaluate(async (sample) => {
           const { toGanttRows, fromGanttWindow } =
-            await import("/src/features/projects/TaskGantt/ganttCalendar.ts");
+            await import("/src/features/home/views/TaskGantt/ganttCalendar.ts");
           const { ganttProjection, emptyGanttFilters } =
-            await import("/src/features/projects/TaskGantt/ganttQuery.ts");
+            await import("/src/features/home/views/TaskGantt/ganttQuery.ts");
           const auth = await import("/src/features/auth/api.ts");
           const { getTasks } =
             await import("/src/features/projects/services.ts");
@@ -383,7 +383,7 @@ try {
     "Columns use header fields panel, keyboard focus returns and no compressed timeline",
     async () => {
       const trigger = page.getByRole("button", {
-        name: "Añadir o quitar columnas",
+        name: "AÃ±adir o quitar columnas",
         exact: true,
       });
       await trigger.click();
@@ -406,7 +406,7 @@ try {
         true,
       );
       const region = page.getByRole("region", {
-        name: "Calendario de tareas; tabla y línea de tiempo",
+        name: "Calendario de tareas; tabla y lÃ­nea de tiempo",
         exact: true,
       });
       await region.focus();
@@ -414,7 +414,7 @@ try {
       await page.waitForFunction(
         () =>
           globalThis.document.querySelector(
-            '[aria-label="Calendario de tareas; tabla y línea de tiempo"]',
+            '[aria-label="Calendario de tareas; tabla y lÃ­nea de tiempo"]',
           ).scrollLeft > 0,
       );
       const scrolled = await region.evaluate((node) => node.scrollLeft);
@@ -572,7 +572,7 @@ try {
     async () => {
       await locate(sample.parent);
       const collapse = page.getByRole("button", {
-        name: "Contraer subtareas de Tarea 0010 medición QA",
+        name: "Contraer subtareas de Tarea 0010 mediciÃ³n QA",
         exact: true,
       });
       await collapse.click();
@@ -607,7 +607,7 @@ try {
       await seen;
       assert.equal(await handle.evaluate((node) => node.isConnected), true);
       assert.equal(
-        await page.getByText("Cargando Gantt…", { exact: true }).count(),
+        await page.getByText("Cargando Ganttâ€¦", { exact: true }).count(),
         0,
       );
       release();
@@ -636,7 +636,7 @@ try {
         route.fulfill({
           status: 503,
           contentType: "application/json",
-          body: JSON.stringify({ detail: "Error QA de actualización" }),
+          body: JSON.stringify({ detail: "Error QA de actualizaciÃ³n" }),
         });
       await page.route(collection, failure);
       await page
@@ -656,7 +656,7 @@ try {
       await locate(sample.parent);
       await page
         .getByRole("button", {
-          name: "Expandir subtareas de Tarea 0010 medición QA",
+          name: "Expandir subtareas de Tarea 0010 mediciÃ³n QA",
           exact: true,
         })
         .waitFor();
@@ -701,7 +701,7 @@ try {
           .count()) > 0,
       );
       const region = page.getByRole("region", {
-        name: "Calendario de tareas; tabla y línea de tiempo",
+        name: "Calendario de tareas; tabla y lÃ­nea de tiempo",
         exact: true,
       });
       assert.equal(
@@ -736,7 +736,7 @@ try {
       }
       await page.goto(origin + "/");
       await page
-        .getByRole("button", { name: "Abrir menú de perfil", exact: true })
+        .getByRole("button", { name: "Abrir menÃº de perfil", exact: true })
         .waitFor();
       assert.equal(await page.locator(".gm-task-gantt").count(), 0);
       await page.screenshot({

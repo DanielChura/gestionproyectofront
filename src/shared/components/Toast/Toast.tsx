@@ -2,7 +2,7 @@ import { useEffect, type ComponentType } from "react";
 import type {
   Toast as ToastData,
   ToastIcon,
-} from "../../../context/ToastContext";
+} from "../../../context/toastState";
 import { useToast } from "../../../hooks/useToast";
 import AlertIcon from "../../icons/AlertIcon";
 import ErrorIcon from "../../icons/ErrorIcon";

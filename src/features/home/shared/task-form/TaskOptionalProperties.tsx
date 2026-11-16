@@ -19,6 +19,7 @@ import TaskDateValue from "../task-fields/TaskDateValue";
 import { isPastTaskDate } from "../task-fields/taskDates";
 
 export default function TaskOptionalProperties({
+  hideCalendar = false,
   project,
   catalogs,
   responsible,
@@ -36,6 +37,7 @@ export default function TaskOptionalProperties({
   readOnlyResponsible = "Tú",
   canAssign = project.permissions.assign_tasks,
 }: {
+  hideCalendar?: boolean;
   project: Project;
   catalogs: ProjectCatalogs;
   responsible: number[];
@@ -85,6 +87,7 @@ export default function TaskOptionalProperties({
           {() => null}
         </TaskProperty>
       )}
+      {!hideCalendar && (
       <TaskProperty
         id={id("due")}
         label={`Fecha límite${isPastTaskDate(dueDate) ? " · Fecha anterior a hoy" : ""}`}
@@ -121,6 +124,7 @@ export default function TaskOptionalProperties({
           />
         )}
       </TaskProperty>
+      )}
       <TaskProperty
         id={id("priority")}
         label="Prioridad"

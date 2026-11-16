@@ -87,7 +87,7 @@ export function headerGeometry(state: GanttState) {
       const x = geometry.toX(cell.date) - state.scrollLeft, right = geometry.toX(end) - state.scrollLeft;
       if (right <= 0 || x >= width) return [];
       const left = Math.max(0, x);
-      return [{ key: cell.date.getTime(), left, width: Math.min(right, width) - left, label: cell.value, start: geometry.fromX(state.scrollLeft + left).getTime(), end: geometry.fromX(state.scrollLeft + Math.min(right, width)).getTime(), weekend: ["day", "hour"].includes(cell.unit) && [0, 6].includes(cell.date.getDay()), title: cell.unit === "week" ? isoWeekLabel(cell.date) : fullDate.format(cell.date) + (cell.unit === "hour" ? ` · ${cell.value}` : ""), css: cell.css }];
+      return [{ key: cell.date.getTime(), full: x >= 0 && right <= width, left, width: Math.min(right, width) - left, label: cell.value, start: geometry.fromX(state.scrollLeft + left).getTime(), end: geometry.fromX(state.scrollLeft + Math.min(right, width)).getTime(), weekend: ["day", "hour"].includes(cell.unit) && [0, 6].includes(cell.date.getDay()), title: cell.unit === "week" ? isoWeekLabel(cell.date) : fullDate.format(cell.date) + (cell.unit === "hour" ? ` · ${cell.value}` : ""), css: cell.css }];
     }),
   }));
 }

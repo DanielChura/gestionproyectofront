@@ -42,7 +42,6 @@ export default function InvitationModal({
     !allAreas &&
     selections.every((item) => item.value) &&
     selections.length < areas.length;
-  const disabled = busy || areas.length === 0;
 
   function changeArea(key: number, value: string) {
     if (value === "all") {

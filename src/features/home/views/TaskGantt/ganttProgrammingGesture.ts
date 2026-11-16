@@ -8,7 +8,8 @@ import { suppressGanttClick } from "./ganttResidualClick";
 
 export type ProgrammingPreview = { id: number; x: number; y: number; width?: number; proposal?: ReturnType<typeof programRange> };
 interface Options {
-  api: IApi; node: HTMLElement; task: Task; index: number;
+  api: IApi; node: HTMLElement; task: Task;
+  constrain?: (proposal: ReturnType<typeof programRange>) => ReturnType<typeof programRange> | null;
   canStart: () => boolean; preview: (value: ProgrammingPreview | null) => void;
   commit: (value: ReturnType<typeof programRange>) => void; open: () => void;
   navigate: (pixels: number) => void; suppress: (clear: () => void) => void;
@@ -22,10 +23,15 @@ export function startGanttProgramming(event: PointerEvent, o: Options) {
   const draw = () => {
     if (!active || !o.canStart()) { stop(); return; }
     const current = o.api.getState(), box = o.node.getBoundingClientRect();
-    proposal = programRange(datePosition(first, current), point - box.left + current.scrollLeft, current, o.task);
+    const index = current._tasks.findIndex(row => Number(row.id) === o.task.id);
+    if (index < 0) { stop(); return; }
+    const range = programRange(datePosition(first, current), point - box.left + current.scrollLeft, current, o.task);
+    const constrained = o.constrain ? o.constrain(range) : range;
+    if (!constrained) { stop(); return; }
+    proposal = constrained;
     const window = toGanttWindow({ ...o.task, ...proposal });
     const x = datePosition(window.start!, current) - current.scrollLeft;
-    o.preview({ id: o.task.id, x, y: (current._scales?.height ?? 56) + (o.index + .5) * (current.cellHeight ?? 40) - current.scrollTop, width: datePosition(window.end!, current) - current.scrollLeft - x, proposal });
+    o.preview({ id: o.task.id, x, y: (current._scales?.height ?? 56) + (index + .5) * (current.cellHeight ?? 40) - current.scrollTop, width: datePosition(window.end!, current) - current.scrollLeft - x, proposal });
   };
   const stop = () => {
     if (!active) return;

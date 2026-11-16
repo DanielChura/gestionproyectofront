@@ -15,10 +15,6 @@ export default function TaskAssigneeCell({ view }: { view: TaskFieldView }) {
   );
 
   useEffect(() => {
-    setSelectedIds(taskAssignees(task).map((p: { id: number }) => p.id));
-  }, [task]);
-
-  useEffect(() => {
     if (!open) return;
     function handle(event: MouseEvent) {
       if (!container.current?.contains(event.target as Node)) {
@@ -39,7 +35,10 @@ export default function TaskAssigneeCell({ view }: { view: TaskFieldView }) {
       <div ref={container} className="relative">
         <button
           type="button"
-          onClick={() => setOpen((prev) => !prev)}
+          onClick={() => {
+            setSelectedIds(people.map((person) => person.id));
+            setOpen((previous) => !previous);
+          }}
           className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
         >
           {people.length > 0 ? (

@@ -19,9 +19,9 @@ export default function TaskGroupLabel({
   mode,
   state,
 }: TaskGroupLabelProps) {
-  if (group.stateCode) {
-    const Icon = getIcon(state?.tema?.icono);
+  const Icon = getIcon(state?.tema?.icono);
 
+  if (group.stateCode) {
     return (
       <span className="inline-flex items-center gap-1.5  text-white">
         <Icon className="size-3.5" fill />

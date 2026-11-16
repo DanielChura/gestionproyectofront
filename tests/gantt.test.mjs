@@ -42,17 +42,17 @@ async function load(relative) {
   return module;
 }
 const calendarModule = await load(
-  "../src/features/projects/TaskGantt/ganttCalendar.ts",
+  "../src/features/home/views/TaskGantt/ganttCalendar.ts",
 );
 await calendarModule.evaluate();
 const adapter = calendarModule.namespace;
 const readOnlyModule = await load(
-  "../src/features/projects/TaskGantt/ganttReadOnly.ts",
+  "../src/features/home/views/TaskGantt/ganttReadOnly.ts",
 );
 await readOnlyModule.evaluate();
 const { bindGanttReadOnly } = readOnlyModule.namespace;
 const entryModule = await load(
-  "../src/features/projects/TaskGantt/TaskGanttEntry.tsx",
+  "../src/features/home/views/TaskGantt/TaskGanttEntry.tsx",
 );
 await entryModule.evaluate();
 const Entry = entryModule.namespace.default;
@@ -96,9 +96,9 @@ test("Gantt calendar round trips calendar days in five zones including DST, leap
         module: ts.ModuleKind.CommonJS,
       },
     }).outputText;
-  const dateCode = transpile("../src/features/projects/calendarDate.ts");
+  const dateCode = transpile("../src/features/home/utils/calendarDate.ts");
   const ganttCode = transpile(
-    "../src/features/projects/TaskGantt/ganttCalendar.ts",
+    "../src/features/home/views/TaskGantt/ganttCalendar.ts",
   );
   const program =
     "const d={};new Function('exports'," +

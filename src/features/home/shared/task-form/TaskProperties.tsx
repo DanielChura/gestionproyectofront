@@ -23,6 +23,7 @@ import { formatTaskDate } from "../../utils/taskHierarchy";
 import { getIcon } from "../../../../shared/icons/icon-catalog";
 
 interface TaskPropertiesProps {
+  hideCalendar?: boolean;
   project: Project;
   catalogs: ProjectCatalogs;
   task?: Task;
@@ -45,6 +46,7 @@ interface TaskPropertiesProps {
 }
 
 export default function TaskProperties({
+  hideCalendar = false,
   project,
   catalogs,
   task,
@@ -191,6 +193,7 @@ export default function TaskProperties({
           </>
         )}
       </TaskProperty>
+      {!hideCalendar && (
       <TaskProperty
         id="task-start"
         label="Fecha de inicio"
@@ -221,7 +224,9 @@ export default function TaskProperties({
           />
         )}
       </TaskProperty>
+      )}
       <TaskOptionalProperties
+        hideCalendar={hideCalendar}
         project={project}
         catalogs={catalogs}
         responsible={responsible}

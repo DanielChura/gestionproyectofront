@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import IdIcon from "../../../../shared/icons/IdIcon";
 import TaskListIcon from "../../../../shared/icons/TaskListIcon";
 import type { Task, TaskPatchPayload } from "../../types";
@@ -18,13 +18,16 @@ export default function TaskTitle({
   const [value, setValue] = useState(task.name);
   const [copied, setCopied] = useState(false);
 
+  const pending = useRef(false);
   async function handleBlur() {
-    setEditing(false);
+    if (pending.current) return;
     const trimmed = value.trim();
     if (trimmed && trimmed !== task.name) {
-      await onPatch({ name: trimmed });
+      pending.current = true;
+      try { await onPatch({ name: trimmed }); setEditing(false); } catch { setEditing(true); } finally { pending.current = false; }
     } else {
       setValue(task.name);
+      setEditing(false);
     }
   }
 

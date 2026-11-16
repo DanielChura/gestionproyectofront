@@ -69,26 +69,13 @@ export async function changeTaskState(
 }
 
 export async function changeDependency(
-  projectId: number,
-  taskId: number,
-  predecessorId: number,
-  remove: boolean,
+  projectId: number, taskId: number, predecessorId: number, remove: boolean,
+  type?: import("../interfaces/task.interface").DependencyType,
 ): Promise<void> {
-  if (remove) {
-    await httpClient.delete(
-      `projects/${projectId}/tasks/${taskId}/dependencies/`,
-      {
-        data: { predecessor_id: predecessorId },
-      },
-    );
-  } else {
-    await httpClient.post(
-      `projects/${projectId}/tasks/${taskId}/dependencies/`,
-      {
-        predecessor_id: predecessorId,
-      },
-    );
-  }
+  const url = `projects/${projectId}/tasks/${taskId}/dependencies/`;
+  const data = { predecessor_id: predecessorId, ...(type ? { dependency_type: type } : {}) };
+  if (remove) await httpClient.delete<void>(url, { data });
+  else await httpClient.post<void>(url, data);
 }
 
 export async function getTaskDetail(

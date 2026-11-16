@@ -73,7 +73,7 @@ export default function TaskGanttToolbar({
             className="size-4"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="1.5"
           >
             <path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6Z" />
             {protectedView && <path d="m8 12 3 3 5-6" />}
@@ -94,7 +94,7 @@ export default function TaskGanttToolbar({
             className="size-4"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
@@ -103,6 +103,7 @@ export default function TaskGanttToolbar({
         </GanttIconButton>
         <div className="gm-gantt-search min-w-0">
           <TaskSearch
+            mode="button"
             value={filters.search}
             onChange={(search) =>
               setFilters((current) => ({ ...current, search }))
@@ -125,7 +126,7 @@ export default function TaskGanttToolbar({
                   className="size-4"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="1.5"
                 >
                   <path d="M3 5h18l-7 8v6l-4 2v-8Z" />
                 </svg>

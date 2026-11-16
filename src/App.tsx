@@ -98,7 +98,10 @@ function AppContent() {
   }, [hideLoading]);
 
   useEffect(() => {
-    const expire = () => setUser(null);
+    const expire = () => {
+      queryClient.clear();
+      setUser(null);
+    };
     const update = (event: Event) => {
       if (event instanceof CustomEvent) setUser(event.detail as SessionUser);
     };
@@ -113,6 +116,7 @@ function AppContent() {
   async function signOut() {
     try {
       await logout();
+      queryClient.clear();
       setUser(null);
       navigate("/", { replace: true });
     } catch (failure) {

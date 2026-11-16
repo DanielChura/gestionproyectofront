@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { calendarProblem } from "../../../utils/useTaskCalendarEdit";
 import { errorText } from "../../../../auth/api";
 import { apiFieldErrors } from "../../../utils/formErrors";
 import type { FieldErrors } from "../../../utils/formErrors";
@@ -40,6 +41,7 @@ export function useQuickTask(
   const [errors, setErrors] = useState<FieldErrors>({});
   const [error, setError] = useState("");
   const pending = useRef(false);
+  const ambiguous = useRef(false);
   const active = useRef(false);
   const state = quickTaskState(project, groupCode, responsible.length > 0);
 
@@ -51,7 +53,7 @@ export function useQuickTask(
   }, []);
 
   async function save() {
-    if (pending.current || !active.current) return false;
+    if (pending.current || ambiguous.current || !active.current) return false;
     if (!name.trim()) {
       setErrors({ "task-name": "Indica el nombre de la tarea." });
       return false;
@@ -92,7 +94,11 @@ export function useQuickTask(
     } catch (failure) {
       if (active.current) {
         setErrors(apiFieldErrors(failure, fields));
-        setError(errorText(failure));
+        if (calendarProblem(failure) === "ambiguous") {
+          ambiguous.current = true;
+          setUncertain(true);
+        }
+        setError(ambiguous.current ? "No se pudo confirmar la creación. Conserva el borrador y consulta las tareas." : errorText(failure));
       }
       return false;
     } finally {

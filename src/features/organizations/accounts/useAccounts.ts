@@ -1,3 +1,6 @@
+import { getActiveAreaOptions } from "../../../core/services/organizationService";
+import { useAuth } from "../../../hooks/useAuth";
+import { checkSession, sessionVersion } from "../../auth/api";
 import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -14,13 +17,15 @@ export interface AccountFilters {
   active?: boolean;
 }
 
+type PaginatedResponse<T> = T[] | { results?: T[]; next_cursor?: string | null };
+
 async function fetchAllAccounts(): Promise<Account[]> {
   const accounts: Account[] = [];
   let cursor: string | null = null;
   for (let page = 0; page < 100; page += 1) {
     const query = new URLSearchParams({ page_size: "50" });
     if (cursor) query.set("cursor", cursor);
-    const data = await apiRequest<any>(`admin/accounts/?${query.toString()}`);
+    const data = await apiRequest<PaginatedResponse<Account>>(`admin/accounts/?${query.toString()}`);
     const rows = Array.isArray(data)
       ? data
       : Array.isArray(data?.results)
@@ -33,19 +38,17 @@ async function fetchAllAccounts(): Promise<Account[]> {
   return accounts;
 }
 
-async function fetchAreas(): Promise<Area[]> {
-  const data = await apiRequest<any>("admin/areas/");
-  return Array.isArray(data)
-    ? data
-    : Array.isArray(data?.results)
-      ? data.results
-      : [];
-}
-
 export function useActiveAreas() {
+  const { isAdmin } = useAuth();
+  const epoch = sessionVersion();
   return useQuery<Area[]>({
-    queryKey: ["admin-areas"],
-    queryFn: fetchAreas,
+    queryKey: ["admin-areas", epoch],
+    enabled: isAdmin,
+    queryFn: ({ signal }) => {
+      checkSession(epoch);
+      return getActiveAreaOptions(signal);
+    },
+    retry: false,
   });
 }
 

@@ -28,12 +28,12 @@ async function load(path, dependencies = {}) {
   await module.evaluate();
   return module.namespace;
 }
-const avatar = await load("../src/shared/avatarInitials.ts");
+const avatar = await load("../src/shared/avatarUtils.ts");
 const { stateInk } = await load(
-  "../src/features/projects/TaskList/stateInk.ts",
+  "../src/features/home/utils/stateInk.ts",
 );
-const state = await load("../src/features/projects/TaskList/quickTaskState.ts");
-const labelSelection = await load("../src/features/projects/labelSelection.ts");
+const state = await load("../src/features/home/views/List/utils/quickTaskState.ts");
+const labelSelection = await load("../src/features/home/utils/labelSelection.ts");
 const project = {
   id: 42,
   permissions: { manage: true, create_tasks: true },
@@ -142,26 +142,27 @@ async function harness(context = project, onDetachedCreated) {
       cleanup ??= effect();
     },
   };
+  const service = {
+    createTask(id, payload) {
+      return new Promise((resolve, reject) =>
+        requests.push({ id, payload, resolve, reject }),
+      );
+    },
+  };
   const { useQuickTask } = await load(
-    "../src/features/projects/TaskList/useQuickTask.ts",
+    "../src/features/home/views/List/hooks/useQuickTask.ts",
     {
       react,
-      "../useTaskCalendarEdit": {
+      "../../../utils/useTaskCalendarEdit": {
         calendarProblem: (error) => (error.ambiguous ? "ambiguous" : null),
       },
-      "../../auth/api": { errorText: (error) => error.message },
-      "../formErrors": {
+      "../../../../auth/api": { errorText: (error) => error.message },
+      "../../../utils/formErrors": {
         apiFieldErrors: () => ({ "task-due": "Fuera del periodo" }),
       },
-      "./quickTaskState": state,
-      "../labelSelection": labelSelection,
-      "../services": {
-        createTask(id, payload) {
-          return new Promise((resolve, reject) =>
-            requests.push({ id, payload, resolve, reject }),
-          );
-        },
-      },
+      "../utils/quickTaskState": state,
+      "../../../utils/labelSelection": labelSelection,
+      "../../../../../core/services/taskService": service,
     },
   );
   return {
@@ -212,10 +213,10 @@ test("optional choices and failed requests retain the draft and permit retry", a
     .render()
     .setLabels([{ name: "Ensayo", kind: "specialty", specialty_id: 7 }]);
   const failed = hook.render().save();
-  hook.requests[0].reject(new Error("Sin conexión"));
+  hook.requests[0].reject(new Error("Sin conexiÃ³n"));
   assert.equal(await failed, false);
   assert.equal(hook.render().name, "Borrador");
-  assert.equal(hook.render().error, "Sin conexión");
+  assert.equal(hook.render().error, "Sin conexiÃ³n");
   assert.equal(hook.render().errors["task-due"], "Fuera del periodo");
   assert.equal(hook.render().busy, false);
   const retry = hook.render().save();

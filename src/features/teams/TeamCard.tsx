@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import ChevronDownIcon from "../../shared/icons/ChevronIcon";
 import EditIcon from "../../shared/icons/EditIcon";
 import PlusIcon from "../../shared/icons/PlusIcon";
-import { avatarFor } from "../../shared/Avatar";
+import { avatarFor } from "../../shared/avatarUtils";
 import { initialColor } from "../../utils/initialColor";
 import type { Team } from "../../core/interfaces/organization.interface";
 import BuildingIcon from "../../shared/icons/BuildingIcon";

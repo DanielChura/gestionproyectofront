@@ -1,11 +1,9 @@
 import type {
   ProjectTaskState,
   StateCategory,
-  Tema,
   TaskStatusTemplate,
 } from "../../../../../core/interfaces/project.interface";
 import { categoryValue, stateCategories } from "../../../utils/stateGroups";
-import type { Tema as TemaType } from "../../../../../core/interfaces/project.interface";
 
 export function newStateCode() {
   return `draft_${crypto.randomUUID().replaceAll("-", "").slice(0, 14)}`;

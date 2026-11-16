@@ -7,6 +7,7 @@ import type {
   TaskStatePayload,
 } from "../../../core/interfaces/task.interface";
 import {
+  getTaskDetail as apiGetTaskDetail,
   changeDependency as apiChangeDependency,
   changeTaskState as apiChangeTaskState,
   createTask as apiCreateTask,
@@ -14,6 +15,7 @@ import {
   updateTask as apiUpdateTask,
 } from "../../../core/services/taskService";
 import { errorText } from "../../auth/api";
+import { useTaskSync } from "../utils/useTaskSync";
 import { useToast } from "../../../hooks/useToast";
 
 interface UseTaskMutationsOptions {
@@ -30,6 +32,7 @@ export function useTaskMutations({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const { addToast } = useToast();
+  const sync = useTaskSync();
 
   const saveTask = useCallback(
     async (
@@ -128,11 +131,17 @@ export function useTaskMutations({
   );
 
   const changeDependency = useCallback(
-    async (taskId: number, predecessorId: number, remove: boolean) => {
+    async (taskId: number, predecessorId: number, remove: boolean, type?: import("../types").DependencyType) => {
       setBusy(true);
       setError("");
       try {
-        await apiChangeDependency(projectId, taskId, predecessorId, remove);
+        const ticket = sync.token();
+        sync.guard(ticket);
+        await apiChangeDependency(projectId, taskId, predecessorId, remove, type);
+        sync.guard(ticket);
+        const detail = await sync.read(() => apiGetTaskDetail({ projectId, taskId }));
+        sync.guard(ticket);
+        onTaskSaved(sync.confirm(detail.task));
         addToast({
           icon: "success",
           title: "Dependencia actualizada",
@@ -151,7 +160,7 @@ export function useTaskMutations({
         setBusy(false);
       }
     },
-    [projectId, addToast],
+    [projectId, addToast, onTaskSaved, sync],
   );
 
   const moveTask = useCallback(

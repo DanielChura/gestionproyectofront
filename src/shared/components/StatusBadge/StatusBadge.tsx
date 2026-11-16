@@ -28,7 +28,7 @@ function StatusBadge({ children, tone = "neutral" }: StatusBadgeProps) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs  ${style}`}
     >
-      <span className={`w-1 h-1 rounded-full ${dotStyles[tone]}`}></span>
+      <span className={`w-1 h-1 rounded-full ${dot}`}></span>
       {children}
     </span>
   );

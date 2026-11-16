@@ -40,10 +40,15 @@ export const useSpecialties = () => {
 
   useEffect(() => {
     if (searchParams.get("nuevo") !== "especialidad") return;
-    setModal({ mode: "create" });
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (!active) return;
+      setModal({ mode: "create" });
     const next = new URLSearchParams(searchParams);
     next.delete("nuevo");
     setSearchParams(next, { replace: true });
+    });
+    return () => { active = false; };
   }, [searchParams, setSearchParams]);
 
   const filteredSpecialties = useMemo(() => {

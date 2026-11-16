@@ -23,6 +23,7 @@ export function useRelationMutation(
     alive = useRef(false),
     ambiguous = useRef(false);
   const pendingTarget = useRef<number | null>(null);
+  const undoReceipt = useRef<import("../types").DependencyUndoReceipt | undefined>(undefined);
   const [uncertain, setUncertain] = useState(false);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export function useRelationMutation(
     };
   }, []);
 
-  async function mutate(action: () => Promise<void>, otherId: number) {
+  async function mutate(action: () => Promise<unknown>, otherId: number) {
     if (
       pending.current ||
       ambiguous.current ||
@@ -101,17 +102,22 @@ export function useRelationMutation(
   }
 
   function unlink(relation: TaskRelation) {
+    undoReceipt.current = undefined;
+    return mutate(async () => {
+      if (relation.kind === "custom") {
+        await removeTaskRelation(target, relation.relation_id!);
+      } else {
+        undoReceipt.current = await changeDependency(
+          target.projectId, relation.successor_id!, relation.predecessor_id!, true,
+        );
+      }
+    }, relation.target_id);
+  }
+
+  function restore(otherId: number, token: string) {
     return mutate(
-      () =>
-        relation.kind === "custom"
-          ? removeTaskRelation(target, relation.relation_id!)
-          : changeDependency(
-              target.projectId,
-              relation.successor_id!,
-              relation.predecessor_id!,
-              true,
-            ),
-      relation.target_id,
+      () => changeDependency(target.projectId, otherId, target.taskId, false, undefined, token),
+      otherId,
     );
   }
 
@@ -160,7 +166,7 @@ export function useRelationMutation(
       relation.target_id,
     );
   }
-  return { link, unlink, convert, busy, error, uncertain, consult };
+  return { link, unlink, restore, undoReceipt, convert, busy, error, uncertain, consult };
 }
 
 export function useRelationPicker(target: TaskIdentity, kind: RelationKind) {

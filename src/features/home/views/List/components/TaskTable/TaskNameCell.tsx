@@ -1,3 +1,4 @@
+import { themeColor, themeIcon } from "../../../../utils/themePresentation";
 import ChevronDownIcon from "../../../../../../shared/icons/ChevronIcon";
 import { getIcon } from "../../../../../../shared/icons/icon-catalog";
 import type { TaskRowModel } from "./types";
@@ -15,9 +16,8 @@ export default function TaskNameCell({
 }) {
   const { task, depth, context, open, searching, childCount, descendantCount } =
     row;
-
+  const color = themeColor(task.state_tema?.color) ?? "#525252";
   const Icon = getIcon(task.state_tema?.icono);
-  const color = task.state_tema?.color ?? "#525252";
 
   return (
     <td className="h-12 px-3">

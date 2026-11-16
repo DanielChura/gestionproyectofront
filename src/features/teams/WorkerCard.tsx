@@ -1,8 +1,7 @@
 import EditIcon from "../../shared/icons/EditIcon";
-import BuildingIcon from "../../shared/icons/BuildingIcon";
 import AtIcon from "../../shared/icons/AtIcon";
 import HashIcon from "../../shared/icons/HashIcon";
-import { avatarFor } from "../../shared/Avatar";
+import { avatarFor } from "../../shared/avatarUtils";
 import { initialColor } from "../../utils/initialColor";
 import type { Worker } from "../../core/interfaces/worker.interface";
 
@@ -15,7 +14,6 @@ interface WorkerCardProps {
 
 export default function WorkerCard({
   worker,
-  areaName,
   canManage,
   onEdit,
 }: WorkerCardProps) {

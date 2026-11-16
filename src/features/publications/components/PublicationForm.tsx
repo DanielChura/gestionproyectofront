@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import type { FormEvent } from "react";
 import PlusIcon from "../../../shared/icons/PlusIcon";
 import TrashIcon from "../../../shared/icons/TrashIcon";
@@ -74,7 +74,6 @@ export default function PublicationForm({
   );
   const [busy, setBusy] = useState(false);
   const { addToast } = useToast();
-  const form = useRef<HTMLFormElement>(null);
   const editing = publication !== undefined;
   const levels = catalogs.levels.length ? catalogs.levels : [1, 2, 3];
   const [selectedState, setSelectedState] = useState<PublicationStateCode>(

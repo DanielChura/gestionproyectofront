@@ -1,6 +1,6 @@
 import ClockIcon from "../../shared/icons/ClockIcon";
 import TrashIcon from "../../shared/icons/TrashIcon";
-import { avatarFor } from "../../shared/Avatar";
+import { avatarFor } from "../../shared/avatarUtils";
 import { initialColor } from "../../utils/initialColor";
 import type { TeamMember } from "../../core/interfaces/organization.interface";
 

@@ -8,13 +8,15 @@ import {
 } from "../../auth/api";
 import { useToast } from "../../../hooks/useToast";
 
+type PaginatedResponse<T> = T[] | { results?: T[]; next_cursor?: string | null };
+
 async function fetchAllRecoveryRequests(): Promise<RecoveryRequest[]> {
   const requests: RecoveryRequest[] = [];
   let cursor: string | null = null;
   for (let page = 0; page < 100; page += 1) {
     const query = new URLSearchParams({ page_size: "50" });
     if (cursor) query.set("cursor", cursor);
-    const data = await apiRequest<any>(
+    const data = await apiRequest<PaginatedResponse<RecoveryRequest>>(
       `admin/recovery-requests/?${query.toString()}`,
     );
     const rows = Array.isArray(data)

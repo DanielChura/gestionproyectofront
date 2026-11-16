@@ -25,4 +25,3 @@ export default function AppRoutes({ canManage }: { canManage: boolean }) {
     </Suspense>
   );
 }
-

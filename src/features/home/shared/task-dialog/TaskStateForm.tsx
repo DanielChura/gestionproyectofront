@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { errorText } from "../../../auth/api";
 import type {
@@ -25,10 +25,13 @@ export default function TaskStateForm({
 }: TaskStateFormProps) {
   const [target, setTarget] = useState(initialState);
   const [busy, setBusy] = useState(false);
+  const busyRef = useRef(false);
   const [error, setError] = useState("");
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (busyRef.current) return;
+    busyRef.current = true;
     setBusy(true);
     setError("");
     try {
@@ -36,6 +39,7 @@ export default function TaskStateForm({
     } catch (failure) {
       setError(errorText(failure));
     } finally {
+      busyRef.current = false;
       setBusy(false);
     }
   }

@@ -12,7 +12,6 @@ import type {
   PublicationStateCode,
   PublicationUpdateData,
 } from "../../core/interfaces/publication.interface";
-import { publicationErrorText } from "../../core/services/publicationService";
 import PublicationForm from "./components/PublicationForm";
 import { usePublicationCatalogs } from "./hooks/usePublicationCatalogs";
 import { usePublications } from "./hooks/usePublications";

@@ -1,4 +1,4 @@
-param([string]$OutputPath, [ValidateSet(1, 2, 3, 4, 5, 6)][int]$Stage = 1, [switch]$ChecksOnly, [switch]$Controls, [switch]$Content, [switch]$TimezonesOnly)
+param([string]$OutputPath, [ValidateSet(1, 2, 3, 4, 5, 6)][int]$Stage = 1, [switch]$ChecksOnly, [switch]$Controls, [switch]$Content, [switch]$TimezonesOnly, [switch]$Refinement, [switch]$Hierarchy, [switch]$Timeline)
 $ErrorActionPreference = 'Stop'
 $ganttFront = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $ganttBack = (Resolve-Path (Join-Path $ganttFront '../backend')).Path
@@ -9,7 +9,7 @@ $ganttContainer = $null
 $ganttServer = $null
 $ganttVite = $null
 $ganttPrevious = @{}
-$ganttKeys = @('MYSQL_ROOT_PASSWORD','MYSQL_PWD','GM_TEST_MYSQL_PASSWORD','GM_TEST_MYSQL_PORT','DJANGO_SETTINGS_MODULE','FRONTEND_ORIGIN','VITE_API_BASE_URL','API_PROXY_TARGET','GM_CALENDAR_BROWSER','GM_GANTT_BROWSER','GM_GANTT_STAGE','GM_GANTT_CONTROLS','GM_GANTT_CONTENT','GM_QA_SECRETS_PATH','GM_BROWSER_REPORT_DIR','GM_PLAYWRIGHT_MODULE','PYTHONIOENCODING')
+$ganttKeys = @('MYSQL_ROOT_PASSWORD','MYSQL_PWD','GM_TEST_MYSQL_PASSWORD','GM_TEST_MYSQL_PORT','DJANGO_SETTINGS_MODULE','FRONTEND_ORIGIN','VITE_API_BASE_URL','API_PROXY_TARGET','GM_CALENDAR_BROWSER','GM_GANTT_BROWSER','GM_GANTT_STAGE','GM_GANTT_CONTROLS','GM_GANTT_CONTENT','GM_GANTT_HIERARCHY','GM_GANTT_TIMELINE','GM_QA_SECRETS_PATH','GM_BROWSER_REPORT_DIR','GM_PLAYWRIGHT_MODULE','PYTHONIOENCODING')
 foreach ($key in $ganttKeys) { $ganttPrevious[$key] = [Environment]::GetEnvironmentVariable($key, 'Process') }
 try {
     docker info --format '{{.ServerVersion}}'
@@ -46,6 +46,8 @@ try {
     $env:GM_GANTT_BROWSER = '1'
     $env:GM_GANTT_STAGE = [string]$Stage
     $env:GM_GANTT_CONTROLS = [string][int][bool]($Controls -or $Content)
+    $env:GM_GANTT_TIMELINE = [string][int][bool]$Timeline
+    $env:GM_GANTT_HIERARCHY = [string][int][bool]$Hierarchy
     $env:GM_GANTT_CONTENT = [string][int][bool]$Content
     $env:PYTHONIOENCODING = 'utf-8'
     $env:GM_QA_SECRETS_PATH = Join-Path $ganttTemp 'credentials.json'
@@ -67,7 +69,7 @@ try {
     }
     Push-Location $ganttFront
     try {
-        if ($Content) { $contentArguments = @(); if ($TimezonesOnly) { $contentArguments += "--timezones-only" }; & node.exe tests/verify-gantt-content-browser.mjs @contentArguments } elseif ($Controls) { & node.exe tests/verify-gantt-controls-browser.mjs } elseif ($Stage -eq 6) { & node.exe tests/verify-gantt-stage6-browser.mjs } elseif ($Stage -eq 5) { $ganttArguments = @(); if ($ChecksOnly) { $ganttArguments += "--checks-only" }; & node.exe tests/verify-gantt-stage5-browser.mjs @ganttArguments } elseif ($Stage -eq 4) { & node.exe tests/verify-gantt-stage4-browser.mjs } elseif ($Stage -eq 3) { & node.exe tests/verify-gantt-stage3-browser.mjs } elseif ($Stage -eq 2) { & node.exe tests/verify-gantt-stage2-browser.mjs } else { & node.exe tests/verify-gantt-browser.mjs }
+        if ($Timeline) { & node.exe tests/verify-gantt-timeline-browser.mjs; if ($LASTEXITCODE -eq 0) { Copy-Item (Join-Path $ganttOutput 'content-ledger.json') (Join-Path $ganttOutput 'timeline-ledger.json'); & node.exe tests/verify-gantt-refinement-browser.mjs; Copy-Item (Join-Path $ganttOutput 'timeline-ledger.json') (Join-Path $ganttOutput 'content-ledger.json') } } elseif ($Hierarchy) { & node.exe tests/verify-gantt-hierarchy-browser.mjs; if ($LASTEXITCODE -eq 0) { & node.exe tests/verify-gantt-refinement-browser.mjs } } elseif ($Refinement) { & node.exe tests/verify-gantt-refinement-browser.mjs } elseif ($Content) { $contentArguments = @(); if ($TimezonesOnly) { $contentArguments += "--timezones-only" }; & node.exe tests/verify-gantt-content-browser.mjs @contentArguments } elseif ($Controls) { & node.exe tests/verify-gantt-controls-browser.mjs } elseif ($Stage -eq 6) { & node.exe tests/verify-gantt-stage6-browser.mjs } elseif ($Stage -eq 5) { $ganttArguments = @(); if ($ChecksOnly) { $ganttArguments += "--checks-only" }; & node.exe tests/verify-gantt-stage5-browser.mjs @ganttArguments } elseif ($Stage -eq 4) { & node.exe tests/verify-gantt-stage4-browser.mjs } elseif ($Stage -eq 3) { & node.exe tests/verify-gantt-stage3-browser.mjs } elseif ($Stage -eq 2) { & node.exe tests/verify-gantt-stage2-browser.mjs } else { & node.exe tests/verify-gantt-browser.mjs }
         if ($LASTEXITCODE -ne 0) { throw 'Falló la comprobación Chrome de Gantt.' }
         Push-Location $ganttBack
         try {

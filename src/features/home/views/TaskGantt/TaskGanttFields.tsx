@@ -45,7 +45,7 @@ export default function TaskGanttFields({
       }}
     >
       <div className="flex items-center justify-between gap-2">
-        <h3 id="gantt-fields-title" className="m-0 text-sm ">
+        <h3 id="gantt-fields-title" className="m-0 text-sm font-medium">
           Campos
         </h3>
         <GanttIconButton label="Cerrar campos" onClick={onClose}>

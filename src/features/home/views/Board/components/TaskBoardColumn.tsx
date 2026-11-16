@@ -1,3 +1,4 @@
+import { themeColor, themeIcon } from "../../../utils/themePresentation";
 import { createElement } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import type {
@@ -42,7 +43,7 @@ export default function TaskBoardColumn({
     id: group.stateCode ?? group.key,
     disabled: !droppable,
   });
-  const color = state?.tema?.color ?? "#737373";
+  const color = themeColor(state?.tema?.color) ?? "#737373";
   const GroupIcon =
     mode === "priority"
       ? FlagIcon
@@ -55,7 +56,7 @@ export default function TaskBoardColumn({
   return (
     <section
       ref={setNodeRef}
-      style={{ backgroundColor: `${color}0D` }}
+      style={{ backgroundColor: `color-mix(in srgb, ${color} 10%, transparent)` }}
       className={`flex max-h-full w-70 shrink-0 flex-col gap-2 rounded-xl p-2 ${isOver ? "ring-2 ring-inset ring-neutral-400" : ""}`}
     >
       <header className="flex min-w-0 shrink-0 items-center gap-3 px-1 py-1.5">
@@ -64,7 +65,7 @@ export default function TaskBoardColumn({
             style={{ backgroundColor: color }}
             className="inline-flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-white"
           >
-            {createElement(getIcon(state.tema?.icono), {
+            {createElement(getIcon(themeIcon(state.tema?.icono)), {
               className: "size-3.5 shrink-0",
               fill: true,
             })}

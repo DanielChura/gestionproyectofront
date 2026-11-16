@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import TaskDetailController from "../task-detail/TaskDetailController";
 import TaskEditDialog from "./TaskEditDialog";
 import type { Task } from "../../types";
@@ -26,18 +27,20 @@ function dialogTitle(action: TaskAction, taskName?: string) {
 export default function TaskDialog({
   controller,
   feedback,
+  gantt = false,
   onUpdated = () => undefined,
 }: {
   controller: TaskDialogController;
   feedback?: ReactNode;
+  gantt?: boolean;
   onUpdated?: (task: Task) => void;
 }) {
+  const queryClient = useQueryClient();
   const {
     project,
     tasks,
     catalogs,
     action,
-    busy,
     close,
     saveTask,
     changeState,
@@ -60,6 +63,7 @@ export default function TaskDialog({
         key={project.id + ":" + action.taskId}
         controller={controller}
         taskId={action.taskId}
+        gantt={gantt}
         onUpdated={onUpdated}
       />
     );
@@ -84,6 +88,8 @@ export default function TaskDialog({
         parent={action.kind === "child" ? activeTask : undefined}
         initialState={action.kind === "create" ? action.stateCode : undefined}
         onSubmit={saveTask}
+        onCheckCreation={() => queryClient.refetchQueries({ queryKey: ["tasks", project.id] })}
+        feedback={feedback}
         onConfigured={configuredStates}
         onClose={close}
       />

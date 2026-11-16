@@ -1,3 +1,4 @@
+import { themeColor } from "../../utils/themePresentation";
 import type { TaskStatePayload } from "../../types";
 import type { Project, Task } from "../../types";
 import { getIcon } from "../../../../shared/icons/icon-catalog";
@@ -13,10 +14,11 @@ export default function StatePopup({
   onState: (task: Task, data: TaskStatePayload) => Promise<void>;
 }) {
   const { panel, trigger, open, setOpen } = usePopup();
+  const Icon = getIcon(task.state_tema?.icono);
+
   const state = project.task_states.states.find(
     (item) => item.code === task.state_code,
   );
-  const Icon = getIcon(state?.tema?.icono ?? task.state_tema?.icono);
   const color =
     state?.tema?.color ?? task.state_tema?.color ?? task.state_color;
 
@@ -41,7 +43,7 @@ export default function StatePopup({
       >
         <span
           className="inline-flex shrink-0"
-          style={color ? { color } : undefined}
+          style={color ? { color: themeColor(color) } : undefined}
         >
           <Icon className="size-4" fill />
         </span>
@@ -63,7 +65,6 @@ export default function StatePopup({
                 const targetState = project.task_states.states.find(
                   (item) => item.code === transition.target,
                 );
-                const TargetIcon = getIcon(targetState?.tema?.icono);
                 const targetColor =
                   targetState?.tema?.color ?? targetState?.color;
                 return (
@@ -75,9 +76,13 @@ export default function StatePopup({
                   >
                     <span
                       className="inline-flex shrink-0"
-                      style={targetColor ? { color: targetColor } : undefined}
+                      style={
+                        targetColor
+                          ? { color: themeColor(targetColor) }
+                          : undefined
+                      }
                     >
-                      <TargetIcon className="size-4" fill />
+                      <Icon className="size-4" fill />
                     </span>
                     <span className="truncate">
                       {targetState?.name ?? transition.target}

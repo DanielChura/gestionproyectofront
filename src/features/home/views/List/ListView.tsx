@@ -25,8 +25,6 @@ import type { TaskChanges, TaskRowModel } from "./components/TaskTable/types";
 import { useList } from "./hooks/useList";
 import { useMyTasksFilter } from "../../hooks/useMyTasksFilter";
 import { useTaskGrouping } from "../../hooks/useTaskGrouping";
-import { sessionVersion } from "../../../auth/api";
-import { createTaskSync, TaskSyncContext } from "../../utils/useTaskSync";
 
 interface ListViewProps {
   project: Project;
@@ -45,6 +43,8 @@ export default function ListView({
 }: ListViewProps) {
   const {
     tasks,
+    error,
+    refetch,
     catalogs,
     search,
     preferences,
@@ -69,12 +69,6 @@ export default function ListView({
     initialCreate,
     onCreateHandled,
     initialTaskId,
-  );
-
-  const epoch = sessionVersion();
-  const taskSync = useMemo(
-    () => createTaskSync(project.id, epoch),
-    [project.id, epoch],
   );
 
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
@@ -135,7 +129,7 @@ export default function ListView({
   };
 
   const groupsRef = useRef(visibleGroups);
-  groupsRef.current = visibleGroups;
+  useEffect(() => { groupsRef.current = visibleGroups; });
   const groupKeys = visibleGroups.map((group) => group.key).join("|");
 
   useEffect(() => {
@@ -259,6 +253,7 @@ export default function ListView({
             {canCreate && (
               <button
                 type="button"
+                aria-label="Crear nueva tarea"
                 onClick={() => setAction({ kind: "create" })}
                 className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-900 px-2.5 py-1 text-xs font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
               >
@@ -293,6 +288,7 @@ export default function ListView({
         </p>
       )}
 
+      {error && <p role="alert" className="px-3 text-xs text-red-600 dark:text-red-400">{error} <button type="button" className="cursor-pointer underline" onClick={() => void refetch()}>Actualizar lista</button></p>}
       <div
         ref={region}
         className="relative min-h-0 flex-1 overflow-y-auto overflow-x-auto pb-6"
@@ -411,9 +407,8 @@ export default function ListView({
         })}
       </div>
 
-      <TaskSyncContext.Provider value={taskSync}>
         <TaskDialog controller={dialog} onUpdated={acceptTask} />
-      </TaskSyncContext.Provider>
+
       {configuringStates && (
         <TaskStatusConfiguration
           project={project}

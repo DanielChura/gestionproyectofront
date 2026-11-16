@@ -14,7 +14,6 @@ export function usePublicationCatalogs(enabled: boolean) {
   useEffect(() => {
     if (!enabled) return;
     let active = true;
-    setLoading(true);
     getPublicationCatalogs()
       .then((catalogs) => {
         if (!active) return;
@@ -32,7 +31,10 @@ export function usePublicationCatalogs(enabled: boolean) {
     };
   }, [enabled, reloadKey]);
 
-  const retry = useCallback(() => setReloadKey((key) => key + 1), []);
+  const retry = useCallback(() => {
+    setLoading(true);
+    setReloadKey((key) => key + 1);
+  }, []);
 
   return { data, loading, error, retry };
 }

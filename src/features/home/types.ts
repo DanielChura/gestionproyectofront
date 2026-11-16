@@ -83,3 +83,8 @@ export interface TaskDialogController {
   ) => Promise<void>;
   configuredStates: (configuration: ProjectTaskConfiguration) => void;
 }
+
+export interface DependencyUndoReceipt {
+  token: string;
+  expires: number;
+}

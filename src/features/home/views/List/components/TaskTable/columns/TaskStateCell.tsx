@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { TaskFieldView } from "../types";
-import {
-  getIcon,
-  iconMap,
-} from "../../../../../../../shared/icons/icon-catalog";
+import { themeColor, themeIcon } from "../../../../../utils/themePresentation";
+import { getIcon } from "../../../../../../../shared/icons/icon-catalog";
 
 export default function TaskStateCell({ view }: { view: TaskFieldView }) {
   const { task, project, onState } = view;
@@ -20,9 +18,8 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
   }, [open]);
 
   const states = project.task_states.states;
-  const iconName = task.state_tema?.icono ?? "default";
-  const IconComponent = iconMap[iconName] || iconMap["circle-dot"];
-  const tone = task.state_tema?.color;
+  const tone = themeColor(task.state_tema?.color);
+  const Icon = getIcon(task.state_tema?.icono);
 
   return (
     <td className="h-12 px-1.5">
@@ -36,7 +33,7 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
           }}
           className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-xs "
         >
-          <IconComponent className="size-4" />
+          <Icon className="size-4" />
           <span className="truncate">{task.state_name}</span>
         </button>
 
@@ -59,12 +56,11 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
                       : "text-neutral-700 dark:text-neutral-300"
                   }`}
                 >
-                  <IconComponent className="size-4" />
+                  <Icon className="size-4" />
                   <span
                     style={{
-                      backgroundColor: state.tema?.color
-                        ? `hsl(${state.tema?.color}, 70%, 90%)`
-                        : "transparent",
+                      backgroundColor:
+                        themeColor(state.tema?.color) ?? "transparent",
                     }}
                     className="h-2 w-2 rounded-full"
                   />

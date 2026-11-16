@@ -39,7 +39,7 @@ export default function TaskGroupingFilter({
         onClick={() => setOpen((value) => !value)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-indigo-200 
+        className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-indigo-200
         bg-indigo-50 px-2.5 py-1 text-xs text-indigo-600 hover:bg-indigo-100 dark:border-indigo-900 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900"
       >
         <StackIcon className="size-4" />
