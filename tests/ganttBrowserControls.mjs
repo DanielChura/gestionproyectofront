@@ -44,21 +44,77 @@ export async function chooseGanttPeriod(page, scale) {
     month: "Mes",
     quarter: "Trimestre",
     year: "Año",
-    flexible: "Flexible",
   };
   await page.getByRole("button", { name: /^Periodo de Gantt:/ }).click();
   await page
     .getByRole("menuitemradio", { name: names[scale] ?? scale, exact: true })
     .click();
 }
-export async function flexibleGanttRange(page, first, last) {
-  await chooseGanttPeriod(page, "flexible");
-  await page.getByLabel("Inicio del intervalo", { exact: true }).fill(first);
-  await page.getByLabel("Fin del intervalo", { exact: true }).fill(last);
-  await page
-    .getByRole("button", { name: "Aplicar intervalo", exact: true })
-    .click();
+// Navigate exclusively through the five public period controls and the native scroll surface.
+export async function showGanttRange(page, first, last) {
+  const year = Number(first.slice(0, 4));
+  await chooseGanttPeriod(page, "year");
+  const chart = page.locator(".gm-task-gantt .wx-chart");
+  for (let step = 0; step < 220; step++) {
+    const cells = page
+      .locator(".gm-task-gantt .gm-gantt-time-header > [role=row]")
+      .first()
+      .locator("[role=columnheader]");
+    const years = (await cells.allTextContents())
+      .map((label) => Number(label.trim()))
+      .filter(Number.isFinite);
+    const cell = cells.filter({ hasText: new RegExp("^" + year + "$") });
+    if (await cell.count()) {
+      const bounds = await chart.boundingBox(),
+        target = await cell.first().boundingBox();
+      assert.ok(bounds && target);
+      await chart.evaluate(async (node, first) => {
+        const { viewportGeometry } = await import("/src/features/home/views/TaskGantt/ganttViewport.ts");
+        const view = globalThis.document.querySelector(".gm-task-gantt").dataset;
+        const [year, month, day] = first.split("-").map(Number);
+        const geometry = viewportGeometry({ start: new Date(Number(view.ganttWindowStart)), end: new Date(Number(view.ganttWindowEnd)), scale: view.ganttScale, zoomLevel: Number(view.ganttZoom) });
+        node.scrollLeft = geometry.toX(new Date(year, month - 1, day)) - node.clientWidth / 2;
+      }, first);
+      break;
+    }
+    assert.ok(
+      years.length && step < 219,
+      "The requested calendar year must be reachable through navigation",
+    );
+    const before = years.join(",");
+    await page
+      .getByRole("button", {
+        name: year < Math.min(...years) ? "Anterior" : "Siguiente",
+        exact: true,
+      })
+      .click();
+    await page.waitForFunction(
+      (before) =>
+        [
+          ...globalThis.document.querySelectorAll(
+            ".gm-task-gantt .gm-gantt-time-header > [role=row]:first-child [role=columnheader]",
+          ),
+        ]
+          .map((node) => node.textContent.trim())
+          .join(",") !== before,
+      before,
+    );
+  }
+  const days = (Date.parse(last) - Date.parse(first)) / 86400000;
+  await chooseGanttPeriod(
+    page,
+    days <= 1
+      ? "day"
+      : days <= 8
+        ? "week"
+        : days <= 90
+          ? "month"
+          : days <= 370
+            ? "quarter"
+            : "year",
+  );
 }
+
 export async function selectGanttTask(
   page,
   id,
@@ -76,17 +132,17 @@ export async function selectGanttTask(
       .click();
     await page
       .getByRole("searchbox", {
-        name: "Buscar tareas por nombre, responsable o etiqueta",
+        name: "Buscar tareas",
       })
       .fill(task.name);
     await row.scrollIntoViewIfNeeded();
-    await row.locator(".wx-cell").last().click();
+    await row.locator("[role=columnheader]").last().click();
     return;
   }
   const tasks = currentGanttTasks(page),
     byId = new Map(tasks.map((task) => [task.id, task]));
   const chart = page.locator(".gm-task-gantt .wx-chart");
-  const vertical = page.locator(".gm-task-gantt .wx-gantt");
+  const vertical = page.locator(".gm-task-gantt .wx-chart");
   const settle = () =>
     page.evaluate(
       () =>
@@ -99,11 +155,13 @@ export async function selectGanttTask(
   async function wheelTo(top) {
     const before = await vertical.evaluate((element) => element.scrollTop);
     if (Math.abs(before - top) > 1) await page.mouse.wheel(0, top - before);
+    await settle();
+    const actualTop = await vertical.evaluate(element => element.scrollTop);
     await page.waitForFunction((top) => {
       const region = globalThis.document.querySelector(
-        ".gm-task-gantt .wx-gantt",
+        ".gm-task-gantt .wx-chart",
       );
-      const table = region.querySelector(".wx-table");
+      const table = globalThis.document.querySelector(".gm-task-gantt .wx-table");
       const offset = Math.max(0, Math.floor(top / 40) - 1) * 40 - top;
       return (
         Math.abs(region.scrollTop - top) <= 1 &&
@@ -112,7 +170,7 @@ export async function selectGanttTask(
             offset,
         ) <= 1
       );
-    }, top);
+    }, actualTop);
     await settle();
   }
   async function reveal(target) {
@@ -163,11 +221,11 @@ export async function selectGanttTask(
         .getByRole("button", { name: /^Periodo de Gantt:/ })
         .textContent()
     ).trim();
-    await flexibleGanttRange(page, task.start_date, task.start_date);
-    if (previous !== "Flexible") await chooseGanttPeriod(page, previous);
+    await showGanttRange(page, task.start_date, task.start_date);
+    await chooseGanttPeriod(page, previous);
   }
   await row.scrollIntoViewIfNeeded();
-  await row.locator(".wx-cell").last().click();
+  await row.locator("[role=columnheader]").last().click();
 }
 export async function selectedGanttTaskId(page) {
   const section = page.getByRole("region", {
@@ -218,6 +276,5 @@ export async function currentGanttPeriod(page) {
     Mes: "month",
     Trimestre: "quarter",
     Año: "year",
-    Flexible: "flexible",
   }[label];
 }

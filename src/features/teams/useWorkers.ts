@@ -10,7 +10,9 @@ export const useWorkers = (filters?: WorkerFilters) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const filtersRef = useRef(filters);
-  filtersRef.current = filters;
+  useEffect(() => {
+    filtersRef.current = filters;
+  }, [filters]);
 
   const fetch = useCallback(async () => {
     try {

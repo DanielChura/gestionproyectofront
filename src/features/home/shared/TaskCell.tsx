@@ -1,3 +1,4 @@
+import { DynamicIcon } from "../../../shared/icons/icon-catalog";
 import { useId, useRef, useState } from "react";
 import type { ComponentType } from "react";
 import Avatar from "../../../shared/Avatar";
@@ -22,7 +23,6 @@ import { isBeforeTaskCreation, taskCreationDay } from "./task-fields/taskDates";
 import HashIcon from "../../../shared/icons/HashIcon";
 import TaskDateValue from "./task-fields/TaskDateValue";
 import StatusIcon from "../../../shared/icons/StatusIcon";
-import { getIcon } from "../../../shared/icons/icon-catalog";
 import TaskProperty from "./task-fields/TaskProperty";
 import type {
   TaskPatchPayload,
@@ -34,7 +34,7 @@ import type {
   TaskStatePayload,
 } from "../types";
 import { formatTaskDate } from "../utils/taskHierarchy";
-import { themeColor } from "../utils/themePresentation";
+import { themeColor, themeIcon } from "../utils/themePresentation";
 import CalendarEditFeedback from "./CalendarEditFeedback";
 import Calendar from "./task-fields/Calendar";
 
@@ -110,13 +110,12 @@ export function StateIcon({
     (code === "CANCELADA" || stateName === "CANCELADA"
       ? "#a42a28"
       : stateCategories.find((item) => item.value === value)?.color);
-  const Icon = getIcon(tema?.icono);
   return (
     <span
       className="inline-flex shrink-0"
       style={tone ? { color: tone } : undefined}
     >
-      <Icon className="size-4" fill />
+      <DynamicIcon name={themeIcon(tema?.icono)} className="size-4" fill />
     </span>
   );
 }

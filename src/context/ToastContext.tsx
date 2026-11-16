@@ -1,27 +1,13 @@
 import {
-  createContext,
   useCallback,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
+import { ToastContext } from "./toastState";
+import type { Toast, ToastContextValue, ToastIcon } from "./toastTypes";
 
-export type ToastIcon = "alert" | "error" | "info" | "success";
-
-export interface Toast {
-  id: string;
-  icon: ToastIcon;
-  title: string;
-  message: string;
-}
-
-export interface ToastContextValue {
-  toasts: Toast[];
-  addToast: (toast: Omit<Toast, "id">) => void;
-  removeToast: (id: string) => void;
-}
-
-export const ToastContext = createContext<ToastContextValue | null>(null);
+export type { Toast, ToastContextValue, ToastIcon };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);

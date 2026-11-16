@@ -39,51 +39,80 @@ async function load(path, dependencies = {}) {
 }
 
 const hierarchy = await load(
-  "../src/features/projects/TaskList/taskHierarchy.ts",
+  "../src/features/home/utils/taskHierarchy.ts",
 );
-const assignees = await load("../src/features/projects/taskAssignees.ts");
-const grouping = await load(
-  "../src/features/projects/TaskList/taskGrouping.ts",
-  { "../taskAssignees": assignees },
+const assignees = await load(
+  "../src/features/home/utils/taskAssignees.ts",
 );
+const themePresentation = await load(
+  "../src/features/home/utils/themePresentation.ts",
+);
+const grouping = await load("../src/features/home/utils/taskGrouping.ts", {
+  "./themePresentation": themePresentation,
+  "./taskAssignees": assignees,
+  "../taskAssignees": assignees,
+});
 const groupingHook = await load(
-  "../src/features/projects/TaskList/useTaskGrouping.ts",
-  { "./taskGrouping": grouping, "./taskHierarchy": hierarchy },
+  "../src/features/home/hooks/useTaskGrouping.ts",
+  {
+    "../utils/taskGrouping": grouping,
+    "../utils/taskHierarchy": hierarchy,
+  },
 );
 const Icon = ({ name }) =>
   React.createElement("svg", { "data-icon": name, "aria-hidden": true });
 const Toolbar = ({ children, action }) =>
   React.createElement(
     "div",
-    { "aria-label": "Herramientas del proyecto" },
+    { role: "toolbar", "aria-label": "Herramientas del proyecto" },
     children,
     action,
   );
 const expansion = await load(
-  "../src/features/projects/TaskList/TaskGroupExpansionControl.tsx",
+  "../src/features/home/components/filters/TaskGroupExpansionFilter.tsx",
   {
-    "../../../shared/Icons/ChevronDownIcon": { default: Icon },
+    "../../../../shared/icons/VectorIcon": { default: Icon },
+    "../../hooks/useTaskMove": {
+      useTaskMove: () => ({
+        dragging: null,
+        drop: null,
+        permitted: () => true,
+      }),
+    },
+    "../../hooks/useTaskPointerDrag": { useTaskPointerDrag: () => ({}) },
+    "../../utils/taskDragSurface": { taskDragSurface: () => null },
+    "../../utils/taskDropPosition": { taskDropPosition: () => null },
+    "../../utils/themePresentation": themePresentation,
+    "../../../../shared/icons/ChevronIcon": { default: Icon },
+    "../../../shared/icons/ChevronDownIcon": { default: Icon },
   },
 );
+const { default: ProjectTitle } = await load("../src/features/home/components/ProjectTitle.tsx", {
+  "../../../shared/icons/CalendarIcon": { default: Icon },
+  "../utils/taskHierarchy": hierarchy,
+});
 let favoriteState = {};
 const { default: ProjectHeader } = await load(
-  "../src/features/projects/ProjectWorkspace/ProjectHeader.tsx",
+  "../src/features/home/components/ProjectHeader.tsx",
   {
     "react-router": {
       Link: ({ to, children, ...props }) =>
         React.createElement("a", { href: to, ...props }, children),
     },
     "../../../routes": { projectPath: (id) => `/proyectos/${id}` },
-    "../../../shared/Icons/FolderIcon": { default: Icon },
-    "../../../shared/Icons/BuildingIcon": { default: Icon },
-    "../../../shared/Icons/ChevronRightIcon": { default: Icon },
-    "../../../shared/Icons/StarIcon": { default: Icon },
-    "../../../shared/Icons/CalendarIcon": { default: Icon },
-    "../../../shared/Icons/ActivityIcon": { default: Icon },
-    "../../../shared/Icons/FileIcon": { default: Icon },
-    "../../../shared/Icons/StackIcon": { default: Icon },
-    "../TaskList/taskHierarchy": hierarchy,
-    "../useProjectFavorite": {
+    "./ProjectTitle": { default: ProjectTitle },
+    "../../../shared/icons/FolderIcon": { default: Icon },
+    "../../../shared/icons/BuildingIcon": { default: Icon },
+    "../../../shared/icons/ChevronRightIcon": { default: Icon },
+    "../../../shared/icons/ChevronIcon": { default: Icon },
+    "../../../shared/icons/StarIcon": { default: Icon },
+    "../../../shared/icons/CalendarIcon": { default: Icon },
+    "../../../shared/icons/ActivityIcon": { default: Icon },
+    "../../../shared/icons/FileIcon": { default: Icon },
+    "../../../shared/icons/StackIcon": { default: Icon },
+    "../../../shared/icons/Dashboard": { default: Icon },
+    "../utils/taskHierarchy": hierarchy,
+    "../hooks/useProjectFavorite": {
       useProjectFavorite: (_id, initial) => ({
         favorite: initial,
         pending: false,
@@ -94,52 +123,105 @@ const { default: ProjectHeader } = await load(
     },
   },
 );
+
+let mockTasks = [];
+let listDraftGroup = null,
+  quickRow,
+  movementError = "";
+const listEffects = [],
+  acceptedTasks = [];
+
 const { default: TaskList } = await load(
-  "../src/features/projects/TaskList/TaskList.tsx",
+  "../src/features/home/views/List/ListView.tsx",
   {
-    "./QuickTaskRow": { default: () => null },
-    "./stateInk": { stateInk: () => "#000000" },
-    "./TaskCell": {
-      default: () => null,
-      StateIcon: Icon,
-      StateBadge: Icon,
-      StateLabel: ({ name }) => React.createElement("span", null, name),
+    react: {
+      ...React,
+      useEffect(effect) {
+        listEffects.push(effect);
+      },
+      useState(initial) {
+        return React.useState(initial === null ? listDraftGroup : initial);
+      },
     },
-    "./taskDragSurface": await load(
-      "../src/features/projects/TaskList/taskDragSurface.ts",
-    ),
-    "../../../shared/Icons/ChevronDownIcon": { default: Icon },
-    "../../../shared/Icons/PlusIcon": { default: Icon },
-    "../../../shared/Icons/RelationIcon": { default: Icon },
-    "./useTaskPointerDrag": {
-      useTaskPointerDrag: () => ({
-        onPointerDown() {},
-        onClickCapture() {},
-        onDragStart() {},
+    "../../hooks/useTaskMove": {
+      useTaskMove: () => ({
+        dragging: null,
+        drop: null,
+        permitted: () => true,
+        error: movementError,
+        refresh: async () => {},
       }),
     },
-    "./taskHierarchy": hierarchy,
-    "./useTaskGrouping": groupingHook,
-    "./TaskGroupingControl": {
-      default: () => React.createElement("button", null, "Agrupar por: Estado"),
+    "../../hooks/useTaskPointerDrag": { useTaskPointerDrag: () => ({}) },
+    "../../utils/taskDragSurface": { taskDragSurface: () => null },
+    "../../utils/taskDropPosition": { taskDropPosition: () => null },
+    "../../utils/themePresentation": themePresentation,
+    "../../../../shared/icons/ChevronIcon": { default: Icon },
+    "../../../../shared/icons/PlusIcon": { default: Icon },
+    "../../shared/ProjectToolbar": { default: Toolbar },
+    "../../shared/task-dialog/TaskDialog": { default: () => null },
+    "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration":
+      {
+        default: () => null,
+      },
+    "../../shared/task-status/TaskStatusSettingsControl": {
+      default: () => null,
     },
-    "./TaskGroupExpansionControl": expansion,
-    "./TaskStatusSettingsControl": { default: () => null },
-    "./TaskGroupLabel": {
+    "../../components/filters/TaskGroupExpansionFilter": expansion,
+    "../../components/filters/TaskGroupingFilter": { default: () => null },
+    "../../components/filters/TaskSearchFilter": { default: () => null },
+    "../../shared/QuickTaskRow": {
+      default: (props) => {
+        quickRow = props;
+        return null;
+      },
+    },
+    "./components/TaskGroupLabel": {
       default: ({ group }) => React.createElement("span", null, group.name),
     },
-    "../ProjectWorkspace/ProjectToolbar": { default: Toolbar },
-    "./TaskSearch": {
-      default: () =>
-        React.createElement("button", { "aria-label": "Buscar tareas" }),
+    "./components/TaskTable/TaskRow": { default: () => null },
+    "./components/TaskTable/TaskTable": {
+      default: ({ children }) => React.createElement("table", null, children),
     },
-    "./useTaskMove": { useTaskMove: () => ({ permitted: () => false }) },
-    "../TaskStateForm/TaskStateForm": { default: () => null },
-    "../Modal/Modal": { default: () => null },
-    "./taskListInteractions.css": {},
-    "./taskDropPosition": { taskDropPosition() {} },
+    "../../hooks/useTaskGrouping": groupingHook,
+    "./hooks/useListMovement": { useListMovement: () => ({ movement: { dragging: null, drop: null, busy: false, error: movementError, refresh() {}, permitted: () => true }, pointerDrag: {} }) },
+    "../../shared/MyTasksToggle": { default: () => null },
+    "../../hooks/useMyTasksFilter": { useMyTasksFilter: tasks => ({ tasks, mine: false, toggleMine() {} }) },
+    "./hooks/useList": {
+      useList: (project) => ({
+        tasks: mockTasks,
+        error: movementError,
+        refetch() {},
+        catalogs: { priorities: [] },
+        search: "",
+        preferences: {
+          mode: "state",
+          order: "asc",
+          separatePeople: false,
+          separateLabels: false,
+        },
+        setGroupControls() {},
+        setAction() {},
+        acceptTask(task) {
+          acceptedTasks.push(task);
+        },
+        patchTask() {},
+        changeState() {},
+        action: null,
+        busy: false,
+        saveTask: async () => {},
+        changeDependency: async () => {},
+        configuringStates: false,
+        setConfiguringStates() {},
+        configuredStates: project.task_states?.states ?? [],
+        setSearch() {},
+        setPreferences() {},
+        groupControls: null,
+      }),
+    },
   },
 );
+
 const project = (changes = {}) => ({
   id: 42,
   name: "Proyecto sintético",
@@ -156,12 +238,16 @@ const project = (changes = {}) => ({
   },
   ...changes,
 });
+
 function header(view = "lista", changes = {}, props = {}) {
   return renderToStaticMarkup(
     React.createElement(ProjectHeader, {
       project: project(changes),
       view,
       busy: false,
+      onToggleFavorite() {},
+      viewKey: view,
+      status: { taskCount: 2, ...favoriteState },
       taskCount: 2,
       onCreateTask() {},
       ...props,
@@ -181,7 +267,7 @@ test("favorite is after the last breadcrumb level in every existing view", () =>
     )[0];
     assert.match(
       breadcrumb,
-      new RegExp(`aria-current="page"[^>]*>[\\s\\S]*?${label}<\\/li>`),
+      new RegExp(`aria-current="page"[^>]*>[\\s\\S]*?${label}<\\/span><\\/li>`),
     );
     assert.ok(
       breadcrumb.indexOf('aria-current="page"') <
@@ -191,7 +277,7 @@ test("favorite is after the last breadcrumb level in every existing view", () =>
       breadcrumb,
       /<button[^>]*aria-pressed="false"[\s\S]*?<\/button><\/li><\/ol><\/nav>$/,
     );
-    assert.equal((markup.match(/<h1\b/g) ?? []).length, 1);
+    assert.equal((markup.match(/<h1\b/g) ?? []).length, key === "gantt" ? 1 : 0);
     assert.match(breadcrumb, /href="\/proyectos\/42"/);
     assert.doesNotMatch(breadcrumb, /href="[^"]*area/);
   }
@@ -201,29 +287,29 @@ test("long names remain complete in titles while the current view and favorite d
   const name = "Proyecto con nombre muy largo ".repeat(6).trim();
   const markup = header("gantt", { name });
   assert.ok(markup.includes(`title="${name}"`));
-  assert.match(markup, /aria-current="page" class="flex shrink-0/);
+  assert.match(markup, /aria-current="page" class="flex[^"]*shrink-0/);
   assert.match(markup, /class="shrink-0"><button/);
 });
 
 test("dates preserve date-only values and missing dates are never invented", () => {
-  assert.match(header(), /<time dateTime="2026-10-07"/);
-  assert.match(header(), /<time dateTime="2026-12-07"/);
-  const missing = header("lista", { start_date: null, end_date: null });
+  assert.match(header("gantt"), /<time dateTime="2026-10-07"/);
+  assert.match(header("gantt"), /<time dateTime="2026-12-07"/);
+  const missing = header("gantt", { start_date: null, end_date: null });
   assert.match(missing, /Sin fecha de inicio/);
   assert.match(missing, /Sin fecha de fin/);
   assert.doesNotMatch(missing, /<time/);
   assert.match(missing, /data-task-count="true"[^>]*>2 tareas<\/span>/);
 });
 
-test("shared title and period precede breadcrumbs; primary action is no longer duplicated in Header", () => {
+test("Gantt title and period precede breadcrumbs while other views preserve the colleague header", () => {
   for (const view of ["lista", "tablero", "gantt"]) {
     const markup = header(view);
     assert.ok(
-      markup.indexOf("<h1") < markup.indexOf('aria-label="Ruta de navegación"'),
+      view === "gantt" ? markup.indexOf("<h1") < markup.indexOf('aria-label="Ruta de navegación"') : !markup.includes("<h1"),
     );
     assert.equal(
       (markup.match(/aria-label="Periodo del proyecto"/g) ?? []).length,
-      1,
+      view === "gantt" ? 1 : 0,
     );
     assert.doesNotMatch(markup, /Crear nueva tarea/);
   }
@@ -245,35 +331,25 @@ test("favorite pressed, pending and error semantics remain available", () => {
 });
 
 test("List has no duplicate primary action and preserves contextual creation permissions", () => {
-  const render = (permissions) =>
-    renderToStaticMarkup(
+  const render = (permissions) => {
+    mockTasks = ["PENDIENTE", "EN_CURSO"].map((state_code, id) => ({
+      id,
+      parent_id: null,
+      name: `Tarea ${id}`,
+      state_code,
+      state_name: state_code,
+      labels: [],
+      responsible_id: null,
+      responsible_name: null,
+      permissions: {},
+    }));
+    return renderToStaticMarkup(
       React.createElement(TaskList, {
         project: project({ permissions }),
-        tasks: ["PENDIENTE", "EN_CURSO"].map((state_code, id) => ({
-          id,
-          parent_id: null,
-          name: `Tarea ${id}`,
-          state_code,
-          state_name: state_code,
-          labels: [],
-          responsible_id: null,
-          responsible_name: null,
-          permissions: {},
-        })),
-        catalogs: { priorities: [] },
-        search: "",
-        preferences: {
-          mode: "state",
-          order: "asc",
-          separatePeople: false,
-          separateLabels: false,
-        },
-        onAction() {},
-        onCreated() {},
-        onPatch() {},
-        onState() {},
+        onProjectChange() {},
       }),
     );
+  };
   const admin = render({ manage: true, create_tasks: true });
   assert.doesNotMatch(admin, /\+ Tarea/);
   assert.equal((admin.match(/Añadir tarea/g) ?? []).length, 2);
@@ -289,9 +365,8 @@ test("List has no duplicate primary action and preserves contextual creation per
   );
 });
 
-test("empty List renders configured states through Workspace without extra states, requests or permission changes", async () => {
-  let hookIndex = 0,
-    view = "lista",
+test("empty List preserves the colleague empty view through Workspace without extra states, requests or permission changes", async () => {
+  let view = "lista",
     requests = 0;
   let permissions = { manage: true, create_tasks: true };
   const currentProject = () =>
@@ -315,101 +390,144 @@ test("empty List renders configured states through Workspace without extra state
   };
   const Empty = () => null;
   const { default: Workspace } = await load(
-    "../src/features/projects/ProjectWorkspace/ProjectWorkspace.tsx",
+    "../src/features/home/ProjectPage.tsx",
     {
-      react: {
-        ...React,
-        useState(initial) {
-          const index = hookIndex++;
-          return React.useState(
-            index === 0
-              ? currentProject()
-              : index === 4
-                ? false
-                : index === 11
-                  ? {
-                      expanded: true,
-                      disabled: false,
-                      controls: "",
-                      toggle() {},
-                    }
-                  : initial,
-          );
-        },
-      },
       "react-router": {
-        useSearchParams: () => [new URLSearchParams(`vista=${view}`)],
+        useParams: () => ({ projectId: "42" }),
+        useNavigate: () => () => undefined,
+        useLocation: () => ({ search: `?vista=${view}` }),
         Link: ({ to, children }) =>
           React.createElement("a", { href: to }, children),
       },
-      "../../auth/api": { errorText: String },
-      "../services": {
-        changeDependency: request,
-        changeTaskState: request,
-        createTask: request,
-        getProject: request,
-        getTasks: request,
-        updateTask: request,
+      "./hooks/useProject": {
+        useProject: () => ({ project: currentProject(), setProject() {} }),
       },
-      "../DependencyForm/DependencyForm": { default: Empty },
-      "../LabelList/LabelList": { default: Empty },
-      "../Modal/Modal": { default: Empty },
-      "../TaskForm/TaskForm": { default: Empty },
-      "../TaskStatusConfiguration/TaskStatusConfiguration": { default: Empty },
-      "../TaskDetail/TaskDetailDialog": { default: Empty },
-      "../TaskDetail/useTaskDetail": {
-        useTaskDetailNavigation: () => ({
-          target: null,
-          openTaskDetail() {},
-          closeTaskDetail() {},
+      "./hooks/useProjectCatalogs": {
+        useProjectCatalogs: () => ({ catalogs: { priorities: [] } }),
+      },
+      "./hooks/useProjectTasks": {
+        useProjectTaskCount: () => 0,
+        useProjectTasks: () => ({
+          tasks: [],
+          acceptTask() {},
+          refetch: request,
         }),
       },
-      "../TaskList/TaskList": { default: TaskList },
-      "../TaskGantt/TaskGanttEntry": { default: Empty },
-      "../TaskBoard/TaskBoard": { default: () => null },
-      "../../../hooks/useToast": { useToast: () => ({ addToast() {} }) },
-      "../TaskList/TaskGroupingControl": {
+      "./components/ProjectHeader": { default: Empty },
+      "./views/Overview/OverviewView": { default: Empty },
+      "./views/TaskGantt/GanttView": { default: Empty },
+      "./components/ProjectTaskWorkspace": { default: ({ children }) => children },
+      "../auth/api": { sessionVersion: () => 0 },
+      "./views/Board/BoardView": {
         default: () =>
-          React.createElement("button", {
-            "aria-label": "Agrupar por: Estado",
-          }),
+          React.createElement(
+            Toolbar,
+            {
+              action: React.createElement("input", {
+                type: "search",
+                "aria-label": "Buscar tareas",
+              }),
+            },
+            null,
+          ),
       },
-      "../TaskList/TaskGroupExpansionControl": expansion,
-      "../TaskList/TaskSearch": {
-        default: () =>
-          React.createElement("button", { "aria-label": "Buscar tareas" }),
-      },
-      "../TaskList/TaskStatusSettingsControl": { default: Empty },
-      "../TaskList/taskHierarchy": hierarchy,
-      "../TaskStateForm/TaskStateForm": { default: Empty },
-      "./ProjectHeader": { default: Empty },
-      "./ProjectToolbar": { default: Toolbar },
-      "../../../shared/Icons/PlusIcon": { default: Icon },
-      "../taskAssignees": assignees,
-      "../taskCollection": await load(
-        "../src/features/projects/taskCollection.ts",
+      "./views/List/ListView": await load(
+        "../src/features/home/views/List/ListView.tsx",
+        {
+          "../../hooks/useTaskMove": {
+            useTaskMove: () => ({
+              dragging: null,
+              drop: null,
+              permitted: () => true,
+            }),
+          },
+          "../../hooks/useTaskPointerDrag": { useTaskPointerDrag: () => ({}) },
+          "../../utils/taskDragSurface": { taskDragSurface: () => null },
+          "../../utils/taskDropPosition": { taskDropPosition: () => null },
+          "../../utils/themePresentation": themePresentation,
+          "../../../../shared/icons/ChevronIcon": { default: Icon },
+          "../../../../shared/icons/PlusIcon": { default: Icon },
+          "../../shared/ProjectToolbar": { default: Toolbar },
+          "../../shared/task-dialog/TaskDialog": { default: () => null },
+          "../../shared/task-status/TaskStatusConfiguration/TaskStatusConfiguration":
+            {
+              default: () => null,
+            },
+          "../../shared/task-status/TaskStatusSettingsControl": {
+            default: () => null,
+          },
+          "../../components/filters/TaskGroupExpansionFilter": expansion,
+          "../../components/filters/TaskGroupingFilter": {
+            default: () => null,
+          },
+          "../../components/filters/TaskSearchFilter": {
+            default: () =>
+              React.createElement("input", {
+                type: "search",
+                "aria-label": "Buscar tareas",
+              }),
+          },
+          "../../shared/QuickTaskRow": { default: () => null },
+          "./components/TaskGroupLabel": {
+            default: ({ group }) =>
+              React.createElement("span", null, group.name),
+          },
+          "./components/TaskTable/TaskRow": { default: () => null },
+          "./components/TaskTable/TaskTable": {
+            default: ({ children }) =>
+              React.createElement("table", null, children),
+          },
+          "../../hooks/useTaskGrouping": groupingHook,
+          "./hooks/useListMovement": { useListMovement: () => ({ movement: { dragging: null, drop: null, busy: false, error: movementError, refresh() {}, permitted: () => true }, pointerDrag: {} }) },
+    "../../shared/MyTasksToggle": { default: () => null },
+    "../../hooks/useMyTasksFilter": { useMyTasksFilter: tasks => ({ tasks, mine: false, toggleMine() {} }) },
+    "./hooks/useList": {
+            useList: () => ({
+              tasks: [],
+              catalogs: { priorities: [] },
+              search: "",
+              preferences: {
+                mode: "state",
+                order: "asc",
+                separatePeople: false,
+                separateLabels: false,
+              },
+              setGroupControls() {},
+              setAction() {},
+              acceptTask() {},
+              patchTask() {},
+              changeState() {},
+              action: null,
+              busy: false,
+              saveTask: async () => {},
+              changeDependency: async () => {},
+              configuringStates: false,
+              setConfiguringStates() {},
+              configuredStates: currentProject().task_states.states,
+              setSearch() {},
+              setPreferences() {},
+              groupControls: {
+                expanded: true,
+                disabled: false,
+                controls: "",
+                toggle() {},
+              },
+            }),
+          },
+        },
       ),
     },
   );
   const render = () => {
-    hookIndex = 0;
-    return renderToStaticMarkup(
-      React.createElement(Workspace, {
-        projectId: 42,
-        catalogs: { priorities: [] },
-        catalogLoading: false,
-        catalogError: "",
-        onRetryCatalogs() {},
-      }),
-    );
+    return renderToStaticMarkup(React.createElement(Workspace));
   };
   const markup = render();
-  assert.equal((markup.match(/data-group-key="state:/g) ?? []).length, 2);
-  assert.equal((markup.match(/>0 tareas<\/span>/g) ?? []).length, 2);
-  assert.match(markup, /Por hacer/);
-  assert.match(markup, /En marcha/);
+  assert.equal((markup.match(/data-group-key="state:/g) ?? []).length, 0);
+  assert.equal((markup.match(/>0 tareas<\/span>/g) ?? []).length, 0);
+  assert.match(markup, /No hay tareas visibles/);
+  assert.doesNotMatch(markup, /Por hacer|En marcha/);
   assert.doesNotMatch(markup, /No configurado|Pendiente general/);
-  assert.equal((markup.match(/Añadir tarea/g) ?? []).length, 2);
+  assert.equal((markup.match(/Añadir tarea/g) ?? []).length, 0);
   assert.equal(
     (markup.match(/aria-label="Crear nueva tarea"/g) ?? []).length,
     1,
@@ -421,7 +539,7 @@ test("empty List renders configured states through Workspace without extra state
     1,
   );
   permissions = { manage: false, create_tasks: true };
-  assert.equal((render().match(/Añadir tarea/g) ?? []).length, 1);
+  assert.equal((render().match(/Añadir tarea/g) ?? []).length, 0);
   permissions = { manage: false, create_tasks: false };
   assert.doesNotMatch(render(), /Añadir tarea/);
   assert.doesNotMatch(render(), /Crear nueva tarea/);
@@ -434,4 +552,114 @@ test("empty List renders configured states through Workspace without extra state
     1,
   );
   assert.equal(requests, 0);
+});
+
+test("state grouping retains all levels below their root without changing each task state", () => {
+  const tasks = [
+    {
+      id: 1,
+      parent_id: null,
+      name: "Root",
+      state_code: "PENDIENTE",
+      labels: [],
+    },
+    { id: 2, parent_id: 1, name: "Child", state_code: "EN_CURSO", labels: [] },
+    {
+      id: 3,
+      parent_id: 2,
+      name: "Grandchild",
+      state_code: "BLOQUEADA",
+      labels: [],
+    },
+  ];
+  const before = JSON.stringify(tasks),
+    tree = hierarchy.taskHierarchy(tasks),
+    preferences = { mode: "state", order: "asc" };
+  const groups = grouping.groupTasks(
+    tasks,
+    tree,
+    preferences,
+    [
+      { code: "PENDIENTE", name: "Pending" },
+      { code: "EN_CURSO", name: "Active" },
+      { code: "BLOQUEADA", name: "Blocked" },
+    ],
+    [],
+    "2026-11-07",
+  );
+  assert.deepEqual(
+    [...groups.find((g) => g.stateCode === "PENDIENTE").members],
+    [1, 2, 3],
+  );
+  assert.equal(groups.find((g) => g.stateCode === "EN_CURSO").members.size, 0);
+  assert.equal(tree.rootById.get(3).id, 1);
+  assert.equal(JSON.stringify(tasks), before);
+  const filtered = hierarchy.taskHierarchy(tasks, "Grandchild");
+  assert.deepEqual([...filtered.visible], [3, 2, 1]);
+  assert.equal(filtered.roots[0].id, 1);
+});
+
+test("historical dates use creation-day warnings without turning every past date red", async () => {
+  const dates = await load(
+    "../src/features/home/shared/task-fields/taskDates.ts",
+    { "../../utils/taskGrouping": grouping },
+  );
+  const { default: DateValue } = await load(
+    "../src/features/home/shared/task-fields/TaskDateValue.tsx",
+    { "../../utils/taskHierarchy": hierarchy, "./taskDates": dates },
+  );
+  const render = (value) =>
+    renderToStaticMarkup(
+      React.createElement(DateValue, {
+        value,
+        createdAt: "2020-01-01T15:00:00Z",
+      }),
+    );
+  assert.doesNotMatch(render("2020-01-02"), /text-red|Fecha anterior a hoy/);
+  assert.match(render("2019-12-31"), /data-before-creation="true"/);
+  assert.match(render(null), /Sin fecha/);
+});
+
+test("List keeps save feedback out of the rows and ignores detached creation after unmount", () => {
+  mockTasks = [{ id: 1, name: "Task", parent_id: null, state_code: "PENDIENTE", labels: [] }];
+  listDraftGroup = "state:PENDIENTE";
+  listEffects.length = 0;
+  acceptedTasks.length = 0;
+  const markup = renderToStaticMarkup(
+    React.createElement(TaskList, { project: project(), onProjectChange() {} }),
+  );
+  const cleanup = listEffects
+    .map((effect) => effect())
+    .filter((effect) => typeof effect === "function");
+  try {
+    assert.doesNotMatch(markup, /Guardado:|role="status"[^>]*>Guardado/);
+    assert.ok(
+      quickRow,
+      "the current quick creation flow is mounted in its real group",
+    );
+    quickRow.onDetachedCreated({ id: 9, name: "Tarea confirmada" });
+    assert.equal(acceptedTasks.length, 1);
+    cleanup.forEach((effect) => effect());
+    quickRow.onDetachedCreated({ id: 10, name: "Respuesta tardía" });
+    assert.equal(acceptedTasks.length, 1);
+  } finally {
+    cleanup.forEach((effect) => effect());
+    listDraftGroup = null;
+  }
+});
+
+test("List refresh failures preserve visible retry feedback through the shared query", () => {
+  movementError = "No se pudo actualizar la lista";
+  try {
+    const failed = renderToStaticMarkup(
+      React.createElement(TaskList, {
+        project: project(),
+        onProjectChange() {},
+      }),
+    );
+    assert.match(failed, /role="alert"[^>]*>No se pudo actualizar la lista/);
+    assert.match(failed, /Actualizar lista/);
+  } finally {
+    movementError = "";
+  }
 });

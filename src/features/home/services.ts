@@ -258,14 +258,20 @@ export async function changeDependency(
   predecessorId: number,
   remove: boolean,
   type?: import("./types").DependencyType,
-): Promise<void> {
-  await projectRequest(`${projectId}/tasks/${taskId}/dependencies/`, {
+  undoToken?: string,
+): Promise<import("./types").DependencyUndoReceipt | undefined> {
+  const response = await httpClient.request<void>({
+    url: `projects/${projectId}/tasks/${taskId}/dependencies/`,
     method: remove ? "DELETE" : "POST",
     data: {
       predecessor_id: predecessorId,
       ...(type ? { dependency_type: type } : {}),
+      ...(undoToken ? { undo_token: undoToken } : {}),
     },
   });
+  const token = response.headers["x-gm-dependency-undo"] as string | undefined;
+  const expires = Number(response.headers["x-gm-dependency-undo-expires"]);
+  return token && Number.isFinite(expires) ? { token, expires } : undefined;
 }
 
 export async function convertDependency(

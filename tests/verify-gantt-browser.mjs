@@ -53,10 +53,10 @@ async function login(role) {
   clients.push({ page, context, role });
   await page.goto(origin);
   await page
-    .getByLabel("Correo electrónico", { exact: true })
+    .getByLabel("Correo electrÃ³nico", { exact: true })
     .fill(secrets[role].email);
   await page
-    .getByLabel("Contraseña", { exact: true })
+    .getByLabel("ContraseÃ±a", { exact: true })
     .fill(secrets[role].password);
   const waiting = page.waitForResponse(
     (response) =>
@@ -66,7 +66,7 @@ async function login(role) {
   await page.getByRole("button", { name: "Ingresar", exact: true }).click();
   const reply = await waiting;
   assert.equal(reply.status(), 200);
-  await page.getByRole("button", { name: "Abrir menú de perfil" }).waitFor();
+  await page.getByRole("button", { name: "Abrir menÃº de perfil" }).waitFor();
   return { page, context, role, token: (await reply.json()).access };
 }
 async function request(client, resource) {
@@ -113,13 +113,13 @@ try {
       return { widget_requests: 0 };
     },
   );
-  await check("Montaje real MIT con colección autorizada", async () => {
+  await check("Montaje real MIT con colecciÃ³n autorizada", async () => {
     const tasks = await request(admin, "projects/" + data.project + "/tasks/");
     assert.equal(tasks.status, 200);
     baselineTasks = tasks.body;
     await admin.page.getByRole("link", { name: "Gantt", exact: true }).click();
     await admin.page
-      .getByRole("button", { name: "Abrir tarea Un día Gantt QA", exact: true })
+      .getByRole("button", { name: "Abrir tarea Un dÃ­a Gantt QA", exact: true })
       .waitFor();
     assert.ok(ganttAssets().length > 0);
     await admin.page.screenshot({
@@ -152,7 +152,7 @@ try {
     };
   });
   await check(
-    "Un día histórico y límite null conservan fechas y presentación",
+    "Un dÃ­a histÃ³rico y lÃ­mite null conservan fechas y presentaciÃ³n",
     async () => {
       for (const id of [data.one_day, data.historical]) {
         const task = baselineTasks.find((item) => item.id === id);
@@ -186,7 +186,7 @@ try {
         const row = admin.page.locator(
           ".gm-task-gantt .wx-row[data-id='" + id + "']",
         );
-        await row.getByText("Sin fecha límite", { exact: true }).waitFor();
+        await row.getByText("Sin fecha lÃ­mite", { exact: true }).waitFor();
         assert.equal(await row.locator("time").count(), 1);
         assert.equal(
           await admin.page
@@ -208,29 +208,29 @@ try {
     },
   );
   await check(
-    "Jerarquía navegable por teclado sin resúmenes ni propagación",
+    "JerarquÃ­a navegable por teclado sin resÃºmenes ni propagaciÃ³n",
     async () => {
       const collapse = admin.page.getByRole("button", {
-        name: "Contraer subtareas de Sin límite Gantt QA",
+        name: "Contraer subtareas de Sin lÃ­mite Gantt QA",
         exact: true,
       });
       await collapse.focus();
       await admin.page.keyboard.press("Enter");
       await admin.page
         .getByRole("button", {
-          name: "Abrir tarea Subtarea sin límite Gantt QA",
+          name: "Abrir tarea Subtarea sin lÃ­mite Gantt QA",
           exact: true,
         })
         .waitFor({ state: "hidden" });
       const expand = admin.page.getByRole("button", {
-        name: "Expandir subtareas de Sin límite Gantt QA",
+        name: "Expandir subtareas de Sin lÃ­mite Gantt QA",
         exact: true,
       });
       await expand.focus();
       await admin.page.keyboard.press("Enter");
       await admin.page
         .getByRole("button", {
-          name: "Abrir tarea Subtarea sin límite Gantt QA",
+          name: "Abrir tarea Subtarea sin lÃ­mite Gantt QA",
           exact: true,
         })
         .waitFor();
@@ -250,11 +250,11 @@ try {
     },
   );
   await check(
-    "Detalle compartido accesible desde una tarea sin fecha límite",
+    "Detalle compartido accesible desde una tarea sin fecha lÃ­mite",
     async () => {
       await admin.page
         .getByRole("button", {
-          name: "Abrir tarea Sin límite Gantt QA",
+          name: "Abrir tarea Sin lÃ­mite Gantt QA",
           exact: true,
         })
         .click();
@@ -267,7 +267,7 @@ try {
     },
   );
   await check(
-    "Ratón sin permiso, teclado, doble clic y menú no editan el widget",
+    "RatÃ³n sin permiso, teclado, doble clic y menÃº no editan el widget",
     async () => {
       const readonly = await login("worker");
       await readonly.page.goto(
@@ -317,7 +317,7 @@ try {
     },
   );
   await check(
-    "Proyecto completamente sin límites mantiene sus dos filas y ninguna barra",
+    "Proyecto completamente sin lÃ­mites mantiene sus dos filas y ninguna barra",
     async () => {
       await admin.page.goto(
         origin + "/proyectos/" + data.null_project + "?vista=gantt",
@@ -350,7 +350,7 @@ try {
     },
   );
   await check(
-    "Vacío real y fallo de carga con reintento se distinguen",
+    "VacÃ­o real y fallo de carga con reintento se distinguen",
     async () => {
       const route = "**/api/projects/" + data.empty_project + "/tasks/";
       let once = false;
@@ -373,7 +373,7 @@ try {
         .waitFor();
       assert.equal(
         await admin.page
-          .getByText("Este proyecto todavía no tiene tareas.", { exact: true })
+          .getByText("Este proyecto todavÃ­a no tiene tareas.", { exact: true })
           .count(),
         0,
       );
@@ -382,7 +382,7 @@ try {
         .getByRole("button", { name: "Reintentar", exact: true })
         .click();
       await admin.page
-        .getByText("Este proyecto todavía no tiene tareas.", { exact: true })
+        .getByText("Este proyecto todavÃ­a no tiene tareas.", { exact: true })
         .waitFor();
       await admin.page.unroute(route, failure);
       return { failed_read: 503, retry_success: 200, valid_empty: true };
@@ -402,7 +402,7 @@ try {
       const done = new Promise((resolve) => {
         delivered = resolve;
       });
-      const route = "**/src/features/projects/TaskGantt/TaskGantt.tsx*";
+      const route = "**/src/features/home/views/TaskGantt/TaskGantt.tsx*";
       const hold = async (request) => {
         arrived();
         await gate;
@@ -416,7 +416,7 @@ try {
         .getByRole("link", { name: "Gantt", exact: true })
         .click();
       await pending;
-      await client.page.getByText("Cargando Gantt…", { exact: true }).waitFor();
+      await client.page.getByText("Cargando Ganttâ€¦", { exact: true }).waitFor();
       await client.page
         .getByRole("link", { name: "Lista", exact: true })
         .click();
@@ -430,7 +430,7 @@ try {
         .click();
       await client.page
         .getByRole("button", {
-          name: "Abrir tarea Un día Gantt QA",
+          name: "Abrir tarea Un dÃ­a Gantt QA",
           exact: true,
         })
         .waitFor();
@@ -442,7 +442,7 @@ try {
     },
   );
   await check(
-    "Trabajador recibe solo sus tareas y conserva subtarea cuyo padre no está autorizado",
+    "Trabajador recibe solo sus tareas y conserva subtarea cuyo padre no estÃ¡ autorizado",
     async () => {
       const worker = await login("worker");
       const visible = await request(
@@ -464,7 +464,7 @@ try {
       assert.equal(
         await worker.page
           .getByRole("button", {
-            name: "Abrir tarea Sin límite Gantt QA",
+            name: "Abrir tarea Sin lÃ­mite Gantt QA",
             exact: true,
           })
           .count(),
@@ -531,7 +531,7 @@ try {
     },
   );
   await check(
-    "Temas claro oscuro y ancho móvil mantienen tabla accesible",
+    "Temas claro oscuro y ancho mÃ³vil mantienen tabla accesible",
     async () => {
       await admin.page.evaluate(() =>
         globalThis.localStorage.setItem("theme", "dark"),
@@ -541,7 +541,7 @@ try {
       );
       await admin.page
         .getByRole("button", {
-          name: "Abrir tarea Un día Gantt QA",
+          name: "Abrir tarea Un dÃ­a Gantt QA",
           exact: true,
         })
         .waitFor();
@@ -568,13 +568,13 @@ try {
       await admin.page.setViewportSize({ width: 390, height: 844 });
       await admin.page
         .getByRole("region", {
-          name: "Calendario de tareas; tabla y línea de tiempo",
+          name: "Calendario de tareas; tabla y lÃ­nea de tiempo",
           exact: true,
         })
         .waitFor();
       const horizontal = await admin.page
         .getByRole("region", {
-          name: "Calendario de tareas; tabla y línea de tiempo",
+          name: "Calendario de tareas; tabla y lÃ­nea de tiempo",
           exact: true,
         })
         .evaluate((node) => node.scrollWidth > node.clientWidth);
@@ -595,11 +595,11 @@ try {
     },
   );
   await check(
-    "Fallo del módulo diferido conserva error y permite reintentar",
+    "Fallo del mÃ³dulo diferido conserva error y permite reintentar",
     async () => {
       const client = await login("admin_chunk");
       let once = false;
-      const route = "**/src/features/projects/TaskGantt/TaskGantt.tsx*";
+      const route = "**/src/features/home/views/TaskGantt/TaskGantt.tsx*";
       const fail = async (request) => {
         if (once) return request.continue();
         once = true;
@@ -624,7 +624,7 @@ try {
         .click();
       await client.page
         .getByRole("button", {
-          name: "Abrir tarea Un día Gantt QA",
+          name: "Abrir tarea Un dÃ­a Gantt QA",
           exact: true,
         })
         .waitFor();
@@ -638,7 +638,7 @@ try {
       await admin.page.reload();
       await admin.page
         .getByRole("button", {
-          name: "Abrir tarea Un día Gantt QA",
+          name: "Abrir tarea Un dÃ­a Gantt QA",
           exact: true,
         })
         .waitFor();
@@ -652,7 +652,7 @@ try {
           .click();
         await admin.page
           .getByRole("button", {
-            name: "Abrir tarea Un día Gantt QA",
+            name: "Abrir tarea Un dÃ­a Gantt QA",
             exact: true,
           })
           .waitFor();

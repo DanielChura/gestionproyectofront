@@ -1,12 +1,9 @@
-import { useMemo } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { sessionVersion } from "../../../auth/api";
 import type { Project } from "../../types";
 import { useTaskView } from "../../hooks/useTaskView";
 import GanttTaskDialog from "./GanttTaskDialog";
 import TaskGanttEntry from "./TaskGanttEntry";
 import type { TaskGanttProps } from "./types";
-import { createTaskSync, TaskSyncContext } from "../../utils/useTaskSync";
 
 export default function GanttView({
   project,
@@ -17,14 +14,9 @@ export default function GanttView({
   protection?: TaskGanttProps["protection"];
   onProjectChange: Dispatch<SetStateAction<Project | null>>;
 }) {
-  const epoch = sessionVersion();
-  const taskSync = useMemo(
-    () => createTaskSync(project.id, epoch),
-    [project.id, epoch],
-  );
   const view = useTaskView(project, onProjectChange);
   return (
-    <TaskSyncContext.Provider value={taskSync}>
+    <>
       <TaskGanttEntry
         project={project}
         protection={protection}
@@ -39,7 +31,7 @@ export default function GanttView({
               type="button"
               disabled={view.busy}
               onClick={() => view.setAction({ kind: "create" })}
-              className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900! dark:hover:bg-neutral-200"
+              className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900! dark:hover:bg-neutral-200"
             >
               + Agregar tarea
             </button>
@@ -67,6 +59,6 @@ export default function GanttView({
           view={view}
         />
       )}
-    </TaskSyncContext.Provider>
+    </>
   );
 }

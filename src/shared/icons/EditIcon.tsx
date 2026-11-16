@@ -1,5 +1,5 @@
 import type { IconProps } from "./types";
-function EditIcon({ className, fill = false }: IconProps) {
+function EditIcon({ className }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

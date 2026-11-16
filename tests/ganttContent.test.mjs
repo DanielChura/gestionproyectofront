@@ -3,12 +3,13 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
 import ts from "typescript";
+import * as GanttStore from "@svar-ui/gantt-store";
 import { DataStore } from "@svar-ui/gantt-store";
 
 const source = ts.transpileModule(
   readFileSync(
     new URL(
-      "../src/features/projects/TaskGantt/ganttGeometry.ts",
+      "../src/features/home/views/TaskGantt/ganttGeometry.ts",
       import.meta.url,
     ),
     "utf8",
@@ -21,8 +22,12 @@ const source = ts.transpileModule(
   },
 ).outputText;
 const module = new vm.SourceTextModule(source);
-await module.link(() => {
-  throw Error("Geometry must not depend on a renderer or HTTP");
+await module.link((name) => {
+  assert.equal(name, "@svar-ui/gantt-store");
+  return new vm.SyntheticModule(Object.keys(GanttStore), function () {
+    for (const [key, value] of Object.entries(GanttStore))
+      this.setExport(key, value);
+  });
 });
 await module.evaluate();
 const { datePosition, calendarScrollLeft, isoWeekLabel, dependencyPath } =
@@ -166,9 +171,13 @@ test("ISO weekly captions reflect the actual Monday through Sunday across leap a
 });
 
 test("informative connectors route forwards and backwards without applying scheduling or touching input", () => {
-  assert.equal(dependencyPath(20, 20, 150, 60), "M20,20H85V60H150");
+  assert.match(dependencyPath(20, 20, 150, 60), /^M20,20L.*Q.*L150,60$/);
   const backward = dependencyPath(150, 20, 20, 60);
-  assert.match(backward, /^M150,20H162V40H8V60H20$/);
+  assert.match(backward, /^M150,20L.*Q.*L20,60$/);
+  assert.ok(
+    backward.includes("162"),
+    "Backward links leave the source bar before turning",
+  );
 });
 
 test("today schedules one GM midnight update, handles focus and removes timers and listeners", async () => {
@@ -208,7 +217,7 @@ test("today schedules one GM midnight update, handles focus and removes timers a
   const code = ts.transpileModule(
     readFileSync(
       new URL(
-        "../src/features/projects/TaskGantt/useGanttToday.ts",
+        "../src/features/home/views/TaskGantt/useGanttToday.ts",
         import.meta.url,
       ),
       "utf8",
@@ -319,7 +328,7 @@ test("diagram subscriptions coalesce public geometry changes and fully detach on
   const code = ts.transpileModule(
     readFileSync(
       new URL(
-        "../src/features/projects/TaskGantt/TaskGanttScene.tsx",
+        "../src/features/home/views/TaskGantt/TaskGanttScene.tsx",
         import.meta.url,
       ),
       "utf8",
@@ -340,14 +349,37 @@ test("diagram subscriptions coalesce public geometry changes and fully detach on
         useRef: (initial) => ({ current: initial }),
         useState: (initial) => [initial, () => painted++],
         useEffect: (fn) => cleanups.push(fn()),
+        useLayoutEffect: (fn) => fn(),
         useId: () => "scene",
       },
       "react/jsx-runtime": {
         jsx: (type, props) => ({ type, props }),
         jsxs: (type, props) => ({ type, props }),
       },
+      "./ganttCalendar": { toGanttWindow: () => ({}) },
+      "./ganttDependencyRouting": { routeGanttDependencies: () => ({ routes: [], obstacles: [], nodes: 0, unrouted: 0 }) },
+      "./ganttSceneGeometry": {
+        ganttBarGeometry: () => null,
+        hasGanttInterval: () => false,
+      },
+      "./useGanttConnection": {
+        useGanttConnection: () => ({ draft: null, start() {} }),
+      },
+      "./useGanttScheduling": { useGanttScheduling: () => null },
+      "./GanttSchedulingPreview": { default: () => null },
+      "./GanttTimelineRows": { default: () => null },
+      "./GanttTimeHeader": { default: () => null },
+      "./GanttTimeGrid": { default: () => null },
+      "./GanttDependencyLayer": { default: () => null },
+      "./useGanttChartLayout": { useGanttChartLayout: () => ({ left: 404, width: 800, grid: null }) },
+      "./ganttBarPresentation": { applyGanttBarPresentation() {} },
+      "./ganttRangeLabel": { ganttRangeLabel: () => "" },
+      "../../utils/taskSchedule": { scheduleLabel: () => "" },
       "./ganttGeometry": { datePosition: () => NaN, dependencyPath },
-      "./ganttViewport": { ganttDay: (date) => new Date(date) },
+      "./ganttViewport": {
+        ganttDay: (date) => new Date(date),
+        shiftGanttDay: (date) => date,
+      },
     };
     const values = dependencies[name];
     assert.ok(values, name);
@@ -361,11 +393,13 @@ test("diagram subscriptions coalesce public geometry changes and fully detach on
   });
   await scene.evaluate();
   scene.namespace.default({
+    vertical: { height: 400 },
     api,
     tasks: [],
     dependencies: [],
     today: "2026-11-04",
     selected: null,
+    calendar: { preview: null, snapshot: new Map(), operations: { canStart: () => true } },
   });
   assert.ok(actions.size > 0 && subscribed.size > 0);
   for (const action of actions.values()) {

@@ -35,18 +35,19 @@ export default function TeamsPage({ canManage = false }: TeamsPageProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const isTeams = pathname === "/equipos" || pathname === "/equipos/todos";
   const people = usePeople();
+  const { setCreatingTeam } = people;
 
   useEffect(() => {
     if (searchParams.get("nuevo") !== "equipo") return;
-    people.setCreatingTeam(true);
+    setCreatingTeam(true);
     const next = new URLSearchParams(searchParams);
     next.delete("nuevo");
     setSearchParams(next, { replace: true });
-  }, [searchParams, setSearchParams, people.setCreatingTeam]);
+  }, [searchParams, setSearchParams, setCreatingTeam]);
 
   const handleOpenCreate = () => {
     if (isTeams) {
-      people.setCreatingTeam(true);
+      setCreatingTeam(true);
       return;
     }
     people.setEditingWorker({

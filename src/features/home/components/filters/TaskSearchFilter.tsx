@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import SearchIcon from "../../../../shared/icons/SearchIcon";
-import XIcon from "../../../../shared/icons/XIcon";
 
 export default function TaskSearchFilter({
   value,

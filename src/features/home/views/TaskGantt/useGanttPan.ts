@@ -4,6 +4,7 @@ import type { IApi } from "@svar-ui/react-gantt";
 import type { GanttNavigation } from "./ganttNavigation";
 import { hasGanttInterval } from "./ganttSceneGeometry";
 import { positionDate } from "./ganttGeometry";
+import { useGanttVerticalScroll } from "./useGanttVerticalScroll";
 
 export function useGanttPan(
   api: IApi | null,
@@ -25,40 +26,7 @@ export function useGanttPan(
     },
     [api, protectedView],
   );
-  useEffect(() => {
-    const node = surface.current;
-    if (!node || !api) return;
-    const wheel = (event: WheelEvent) => {
-      const state = api.getState(),
-        bounds = node.getBoundingClientRect();
-      if (
-        event.clientX < bounds.left + state.gridWidth + 4
-      )
-        return;
-      event.preventDefault();
-      event.stopPropagation();
-      const unit =
-        event.deltaMode === 1
-          ? 16
-          : event.deltaMode === 2
-            ? (state._chartHeight ?? 400)
-            : 1;
-      const maximum = Math.max(
-        0,
-        (state._scales?.height ?? 56) + state._tasks.length * (state.cellHeight ?? 40) -
-          (state._chartHeight ?? 0),
-      );
-      void api.exec("scroll-chart", {
-        top: Math.min(
-          maximum,
-          Math.max(0, state.scrollTop + (event.shiftKey ? 0 : event.deltaY) * unit),
-        ),
-        left: Math.max(0, state.scrollLeft + (event.deltaX || (event.shiftKey ? event.deltaY : 0)) * unit),
-      });
-    };
-    node.addEventListener("wheel", wheel, { passive: false });
-    return () => node.removeEventListener("wheel", wheel);
-  }, [api, protectedView]);
+  const vertical = useGanttVerticalScroll(api, surface);
   function down(event: ReactPointerEvent<HTMLDivElement>) {
     if (
       !api ||
@@ -74,8 +42,9 @@ export function useGanttPan(
     if (!protectedView && event.target instanceof Element && event.target.closest(".wx-bar,button,.gm-gantt-links,[data-link-source]")) return false;
     const state = api.getState(),
       bounds = event.currentTarget.getBoundingClientRect();
+    const chartLeft = event.currentTarget.querySelector(".wx-chart")?.getBoundingClientRect().left ?? bounds.left + state.gridWidth + 4;
     if (
-      event.clientX < bounds.left + state.gridWidth + 4 ||
+      event.clientX < chartLeft ||
       event.clientY >= bounds.bottom - (state._scrollSize ?? 10)
     )
       return false;
@@ -90,7 +59,7 @@ export function useGanttPan(
       id = event.pointerId,
       origin = event.clientX,
       left = state.scrollLeft;
-    const anchor = navigation ? positionDate(left + origin - bounds.left - state.gridWidth - 4, state) : null;
+    const anchor = navigation ? positionDate(left + origin - chartLeft, state) : null;
     let moved = false,
       ended = false;
     const clearClick = () => {
@@ -150,7 +119,8 @@ export function useGanttPan(
       next.stopPropagation();
       if (anchor && navigation) {
         const current = node.getBoundingClientRect();
-        navigation.toDate(anchor, next.clientX - current.left - api.getState().gridWidth - 4);
+        const left = node.querySelector(".wx-chart")?.getBoundingClientRect().left ?? current.left + api.getState().gridWidth + 4;
+        navigation.toDate(anchor, next.clientX - left);
       } else void api.exec("scroll-chart", { left: Math.max(0, left - delta) });
     };
     document.addEventListener("pointermove", move, true);
@@ -162,5 +132,5 @@ export function useGanttPan(
     event.stopPropagation();
     return true;
   }
-  return { down, dragging, captureSurface };
+  return { down, dragging, captureSurface, vertical };
 }

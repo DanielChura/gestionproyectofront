@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Task } from "../../../../core/interfaces/task.interface";
-import { getTasks } from "../../../../core/services/taskService";
+import { projectTaskQuery } from "../../../home/hooks/projectTaskQuery";
 import { useAuth } from "../../../../hooks/useAuth";
 import { taskAssignees } from "../../../home/utils/taskAssignees";
 
@@ -8,10 +8,10 @@ export type PriorityTask = Task & { projectId: number };
 
 export function usePriorityTasks(projectId: number | null) {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  const { data = [], isLoading } = useQuery<Task[]>({
-    queryKey: ["tasks", projectId],
-    queryFn: () => (projectId === null ? [] : getTasks(projectId)),
+  const { data = [], isLoading } = useQuery({
+    ...projectTaskQuery(projectId ?? 0, queryClient),
     enabled: projectId !== null,
     staleTime: 1000 * 60 * 5,
     retry: false,

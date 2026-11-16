@@ -15,16 +15,12 @@ export function useHome() {
   const { addToast } = useToast();
   const queryClient = useQueryClient();
 
-  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+  const [requestedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [taskSearch, setTaskSearch] = useState("");
   const [isCreateTaskOpen, setCreateTaskOpen] = useState(false);
   const [isPublishOpen, setPublishOpen] = useState(false);
 
-  useEffect(() => {
-    if (projects.length > 0 && selectedProjectId === null) {
-      setSelectedProjectId(projects[0].id);
-    }
-  }, [projects, selectedProjectId]);
+  const selectedProjectId = projects.some(project => project.id === requestedProjectId) ? requestedProjectId : (projects[0]?.id ?? null);
 
   useEffect(() => {
     const handleOpenTask = () => setCreateTaskOpen(true);

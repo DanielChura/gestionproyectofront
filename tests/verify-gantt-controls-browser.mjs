@@ -7,7 +7,6 @@ import {
   currentGanttTasks,
   waitGantt,
   chooseGanttPeriod,
-  flexibleGanttRange,
   selectGanttTask,
   ganttFilter,
   clearGanttFilters,
@@ -321,7 +320,7 @@ try {
     },
   );
   await check(
-    "Six real periods, coherent temporal anchors, custom inclusive range and today use no writes",
+    "Five real periods, coherent temporal anchors and today use no writes",
     async () => {
       const results = [];
       for (const scale of ["day", "week", "month", "quarter", "year"]) {
@@ -339,36 +338,13 @@ try {
         );
         results.push({ scale, interval });
       }
-      const first = data.today,
-        last = data.today;
-      await chooseGanttPeriod(page, "flexible");
-      await page
-        .getByLabel("Inicio del intervalo", { exact: true })
-        .fill(first);
-      await page.getByLabel("Fin del intervalo", { exact: true }).fill(last);
-      await page.screenshot({
-        path: path.join(output, "period-flexible.png"),
-        fullPage: true,
-      });
+      await page.getByRole("button", { name: /^Periodo de Gantt:/ }).click();
+      assert.deepEqual(await page.getByRole("menuitemradio").allTextContents(), ["Día", "Semana", "Mes", "Trimestre", "Año"]);
       await page.keyboard.press("Escape");
-      await flexibleGanttRange(page, first, last);
-      await settled();
-      assert.match(
-        await page
-          .getByRole("button", { name: /^Periodo de Gantt:/ })
-          .textContent(),
-        /Flexible/,
-      );
-      assert.equal(
-        await page
-          .locator(".gm-task-gantt .wx-chart")
-          .evaluate((node) => node.scrollWidth <= node.clientWidth + 1),
-        true,
-      );
       await chooseGanttPeriod(page, "day");
       await page.getByRole("button", { name: "Hoy", exact: true }).click();
       assert.equal(writes.length, 0);
-      return { periods: results, single_day_flexible: true, writes: 0 };
+      return { periods: results, five_periods: true, writes: 0 };
     },
   );
   await check(

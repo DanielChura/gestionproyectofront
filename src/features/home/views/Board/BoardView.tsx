@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-import { sessionVersion } from "../../../auth/api";
-import { createTaskSync, TaskSyncContext } from "../../utils/useTaskSync";
 import type { Dispatch, SetStateAction } from "react";
 import PlusIcon from "../../../../shared/icons/PlusIcon";
 import ProjectToolbar from "../../shared/ProjectToolbar";
@@ -36,6 +34,7 @@ export default function BoardView({
 }: BoardViewProps) {
   const {
     tasks,
+    acceptTask,
     catalogs,
     search,
     preferences,
@@ -44,7 +43,6 @@ export default function BoardView({
     setAction,
     changeState,
     patchTask,
-    acceptTask,
     action,
     busy,
     saveTask,
@@ -54,11 +52,6 @@ export default function BoardView({
     configuredStates,
   } = useBoard(project, onProjectChange, initialCreate, onCreateHandled);
 
-  const epoch = sessionVersion();
-  const taskSync = useMemo(
-    () => createTaskSync(project.id, epoch),
-    [project.id, epoch],
-  );
 
   const myTasks = useMyTasksFilter(tasks);
   const states = project.task_states?.states ?? [];
@@ -183,9 +176,7 @@ export default function BoardView({
         onPatch={patchTask}
       />
 
-      <TaskSyncContext.Provider value={taskSync}>
-        <TaskDialog controller={dialog} onUpdated={acceptTask} />
-      </TaskSyncContext.Provider>
+      <TaskDialog controller={dialog} onUpdated={acceptTask} />
       {configuringStates && (
         <TaskStatusConfiguration
           project={project}

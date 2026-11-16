@@ -6,6 +6,7 @@ interface ModalProps {
   onClose: () => void;
   busy?: boolean;
   wide?: boolean;
+  compact?: boolean;
   taskComposer?: boolean;
   projectComposer?: boolean;
   statusComposer?: boolean;
@@ -17,6 +18,7 @@ export default function Modal({
   onClose,
   busy = false,
   wide = false,
+  compact = false,
   taskComposer = false,
   projectComposer = false,
   statusComposer = false,
@@ -40,9 +42,11 @@ export default function Modal({
   }, []);
 
   let sizeClasses = "max-w-2xl";
+  if (compact) sizeClasses = "max-w-md";
   if (wide) sizeClasses = "max-w-3xl";
   if (taskComposer || projectComposer)
-    sizeClasses = "max-w-3xl overflow-hidden open:flex open:flex-col";
+    sizeClasses =
+      "max-w-3xl max-h-[calc(100dvh-2rem)] overflow-hidden open:flex open:flex-col";
   if (statusComposer)
     sizeClasses =
       "max-w-3xl h-dvh max-h-[48rem] overflow-hidden rounded-xl open:flex open:flex-col";

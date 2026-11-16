@@ -10,6 +10,7 @@ export default function GanttTaskDialog({
 }) {
   return (
     <TaskDialog
+      gantt
       controller={{ project, ...view, close: () => view.setAction(null) }}
       onUpdated={view.acceptTask}
     />

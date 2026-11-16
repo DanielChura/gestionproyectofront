@@ -31,7 +31,7 @@ export default function GanttProjectRow({
       style={{ gridTemplateColumns: `min(${width + 4}px, 42%) minmax(0, 1fr)` }}
       aria-label="Resumen del proyecto"
     >
-      <span className="truncate px-3 py-2 " title={project.name}>
+      <span className="truncate px-3 py-2 font-medium" title={project.name}>
         {project.name}
       </span>
       <nav
@@ -44,7 +44,7 @@ export default function GanttProjectRow({
           Zoom {controls.viewport.zoomLevel} de 9
         </span>
         <GanttIconButton label="Anterior" onClick={() => controls.page(-1)}>
-          <ChevronIcon className="size-4" />
+          <ChevronIcon className="size-4 rotate-90" />
         </GanttIconButton>
         <div className="flex min-w-0 flex-1 items-center gap-2">
           {summary.percent !== null && (
@@ -55,10 +55,10 @@ export default function GanttProjectRow({
               aria-label={`Avance de ${project.name}`}
             />
           )}
-          <span className="shrink-0 px-1  tabular-nums">{label}</span>
+          <span className="shrink-0 px-1 font-medium tabular-nums">{label}</span>
         </div>
         <GanttIconButton label="Siguiente" onClick={() => controls.page(1)}>
-          <ChevronIcon className="size-4" />
+          <ChevronIcon className="size-4 -rotate-90" />
         </GanttIconButton>
         <div className="flex shrink-0 items-center rounded-lg border border-neutral-200 dark:border-neutral-700">
           <GanttIconButton

@@ -1,5 +1,6 @@
+import { themeColor, themeIcon } from "../../../../utils/themePresentation";
 import ChevronDownIcon from "../../../../../../shared/icons/ChevronIcon";
-import { getIcon } from "../../../../../../shared/icons/icon-catalog";
+import { DynamicIcon } from "../../../../../../shared/icons/icon-catalog";
 import type { TaskRowModel } from "./types";
 
 export default function TaskNameCell({
@@ -15,9 +16,7 @@ export default function TaskNameCell({
 }) {
   const { task, depth, context, open, searching, childCount, descendantCount } =
     row;
-
-  const Icon = getIcon(task.state_tema?.icono);
-  const color = task.state_tema?.color ?? "#525252";
+  const color = themeColor(task.state_tema?.color) ?? "#525252";
 
   return (
     <td className="h-12 px-3">
@@ -44,7 +43,7 @@ export default function TaskNameCell({
         )}
 
         <span style={{ color }} className="shrink-0" title={task.state_name}>
-          <Icon className="size-4" fill />
+          <DynamicIcon name={themeIcon(task.state_tema?.icono)} className="size-4" fill />
         </span>
 
         <div className={`min-w-0 flex-1 ${depth ? "pl-2" : ""}`}>

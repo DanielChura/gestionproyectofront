@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import type { Project } from "../../../../../core/interfaces/task.interface";
-import { avatarFor } from "../../../../../shared/Avatar";
+import { avatarFor } from "../../../../../shared/avatarUtils";
 import { useAssignmentTeams } from "./useAssignmentTeams";
 
 export default function AssigneeSelector({

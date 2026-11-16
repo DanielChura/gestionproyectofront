@@ -1,5 +1,5 @@
 import type { IconProps } from "./types";
-function VectorIcon({ className, fill = false }: IconProps) {
+function VectorIcon({ className }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

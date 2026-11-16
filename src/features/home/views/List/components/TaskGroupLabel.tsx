@@ -1,4 +1,4 @@
-import { getIcon } from "../../../../../shared/icons/icon-catalog";
+import { DynamicIcon } from "../../../../../shared/icons/icon-catalog";
 import UserIcon from "../../../../../shared/icons/UserIcon";
 
 import type {
@@ -20,11 +20,10 @@ export default function TaskGroupLabel({
   state,
 }: TaskGroupLabelProps) {
   if (group.stateCode) {
-    const Icon = getIcon(state?.tema?.icono);
 
     return (
       <span className="inline-flex items-center gap-1.5  text-white">
-        <Icon className="size-3.5" fill />
+        <DynamicIcon name={state?.tema?.icono} className="size-3.5" fill />
         <span className="truncate">{group.name}</span>
       </span>
     );

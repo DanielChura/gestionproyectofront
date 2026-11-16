@@ -26,7 +26,6 @@ export function usePublications({
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
     listPublications({ search, state, project_id: projectId })
       .then((response) => {
         if (!active) return;
@@ -44,7 +43,10 @@ export function usePublications({
     };
   }, [search, state, projectId, reloadKey]);
 
-  const refetch = useCallback(() => setReloadKey((key) => key + 1), []);
+  const refetch = useCallback(() => {
+    setLoading(true);
+    setReloadKey((key) => key + 1);
+  }, []);
 
   const matches = useCallback(
     (publication: Publication) =>

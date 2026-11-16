@@ -94,4 +94,3 @@ export function useHomeActions(project: ProjectSummary | null) {
     isSavingPublication: pubMutation.isPending,
   };
 }
-

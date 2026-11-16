@@ -43,20 +43,21 @@ async function load(relative) {
   return module;
 }
 const queryModule = await load(
-  "../src/features/projects/TaskGantt/ganttQuery.ts",
+  "../src/features/home/views/TaskGantt/ganttQuery.ts",
 );
 await queryModule.evaluate();
 const viewportModule = await load(
-  "../src/features/projects/TaskGantt/ganttViewport.ts",
+  "../src/features/home/views/TaskGantt/ganttViewport.ts",
 );
 await viewportModule.evaluate();
 const calendarModule = await load(
-  "../src/features/projects/TaskGantt/ganttCalendar.ts",
+  "../src/features/home/views/TaskGantt/ganttCalendar.ts",
 );
 await calendarModule.evaluate();
 const { ganttProjection, ganttDependencies, emptyGanttFilters } =
   queryModule.namespace;
 const {
+  normalizeGanttScale,
   centeredViewport,
   fitProjectViewport,
   fitTimelineViewport,
@@ -227,7 +228,7 @@ test("missing unauthorized ancestors and dependency endpoints are never fetched,
   assert.equal(edges[0].id, "1:2");
   assert.equal(edges[0].predecessor.id, 1);
   assert.equal(edges[0].successor.id, 2);
-  assert.equal(edges[0].type, undefined);
+  assert.equal(edges[0].type, null);
   assert.equal(edges[0].lag, undefined);
 });
 
@@ -328,11 +329,11 @@ test("ordinary real store refresh retains controlled selection, collapse, viewpo
   assert.equal(store.getTask(60).text, "Nombre actualizado");
 });
 
-test("fit uses the complete authorized task collection and fits centuries inside the actual timeline width", () => {
+test("fit uses the complete authorized task collection and retains complete years and quarters with readable horizontal navigation for extreme ranges", () => {
   const tasks = [task(1, { start_date: "1901-01-01", due_date: "2099-01-01" })];
   const expanded = fitProjectViewport(tasks, "2026-10-30", 640);
   assert.equal(expanded.scale, "year");
-  assert.ok(expanded.step > 1);
+  assert.equal(expanded.step, 1);
   assert.equal(viewportScales(expanded)[0].step, expanded.step);
   assert.equal(viewportContains(expanded, "2099-01-01"), true);
   const store = new DataStore();
@@ -343,14 +344,14 @@ test("fit uses the complete authorized task collection and fits centuries inside
     scales: viewportScales(expanded),
     cellWidth: viewportCellWidth(expanded),
   });
-  assert.ok(store.getState()._scales.width <= 640.01);
-  assert.ok(store.getState()._scales.rows[0].cells.length < 12);
+  assert.ok(store.getState()._scales.width > 640);
+  assert.equal(store.getState()._scales.rows[0].cells.length, 199);
   assert.equal(store.getTask(1).start.getFullYear(), 1901);
   const anchor = viewportAnchor(
     centeredViewport(ganttDay("2026-10-30"), "week"),
     280,
   );
-  assert.equal(anchor.getDate(), 5);
+  assert.ok(anchor >= centeredViewport(ganttDay("2026-10-30"), "week").start);
 });
 
 test("fit includes unbounded starts without inventing ends, ignores active matches and handles empty or single-day projects", () => {
@@ -385,23 +386,39 @@ test("fit includes unbounded starts without inventing ends, ignores active match
       cellWidth: viewportCellWidth(fit),
     });
     assert.equal(fit.scale, "day");
-    assert.equal(store.getState()._scales.width, 500);
-    assert.equal(store.getState()._scales.rows[1].cells.length, 1);
+    assert.equal(store.getState()._scales.width, 24 * viewportCellWidth(fit));
+    assert.equal(store.getState()._scales.rows[1].cells.length, 24);
+    assert.ok(viewportCellWidth(fit) >= 40);
     if (source[0]?.due_date === null)
       assert.equal(store.getTask(1).end, undefined);
   }
 });
 
-test("all six period choices use real calendar units; custom ranges are inclusive, validated and responsive", () => {
+test("five period choices and automatic fitting use real calendar units and inclusive bounds", () => {
   for (const scale of ["day", "week", "month", "quarter", "year"]) {
     const view = centeredViewport(ganttDay("2026-11-03"), scale);
     const scales = viewportScales(view);
-    assert.equal(scales.at(-1).unit, scale === "week" ? "day" : scale);
+    assert.equal(
+      scales.at(-1).unit,
+      {
+        day: "hour",
+        week: "day",
+        month: "week",
+        quarter: "month",
+        year: "quarter",
+      }[scale],
+    );
     const store = new DataStore();
     store.init({ ...config, ...view, tasks: [], scales });
     assert.equal(
       store.getState()._scales.minUnit,
-      scale === "week" ? "day" : scale,
+      {
+        day: "hour",
+        week: "day",
+        month: "week",
+        quarter: "month",
+        year: "quarter",
+      }[scale],
     );
     assert.ok(scales.at(-1).format(view.start).length > 0);
   }
@@ -411,8 +428,10 @@ test("all six period choices use real calendar units; custom ranges are inclusiv
     ["1901-01-01", "2099-12-31"],
   ]) {
     for (const width of [240, 500, 1100]) {
-      const fit = fitTimelineViewport(first, last, width, true);
-      assert.equal(fit.scale, "flexible");
+      const fit = fitTimelineViewport(first, last, width);
+      assert.ok(
+        ["day", "week", "month", "quarter", "year"].includes(fit.scale),
+      );
       assert.equal(viewportContains(fit, first), true);
       assert.equal(viewportContains(fit, last), true);
       const store = new DataStore();
@@ -423,8 +442,9 @@ test("all six period choices use real calendar units; custom ranges are inclusiv
         scales: viewportScales(fit),
         cellWidth: viewportCellWidth(fit),
       });
-      assert.ok(store.getState()._scales.width <= width + 0.01);
-      assert.ok(store.getState()._scales.rows.at(-1).cells.length < 32);
+      assert.ok(store.getState()._scales.width >= width - 1);
+      assert.equal(viewportScales(fit).length, 2);
+      assert.equal(fit.step, 1);
     }
   }
   assert.throws(
@@ -453,12 +473,13 @@ test("diagram paging preserves density and window size after a custom or centuri
   }
 });
 
-test("automatic framing keeps a fourteen-month schedule at legible quarters without an empty year margin", () => {
+test("automatic framing selects a readable period under the explicit minimum visual-unit widths", () => {
   const view = fitTimelineViewport("2026-10-14", "2027-12-08", 450);
-  assert.equal(view.unit, "quarter");
-  assert.equal(view.start.getMonth(), 9);
+  assert.equal(view.unit, "year");
+  assert.equal(view.start.getMonth(), 0);
   assert.equal(view.start.getFullYear(), 2026);
-  assert.ok(view.cellWidth >= 64);
+  assert.ok(viewportCellWidth(view) >= 64);
+  assert.equal(viewportContains(view, "2027-12-08"), true);
 });
 
 test("all authorized records remain addressable beyond previous listing limits with stable sibling order", () => {
@@ -504,4 +525,18 @@ test("public grid resizing preserves hierarchy, calendar and independent states"
   await store.in.exec("resize-grid", { width: 840 });
   assert.equal(store.getState().gridWidth, 840);
   assert.equal(store.getTask(2).parent, 1);
+});
+
+test("legacy or unknown scale preferences normalize to month without changing task calendars", () => {
+  for (const scale of ["flexible", "Flexible", "obsolete", null, undefined]) {
+    assert.equal(normalizeGanttScale(scale), "month");
+    const view = centeredViewport(
+      ganttDay("2024-02-29"),
+      normalizeGanttScale(scale),
+    );
+    assert.equal(view.scale, "month");
+    assert.equal(viewportContains(view, "2024-02-29"), true);
+  }
+  for (const scale of ["day", "week", "month", "quarter", "year"])
+    assert.equal(normalizeGanttScale(scale), scale);
 });

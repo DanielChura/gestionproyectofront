@@ -1,7 +1,0 @@
-src/features/inicio/views/TaskGantt/GanttView.tsx(3,32): error TS2307: Cannot find module '../../auth/api' or its corresponding type declarations.
-src/features/inicio/views/TaskGantt/GanttView.tsx(5,49): error TS2307: Cannot find module '../utils/useTaskSync' or its corresponding type declarations.
-src/features/inicio/views/TaskGantt/GanttView.tsx(19,20): error TS2552: Cannot find name 'useTaskSync'. Did you mean 'taskSync'?
-src/features/inicio/views/TaskGantt/TaskGantt.tsx(99,8): error TS2304: Cannot find name 'PlusIcon'.
-src/features/inicio/views/TaskGantt/TaskGantt.tsx(209,14): error TS2304: Cannot find name 'PlusIcon'.
-src/features/inicio/views/TaskGantt/TaskGantt.tsx(680,18): error TS2304: Cannot find name 'TaskGanttFields'.
-src/features/inicio/views/TaskGantt/TaskGantt.tsx(687,14): error TS2304: Cannot find name 'TaskGanttCalendarFeedback'.

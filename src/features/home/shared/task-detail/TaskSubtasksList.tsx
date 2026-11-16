@@ -1,3 +1,4 @@
+import { themeColor } from "../../utils/themePresentation";
 import { useState } from "react";
 import ChevronIcon from "../../../../shared/icons/ChevronIcon";
 import FlagIcon from "../../../../shared/icons/FlagIcon";
@@ -61,7 +62,7 @@ export default function TaskSubtasksList({
               item.priority && priorityTones[item.priority]
                 ? priorityTones[item.priority].text
                 : "text-neutral-400";
-            const color = item.state_tema?.color ?? "#737373";
+            const color = themeColor(item.state_tema?.color ?? item.state_color) ?? "#737373";
 
             return (
               <button
@@ -105,7 +106,7 @@ export default function TaskSubtasksList({
             );
           })}
 
-          {adding ? (
+          {parent.permissions.create_child && (adding ? (
             <QuickTaskRow
               project={project}
               catalogs={catalogs}
@@ -125,7 +126,7 @@ export default function TaskSubtasksList({
               <PlusIcon className="size-3.5" />
               <span>Añadir subtarea</span>
             </button>
-          )}
+          ))}
         </div>
       )}
     </section>

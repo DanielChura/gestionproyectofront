@@ -147,9 +147,10 @@ export default function ProjectChartsSection({ charts, totalTasks }: Props) {
     };
   }, [charts?.timeline]);
 
+  const distribution = charts?.status_distribution;
   const statusPieData = useMemo(() => {
-    if (!charts?.status_distribution) return null;
-    const { labels, datasets } = charts.status_distribution;
+    if (!distribution) return null;
+    const { labels, datasets } = distribution;
     const colors = labels.map(getStatusColor);
 
     return {
@@ -166,7 +167,7 @@ export default function ProjectChartsSection({ charts, totalTasks }: Props) {
         },
       ],
     };
-  }, [charts?.status_distribution]);
+  }, [distribution]);
 
   const lineOptions = {
     responsive: true,

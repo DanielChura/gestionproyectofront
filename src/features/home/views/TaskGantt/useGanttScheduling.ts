@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 import type { IApi } from "@svar-ui/react-gantt";
-import type { Task } from "../../types";
+import { constrainGanttProgramming } from "./ganttProgrammingBounds";
+import type { Task, Project } from "../../types";
 import type { useGanttCalendar } from "./useGanttCalendar";
 import type { GanttUnit } from "./ganttViewport";
 import type { GanttNavigation } from "./ganttNavigation";
@@ -10,7 +11,7 @@ import { startGanttProgramming } from "./ganttProgrammingGesture";
 import type { ProgrammingPreview } from "./ganttProgrammingGesture";
 
 interface Model {
-  api: IApi | null; tasks: Task[]; unit: GanttUnit; enabled: boolean; navigationKey: string;
+  api: IApi | null; project: Project; height: number; tasks: Task[]; unit: GanttUnit; enabled: boolean; navigationKey: string;
   canCreate: boolean; calendar: ReturnType<typeof useGanttCalendar>; navigation: GanttNavigation;
   onDates: (task: Task, initial?: { start_date: string; due_date: string }) => void;
   onCreateAt: (start: string) => void;
@@ -27,7 +28,7 @@ export function useGanttScheduling(region: RefObject<HTMLDivElement | null>, mod
       if (!(event.target instanceof Element) || event.altKey || event.target.closest("button,input,[role=button],.wx-bar,.gm-gantt-exterior,.gm-gantt-links")) return null;
       const state = api.getState(), box = node.getBoundingClientRect(), header = state._scales?.height ?? 56;
       const x = event.clientX - box.left, y = event.clientY - box.top - header;
-      if (x < 0 || x >= box.width || y < 0 || y >= (state._chartHeight ?? 0) - header) return null;
+      if (x < 0 || x >= box.width || y < 0 || y >= latest.current.height) return null;
       const index = Math.floor((y + state.scrollTop) / (state.cellHeight ?? 40));
       const task = latest.current.tasks.find(item => item.id === Number(state._tasks[index]?.id));
       return task && !hasGanttInterval(task) && latest.current.calendar.operations.canStart(task) ? { task, index, x, y: header + (index + .5) * (state.cellHeight ?? 40) - state.scrollTop } : null;
@@ -42,7 +43,8 @@ export function useGanttScheduling(region: RefObject<HTMLDivElement | null>, mod
       event.preventDefault(); event.stopImmediatePropagation(); cancel?.(); clearClick?.();
       const task = latest.current.calendar.captureTask(at.task);
       cancel = startGanttProgramming(event, {
-        api, node, task, index: at.index, canStart: () => latest.current.enabled && latest.current.calendar.operations.canStart(task),
+        constrain: proposal => constrainGanttProgramming(proposal, task, latest.current.tasks, latest.current.project),
+        api, node, task, canStart: () => latest.current.enabled && latest.current.calendar.operations.canStart(task),
         preview: value => { if (!value) cancel = undefined; setPreview(value); },
         commit: value => { latest.current.calendar.operations.commit(task, value); },
         open: () => latest.current.onDates(task), navigate: latest.current.navigation.scrollBy,

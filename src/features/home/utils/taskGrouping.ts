@@ -1,3 +1,4 @@
+import { themeColor } from "./themePresentation";
 import type {
   ProjectCatalogs,
   ProjectTaskState,
@@ -85,7 +86,7 @@ export function groupTasks(
         name: state.name,
         stateCode: state.code,
         stateCategory: state.category,
-        stateColor: `var(--color-${color})`,
+        stateColor: themeColor(color),
         rank: state.rank,
         tokens: [],
         members: new Set(),
@@ -187,7 +188,7 @@ export function groupTasks(
 
   for (const task of byId.values()) {
     if (!hierarchy.visible.has(task.id)) continue;
-    for (const descriptor of descriptors(task)) {
+    for (const descriptor of descriptors(preferences.mode === "state" ? (hierarchy.rootById.get(task.id) ?? task) : task)) {
       const key = `${preferences.mode}:${descriptor.key}`;
       let group = groups.get(key);
       if (!group) {

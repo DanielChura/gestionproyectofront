@@ -7,7 +7,7 @@ import {
   currentGanttTasks,
   waitGantt,
   chooseGanttPeriod,
-  flexibleGanttRange,
+  showGanttRange,
   selectGanttTask,
   ganttFilter,
   clearGanttFilters,
@@ -338,7 +338,7 @@ try {
   await check(
     "ISO weeks cross year accurately, weekends remain calendar days and Today follows GM timezone",
     async () => {
-      await flexibleGanttRange(page, "2026-12-28", "2027-01-10");
+      await showGanttRange(page, "2026-12-28", "2027-01-10");
       await chooseGanttPeriod(page, "week");
       await page.getByText(/S53.*28 dic.*3 ene/).waitFor();
       assert.ok((await page.locator(".gm-gantt-weekend").count()) > 0);
@@ -357,7 +357,7 @@ try {
         path: path.join(output, "week-today-weekends.png"),
         fullPage: true,
       });
-      await flexibleGanttRange(page, "1901-01-01", "1901-01-02");
+      await showGanttRange(page, "1901-01-01", "1901-01-02");
       await page.locator(".gm-gantt-today").waitFor({ state: "hidden" });
       await page.getByRole("button", { name: "Hoy", exact: true }).click();
       await page.locator(".gm-gantt-today").waitFor();
@@ -395,7 +395,7 @@ try {
             const marker = client.tab.locator(".gm-gantt-today");
             await marker.waitFor();
             const dateCell = client.tab
-              .locator(".wx-scale .wx-row")
+              .locator(".gm-gantt-time-header > [role=row]")
               .last()
               .locator(".wx-cell")
               .filter({ hasText: new RegExp("^" + day + "$") })
@@ -403,7 +403,7 @@ try {
             await dateCell.waitFor();
             await client.tab.waitForFunction((day) => {
               const rows =
-                  globalThis.document.querySelectorAll(".wx-scale .wx-row"),
+                  globalThis.document.querySelectorAll(".gm-gantt-time-header > [role=row]"),
                 marker = globalThis.document.querySelector(".gm-gantt-today");
               const cell = [
                 ...rows[rows.length - 1].querySelectorAll(".wx-cell"),
@@ -443,7 +443,7 @@ try {
                   '[aria-label="Navegación temporal de Gantt"]',
                 )?.textContent,
                 cells: [
-                  ...globalThis.document.querySelectorAll(".wx-scale .wx-cell"),
+                  ...globalThis.document.querySelectorAll(".gm-gantt-time-header [role=columnheader]"),
                 ].map((node) => ({
                   text: node.textContent,
                   left: node.getBoundingClientRect().x,
@@ -825,7 +825,7 @@ try {
         method: "POST",
       });
       await dialog
-        .getByRole("button", { name: "Cerrar detalle de tarea", exact: true })
+        .getByRole("button", { name: "Cerrar modal", exact: true })
         .click();
       await arrow(qa.target, qa.subject).waitFor();
       await arrow(qa.target, qa.subject).focus();

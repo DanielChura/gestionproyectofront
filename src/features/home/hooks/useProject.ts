@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Dispatch, SetStateAction } from "react";
 import type { Project } from "../../../core/interfaces/task.interface";
@@ -11,6 +11,9 @@ import { useToast } from "../../../hooks/useToast";
 
 export function useProject(projectId: number) {
   const queryClient = useQueryClient();
+  const favoriteLock = useRef(false);
+  const [favoritePending, setFavoritePending] = useState(false);
+  const [favoriteError, setFavoriteError] = useState("");
   const { addToast } = useToast();
 
   const { data: project = null, refetch } = useQuery<Project | null>({
@@ -44,7 +47,10 @@ export function useProject(projectId: number) {
   );
 
   const toggleFavorite = useCallback(async () => {
-    if (!project) return;
+    if (!project || favoriteLock.current) return;
+    favoriteLock.current = true;
+    setFavoritePending(true);
+    setFavoriteError("");
     const nextFavorite = !project.is_favorite;
     setProject((prev) =>
       prev ? { ...prev, is_favorite: nextFavorite } : prev,
@@ -53,6 +59,7 @@ export function useProject(projectId: number) {
       await setProjectFavorite(projectId, nextFavorite);
       void queryClient.invalidateQueries({ queryKey: ["projects"] });
     } catch (err) {
+      setFavoriteError(errorText(err));
       setProject((prev) =>
         prev ? { ...prev, is_favorite: !nextFavorite } : prev,
       );
@@ -61,8 +68,11 @@ export function useProject(projectId: number) {
         title: "Error al actualizar favorito",
         message: errorText(err),
       });
+    } finally {
+      favoriteLock.current = false;
+      setFavoritePending(false);
     }
   }, [project, projectId, setProject, queryClient, addToast]);
 
-  return { project, refetch, setProject, toggleFavorite };
+  return { project, refetch, setProject, toggleFavorite, favoritePending, favoriteError };
 }

@@ -36,6 +36,8 @@ export interface TaskRowData {
 }
 
 export interface TaskRowActions {
+  dragEnabled?: boolean;
+  dragging?: boolean;
   onToggle: () => void;
   onOpen: () => void;
 }

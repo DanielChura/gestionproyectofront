@@ -1,5 +1,5 @@
 import type { IconProps } from "./types";
-function TaskListIcon({ className, fill = false }: IconProps) {
+function TaskListIcon({ className }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

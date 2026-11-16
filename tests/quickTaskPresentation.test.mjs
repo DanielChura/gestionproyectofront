@@ -26,6 +26,7 @@ async function load(path, dependencies) {
     const exports = {
       "../TaskSyncProvider": { default: ({ children }) => children },
       "../useTaskSync": { useTaskSync: () => syncFixture },
+      "../utils/useTaskSync": { useTaskSync: () => syncFixture },
       react: React,
       "react/jsx-runtime": jsxRuntime,
       ...dependencies,
@@ -53,10 +54,11 @@ const project = {
 };
 let draft;
 const { default: QuickRow } = await load(
-  "../src/features/projects/TaskList/QuickTaskRow.tsx",
+  "../src/features/home/shared/QuickTaskRow.tsx",
   {
-    "./useQuickTask": { useQuickTask: () => draft },
-    "./useQuickTaskAlignment": { useQuickTaskAlignment() {} },
+    "../views/List/hooks/useQuickTask": { useQuickTask: () => draft },
+    "../views/List/hooks/useQuickTaskAlignment": { useQuickTaskAlignment() {} },
+    "../../../shared/icons/CheckIcon": { default: () => null },
     "./TaskCell": {
       StateIcon: () => React.createElement("svg", { "aria-hidden": true }),
       StateLabel: ({ name }) => React.createElement("span", null, name),
@@ -65,11 +67,13 @@ const { default: QuickRow } = await load(
       default: ({ label, children }) =>
         React.createElement("span", { title: label }, children("hint")),
     },
-    "../TaskForm/TaskOptionalProperties": {
+    "./task-form/TaskOptionalProperties": {
       default: () =>
         React.createElement("span", null, "Propiedades opcionales"),
     },
-    "../TaskForm/taskDates": { taskCreationStart: () => "2026-10-21" },
+    "./task-fields/taskDates": {
+      taskCreationStart: () => "2026-10-21",
+    },
   },
 );
 const renderQuick = (groupCode = "PENDIENTE") =>
@@ -92,8 +96,8 @@ test("inline name has no permanent frame; repeated state does not create a visua
     error: "",
   };
   const markup = renderQuick();
-  assert.match(markup, /border-0 border-b-2 border-transparent bg-transparent/);
-  assert.match(markup, /focus-visible:border-neutral-700/);
+  assert.match(markup, /border-0 bg-transparent outline-none/);
+  assert.match(markup, /focus-visible:outline-2/);
   assert.doesNotMatch(markup, /Estado:|Se creará en/);
   assert.match(markup, /items-center/);
   assert.ok(markup.indexOf("Cancelar") < markup.indexOf(">Guardar<"));
@@ -123,63 +127,17 @@ test("inline errors and pending actions remain visible while preserving draft co
   assert.match(markup, /Guardando…/);
 });
 
-test("Workspace saves announce through the shared overlay and refresh failures remain retryable alerts", async () => {
+test("task saves announce through the shared overlay", async () => {
   const Empty = () => null;
-  const effects = [],
-    notifications = [];
-  let slot = 0,
-    refreshError = "",
-    list;
-  const { default: Workspace } = await load(
-    "../src/features/projects/ProjectWorkspace/ProjectWorkspace.tsx",
+  const notifications = [];
+  const { useTaskMutations } = await load(
+    "../src/features/home/hooks/useTaskMutations.ts",
     {
       react: {
         ...React,
-        useEffect(effect) {
-          effects.push(effect);
-        },
-        useState(initial) {
-          const index = slot++;
-          return React.useState(
-            index === 0
-              ? project
-              : index === 1
-                ? []
-                : index === 4
-                  ? false
-                  : index === 8
-                    ? refreshError
-                    : initial,
-          );
-        },
+        useCallback: (fn) => fn,
+        useState: (initial) => [initial, () => {}],
       },
-      "react-router": {
-        useSearchParams: () => [new URLSearchParams("vista=lista")],
-        Link: Empty,
-      },
-      "../../auth/api": { errorText: String },
-      "../services": Object.fromEntries(
-        [
-          "changeDependency",
-          "changeTaskState",
-          "createTask",
-          "getProject",
-          "getTasks",
-          "updateTask",
-        ].map((name) => [name, async () => {}]),
-      ),
-      "../DependencyForm/DependencyForm": { default: Empty },
-      "../LabelList/LabelList": { default: Empty },
-      "../Modal/Modal": { default: Empty },
-      "../TaskForm/TaskForm": { default: Empty },
-      "../TaskList/TaskList": {
-        default: (props) => {
-          list = props;
-          return null;
-        },
-      },
-      "../TaskGantt/TaskGanttEntry": { default: Empty },
-      "../TaskBoard/TaskBoard": { default: Empty },
       "../../../hooks/useToast": {
         useToast: () => ({
           addToast(value) {
@@ -187,51 +145,34 @@ test("Workspace saves announce through the shared overlay and refresh failures r
           },
         }),
       },
-      "../TaskList/TaskGroupingControl": { default: Empty },
-      "../TaskList/TaskGroupExpansionControl": { default: Empty },
-      "../TaskList/TaskSearch": { default: Empty },
-      "../TaskList/TaskStatusSettingsControl": { default: Empty },
-      "../TaskList/taskHierarchy": {
-        taskHierarchy: () => ({ visible: new Set() }),
+      "../../auth/api": { errorText: String },
+      "../../../core/services/taskService": {
+        getTaskDetail: async () => ({}),
+        createTask: async (_id, payload) => ({ id: 9, name: payload.name }),
+        updateTask: async () => {},
+        changeTaskState: async () => {},
+        changeDependency: async () => {},
+        moveTask: async () => {},
       },
-      "../TaskStateForm/TaskStateForm": { default: Empty },
-      "./ProjectHeader": { default: Empty },
-      "../taskAssignees": { taskAssignees: () => [] },
-      "./ProjectToolbar": { default: Empty },
-      "../../../shared/Icons/PlusIcon": { default: Empty },
-      "../TaskStatusConfiguration/TaskStatusConfiguration": { default: Empty },
-      "../TaskDetail/TaskDetailDialog": { default: Empty },
-      "../TaskDetail/useTaskDetail": {
-        useTaskDetailNavigation: () => ({
-          target: null,
-          openTaskDetail() {},
-          closeTaskDetail() {},
-        }),
-      },
-      "../taskCollection": await load(
-        "../src/features/projects/taskCollection.ts",
-      ),
     },
   );
-  const render = () => {
-    slot = 0;
-    effects.length = 0;
-    return renderToStaticMarkup(
-      React.createElement(Workspace, {
-        projectId: 42,
-        catalogs: { priorities: [] },
-      }),
-    );
-  };
-  const markup = render();
-  const unmount = effects[0]();
-  list.onCreated({ id: 9, name: "Tarea confirmada" });
+  let savedTask;
+  const mutations = useTaskMutations({
+    projectId: 42,
+    onTaskSaved: (task) => {
+      savedTask = task;
+    },
+  });
+  await mutations.saveTask(
+    { name: "Tarea confirmada", state_code: "PENDIENTE" },
+    "create",
+  );
+  assert.equal(savedTask.id, 9);
   assert.deepEqual(notifications, [
     { icon: "success", title: "Guardado", message: "Tarea confirmada" },
   ]);
-  assert.doesNotMatch(markup, /Guardado:|role="status"[^>]*>Guardado/);
-  const { Toast } = await load("../src/shared/Toast/Toast.tsx", {
-    "../../hooks/useToast": {
+  const { Toast } = await load("../src/shared/components/Toast/Toast.tsx", {
+    "../../../hooks/useToast": {
       useToast: () => ({
         removeToast() {},
         toasts: notifications.map((value, index) => ({
@@ -242,7 +183,7 @@ test("Workspace saves announce through the shared overlay and refresh failures r
     },
     ...Object.fromEntries(
       ["AlertIcon", "ErrorIcon", "InfoIcon", "SuccessIcon", "XIcon"].map(
-        (name) => ["../icons/" + name, { default: Empty }],
+        (name) => ["../../icons/" + name, { default: Empty }],
       ),
     ),
   });
@@ -251,14 +192,27 @@ test("Workspace saves announce through the shared overlay and refresh failures r
   assert.match(overlay, /role="status"/);
   assert.match(overlay, /Guardado/);
   assert.match(overlay, /Tarea confirmada/);
-  unmount();
-  list.onCreated({ id: 10, name: "Respuesta tardía" });
-  assert.equal(notifications.length, 1);
-  refreshError = "No se pudo actualizar la lista";
-  const failed = render();
-  assert.match(
-    failed,
-    /role="alert"[^>]*><span>No se pudo actualizar la lista<\/span>/,
-  );
-  assert.match(failed, /Actualizar lista/);
 });
+
+for (const phase of ["mutation", "read"])
+  test("dependency reconciliation discards a previous project/session after late " + phase, async () => {
+    let active = true, resolve, reads = 0, saved = 0, writes = 0;
+    const pending = new Promise(done => { resolve = done; });
+    const sync = { ...taskSyncFixture(), guard() { if (!active) throw new Error("stale"); } };
+    const { useTaskMutations } = await load("../src/features/home/hooks/useTaskMutations.ts", {
+      react: { ...React, useCallback: fn => fn, useState: value => [value, () => {}] },
+      "../utils/useTaskSync": { useTaskSync: () => sync },
+      "../../../hooks/useToast": { useToast: () => ({ addToast() {} }) },
+      "../../auth/api": { errorText: String },
+      "../../../core/services/taskService": {
+        async changeDependency() { writes++; if (phase === "mutation") await pending; },
+        async getTaskDetail() { reads++; if (phase === "read") await pending; return { task: { id: 9 } }; },
+        createTask() {}, updateTask() {}, changeTaskState() {}, moveTask() {},
+      },
+    });
+    const mutations = useTaskMutations({ projectId: 42, onTaskSaved: () => { saved++; } });
+    const operation = mutations.changeDependency(9, 8, false, "SS");
+    await Promise.resolve(); await Promise.resolve(); active = false; resolve();
+    await assert.rejects(operation, /stale/);
+    assert.equal(writes, 1); assert.equal(saved, 0); assert.equal(reads, phase === "read" ? 1 : 0);
+  });

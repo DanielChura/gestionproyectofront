@@ -1,9 +1,7 @@
+import { projectTaskQuery } from "./projectTaskQuery";
 import { useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Task } from "../../../core/interfaces/task.interface";
-import { getTasks } from "../../../core/services/taskService";
-import { sessionVersion } from "../../auth/api";
-import { StaleTaskResponse } from "../utils/useTaskSync";
 import { errorText } from "../../auth/api";
 import { useToast } from "../../../hooks/useToast";
 import { reconcileTasks } from "../utils/taskCollection";
@@ -16,29 +14,9 @@ export function useProjectTasks(projectId: number) {
     data: tasks = [],
     isFetching,
     error,
-  } = useQuery<Task[]>({
-    queryKey: ["tasks", projectId],
-    queryFn: async () => {
-      const epoch = sessionVersion();
-      const before = queryClient.getQueryData<Task[]>(["tasks", projectId]);
-      try {
-        const incoming = await getTasks(projectId);
-        if (epoch !== sessionVersion()) throw new StaleTaskResponse();
-        const current = queryClient.getQueryData<Task[]>(["tasks", projectId]);
-        return reconcileTasks(current ?? [], incoming, current === before);
-      } catch (err) {
-        if (epoch !== sessionVersion()) throw err;
-        addToast({
-          icon: "error",
-          title: "Error al cargar tareas",
-          message: errorText(err),
-        });
-        throw err;
-      }
-    },
-    enabled: Number.isSafeInteger(projectId) && projectId > 0,
-    staleTime: 1000 * 60 * 5,
-  });
+  } = useQuery(projectTaskQuery(projectId, queryClient, (error) => {
+    addToast({ icon: "error", title: "Error al cargar tareas", message: errorText(error) });
+  }));
 
   const setTasks = useCallback(
     (updater: Task[] | ((current: Task[]) => Task[])) => {
@@ -71,4 +49,15 @@ export function useProjectTasks(projectId: number) {
     refetch,
     acceptTask,
   };
+}
+
+const taskCount = (tasks: Task[]) => tasks.length;
+
+export function useProjectTaskCount(projectId: number) {
+  const queryClient = useQueryClient();
+  return useQuery({
+    ...projectTaskQuery(projectId, queryClient),
+    enabled: false,
+    select: taskCount,
+  }).data;
 }

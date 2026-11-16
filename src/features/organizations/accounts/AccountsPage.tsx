@@ -5,7 +5,6 @@ import InvitationModal from "./InvitationModal/InvitationModal";
 import { useAccounts } from "./useAccounts";
 import PlusIcon from "../../../shared/icons/PlusIcon";
 import SearchIcon from "../../../shared/icons/SearchIcon";
-import ChevronDownIcon from "../../../shared/icons/ChevronIcon";
 import UserIcon from "../../../shared/icons/UserIcon";
 import AtIcon from "../../../shared/icons/AtIcon";
 import StackIcon from "../../../shared/icons/StackIcon";
@@ -35,10 +34,15 @@ export default function AccountsPage() {
 
   useEffect(() => {
     if (searchParams.get("nuevo") !== "invitar") return;
-    setInviting(true);
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (!active) return;
+      setInviting(true);
     const next = new URLSearchParams(searchParams);
     next.delete("nuevo");
     setSearchParams(next, { replace: true });
+    });
+    return () => { active = false; };
   }, [searchParams, setSearchParams]);
 
   const applyFilters = (e: React.FormEvent) => {

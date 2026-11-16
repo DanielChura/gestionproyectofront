@@ -91,7 +91,7 @@ export function useTaskView(
       type?: import("../types").DependencyType,
     ) => {
       if (!action || action.kind !== "dependencies") return;
-      await executeChangeDependency(action.taskId, predecessorId, remove);
+      await executeChangeDependency(action.taskId, predecessorId, remove, type);
     },
     [action, executeChangeDependency],
   );

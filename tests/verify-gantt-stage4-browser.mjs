@@ -193,7 +193,7 @@ async function open(client, id, dependencies = false) {
 }
 async function close(client) {
   await dialog(client)
-    .getByRole("button", { name: "Cerrar detalle de tarea", exact: true })
+    .getByRole("button", { name: "Cerrar modal", exact: true })
     .click();
   await dialog(client).waitFor({ state: "hidden" });
 }

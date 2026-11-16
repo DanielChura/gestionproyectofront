@@ -4,7 +4,6 @@ import vm from "node:vm";
 import test from "node:test";
 import ts from "typescript";
 import * as runtime from "react/jsx-runtime";
-import { renderToStaticMarkup } from "react-dom/server";
 import { DataStore } from "@svar-ui/gantt-store";
 
 const deferred = () => {
@@ -87,12 +86,40 @@ function hooks() {
     },
   };
 }
+const GANTT_BASE = "../src/features/home/views/TaskGantt/";
+const SHARED_ROOTS = [
+  "../src/features/home/shared/task-form/",
+  "../src/features/home/shared/task-dialog/",
+  "../src/features/home/shared/task-fields/",
+  "../src/features/home/shared/task-status/TaskStatusConfiguration/",
+  "../src/features/home/shared/",
+  "../src/features/home/utils/",
+  "../src/features/home/hooks/",
+  "../src/features/home/views/List/hooks/",
+  "../src/features/home/views/Board/hooks/",
+];
+function resolveFeatureFile(file) {
+  if (file.startsWith("TaskGantt/")) {
+    return new URL(
+      GANTT_BASE + file.slice("TaskGantt/".length),
+      import.meta.url,
+    );
+  }
+  const name = file.split("/").pop();
+  for (const root of SHARED_ROOTS) {
+    try {
+      const url = new URL(root + name, import.meta.url);
+      readFileSync(url);
+      return url;
+    } catch {
+      /* file not found at this root, try next */
+    }
+  }
+  return new URL("../src/features/home/" + file, import.meta.url);
+}
 async function load(file, dependencies = {}) {
   const source = ts.transpileModule(
-    readFileSync(
-      new URL("../src/features/projects/" + file, import.meta.url),
-      "utf8",
-    ),
+    readFileSync(resolveFeatureFile(file), "utf8"),
     {
       compilerOptions: {
         module: ts.ModuleKind.ES2022,
@@ -103,7 +130,31 @@ async function load(file, dependencies = {}) {
   ).outputText;
   const module = new vm.SourceTextModule(source);
   await module.link((name) => {
-    const values = { "react/jsx-runtime": runtime, ...dependencies }[name];
+    const lookup = { "react/jsx-runtime": runtime, ...dependencies };
+    const normalizedName = name
+      .replace(/^(\.\.\/)+(utils\/)?useTaskScheduleForm$/, "./useTaskScheduleForm")
+      .replace(/^(\.\.\/)+auth\/api$/, "../../auth/api")
+      .replace(/^(\.\.\/)+(utils\/)?useTaskSync$/, "../useTaskSync")
+      .replace(
+        /^(\.\.\/)+(shared\/)?CalendarEditFeedback$/,
+        "../CalendarEditFeedback",
+      )
+      .replace(
+        /^(\.\.\/)+(utils\/)?useTaskCalendarEdit$/,
+        "../useTaskCalendarEdit",
+      )
+      .replace(/^(\.\.\/)+services$/, "../services")
+      .replace(/^(\.\.\/)+(utils\/)?formErrors$/, "../formErrors")
+      .replace(/^(\.\.\/)+(utils\/)?labelSelection$/, "../labelSelection")
+      .replace(/^(\.\.\/)+(utils\/)?taskAssignees$/, "../taskAssignees")
+      .replace(/^(\.\.\/)+task-fields\/taskDates$/, "./taskDates")
+      .replace(
+        /^(\.\.\/)+task-status\/TaskStatusConfiguration\/TaskStatusConfiguration$/,
+        "../TaskStatusConfiguration/TaskStatusConfiguration",
+      )
+      .replace(/^(\.\.\/|\.\/)LabelList$/, "../LabelList/LabelList")
+      .replace(/^(\.\.\/|\.\/)ProjectForm$/, "../ProjectForm/ProjectForm");
+    const values = lookup[name] || lookup[normalizedName];
     assert.ok(values, name);
     return new vm.SyntheticModule(Object.keys(values), function () {
       for (const [key, value] of Object.entries(values))
@@ -169,7 +220,7 @@ const calendar = {
 };
 async function formHarness(onSubmit, onCheckCreation) {
   const h = hooks();
-  const { default: Form } = await load("TaskForm/TaskForm.tsx", {
+  const dependencies = {
     react: h.react,
     "../../auth/api": { errorText: (error) => error.message },
     "../CalendarEditFeedback": { default: Empty },
@@ -183,7 +234,16 @@ async function formHarness(onSubmit, onCheckCreation) {
     "../labelSelection": { labelSelection: () => ({ labels: [] }) },
     "../taskAssignees": { taskAssignees: () => [] },
     "./TaskProperties": { default: Empty },
+    "./TaskScheduleFields": { default: Empty },
+    "./useTaskScheduleForm": { useTaskScheduleForm: () => ({ precision: "day", value: () => undefined }) },
     "./taskDates": { taskCreationStart: () => "2026-10-31" },
+  };
+  const formHook = await load("useTaskForm.ts", dependencies);
+  const { default: Form } = await load("TaskForm/TaskForm.tsx", {
+    ...dependencies,
+    "./useTaskForm": formHook,
+    "../../../../shared/components/Modal/Modal": { default: Empty },
+    "./TaskOptionalProperties": { default: Empty },
   });
   const props = {
     project,
@@ -205,62 +265,6 @@ async function formHarness(onSubmit, onCheckCreation) {
     });
   return { ...h, render, name, submit };
 }
-
-test("Gantt actions expose only authorized existing capabilities and route to shared forms", async () => {
-  const { default: Actions } = await load("TaskGantt/TaskGanttActions.tsx");
-  const calls = [],
-    props = {
-      task: baseTask,
-      onOpenTask: (...args) => calls.push(args),
-      onAction: (...args) => calls.push(args),
-    };
-  const tree = Actions(props),
-    markup = renderToStaticMarkup(tree);
-  for (const label of [
-    "Abrir detalle",
-    "Editar datos",
-    "Cambiar estado",
-    "Crear subtarea",
-    "Gestionar dependencias",
-  ])
-    assert.match(markup, new RegExp(label));
-  for (const node of elements(tree).filter((node) => node.type === "button"))
-    node.props.onClick();
-  assert.deepEqual(calls, [
-    [7],
-    ["edit", 7],
-    ["state", 7],
-    ["child", 7],
-    [7, "relations"],
-  ]);
-  const readonly = Actions({
-    ...props,
-    task: { ...baseTask, permissions: {} },
-  });
-  assert.deepEqual(
-    elements(readonly)
-      .filter((node) => node.type === "button")
-      .map((node) => node.props.children),
-    ["Abrir detalle", "Ver relaciones"],
-  );
-  const child = renderToStaticMarkup(
-    Actions({
-      ...props,
-      task: {
-        ...baseTask,
-        parent_id: 2,
-        permissions: { ...baseTask.permissions, dependencies: false },
-      },
-    }),
-  );
-  assert.doesNotMatch(
-    child,
-    /Gestionar dependencias|progreso|avance|Duplicar|Eliminar|Hito/,
-  );
-  const disabled = Actions({ ...props, disabled: true });
-  assert.equal(button(disabled, "Editar datos").props.disabled, true);
-  assert.equal(button(disabled, "Abrir detalle").props.disabled, undefined);
-});
 
 test("native progress, dependencies, duplication, deletion and reparenting cannot mutate the real MIT store", async () => {
   const { bindGanttReadOnly } = await load("TaskGantt/ganttReadOnly.ts");
@@ -419,6 +423,7 @@ async function relationHarness() {
     ticket = 1;
   const sync = { isCurrent: () => current, token: () => ticket };
   const services = {
+    convertDependency: async () => undefined,
     changeDependency: (...args) => {
       calls.push(args);
       return wait.promise;
@@ -457,20 +462,18 @@ async function relationHarness() {
 }
 test("an ambiguous dependency response retains context and blocks another mutation in that intention", async () => {
   const h = await relationHarness();
-  const one = h.render().link("blocks", 8, "");
+  const one = h.render().link("blocks", 8, "", "SS");
   h.wait.reject(Object.assign(new Error("Respuesta perdida"), { status: 503 }));
   assert.equal(await one, false);
   assert.equal(h.render().uncertain, true);
-  assert.equal(await h.render().link("blocks", 8, ""), false);
+  assert.equal(await h.render().link("blocks", 8, "", "SS"), false);
   assert.equal(
-    await h
-      .render()
-      .unlink({
-        kind: "blocks",
-        successor_id: 8,
-        predecessor_id: 7,
-        target_id: 8,
-      }),
+    await h.render().unlink({
+      kind: "blocks",
+      successor_id: 8,
+      predecessor_id: 7,
+      target_id: 8,
+    }),
     false,
   );
   assert.equal(h.calls.length, 1);
@@ -485,9 +488,9 @@ test("an ambiguous dependency response retains context and blocks another mutati
 test("dependency mutations retain directed IDs, guard duplicate dispatch and reconcile only after success", async () => {
   const h = await relationHarness();
   const model = h.render();
-  const one = model.link("blocks", 8, ""),
-    two = model.link("blocks", 8, "");
-  assert.deepEqual(h.calls, [[4, 8, 7, false]]);
+  const one = model.link("blocks", 8, "", "SS"),
+    two = model.link("blocks", 8, "", "SS");
+  assert.deepEqual(h.calls, [[4, 8, 7, false, "SS"]]);
   assert.equal(await two, false);
   assert.deepEqual(h.changed, []);
   h.wait.resolve();
@@ -495,14 +498,12 @@ test("dependency mutations retain directed IDs, guard duplicate dispatch and rec
   assert.deepEqual(h.changed, [8]);
   h.unmount();
   const reverse = await relationHarness();
-  const removal = reverse
-    .render()
-    .unlink({
-      kind: "blocked_by",
-      successor_id: 7,
-      predecessor_id: 8,
-      target_id: 8,
-    });
+  const removal = reverse.render().unlink({
+    kind: "blocked_by",
+    successor_id: 7,
+    predecessor_id: 8,
+    target_id: 8,
+  });
   assert.deepEqual(reverse.calls, [[4, 7, 8, true]]);
   reverse.wait.resolve();
   assert.equal(await removal, true);
@@ -511,7 +512,7 @@ test("dependency mutations retain directed IDs, guard duplicate dispatch and rec
 
 test("failed or out-of-scope dependency responses preserve context without optimistic links or late callbacks", async () => {
   const failed = await relationHarness();
-  const action = failed.render().link("blocked_by", 8, "");
+  const action = failed.render().link("blocked_by", 8, "", "SS");
   failed.wait.reject(new Error("Ciclo rechazado"));
   assert.equal(await action, false);
   assert.deepEqual(failed.changed, []);
@@ -519,7 +520,7 @@ test("failed or out-of-scope dependency responses preserve context without optim
   failed.unmount();
   for (const finish of ["unmount", "session"]) {
     const h = await relationHarness(),
-      pending = h.render().link("blocks", 8, "");
+      pending = h.render().link("blocks", 8, "", "SS");
     if (finish === "unmount") h.unmount();
     else h.invalidate();
     h.wait.resolve();
@@ -683,4 +684,56 @@ test("late relation reconciliation from an earlier identity neither updates nor 
     [9, 10],
   );
   h.unmount();
+});
+
+test("Gantt dialog keeps authorized state and dependency flows available without the contextual toolbar", async () => {
+  const { default: Actions } = await load("TaskGantt/GanttDialogActions.tsx", {
+    "./GanttControl": { ganttControl: "control" },
+  });
+  const calls = [],
+    task = {
+      id: 17,
+      parent_id: null,
+      due_date: null,
+      permissions: { edit: true, state: true, dependencies: true },
+      transitions: [{ target: "CLOSED" }],
+    };
+  const view = {
+    action: { kind: "edit", taskId: 17 },
+    setAction: (action) => calls.push(plain(action)),
+  };
+  const tree = Actions({ task, view, busy: false });
+  button(tree, "Cambiar estado").props.onClick();
+  button(tree, "Gestionar dependencias").props.onClick();
+  assert.deepEqual(calls, [
+    { kind: "state", taskId: 17 },
+    { kind: "dependencies", taskId: 17 },
+  ]);
+  assert.equal(
+    elements(tree).some((node) => node.props?.children === "Editar datos"),
+    false,
+  );
+  for (const denied of [
+    {
+      ...task,
+      permissions: { edit: false, state: false, dependencies: false },
+    },
+    {
+      ...task,
+      parent_id: 4,
+      permissions: { state: false, dependencies: true },
+    },
+  ]) {
+    assert.equal(
+      elements(Actions({ task: denied, view, busy: false })).filter(
+        (node) => node.type === "button",
+      ).length,
+      0,
+    );
+  }
+  assert.ok(
+    elements(Actions({ task, view, busy: true }))
+      .filter((node) => node.type === "button")
+      .every((node) => node.props.disabled),
+  );
 });

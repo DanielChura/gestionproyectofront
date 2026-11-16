@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import { createElement, type ComponentType } from "react";
 import CheckIcon from "./CheckIcon";
 import DotsIcon from "./DotsIcon";
 import CircleMinusIcon from "./CircleMinusIcon";
@@ -81,7 +81,11 @@ const iconMap: Record<string, ComponentType<IconProps>> = {
 };
 
 export const getIcon = (slug?: string | null): ComponentType<IconProps> => {
-  return (slug && iconMap[slug]) || CircleDotIcon;
+  return (slug && iconMap[slug.replace(/^icon-/, "")]) || CircleDotIcon;
 };
+
+export function DynamicIcon({ name, className, fill }: IconProps & { name?: string | null }) {
+  return createElement(getIcon(name), { className, fill });
+}
 
 export { iconMap };

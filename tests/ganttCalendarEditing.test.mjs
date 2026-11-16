@@ -10,6 +10,7 @@ import {
   calcScaleCellDate,
   getAdder,
   getDiffer,
+  getUnitStart,
 } from "@svar-ui/gantt-store";
 
 class ApiError extends Error {}
@@ -120,15 +121,26 @@ async function setup(options = {}) {
     react: React,
     "../auth/api": auth,
     "../../auth/api": auth,
+    "../../../auth/api": auth,
     "./services": transport,
     "../services": transport,
-    "@svar-ui/gantt-store": { calcScaleCellDate, getAdder, getDiffer },
+    "../../services": transport,
+    "@svar-ui/gantt-store": {
+      calcScaleCellDate,
+      getAdder,
+      getDiffer,
+      getUnitStart,
+    },
   };
   async function load(relative) {
+    const normalized =
+      typeof relative === "string"
+        ? relative.replace(/^TaskGantt\//, "views/TaskGantt/")
+        : relative;
     const url =
-      relative instanceof URL
-        ? relative
-        : new URL("../src/features/projects/" + relative, import.meta.url);
+      normalized instanceof URL
+        ? normalized
+        : new URL("../src/features/home/" + normalized, import.meta.url);
     if (modules.has(url.href)) return modules.get(url.href);
     const code = ts.transpileModule(readFileSync(url, "utf8"), {
       compilerOptions: {
@@ -157,7 +169,7 @@ async function setup(options = {}) {
     if (module.status === "linked") await module.evaluate();
     return module.namespace;
   }
-  const sync = (await namespace("useTaskSync.ts")).createTaskSync(4, 1);
+  const sync = (await namespace("utils/useTaskSync.ts")).createTaskSync(4, 1);
   const operations = (
     await namespace("TaskGantt/ganttCalendarOperations.ts")
   ).createGanttCalendarOperations(sync);
@@ -748,4 +760,48 @@ test("continuous geometric preview publishes only changed calendar days and canc
   assert.equal(h.commits.length, 1);
   h.gesture.dispose();
   assert.equal(h.document.count("pointerdown"), 0);
+});
+
+test("programming an incomplete task confirms the shared collection once without inventing old dates", async () => {
+  const env = await setup(),
+    base = task(99, { due_date: null }),
+    confirmed = [];
+  env.operations.setOnConfirmed((t) => confirmed.push(plain(t)));
+  assert.equal(env.operations.canStart(base), true);
+  assert.equal(
+    env.operations.commit(base, {
+      start_date: "2026-11-01",
+      due_date: "2026-11-03",
+    }),
+    true,
+  );
+  await flush();
+  assert.equal(env.calls.length, 1);
+  assert.equal(confirmed.length, 1);
+  assert.equal(confirmed[0].due_date, "2026-11-03");
+  assert.equal(confirmed[0].parent_id, base.parent_id);
+  assert.equal(
+    env.calls[0].payload.expected_calendar_revision,
+    base.calendar_revision,
+  );
+});
+
+test("canvas protection cancels an actual MIT preview, blocks gestures and restores them without disposing confirmed operations", async () => {
+  const env = await pointerHarness();
+  const original = env.store.getTask(7).$x;
+  env.down();
+  env.dispatch("pointermove", { clientX: 130 });
+  assert.notEqual(env.store.getTask(7).$x, original);
+  env.gesture.setWritable(false);
+  env.dispatch("pointerup", { clientX: 130 });
+  assert.equal(env.store.getTask(7).$x, original);
+  assert.equal(env.commits.length, 0);
+  assert.equal(env.down(), false);
+  env.gesture.setWritable(true);
+  assert.equal(env.down(), true);
+  env.dispatch("pointermove", { clientX: 90 });
+  env.dispatch("pointerup", { clientX: 90 });
+  assert.equal(env.commits.length, 1);
+  env.gesture.dispose();
+  env.detach();
 });
