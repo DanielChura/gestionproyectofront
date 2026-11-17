@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { ProjectCatalogs } from "../../../core/interfaces/project.interface";
 import { getProjectCatalogs } from "../../../core/services/projectService";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 import { useToast } from "../../../hooks/useToast";
 
 const initialCatalogs: ProjectCatalogs = {

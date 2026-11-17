@@ -1,36 +1,12 @@
 import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  apiRequest,
-  errorText,
-  type DetailResult,
-  type RecoveryRequest,
-} from "../../auth/api";
+  issueReset,
+  listRecoveryRequests,
+} from "../../../core/services/authService";
+import { errorText } from "../../../core/api/httpClient";
+import type { RecoveryRequest } from "../../../core/interfaces/auth.interface";
 import { useToast } from "../../../hooks/useToast";
-
-type PaginatedResponse<T> =
-  T[] | { results?: T[]; next_cursor?: string | null };
-
-async function fetchAllRecoveryRequests(): Promise<RecoveryRequest[]> {
-  const requests: RecoveryRequest[] = [];
-  let cursor: string | null = null;
-  for (let page = 0; page < 100; page += 1) {
-    const query = new URLSearchParams({ page_size: "50" });
-    if (cursor) query.set("cursor", cursor);
-    const data = await apiRequest<PaginatedResponse<RecoveryRequest>>(
-      `admin/recovery-requests/?${query.toString()}`,
-    );
-    const rows = Array.isArray(data)
-      ? data
-      : Array.isArray(data?.results)
-        ? data.results
-        : [];
-    requests.push(...rows);
-    cursor = Array.isArray(data) ? null : (data?.next_cursor ?? null);
-    if (!cursor) break;
-  }
-  return requests;
-}
 
 export interface RecoveryRequestFilters {
   search?: string;
@@ -43,15 +19,11 @@ export function useRecoveryRequests(filters: RecoveryRequestFilters = {}) {
 
   const { data: requests = [] } = useQuery<RecoveryRequest[]>({
     queryKey: ["recovery-requests"],
-    queryFn: fetchAllRecoveryRequests,
+    queryFn: listRecoveryRequests,
   });
 
   const resetMutation = useMutation({
-    mutationFn: (requestId: number) =>
-      apiRequest<DetailResult>(
-        `admin/recovery-requests/${requestId}/issue-reset/`,
-        { method: "POST" },
-      ),
+    mutationFn: (requestId: number) => issueReset(requestId),
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["recovery-requests"] });
       addToast({

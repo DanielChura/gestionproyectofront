@@ -7,7 +7,7 @@ import FlagIcon from "../../../shared/icons/FlagIcon";
 import SuccessIcon from "../../../shared/icons/SuccessIcon";
 import UserIcon from "../../../shared/icons/UserIcon";
 import { useTaskCalendarEdit } from "../utils/useTaskCalendarEdit";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 import LabelEditor from "./task-fields/LabelEditor";
 import { labelSelection } from "../utils/labelSelection";
 import AssigneeSelector from "./task-fields/ResponsiblePicker/AssigneeSelector";

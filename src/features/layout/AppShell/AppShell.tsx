@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useLocation, matchPath } from "react-router";
 import { appModules } from "../../../routes";
-import type { SessionUser } from "../../auth/api";
+import type { SessionUser } from "../../../core/interfaces/auth.interface";
 import AppSidebar from "../Sidebar/AppSidebar/AppSidebar";
 import SectionMenu from "../Sidebar/SectionMenu/SectionMenu";
 import SidebarHighlights from "../Sidebar/Highlights/SidebarHighlights";
@@ -12,7 +12,6 @@ import { useLoading } from "../../../hooks/useLoading";
 interface AppShellProps {
   user: SessionUser | null;
   onLogout: () => void;
-  logoutError?: string;
 }
 
 export default function AppShell({ user, onLogout }: AppShellProps) {

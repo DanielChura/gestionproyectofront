@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ApiError, errorText } from "../../auth/api";
+import { ApiError, errorText } from "../../../core/api/httpClient";
 import { labelSelection } from "./labelSelection";
 import { taskAssignees } from "./taskAssignees";
 import { StaleTaskResponse, useTaskSync } from "./useTaskSync";

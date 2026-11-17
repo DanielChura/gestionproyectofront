@@ -1,15 +1,21 @@
-import { getActiveAreaOptions } from "../../../core/services/organizationService";
-import { useAuth } from "../../../hooks/useAuth";
-import { checkSession, sessionVersion } from "../../auth/api";
 import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getActiveAreaOptions } from "../../../core/services/organizationService";
 import {
-  apiRequest,
+  listAccounts,
+  resendInvitation,
+  unlockAccount,
+} from "../../../core/services/authService";
+import {
+  checkSession,
   errorText,
-  type Account,
-  type Area,
-  type DetailResult,
-} from "../../auth/api";
+  sessionVersion,
+} from "../../../core/api/httpClient";
+import type {
+  Account,
+  SessionArea,
+} from "../../../core/interfaces/auth.interface";
+import { useAuth } from "../../../hooks/useAuth";
 import { useToast } from "../../../hooks/useToast";
 
 export interface AccountFilters {
@@ -17,34 +23,10 @@ export interface AccountFilters {
   active?: boolean;
 }
 
-type PaginatedResponse<T> =
-  T[] | { results?: T[]; next_cursor?: string | null };
-
-async function fetchAllAccounts(): Promise<Account[]> {
-  const accounts: Account[] = [];
-  let cursor: string | null = null;
-  for (let page = 0; page < 100; page += 1) {
-    const query = new URLSearchParams({ page_size: "50" });
-    if (cursor) query.set("cursor", cursor);
-    const data = await apiRequest<PaginatedResponse<Account>>(
-      `admin/accounts/?${query.toString()}`,
-    );
-    const rows = Array.isArray(data)
-      ? data
-      : Array.isArray(data?.results)
-        ? data.results
-        : [];
-    accounts.push(...rows);
-    cursor = Array.isArray(data) ? null : (data?.next_cursor ?? null);
-    if (!cursor) break;
-  }
-  return accounts;
-}
-
 export function useActiveAreas() {
   const { isAdmin } = useAuth();
   const epoch = sessionVersion();
-  return useQuery<Area[]>({
+  return useQuery<SessionArea[]>({
     queryKey: ["admin-areas", epoch],
     enabled: isAdmin,
     queryFn: ({ signal }) => {
@@ -63,20 +45,14 @@ export function useAccounts(filters: AccountFilters = {}) {
   const { data: accounts = [], refetch: refetchAccounts } = useQuery<Account[]>(
     {
       queryKey: ["accounts"],
-      queryFn: fetchAllAccounts,
+      queryFn: listAccounts,
     },
   );
 
   const { data: areas = [], refetch: refetchAreas } = useActiveAreas();
 
   const resendMutation = useMutation({
-    mutationFn: (accountId: number) =>
-      apiRequest<DetailResult>(
-        `admin/accounts/${accountId}/resend-invitation/`,
-        {
-          method: "POST",
-        },
-      ),
+    mutationFn: (accountId: number) => resendInvitation(accountId),
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       addToast({
@@ -95,10 +71,7 @@ export function useAccounts(filters: AccountFilters = {}) {
   });
 
   const unlockMutation = useMutation({
-    mutationFn: (accountId: number) =>
-      apiRequest<DetailResult>(`admin/accounts/${accountId}/unlock/`, {
-        method: "POST",
-      }),
+    mutationFn: (accountId: number) => unlockAccount(accountId),
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       addToast({

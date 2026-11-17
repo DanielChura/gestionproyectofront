@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { ApiError, sessionVersion } from "../../auth/api";
+import { ApiError, sessionVersion } from "../../../core/api/httpClient";
 import { updateTask } from "../services";
 import { taskPatchSignature } from "./taskPatch";
 import { reconcileTask, reconcileTasks } from "./taskCollection";

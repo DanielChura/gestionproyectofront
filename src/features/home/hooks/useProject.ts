@@ -11,7 +11,7 @@ import {
   setProjectFavorite,
 } from "../../../core/services/projectService";
 import { setProjectMemberRole } from "../services";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 import { useToast } from "../../../hooks/useToast";
 
 export function useProject(projectId: number) {

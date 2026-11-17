@@ -6,7 +6,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 import {
   changeTaskState,
   getTaskActivity,

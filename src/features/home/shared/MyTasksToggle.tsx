@@ -1,5 +1,5 @@
 import Avatar from "../../../shared/Avatar";
-import type { SessionUser } from "../../auth/api";
+import type { SessionUser } from "../../../core/interfaces/auth.interface";
 
 export default function MyTasksToggle({
   user,

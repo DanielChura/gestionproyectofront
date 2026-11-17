@@ -8,7 +8,7 @@ import {
   getWorkerCandidates,
 } from "../../../../core/services/projectService";
 import type { Project, ProjectDraft } from "../../types";
-import { ApiError, errorText, sessionVersion } from "../../../auth/api";
+import { ApiError, errorText, sessionVersion } from "../../../../core/api/httpClient";
 import { apiFieldErrors } from "../../utils/formErrors";
 import { projectCreationValidation } from "./projectCreationValidation";
 export function useProjectCreation(

@@ -3,7 +3,7 @@ import Modal from "../../../../shared/components/Modal/Modal";
 import { useQuickTask } from "../List/hooks/useQuickTask";
 import { useTaskSync } from "../../utils/useTaskSync";
 import { calendarProblem } from "../../utils/useTaskCalendarEdit";
-import { errorText } from "../../../auth/api";
+import { errorText } from "../../../../core/api/httpClient";
 import type { Task, Project } from "../../types";
 import { ganttControl } from "./GanttControl";
 import { getTasks } from "../../services";

@@ -8,7 +8,7 @@ import {
   searchRelatedTasks,
 } from "../services";
 import { calendarProblem } from "../utils/useTaskCalendarEdit";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 import { useTaskSync } from "../utils/useTaskSync";
 import { useTaskPage } from "./useTaskDetail";
 

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProjectCharts } from "../../../../../core/services/projectService";
 import type { ProjectChartsResponse } from "../../../../../core/interfaces/projectOverview.interface";
 import { useToast } from "../../../../../hooks/useToast";
-import { errorText } from "../../../../auth/api";
+import { errorText } from "../../../../../core/api/httpClient";
 
 export function useProjectCharts(projectId: number) {
   const { addToast } = useToast();

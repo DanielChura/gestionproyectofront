@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type FormEvent } from "react";
-import { errorText } from "../../../auth/api";
+import { errorText } from "../../../../core/api/httpClient";
 import { useToast } from "../../../../hooks/useToast";
 import type { FieldErrors } from "../../utils/formErrors";
 import { labelSelection } from "../../utils/labelSelection";

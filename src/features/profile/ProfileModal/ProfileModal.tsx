@@ -1,6 +1,6 @@
 import { useState } from "react";
 import XIcon from "../../../shared/icons/XIcon";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 import { useProfile } from "./useProfile";
 
 interface ProfileModalProps {

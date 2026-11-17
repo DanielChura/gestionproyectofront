@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import type { ReactNode } from "react";
-import { sessionVersion } from "../../auth/api";
+import { sessionVersion } from "../../../core/api/httpClient";
 import { createTaskSync, TaskSyncContext } from "../utils/useTaskSync";
 
 export default function ProjectTaskWorkspace({

@@ -1,4 +1,4 @@
-import { errorText } from "../../../auth/api";
+import { errorText } from "../../../../core/api/httpClient";
 import { getTaskDetail } from "../../services";
 import {
   calendarProblem,

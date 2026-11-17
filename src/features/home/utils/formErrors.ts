@@ -1,4 +1,4 @@
-import { ApiError } from "../../auth/api";
+import { ApiError } from "../../../core/api/httpClient";
 
 export type FieldErrors = Record<string, string>;
 

@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { sessionVersion, errorText } from "../../../auth/api";
+import { sessionVersion, errorText } from "../../../../core/api/httpClient";
 import { useToast } from "../../../../hooks/useToast";
 import {
   changeTaskState,

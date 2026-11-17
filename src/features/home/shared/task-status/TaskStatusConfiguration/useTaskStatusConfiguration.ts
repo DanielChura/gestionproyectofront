@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { SetStateAction } from "react";
-import { ApiError, errorText } from "../../../../auth/api";
+import { ApiError, errorText } from "../../../../../core/api/httpClient";
 import {
   configureProjectTaskStates,
   getProjectTaskStates,

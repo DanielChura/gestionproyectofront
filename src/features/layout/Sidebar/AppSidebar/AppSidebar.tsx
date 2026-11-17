@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import type { SessionUser } from "../../../auth/api";
+import type { SessionUser } from "../../../../core/interfaces/auth.interface";
 import ProfileMenu from "../../../profile/ProfileMenu/ProfileMenu";
 import InviteButton from "../InviteButton/InviteButton";
 import type { NavModule } from "../../../../routes";

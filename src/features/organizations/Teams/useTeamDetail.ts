@@ -9,7 +9,7 @@ import type {
   TeamMember,
 } from "../../../core/interfaces/organization.interface";
 import { useToast } from "../../../hooks/useToast";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 
 export function useTeamDetail(teamId: number) {
   const queryClient = useQueryClient();

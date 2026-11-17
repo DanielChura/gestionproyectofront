@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { ApiError, apiRequest, errorText, type Area } from "../../../auth/api";
+import { ApiError, errorText } from "../../../../core/api/httpClient";
+import { createInvitation } from "../../../../core/services/authService";
+import type { SessionArea } from "../../../../core/interfaces/auth.interface";
 import { useToast } from "../../../../hooks/useToast";
 import Form from "../../../../shared/components/Form/Form";
 import Input from "../../../../shared/components/Input/Input";
@@ -10,7 +12,7 @@ import { accountRoles } from "../../../auth/roles";
 import { GMAIL_PATTERN, GMAIL_TITLE } from "../../../../utils/gmail";
 
 interface InvitationModalProps {
-  areas: Area[];
+  areas: SessionArea[];
   onClose: () => void;
   onUpdate: () => void | Promise<void>;
 }
@@ -18,9 +20,6 @@ interface InvitationModalProps {
 interface AreaSelection {
   key: number;
   value: string;
-}
-interface InvitationResult {
-  detail: string;
 }
 
 export default function InvitationModal({
@@ -76,18 +75,15 @@ export default function InvitationModal({
     event.preventDefault();
     setBusy(true);
     try {
-      const result = await apiRequest<InvitationResult>("admin/invitations/", {
-        method: "POST",
-        body: JSON.stringify({
-          first_names: firstNames,
-          last_names: lastNames,
-          email,
-          role,
-          all_areas: allAreas,
-          area_ids: allAreas
-            ? []
-            : selections.map((item) => Number(item.value)),
-        }),
+      const result = await createInvitation({
+        first_names: firstNames,
+        last_names: lastNames,
+        email,
+        role,
+        all_areas: allAreas,
+        area_ids: allAreas
+          ? []
+          : selections.map((item) => Number(item.value)),
       });
       addToast({
         icon: "success",

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { errorText } from "../../../auth/api";
+import { errorText } from "../../../../core/api/httpClient";
 import type {
   ProjectTaskState,
   Task,

@@ -2,7 +2,7 @@ import { projectTaskQuery } from "./projectTaskQuery";
 import { useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Task } from "../../../core/interfaces/task.interface";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 import { useToast } from "../../../hooks/useToast";
 import { reconcileTasks } from "../utils/taskCollection";
 

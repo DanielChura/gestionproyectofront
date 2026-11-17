@@ -2,7 +2,7 @@ import { lazy, Suspense, useState } from "react";
 import LogoutIcon from "../../../shared/icons/LogoutIcon";
 import SettingsIcon from "../../../shared/icons/SettingsIcon";
 import Avatar from "../../../shared/Avatar";
-import type { SessionUser } from "../../auth/api";
+import type { SessionUser } from "../../../core/interfaces/auth.interface";
 import { roleLabel } from "../../auth/roles";
 
 const SettingsModal = lazy(() => import("../../settings/SettingsModal"));

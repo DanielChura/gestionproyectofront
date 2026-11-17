@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 import { getTasks, moveTask } from "../services";
 import type { Project, Task } from "../types";
 

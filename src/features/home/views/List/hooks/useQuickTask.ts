@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { calendarProblem } from "../../../utils/useTaskCalendarEdit";
-import { errorText } from "../../../../auth/api";
+import { errorText } from "../../../../../core/api/httpClient";
 import { apiFieldErrors } from "../../../utils/formErrors";
 import type { FieldErrors } from "../../../utils/formErrors";
 import { createTask } from "../../../../../core/services/taskService";

@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 import type { Task } from "../../../core/interfaces/task.interface";
 import { getTasks } from "../../../core/services/taskService";
-import { sessionVersion } from "../../auth/api";
+import { sessionVersion } from "../../../core/api/httpClient";
 import { StaleTaskResponse } from "../utils/useTaskSync";
 import { reconcileTasks } from "../utils/taskCollection";
 

@@ -3,7 +3,7 @@ import type { ProjectSummary } from "../../../core/interfaces/project.interface"
 import { getProjects } from "../../../core/services/projectService";
 import { useAuth } from "../../../hooks/useAuth";
 import { useToast } from "../../../hooks/useToast";
-import { checkSession, errorText, sessionVersion } from "../../auth/api";
+import { checkSession, errorText, sessionVersion } from "../../../core/api/httpClient";
 
 export function useProjects() {
   const { addToast } = useToast();

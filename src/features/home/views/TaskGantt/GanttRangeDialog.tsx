@@ -3,7 +3,7 @@ import Modal from "../../../../shared/components/Modal/Modal";
 
 import { useTaskCalendarEdit } from "../../utils/useTaskCalendarEdit";
 import { useTaskSync } from "../../utils/useTaskSync";
-import { errorText } from "../../../auth/api";
+import { errorText } from "../../../../core/api/httpClient";
 import { apiFieldErrors } from "../../utils/formErrors";
 import type { FieldErrors } from "../../utils/formErrors";
 import type { TaskGanttProps } from "./types";

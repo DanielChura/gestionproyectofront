@@ -22,7 +22,7 @@ export default function Select({
   return (
     <div className="relative">
       <select
-        className={`w-full appearance-none rounded-md border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-200 focus:border-neutral-400 focus:outline-none cursor-pointer ${
+        className={`w-full appearance-none rounded-lg border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-200 focus:border-neutral-400 focus:outline-none cursor-pointer ${
           small ? "pl-2.5 pr-7 py-1 text-xs" : "pl-3 pr-8 py-1.5 text-sm"
         } ${className}`}
         {...props}

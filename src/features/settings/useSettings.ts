@@ -3,7 +3,7 @@ import type { FormEvent } from "react";
 import type { MySpecialty } from "../../core/interfaces/worker.interface";
 import { useTheme } from "../../hooks/useTheme";
 import { useToast } from "../../hooks/useToast";
-import { updateSessionProfile } from "../auth/api";
+import { updateSessionProfile } from "../../core/services/authService";
 import { useProfile } from "../profile/ProfileModal/useProfile";
 
 export function useSettings() {

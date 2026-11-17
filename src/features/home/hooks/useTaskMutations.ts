@@ -14,7 +14,7 @@ import {
   moveTask as apiMoveTask,
   updateTask as apiUpdateTask,
 } from "../../../core/services/taskService";
-import { errorText } from "../../auth/api";
+import { errorText } from "../../../core/api/httpClient";
 import { useTaskSync } from "../utils/useTaskSync";
 import { useToast } from "../../../hooks/useToast";
 

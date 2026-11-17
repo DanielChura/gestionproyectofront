@@ -18,7 +18,7 @@ import type {
   WorkerUpdateData,
 } from "../../core/interfaces/worker.interface";
 import { useToast } from "../../hooks/useToast";
-import { errorText } from "../auth/api";
+import { errorText } from "../../core/api/httpClient";
 
 export function usePeople() {
   const [workerFilters, setWorkerFilters] = useState<WorkerListFilters>({

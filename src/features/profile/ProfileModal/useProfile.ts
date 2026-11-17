@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { getSessionProfile } from "../../auth/api";
-import type { SessionProfile } from "../../auth/api";
+import { getSessionProfile } from "../../../core/services/authService";
+import type { SessionProfile } from "../../../core/interfaces/auth.interface";
 import { listSpecialties } from "../../../core/services/organizationService";
 import {
   addMySpecialty,
