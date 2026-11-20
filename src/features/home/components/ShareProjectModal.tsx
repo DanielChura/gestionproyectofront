@@ -87,7 +87,7 @@ export default function ShareProjectModal({
       onClose={onClose}
       onSubmit={handleSubmit}
     >
-      <div className="col-span-2 flex rounded-lg bg-neutral-100 dark:bg-neutral-800 p-0.5 text-xs">
+      <div className="col-span-2 flex rounded-md bg-neutral-100 dark:bg-neutral-800 p-0.5 text-xs">
         <button
           type="button"
           onClick={() => {
@@ -121,7 +121,7 @@ export default function ShareProjectModal({
         </div>
       )}
 
-      <div className="col-span-2 max-h-48 overflow-y-auto space-y-1 rounded-lg border border-neutral-200 dark:border-neutral-700 p-1">
+      <div className="col-span-2 max-h-48 overflow-y-auto space-y-1 rounded-md border border-neutral-200 dark:border-neutral-700 p-1">
         {isWorkers ? (
           availableWorkers.length === 0 ? (
             <p className="p-2 text-xs text-neutral-400">

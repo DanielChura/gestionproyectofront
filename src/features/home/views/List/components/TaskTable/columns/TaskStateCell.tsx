@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { TaskFieldView } from "../types";
-import { themeColor, themeIcon } from "../../../../../utils/themePresentation";
+import { themeColor } from "../../../../../utils/themePresentation";
 import { getIcon } from "../../../../../../../shared/icons/icon-catalog";
 
 export default function TaskStateCell({ view }: { view: TaskFieldView }) {
@@ -22,25 +22,31 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
   const Icon = getIcon(task.state_tema?.icono);
 
   return (
-    <td className="h-12 px-1.5">
-      <div ref={container} className="relative">
+    <td className="h-12 p-1">
+      <div ref={container} className="relative h-full w-full">
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          style={{
-            backgroundColor: tone ?? "#525252",
-            color: "#fff",
-          }}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-xs "
+          className="flex h-full w-full items-center gap-1.5 rounded-md border border-transparent px-2 text-xs hover:border-neutral-300 dark:hover:border-neutral-700"
         >
-          <Icon className="size-4" />
-          <span className="truncate">{task.state_name}</span>
+          <span
+            style={{
+              backgroundColor: tone ?? "#525252",
+              color: "#fff",
+            }}
+            className="inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-xs font-medium"
+          >
+            <Icon className="size-3.5" fill />
+            <span className="truncate">{task.state_name}</span>
+          </span>
         </button>
 
         {open && (
-          <div className="absolute left-0 top-full z-30 mt-1 min-w-40 rounded-lg border border-neutral-200 bg-neutral-100 p-1 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
+          <div className="absolute left-0 top-full z-30 mt-1 min-w-40 rounded-md border border-neutral-200 bg-white p-1 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
             {states.map((state) => {
               const isSelected = task.state_code === state.code;
+              const stateTone = themeColor(state.tema?.color);
+              const StateItemIcon = getIcon(state.tema?.icono);
 
               return (
                 <button
@@ -52,15 +58,14 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
                   }}
                   className={`flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
                     isSelected
-                      ? "bg-neutral-100  text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
+                      ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
                       : "text-neutral-700 dark:text-neutral-300"
                   }`}
                 >
-                  <Icon className="size-4" />
+                  <StateItemIcon className="size-4" fill />
                   <span
                     style={{
-                      backgroundColor:
-                        themeColor(state.tema?.color) ?? "transparent",
+                      backgroundColor: stateTone ?? "transparent",
                     }}
                     className="h-2 w-2 rounded-full"
                   />

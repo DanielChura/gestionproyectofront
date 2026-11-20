@@ -8,19 +8,16 @@ export default function TaskTable({
   children: ReactNode;
 }) {
   return (
-    <table
-      className="w-full table-fixed border-collapse text-xs text-neutral-800 dark:text-neutral-100"
-      aria-label={`Tareas de ${groupName}`}
-    >
+    <table className="w-full table-fixed border-collapse text-xs text-neutral-800 dark:text-neutral-100">
       <colgroup>
-        <col style={{ width: "39%" }} />
+        <col style={{ width: "35%" }} />
         <col style={{ width: "13%" }} />
         <col style={{ width: "13%" }} />
         <col style={{ width: "13%" }} />
-        <col style={{ width: "10%" }} />
-        <col style={{ width: "12%" }} />
+        <col style={{ width: "13%" }} />
+        <col style={{ width: "13%" }} />
       </colgroup>
-      <thead className="border-b border-neutral-200 dark:border-neutral-800 text-left text-neutral-500 dark:text-neutral-400">
+      <thead className="border-b border-neutral-200 dark:border-neutral-800 text-left text-neutral-400 dark:text-neutral-500">
         <tr>
           <th scope="col" className="py-2 px-3 text-left">
             Nombre

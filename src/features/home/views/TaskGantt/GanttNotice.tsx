@@ -27,7 +27,7 @@ export default function GanttNotice({
     <aside
       aria-label={label}
       aria-live="polite"
-      className="pointer-events-none fixed bottom-14 right-6 z-60 grid max-w-sm gap-2 rounded-lg border border-neutral-300 bg-white p-3 text-xs text-neutral-800 [&_button]:pointer-events-auto dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-100"
+      className="pointer-events-none fixed bottom-14 right-6 z-60 grid max-w-sm gap-2 rounded-md border border-neutral-300 bg-white p-3 text-xs text-neutral-800 [&_button]:pointer-events-auto dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-100"
     >
       {children}
     </aside>

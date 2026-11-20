@@ -18,7 +18,6 @@ export function useProject(projectId: number) {
   const queryClient = useQueryClient();
   const favoriteLock = useRef(false);
   const [favoritePending, setFavoritePending] = useState(false);
-  const [favoriteError, setFavoriteError] = useState("");
   const { addToast } = useToast();
 
   const { data: project = null, refetch } = useQuery<Project | null>({
@@ -55,7 +54,6 @@ export function useProject(projectId: number) {
     if (!project || favoriteLock.current) return;
     favoriteLock.current = true;
     setFavoritePending(true);
-    setFavoriteError("");
     const nextFavorite = !project.is_favorite;
     setProject((prev) =>
       prev ? { ...prev, is_favorite: nextFavorite } : prev,
@@ -64,7 +62,6 @@ export function useProject(projectId: number) {
       await setProjectFavorite(projectId, nextFavorite);
       void queryClient.invalidateQueries({ queryKey: ["projects"] });
     } catch (err) {
-      setFavoriteError(errorText(err));
       setProject((prev) =>
         prev ? { ...prev, is_favorite: !nextFavorite } : prev,
       );
@@ -144,6 +141,5 @@ export function useProject(projectId: number) {
     updateMemberRole,
     addParticipants,
     favoritePending,
-    favoriteError,
   };
 }

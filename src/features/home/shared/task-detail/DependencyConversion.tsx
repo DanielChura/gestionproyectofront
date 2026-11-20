@@ -17,7 +17,7 @@ export default function DependencyConversion({
       <DependencyTypeSelect value={type} onChange={setType} disabled={busy} />
       <button
         type="button"
-        className="cursor-pointer rounded-lg border border-neutral-300 px-3 py-1.5 text-xs disabled:opacity-50 dark:border-neutral-600"
+        className="cursor-pointer rounded-md border border-neutral-300 px-3 py-1.5 text-xs disabled:opacity-50 dark:border-neutral-600"
         disabled={busy || !type || type === relation.dependency_type}
         onClick={() => {
           if (type)

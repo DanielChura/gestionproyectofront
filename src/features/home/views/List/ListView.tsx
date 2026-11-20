@@ -19,6 +19,7 @@ import TaskSearchFilter from "../../components/filters/TaskSearchFilter";
 import MyTasksToggle from "../../shared/MyTasksToggle";
 import QuickTaskRow from "../../shared/QuickTaskRow";
 import TaskGroupLabel from "./components/TaskGroupLabel";
+import TaskTableSkeleton from "./components/TaskTableSkeleton";
 import TaskRow from "./components/TaskTable/TaskRow";
 import TaskTable from "./components/TaskTable/TaskTable";
 import type { TaskChanges, TaskRowModel } from "./components/TaskTable/types";
@@ -43,6 +44,7 @@ export default function ListView({
 }: ListViewProps) {
   const {
     tasks,
+    loading,
     error,
     refetch,
     catalogs,
@@ -257,7 +259,7 @@ export default function ListView({
                 type="button"
                 aria-label="Crear nueva tarea"
                 onClick={() => setAction({ kind: "create" })}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-900 px-2.5 py-1 text-xs font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-neutral-900 px-2.5 py-1 text-xs font-medium text-neutral-100 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
               >
                 <PlusIcon className="size-4" />
                 Agregar tarea
@@ -283,7 +285,7 @@ export default function ListView({
         )}
       </ProjectToolbar>
 
-      {hierarchy.roots.length === 0 && !search.trim() && (
+      {!loading && hierarchy.roots.length === 0 && !search.trim() && (
         <p className="my-4 text-xs text-neutral-500 dark:text-neutral-400">
           No hay tareas visibles. Crea una tarea para comenzar si tienes
           permiso.
@@ -294,118 +296,121 @@ export default function ListView({
         ref={region}
         className="relative min-h-0 flex-1 overflow-y-auto overflow-x-auto pb-6"
       >
-        {visibleGroups.map((group, index) => {
-          const open = !collapsed.has(group.key);
-          const groupId = `${listId}-group-${index}`;
-          const groupState = group.stateCode
-            ? (states ?? []).find((s) => s.code === group.stateCode)
-            : undefined;
-          const canCreateGroup = group.stateCode
-            ? canCreateIn(group.stateCode)
-            : project.permissions.create_tasks;
+        {loading && <TaskTableSkeleton />}
+        {!loading &&
+          visibleGroups.map((group, index) => {
+            const open = !collapsed.has(group.key);
+            const groupId = `${listId}-group-${index}`;
+            const groupState = group.stateCode
+              ? (states ?? []).find((s) => s.code === group.stateCode)
+              : undefined;
+            const canCreateGroup = group.stateCode
+              ? canCreateIn(group.stateCode)
+              : project.permissions.create_tasks;
 
-          return (
-            <section
-              className="relative mb-8"
-              key={group.key}
-              data-group-key={group.key}
-            >
-              <h2 className="sticky top-0 z-10 mb-1 px-3 py-1 text-xs">
-                <button
-                  type="button"
-                  className="sticky left-0 inline-flex cursor-pointer items-center gap-2 text-xs text-neutral-400"
-                  aria-expanded={open}
-                  aria-controls={groupId}
-                  onClick={() =>
-                    setCollapsed((current) => {
-                      const next = new Set(current);
-                      if (next.has(group.key)) next.delete(group.key);
-                      else next.add(group.key);
-                      return next;
-                    })
-                  }
-                >
-                  <ChevronDownIcon
-                    className={`size-4 ${open ? "" : "-rotate-90"}`}
-                    fill
-                  />
+            return (
+              <section
+                className="relative mb-8"
+                key={group.key}
+                data-group-key={group.key}
+              >
+                <h2 className="sticky top-0 z-10 mb-1 px-3 py-1 text-xs">
+                  <button
+                    type="button"
+                    className="sticky left-0 inline-flex cursor-pointer items-center gap-2 text-xs text-neutral-400"
+                    aria-expanded={open}
+                    aria-controls={groupId}
+                    onClick={() =>
+                      setCollapsed((current) => {
+                        const next = new Set(current);
+                        if (next.has(group.key)) next.delete(group.key);
+                        else next.add(group.key);
+                        return next;
+                      })
+                    }
+                  >
+                    <ChevronDownIcon
+                      className={`size-4 ${open ? "" : "-rotate-90"}`}
+                      fill
+                    />
 
-                  {group.stateCode ? (
-                    <span
-                      style={{
-                        backgroundColor:
-                          groupState?.tema?.color ??
-                          group.stateColor ??
-                          "#525252",
-                      }}
-                      className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs  text-white"
-                    >
-                      <TaskGroupLabel
-                        group={group}
-                        mode={preferences.mode}
-                        state={groupState}
-                      />
+                    {group.stateCode ? (
+                      <span
+                        style={{
+                          backgroundColor:
+                            groupState?.tema?.color ??
+                            group.stateColor ??
+                            "#525252",
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs  text-neutral-100"
+                      >
+                        <TaskGroupLabel
+                          group={group}
+                          mode={preferences.mode}
+                          state={groupState}
+                        />
+                      </span>
+                    ) : (
+                      <TaskGroupLabel group={group} mode={preferences.mode} />
+                    )}
+
+                    <span className="text-xs text-neutral-600 dark:text-neutral-400 ml-2">
+                      {group.members.size}
                     </span>
-                  ) : (
-                    <TaskGroupLabel group={group} mode={preferences.mode} />
-                  )}
+                  </button>
+                </h2>
 
-                  <span className="text-xs text-neutral-600 dark:text-neutral-400">
-                    {group.members.size}
-                  </span>
-                </button>
-              </h2>
+                <div id={groupId} hidden={!open} className="pl-8">
+                  <TaskTable groupName={group.name}>
+                    {rows(group.roots, group)}
+                  </TaskTable>
 
-              <div id={groupId} hidden={!open} className="pl-8">
-                <TaskTable groupName={group.name}>
-                  {rows(group.roots, group)}
-                </TaskTable>
-
-                {canCreateGroup && draftGroup === group.key ? (
-                  <QuickTaskRow
-                    key={`${project.id}:${group.key}`}
-                    project={project}
-                    catalogs={catalogs}
-                    groupCode={group.stateCode}
-                    onCreated={acceptTask}
-                    savingRef={pendingQuickTask}
-                    onClose={(returnFocus = true) => {
-                      setDraftGroup(null);
-                      if (returnFocus) {
-                        requestAnimationFrame(() =>
-                          document
-                            .getElementById(
-                              `${listId}-${encodeURIComponent(group.key)}-create`,
-                            )
-                            ?.focus({ preventScroll: true }),
-                        );
-                      }
-                    }}
-                    onDetachedCreated={(task) => {
-                      if (listActive.current) {
+                  {canCreateGroup && draftGroup === group.key ? (
+                    <QuickTaskRow
+                      key={`${project.id}:${group.key}`}
+                      project={project}
+                      catalogs={catalogs}
+                      groupCode={group.stateCode}
+                      onCreated={acceptTask}
+                      savingRef={pendingQuickTask}
+                      onClose={(returnFocus = true) => {
                         setDraftGroup(null);
-                        acceptTask(task);
-                      }
-                    }}
-                  />
-                ) : (
-                  canCreateGroup && (
-                    <button
-                      id={`${listId}-${encodeURIComponent(group.key)}-create`}
-                      className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-100"
-                      type="button"
-                      onClick={() => {
-                        if (!pendingQuickTask.current) setDraftGroup(group.key);
+                        if (returnFocus) {
+                          requestAnimationFrame(() =>
+                            document
+                              .getElementById(
+                                `${listId}-${encodeURIComponent(group.key)}-create`,
+                              )
+                              ?.focus({ preventScroll: true }),
+                          );
+                        }
                       }}
-                    >
-                      <PlusIcon className="size-4" /> Añadir tarea
-                    </button>
-                  )
-                )}
-              </div>
-            </section>
-          );
-        })}
+                      onDetachedCreated={(task) => {
+                        if (listActive.current) {
+                          setDraftGroup(null);
+                          acceptTask(task);
+                        }
+                      }}
+                    />
+                  ) : (
+                    canCreateGroup && (
+                      <button
+                        id={`${listId}-${encodeURIComponent(group.key)}-create`}
+                        className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-100"
+                        type="button"
+                        onClick={() => {
+                          if (!pendingQuickTask.current)
+                            setDraftGroup(group.key);
+                        }}
+                      >
+                        <PlusIcon className="size-4" /> Añadir tarea
+                      </button>
+                    )
+                  )}
+                </div>
+              </section>
+            );
+          })}
       </div>
 
       <TaskDialog controller={dialog} onUpdated={acceptTask} />

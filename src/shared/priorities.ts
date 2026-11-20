@@ -15,7 +15,7 @@ export const TASK_PRIORITIES: Record<number, PriorityConfig> = {
     code: 2,
     label: "Alta",
     badgeClass:
-      "text-amber-700 bg-amber-50 dark:bg-amber-950/50 dark:text-amber-400 border-amber-200 dark:border-amber-900",
+      "text-yellow-700 bg-yellow-50 dark:bg-yellow-950/50 dark:text-yellow-400 border-yellow-200 dark:border-yellow-900",
   },
   3: {
     code: 3,

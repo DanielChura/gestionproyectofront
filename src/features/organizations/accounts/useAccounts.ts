@@ -42,14 +42,19 @@ export function useAccounts(filters: AccountFilters = {}) {
   const { addToast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: accounts = [], refetch: refetchAccounts } = useQuery<Account[]>(
+  const {
+    data: accounts = [],
+    refetch: refetchAccounts,
+    isLoading: accountsLoading,
+  } = useQuery<Account[]>(
     {
       queryKey: ["accounts"],
       queryFn: listAccounts,
     },
   );
 
-  const { data: areas = [], refetch: refetchAreas } = useActiveAreas();
+  const { data: areas = [], refetch: refetchAreas, isLoading: areasLoading } =
+    useActiveAreas();
 
   const resendMutation = useMutation({
     mutationFn: (accountId: number) => resendInvitation(accountId),
@@ -106,6 +111,7 @@ export function useAccounts(filters: AccountFilters = {}) {
   };
 
   return {
+    isLoading: accountsLoading || areasLoading,
     accounts: visibleAccounts,
     areas,
     busy: resendMutation.isPending || unlockMutation.isPending,

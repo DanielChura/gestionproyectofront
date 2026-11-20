@@ -32,8 +32,6 @@ export default function TaskRow({
   return (
     <tr
       data-task-id={task.id}
-      data-drag-enabled={actions.dragEnabled || undefined}
-      data-dragging={actions.dragging || undefined}
       className="group/row h-12 border-b border-neutral-200 hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-900"
       onClick={(e) => {
         if (

@@ -31,15 +31,15 @@ export default function TaskAssigneeCell({ view }: { view: TaskFieldView }) {
   };
 
   return (
-    <td className="h-12 px-1.5">
-      <div ref={container} className="relative">
+    <td className="h-12 p-1">
+      <div ref={container} className="relative h-full w-full">
         <button
           type="button"
           onClick={() => {
             setSelectedIds(people.map((person) => person.id));
             setOpen((previous) => !previous);
           }}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+          className="flex h-full w-full items-center gap-1.5 rounded-md border border-transparent px-2 text-xs text-neutral-700 hover:border-neutral-300 dark:text-neutral-300 dark:hover:border-neutral-700"
         >
           {people.length > 0 ? (
             <span className="flex items-center gap-1">
@@ -49,7 +49,7 @@ export default function TaskAssigneeCell({ view }: { view: TaskFieldView }) {
                   <Avatar
                     key={person.id}
                     name={person.name}
-                    className="rounded-full"
+                    className="size-6 rounded-full text-[10px]"
                   />
                 ))}
               {people.length > 3 && (
@@ -59,14 +59,11 @@ export default function TaskAssigneeCell({ view }: { view: TaskFieldView }) {
               )}
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 text-neutral-400">
-              <UserIcon className="size-4" />
-              <span>Sin asignar</span>
-            </span>
+            <UserIcon className="size-4 shrink-0 text-neutral-400" fill={false} />
           )}
         </button>
         {open && (
-          <div className="absolute left-0 top-full z-30 mt-1 w-72 rounded-lg border border-neutral-200 bg-white p-3 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
+          <div className="absolute left-0 top-full z-30 mt-1 w-72 rounded-md border border-neutral-200 bg-white p-3 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
             <AssigneeSelector
               project={project}
               value={selectedIds}

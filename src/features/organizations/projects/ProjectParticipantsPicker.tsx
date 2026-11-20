@@ -22,7 +22,7 @@ export default function ProjectParticipantsPicker({ picker }: Props) {
 
   if (!areaId) {
     return (
-      <div className="col-span-2 rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700 p-3 text-center text-xs text-neutral-500">
+      <div className="col-span-2 rounded-md border border-dashed border-neutral-300 dark:border-neutral-700 p-3 text-center text-xs text-neutral-500">
         Selecciona un área operativa para asignar personas o equipos.
       </div>
     );
@@ -42,7 +42,7 @@ export default function ProjectParticipantsPicker({ picker }: Props) {
         </span>
       </div>
 
-      <div className="flex rounded-lg bg-neutral-100 dark:bg-neutral-800 p-0.5">
+      <div className="flex rounded-md bg-neutral-100 dark:bg-neutral-800 p-0.5">
         <button
           type="button"
           onClick={() => onSourceChange("workers")}
@@ -76,7 +76,7 @@ export default function ProjectParticipantsPicker({ picker }: Props) {
         />
       )}
 
-      <div className="max-h-36 overflow-y-auto space-y-1 rounded-lg border border-neutral-200 dark:border-neutral-700 p-1">
+      <div className="max-h-36 overflow-y-auto space-y-1 rounded-md border border-neutral-200 dark:border-neutral-700 p-1">
         {isWorkers ? (
           workers.length === 0 ? (
             <p className="p-2 text-xs text-neutral-400">

@@ -1,7 +1,6 @@
 import type { FormEvent, ReactNode } from "react";
 import XIcon from "../../icons/XIcon";
 import Button from "../Button/Button";
-import SecondaryButton from "../Button/SecondaryButton";
 
 interface FormProps {
   title: string;
@@ -45,13 +44,13 @@ export default function Form({
         <form className="grid grid-cols-2 gap-4 px-5 py-3" onSubmit={onSubmit}>
           {children}
           <footer className="col-span-2 -mx-5 mt-3 flex items-center justify-end gap-2 border-t border-neutral-200 px-5 pt-3 dark:border-neutral-800">
-            <SecondaryButton
+            <Button variant="secondary"
               type="button"
               className="text-sm!"
               onClick={onClose}
             >
               Cancelar
-            </SecondaryButton>
+            </Button>
             <Button type="submit" className="text-sm!" disabled={submitting}>
               {submitting ? "Guardando…" : submitLabel}
             </Button>

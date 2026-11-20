@@ -15,7 +15,7 @@ const toastIcons: Record<
   ToastIcon,
   { Icon: ComponentType<IconProps>; color: string }
 > = {
-  alert: { Icon: AlertIcon, color: "text-amber-600" },
+  alert: { Icon: AlertIcon, color: "text-yellow-600" },
   error: { Icon: ErrorIcon, color: "text-red-600" },
   info: { Icon: InfoIcon, color: "text-blue-600" },
   success: { Icon: SuccessIcon, color: "text-green-500" },

@@ -13,10 +13,10 @@ const NO_AREA_NAME = "Sin área";
 
 export function useProjectsByArea() {
   const { user, isAdmin } = useAuth();
-  const { projects } = useProjects();
+  const { projects, isLoading: projectsLoading } = useProjects();
   const showAllAreas = isAdmin || Boolean(user?.all_areas);
 
-  const { data: areas = [] } = useQuery<Area[]>({
+  const { data: areas = [], isLoading: areasLoading } = useQuery<Area[]>({
     queryKey: ["areas"],
     queryFn: listAreas,
     enabled: showAllAreas,
@@ -57,5 +57,10 @@ export function useProjectsByArea() {
     [projects],
   );
 
-  return { groups, projects: flat, grouped: showAllAreas };
+  return {
+    groups,
+    projects: flat,
+    grouped: showAllAreas,
+    isLoading: projectsLoading || (showAllAreas && areasLoading),
+  };
 }

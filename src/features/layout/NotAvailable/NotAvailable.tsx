@@ -8,7 +8,7 @@ function NotAvailable() {
           404
         </p>
 
-        <h1 className="mt-4 text-lg sm:text-xl  tracking-tight text-neutral-950 dark:text-white">
+        <h1 className="mt-4 text-lg sm:text-xl  tracking-tight text-neutral-950 dark:text-neutral-100">
           Página no encontrada
         </h1>
 
@@ -19,7 +19,7 @@ function NotAvailable() {
         <div className="mt-6 flex items-center justify-center gap-3">
           <Link
             to="/"
-            className="px-4 py-2 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs  hover:bg-neutral-800 dark:hover:bg-neutral-200 cursor-pointer"
+            className="px-4 py-2 rounded-full bg-neutral-900 dark:bg-white text-neutral-100 dark:text-neutral-900 text-xs  hover:bg-neutral-800 dark:hover:bg-neutral-200 cursor-pointer"
           >
             Ir al inicio
           </Link>

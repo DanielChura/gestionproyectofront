@@ -21,7 +21,7 @@ export default function ProjectMemberPicker({
       <div
         role="group"
         aria-label="Origen de participantes"
-        className="flex rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800"
+        className="flex rounded-md bg-neutral-100 p-1 dark:bg-neutral-800"
       >
         {(["workers", "teams"] as const).map((source) => (
           <button
@@ -36,7 +36,7 @@ export default function ProjectMemberPicker({
                   teamIds: [],
                 });
             }}
-            className="flex-1 cursor-pointer rounded-lg px-3 py-1.5 hover:bg-neutral-200 aria-pressed:bg-white dark:hover:bg-neutral-700 dark:aria-pressed:bg-neutral-900"
+            className="flex-1 cursor-pointer rounded-md px-3 py-1.5 hover:bg-neutral-200 aria-pressed:bg-white dark:hover:bg-neutral-700 dark:aria-pressed:bg-neutral-900"
           >
             {source === "workers" ? "Trabajadores" : "Equipos"}
           </button>

@@ -76,7 +76,7 @@ export default function PublicationBoard({
                     aria-label={`Acciones de ${publication.title}`}
                     aria-haspopup="menu"
                     aria-expanded={menuOpen}
-                    className="cursor-pointer rounded-lg p-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+                    className="cursor-pointer rounded-md p-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
                   >
                     <DotsIcon className="size-4" />
                   </button>
@@ -84,7 +84,7 @@ export default function PublicationBoard({
                   {menuOpen && (
                     <div
                       role="menu"
-                      className="absolute right-0 top-full z-30 mt-1 w-44 rounded-lg border border-neutral-200 bg-white p-1 dark:border-neutral-800 dark:bg-neutral-900"
+                      className="absolute right-0 top-full z-30 mt-1 w-44 rounded-md border border-neutral-200 bg-white p-1 dark:border-neutral-800 dark:bg-neutral-900"
                     >
                       <button
                         type="button"

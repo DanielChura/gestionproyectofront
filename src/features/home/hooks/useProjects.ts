@@ -10,7 +10,7 @@ export function useProjects() {
   const { isAuthenticated } = useAuth();
   const epoch = sessionVersion();
 
-  const { data: projects = [], refetch } = useQuery<ProjectSummary[]>({
+  const { data: projects = [], refetch, isLoading } = useQuery<ProjectSummary[]>({
     queryKey: ["projects"],
     enabled: isAuthenticated,
     queryFn: async () => {
@@ -32,5 +32,5 @@ export function useProjects() {
     staleTime: 1000 * 60 * 5,
   });
 
-  return { projects, refetch };
+  return { projects, refetch, isLoading };
 }

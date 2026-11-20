@@ -14,7 +14,7 @@ export default function DependencyTypeSelect({
     <label className="grid gap-1 text-xs">
       Tipo de dependencia
       <select
-        className="cursor-pointer rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs focus-visible:outline-2 dark:border-neutral-600 dark:bg-neutral-900"
+        className="cursor-pointer rounded-md border border-neutral-300 bg-white px-3 py-1.5 text-xs focus-visible:outline-2 dark:border-neutral-600 dark:bg-neutral-900"
         value={value}
         disabled={disabled}
         onChange={(event) =>

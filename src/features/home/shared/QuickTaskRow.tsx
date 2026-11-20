@@ -180,7 +180,7 @@ export default function QuickTaskRow({
                     type="button"
                     aria-label={stateHelp}
                     aria-describedby={description}
-                    className="inline-flex max-w-32 shrink-0 cursor-help items-center gap-1 rounded-lg px-1.5 py-1 text-xs text-neutral-700 dark:text-neutral-300"
+                    className="inline-flex max-w-32 shrink-0 cursor-help items-center gap-1 rounded-md px-1.5 py-1 text-xs text-neutral-700 dark:text-neutral-300"
                   >
                     <span className="truncate">{draft.state!.name}</span>
                   </button>
@@ -223,7 +223,7 @@ export default function QuickTaskRow({
         </button>
         <button
           type="submit"
-          className="cursor-pointer rounded-md bg-neutral-900 px-2.5 py-1 font-medium text-white dark:bg-white dark:text-neutral-900"
+          className="cursor-pointer rounded-md bg-neutral-900 px-2.5 py-1 font-medium text-neutral-100 dark:bg-white dark:text-neutral-900"
         >
           {draft.busy ? "Guardando…" : "Guardar"}
         </button>
@@ -231,7 +231,7 @@ export default function QuickTaskRow({
       {draft.uncertain && onCheckCreation && (
         <button
           type="button"
-          className="cursor-pointer rounded-lg px-3 py-1.5 text-xs underline"
+          className="cursor-pointer rounded-md px-3 py-1.5 text-xs underline"
           onClick={onCheckCreation}
         >
           Consultar tareas antes de otra creación
@@ -240,7 +240,7 @@ export default function QuickTaskRow({
       {draft.uncertain && (
         <button
           type="button"
-          className="cursor-pointer rounded-lg px-3 py-1.5 text-xs underline"
+          className="cursor-pointer rounded-md px-3 py-1.5 text-xs underline"
           onClick={() => onClose(true)}
         >
           Cerrar borrador sin reenviar

@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { useProjectTasks } from "../../../home/hooks/useProjectTasks";
+import RecentTasksSkeleton from "./RecentTasksSkeleton";
 import { getIcon } from "../../../../shared/icons/icon-catalog";
 import {
   categoryValue,
@@ -12,8 +13,10 @@ interface RecentTasksProps {
 }
 
 export default function RecentTasks({ projectId }: RecentTasksProps) {
-  const { tasks } = useProjectTasks(projectId);
+  const { tasks, loading } = useProjectTasks(projectId);
   const recentTasks = tasks.slice(0, 6);
+
+  if (loading) return <RecentTasksSkeleton />;
 
   if (recentTasks.length === 0) {
     return (

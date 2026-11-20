@@ -36,13 +36,14 @@ export function useStructure() {
   const queryClient = useQueryClient();
   const { addToast } = useToast();
 
-  const { data: areas = [] } = useQuery<Area[]>({
+  const { data: areas = [], isLoading: areasLoading } = useQuery<Area[]>({
     queryKey: ["areas"],
     queryFn: listAreas,
     select: (data) => (Array.isArray(data) ? data : []),
   });
 
-  const { data: projects = [] } = useQuery<ProjectSummary[]>({
+  const { data: projects = [], isLoading: projectsLoading } =
+    useQuery<ProjectSummary[]>({
     queryKey: ["projects"],
     queryFn: getProjects,
     select: (data) => (Array.isArray(data) ? data : []),
@@ -165,6 +166,7 @@ export function useStructure() {
   };
 
   return {
+    isLoading: areasLoading || projectsLoading,
     areas,
     projects,
     filteredProjects,

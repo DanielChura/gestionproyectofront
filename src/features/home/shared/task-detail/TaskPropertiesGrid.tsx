@@ -68,7 +68,7 @@ export default function TaskPropertiesGrid({
     return (
       <div
         key={field}
-        className="flex items-center gap-2 rounded-lg px-2 py-1 "
+        className="flex items-center gap-2 rounded-md px-2 py-1 "
       >
         <div className="flex w-32 shrink-0 items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
           <span

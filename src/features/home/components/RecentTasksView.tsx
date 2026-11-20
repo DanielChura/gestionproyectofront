@@ -43,7 +43,7 @@ export default function RecentTasksView({
             <select
               value={project?.id ?? ""}
               onChange={(e) => onSelectProject(Number(e.target.value))}
-              className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs  text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300"
+              className="cursor-pointer rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-xs  text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300"
             >
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>

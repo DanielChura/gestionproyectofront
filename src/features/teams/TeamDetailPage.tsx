@@ -10,6 +10,7 @@ import Avatar from "../../shared/Avatar";
 import TeamMembersModal from "../organizations/Teams/TeamMembersModal";
 import { useTeamDetail } from "../organizations/Teams/useTeamDetail";
 import TeamMembersPanel from "./TeamMembersPanel";
+import TeamDetailSkeleton from "./TeamDetailSkeleton";
 
 interface TeamDetailPageProps {
   canManage?: boolean;
@@ -20,10 +21,10 @@ export default function TeamDetailPage({
 }: TeamDetailPageProps) {
   const { teamId } = useParams();
   const [adding, setAdding] = useState(false);
-  const { team, members, removing, refetch, removeMember } = useTeamDetail(
-    Number(teamId),
-  );
+  const { team, members, removing, refetch, removeMember, isLoading } =
+    useTeamDetail(Number(teamId));
 
+  if (isLoading) return <TeamDetailSkeleton />;
   if (team == null) return <NotAvailable />;
 
   return (
@@ -38,11 +39,11 @@ export default function TeamDetailPage({
               to="/equipos"
               aria-label="Volver a equipos"
               title="Volver a equipos"
-              className="cursor-pointer rounded-lg p-1.5 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
+              className="cursor-pointer rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
             >
               <ChevronDownIcon className="size-4 rotate-90" />
             </Link>
-            <Avatar name={team.name} className="size-8 rounded-lg text-xs" />
+            <Avatar name={team.name} className="size-8 rounded-md text-xs" />
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="m-0 truncate text-sm  text-neutral-800 dark:text-neutral-100">

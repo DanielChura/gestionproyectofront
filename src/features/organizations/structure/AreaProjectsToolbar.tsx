@@ -75,7 +75,7 @@ export default function AreaProjectsToolbar({
             onModeFilterChange("");
             onSortChange("asc");
           }}
-          className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 px-2 py-1 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
+          className="text-xs text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 px-2 py-1 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
         >
           Limpiar
         </button>

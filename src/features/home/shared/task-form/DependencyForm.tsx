@@ -64,7 +64,7 @@ export default function DependencyForm({
           id="dependency-source"
           value={selected}
           onChange={(event) => setSelected(event.target.value)}
-          className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+          className="rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
         >
           <option value="">Selecciona una tarea</option>
           {candidates.map((item) => (
@@ -74,7 +74,7 @@ export default function DependencyForm({
           ))}
         </select>
         <button
-          className="mt-2 inline-flex cursor-pointer items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
+          className="mt-2 inline-flex cursor-pointer items-center justify-center rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
           disabled={busy || !selected}
           type="submit"
         >
@@ -95,7 +95,7 @@ export default function DependencyForm({
               return (
                 <li
                   key={dependencyId}
-                  className="flex items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-xs text-neutral-800 dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-200"
+                  className="flex items-center justify-between gap-2 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-xs text-neutral-800 dark:border-neutral-800 dark:bg-neutral-800/50 dark:text-neutral-200"
                 >
                   <span className="truncate">
                     {predecessor?.name ?? `Tarea #${dependencyId}`}

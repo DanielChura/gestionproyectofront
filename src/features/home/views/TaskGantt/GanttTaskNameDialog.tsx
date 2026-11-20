@@ -139,7 +139,7 @@ export default function GanttTaskNameDialog({
               quick.setName(event.target.value);
             }}
             disabled={working || uncertain || quick.uncertain}
-            className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
+            className="rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
           />
         </label>
         {(error || quick.error || quick.errors["task-name"]) && (
@@ -168,7 +168,7 @@ export default function GanttTaskNameDialog({
           </button>
           <button
             type="submit"
-            className={ganttControl + " bg-neutral-800! text-white!"}
+            className={ganttControl + " bg-neutral-800! text-neutral-100!"}
             disabled={working || uncertain || quick.uncertain}
           >
             {working ? "Guardando…" : task ? "Guardar" : "Crear"}

@@ -57,13 +57,3 @@ export function useProjectTasks(projectId: number) {
   };
 }
 
-const taskCount = (tasks: Task[]) => tasks.length;
-
-export function useProjectTaskCount(projectId: number) {
-  const queryClient = useQueryClient();
-  return useQuery({
-    ...projectTaskQuery(projectId, queryClient),
-    enabled: false,
-    select: taskCount,
-  }).data;
-}

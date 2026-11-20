@@ -1,7 +1,7 @@
 const avatarColors = [
   "bg-red-500",
   "bg-orange-500",
-  "bg-amber-500",
+  "bg-yellow-500",
   "bg-yellow-500",
   "bg-lime-500",
   "bg-green-500",

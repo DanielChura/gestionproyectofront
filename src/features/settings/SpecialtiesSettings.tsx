@@ -32,7 +32,7 @@ export default function SpecialtiesSettings({
               {settings.specialties.map((specialty) => (
                 <li
                   key={specialty.id}
-                  className="inline-flex items-center gap-1 rounded-full bg-sky-600 px-2 py-0.5 text-xs  text-white"
+                  className="inline-flex items-center gap-1 rounded-full bg-sky-600 px-2 py-0.5 text-xs  text-neutral-100"
                 >
                   {specialty.name}
                   <button

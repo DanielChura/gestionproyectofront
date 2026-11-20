@@ -17,7 +17,7 @@ function ProfileMenu({ user, onLogout, isCollapsed }: ProfileMenuProps) {
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const item =
-    "w-full flex items-center gap-2 px-3 py-2 text-xs text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg cursor-pointer text-left";
+    "w-full flex items-center gap-2 px-3 py-2 text-xs text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer text-left";
 
   return (
     <div

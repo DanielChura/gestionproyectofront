@@ -31,7 +31,7 @@ export default function GanttView({
               type="button"
               disabled={view.busy}
               onClick={() => view.setAction({ kind: "create" })}
-              className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900! dark:hover:bg-neutral-200"
+              className="cursor-pointer rounded-md bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900! dark:hover:bg-neutral-200"
             >
               + Agregar tarea
             </button>

@@ -10,7 +10,7 @@ export default function ProjectWorkerResults({
       <div
         role="group"
         aria-label="Trabajadores elegibles"
-        className="grid gap-2 rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
+        className="grid gap-2 rounded-md border border-neutral-200 p-3 dark:border-neutral-700"
       >
         {workers.data?.map((item) => (
           <label

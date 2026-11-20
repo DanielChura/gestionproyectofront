@@ -41,19 +41,19 @@ export function usePeople() {
   const queryClient = useQueryClient();
   const { addToast } = useToast();
 
-  const { data: workers = [] } = useQuery<Worker[]>({
+  const { data: workers = [], isLoading: workersLoading } = useQuery<Worker[]>({
     queryKey: ["workers"],
     queryFn: () => listWorkers(),
     select: (data) => (Array.isArray(data) ? data : []),
   });
 
-  const { data: teams = [] } = useQuery<Team[]>({
+  const { data: teams = [], isLoading: teamsLoading } = useQuery<Team[]>({
     queryKey: ["teams"],
     queryFn: listTeams,
     select: (data) => (Array.isArray(data) ? data : []),
   });
 
-  const { data: areas = [] } = useQuery<Area[]>({
+  const { data: areas = [], isLoading: areasLoading } = useQuery<Area[]>({
     queryKey: ["areas"],
     queryFn: listAreas,
     select: (data) => (Array.isArray(data) ? data : []),
@@ -170,6 +170,7 @@ export function usePeople() {
   };
 
   return {
+    isLoading: workersLoading || teamsLoading || areasLoading,
     workers,
     visibleWorkers,
     areaNameById,

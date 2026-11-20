@@ -2,6 +2,7 @@ import { useState } from "react";
 import Avatar from "../../../../shared/Avatar";
 import ChevronDownIcon from "../../../../shared/icons/ChevronIcon";
 import ProjectLink from "./ProjectLink";
+import ProjectsByAreaSkeleton from "./ProjectsByAreaSkeleton";
 import { useProjectsByArea } from "./useProjectsByArea";
 
 interface ProjectsByAreaProps {
@@ -9,17 +10,16 @@ interface ProjectsByAreaProps {
 }
 
 export default function ProjectsByArea({ currentPath }: ProjectsByAreaProps) {
-  const { groups, projects, grouped } = useProjectsByArea();
+  const { groups, projects, grouped, isLoading } = useProjectsByArea();
   const [collapsed, setCollapsed] = useState<Record<number, boolean>>({});
+
+  if (isLoading) return <ProjectsByAreaSkeleton />;
 
   if (!grouped) {
     if (projects.length === 0) return null;
 
     return (
-      <ul
-        className="m-0 flex list-none flex-col gap-1 p-0"
-        aria-label="Mis proyectos"
-      >
+      <ul className="m-0 flex list-none flex-col gap-1 p-0">
         {projects.map((project) => (
           <li key={project.id} className="min-w-0">
             <ProjectLink project={project} currentPath={currentPath} />
@@ -32,10 +32,7 @@ export default function ProjectsByArea({ currentPath }: ProjectsByAreaProps) {
   if (groups.length === 0) return null;
 
   return (
-    <ul
-      className="m-0 flex list-none flex-col gap-1 p-0"
-      aria-label="Áreas con proyectos"
-    >
+    <ul className="m-0 flex list-none flex-col gap-1 p-0">
       {groups.map((area) => {
         const expanded = !collapsed[area.id];
 

@@ -60,7 +60,7 @@ export default function TaskGroupingFilter({
                 onChange({ ...preferences, mode: option.value });
                 setOpen(false);
               }}
-              className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
+              className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-left text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
             >
               <span>{option.label}</span>
               {option.value === preferences.mode && (
@@ -83,7 +83,7 @@ export default function TaskGroupingFilter({
                   order,
                 })
               }
-              className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
+              className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-left text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
             >
               <span>{order === "asc" ? "Ascendente" : "Descendente"}</span>
               {order === preferences.order && (

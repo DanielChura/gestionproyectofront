@@ -11,8 +11,8 @@ import ClockIcon from "./shared/icons/ClockIcon";
 import IdIcon from "./shared/icons/IdIcon";
 import PlusIcon from "./shared/icons/PlusIcon";
 
+export const HomeRedirect = lazy(() => import("./features/home/HomeRedirect"));
 export const HomePage = lazy(() => import("./features/home/HomePage"));
-export const ProjectRoute = lazy(() => import("./features/home/ProjectPage"));
 export const PublicationsPage = lazy(
   () => import("./features/publications/PublicationsPage"),
 );
@@ -62,14 +62,14 @@ export const appModules: NavModule[] = [
         title: "Inicio",
         path: "/",
         Icon: ClockIcon,
-        Component: HomePage,
+        Component: HomeRedirect,
         hidden: true,
       },
       {
         title: "Detalle de proyecto",
         path: "/proyectos/:projectId",
         Icon: FolderIcon,
-        Component: ProjectRoute,
+        Component: HomePage,
         hidden: true,
       },
     ],

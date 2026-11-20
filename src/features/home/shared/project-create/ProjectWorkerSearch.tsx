@@ -29,7 +29,7 @@ export default function ProjectWorkerSearch({
           type="button"
           onClick={editor.searchWorkers}
           disabled={workers.isFetching}
-          className="cursor-pointer rounded-lg border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 disabled:opacity-50 dark:border-neutral-700 dark:hover:bg-neutral-800"
+          className="cursor-pointer rounded-md border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 disabled:opacity-50 dark:border-neutral-700 dark:hover:bg-neutral-800"
         >
           Buscar
         </button>

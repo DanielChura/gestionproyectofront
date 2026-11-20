@@ -23,7 +23,7 @@ export default function TaskGroupLabel({
 
   if (group.stateCode) {
     return (
-      <span className="inline-flex items-center gap-1.5  text-white">
+      <span className="inline-flex items-center gap-1.5  text-neutral-100">
         <Icon className="size-3.5" fill />
         <span className="truncate">{group.name}</span>
       </span>
@@ -46,7 +46,7 @@ export default function TaskGroupLabel({
             key={token.id}
             className={
               mode === "labels"
-                ? "max-w-48 truncate rounded-lg px-2 py-0.5 text-xs text-neutral-800 dark:text-neutral-100"
+                ? "max-w-48 truncate rounded-md px-2 py-0.5 text-xs text-neutral-800 dark:text-neutral-100"
                 : "max-w-56 truncate text-xs text-neutral-800 dark:text-neutral-100"
             }
           >

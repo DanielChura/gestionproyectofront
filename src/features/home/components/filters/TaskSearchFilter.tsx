@@ -31,7 +31,7 @@ export default function TaskSearchFilter({
           placeholder="Buscar tareas…"
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className="w-48 rounded-lg border border-neutral-200 bg-white py-1.5 pl-8 pr-3 text-xs text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500"
+          className="w-48 rounded-md border border-neutral-200 bg-white py-1.5 pl-8 pr-3 text-xs text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500"
         />
       </div>
     );
@@ -44,7 +44,7 @@ export default function TaskSearchFilter({
         onClick={() => setOpen((current) => !current)}
         aria-label="Buscar tareas"
         aria-expanded={open}
-        className={`inline-flex cursor-pointer items-center justify-center rounded-lg p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 ${
+        className={`inline-flex cursor-pointer items-center justify-center rounded-md p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 ${
           value
             ? "text-violet-700 dark:text-violet-300"
             : "text-neutral-500 dark:text-neutral-400"
@@ -53,7 +53,7 @@ export default function TaskSearchFilter({
         <SearchIcon className="size-4" />
       </button>
       {open && (
-        <div className="absolute left-0 top-full z-20 mt-1 flex w-64 items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="absolute left-0 top-full z-20 mt-1 flex w-64 items-center gap-1.5 rounded-md border border-neutral-200 bg-white px-2 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
           <SearchIcon className="size-4 shrink-0 text-neutral-400" />
           <input
             autoFocus

@@ -200,22 +200,6 @@ export function getProjectAssignmentTeams(
   return projectRequest<TeamOption[]>(`${projectId}/assignment-teams/`);
 }
 
-export function moveTask(
-  projectId: number,
-  taskId: number,
-  payload: TaskStatePayload & {
-    before_id: number | null;
-    expected_revision: string;
-    mode?: "hierarchy";
-    parent_id?: number | null;
-  },
-): Promise<Task[]> {
-  return projectRequest<Task[]>(`${projectId}/tasks/${taskId}/move/`, {
-    method: "POST",
-    data: payload,
-  });
-}
-
 export function createTask(
   projectId: number,
   payload: CreateTaskPayload,

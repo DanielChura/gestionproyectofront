@@ -15,7 +15,7 @@ export default function Avatar({
   return (
     <span
       {...props}
-      className={`inline-grid shrink-0 place-items-center text-white ${initialColor(name)} ${className}`}
+      className={`inline-grid shrink-0 place-items-center text-neutral-100 ${initialColor(name)} ${className}`}
     >
       {avatarFor(name)}
     </span>

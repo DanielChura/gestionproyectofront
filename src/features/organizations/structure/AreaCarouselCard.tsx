@@ -34,7 +34,7 @@ export default function AreaCarouselCard({
             e.stopPropagation();
             onEdit(area);
           }}
-          className="p-1 rounded-lg text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:text-neutral-200 dark:hover:bg-neutral-800 opacity-0 group-hover:opacity-100 cursor-pointer"
+          className="p-1 rounded-md text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:text-neutral-200 dark:hover:bg-neutral-800 opacity-0 group-hover:opacity-100 cursor-pointer"
           title={`Editar área ${area.name}`}
         >
           <EditIcon className="size-4" />

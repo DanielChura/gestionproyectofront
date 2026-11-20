@@ -5,7 +5,6 @@ import PlusIcon from "../../shared/icons/PlusIcon";
 import SearchIcon from "../../shared/icons/SearchIcon";
 import { useToast } from "../../hooks/useToast";
 import Button from "../../shared/components/Button/Button";
-import SecondaryButton from "../../shared/components/Button/SecondaryButton";
 import type {
   Publication,
   PublicationCreateData,
@@ -30,13 +29,13 @@ function ErrorAlert({
   return (
     <div
       role="alert"
-      className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300"
+      className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300"
     >
       <span>{message}</span>
       <button
         type="button"
         onClick={onRetry}
-        className="cursor-pointer rounded-lg border border-red-200 bg-white px-2.5 py-1 text-xs  text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-neutral-900 dark:text-red-300 dark:hover:bg-red-950/40"
+        className="cursor-pointer rounded-md border border-red-200 bg-white px-2.5 py-1 text-xs  text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-neutral-900 dark:text-red-300 dark:hover:bg-red-950/40"
       >
         Reintentar
       </button>
@@ -45,7 +44,7 @@ function ErrorAlert({
 }
 
 const STATE_TEXT: Record<PublicationStateCode, string> = {
-  BORRADOR: "text-amber-600 dark:text-amber-400",
+  BORRADOR: "text-yellow-600 dark:text-yellow-400",
   ABIERTA: "text-emerald-600 dark:text-emerald-400",
   CERRADA: "text-neutral-500 dark:text-neutral-400",
   CANCELADA: "text-red-600 dark:text-red-400",
@@ -171,7 +170,7 @@ export default function PublicationsManager() {
             placeholder="Buscar por título o proyecto"
             aria-label="Buscar publicaciones"
             onChange={(event) => setSearchInput(event.target.value)}
-            className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-600 dark:placeholder:text-neutral-500 pl-8 pr-3 py-1.5 text-xs rounded-lg focus:border-neutral-400 focus:outline-none"
+            className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-600 dark:placeholder:text-neutral-500 pl-8 pr-3 py-1.5 text-xs rounded-md focus:border-neutral-400 focus:outline-none"
           />
         </div>
 
@@ -180,7 +179,7 @@ export default function PublicationsManager() {
             value={stateInput}
             aria-label="Filtrar por estado"
             onChange={(event) => setStateInput(event.target.value)}
-            className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 pl-3 pr-8 py-1.5 text-xs rounded-lg appearance-none focus:border-neutral-400 focus:outline-none cursor-pointer"
+            className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 pl-3 pr-8 py-1.5 text-xs rounded-md appearance-none focus:border-neutral-400 focus:outline-none cursor-pointer"
           >
             <option value="">Todos los estados</option>
             {Object.entries(PUBLICATION_STATE_LABELS).map(([code, label]) => (
@@ -197,7 +196,7 @@ export default function PublicationsManager() {
             value={projectInput}
             aria-label="Filtrar por proyecto"
             onChange={(event) => setProjectInput(event.target.value)}
-            className="max-w-56 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 pl-3 pr-8 py-1.5 text-xs rounded-lg appearance-none focus:border-neutral-400 focus:outline-none cursor-pointer truncate"
+            className="max-w-56 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 pl-3 pr-8 py-1.5 text-xs rounded-md appearance-none focus:border-neutral-400 focus:outline-none cursor-pointer truncate"
           >
             <option value="">Todos los proyectos</option>
             {(catalogs?.projects ?? []).map((project) => (
@@ -214,13 +213,14 @@ export default function PublicationsManager() {
         </Button>
 
         {hasFilters && (
-          <SecondaryButton
+          <Button
+            variant="secondary"
             type="button"
             onClick={clearFilters}
             className="px-2 py-1.5"
           >
             Limpiar
-          </SecondaryButton>
+          </Button>
         )}
       </form>
 
@@ -235,7 +235,7 @@ export default function PublicationsManager() {
           <button
             type="button"
             onClick={() => void refetch()}
-            className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+            className="mt-4 cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
           >
             Reintentar
           </button>
@@ -254,7 +254,7 @@ export default function PublicationsManager() {
             <button
               type="button"
               onClick={clearFilters}
-              className="mt-4 cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+              className="mt-4 cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
             >
               Limpiar filtros
             </button>
@@ -263,7 +263,7 @@ export default function PublicationsManager() {
               <button
                 type="button"
                 onClick={openCreate}
-                className="mt-4 inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+                className="mt-4 inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
               >
                 <PlusIcon className="size-4" />
                 Crear publicación
@@ -339,7 +339,7 @@ export default function PublicationsManager() {
                                 onClick={() => openEdit(publication)}
                                 disabled={!editable}
                                 aria-label={`Editar ${publication.title}`}
-                                className="cursor-pointer rounded-lg p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="cursor-pointer rounded-md p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:hover:text-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
                               >
                                 <EditIcon className="size-4" />
                               </button>

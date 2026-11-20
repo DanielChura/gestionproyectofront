@@ -18,7 +18,7 @@ export default function ProjectPermissions({
           aria-invalid={!!fields.worker_contribute}
           aria-describedby="project-permission-hint"
           onClick={() => update({ workerContribute: !draft.workerContribute })}
-          className="w-11 shrink-0 cursor-pointer rounded-lg bg-neutral-300 p-1 aria-checked:bg-neutral-800 dark:bg-neutral-700 dark:aria-checked:bg-neutral-100"
+          className="w-11 shrink-0 cursor-pointer rounded-md bg-neutral-300 p-1 aria-checked:bg-neutral-800 dark:bg-neutral-700 dark:aria-checked:bg-neutral-100"
         >
           <span
             aria-hidden="true"

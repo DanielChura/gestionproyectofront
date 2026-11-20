@@ -13,7 +13,7 @@ export const PUBLICATION_STATE_LABELS: Record<PublicationStateCode, string> = {
 };
 
 export const PUBLICATION_STATE_TEXT: Record<PublicationStateCode, string> = {
-  BORRADOR: "text-amber-600",
+  BORRADOR: "text-yellow-600",
   ABIERTA: "text-emerald-600",
   CERRADA: "text-neutral-500",
   CANCELADA: "text-red-600",
@@ -150,8 +150,8 @@ export function publicationFeedback(
   if (publication.state === "BORRADOR")
     return {
       label: "Sin publicar",
-      text: "text-amber-600",
-      border: "border-amber-200 hover:border-amber-300",
+      text: "text-yellow-600",
+      border: "border-yellow-200 hover:border-yellow-300",
     };
   if (publication.state === "CANCELADA")
     return {
@@ -180,8 +180,8 @@ export function publicationFeedback(
   if (closing >= 0 && closing <= 3)
     return {
       label: "Cierra pronto",
-      text: "text-amber-600",
-      border: "border-amber-200 hover:border-amber-300",
+      text: "text-yellow-600",
+      border: "border-yellow-200 hover:border-yellow-300",
     };
 
   const opening = daysUntil(publication.opening_date, today);

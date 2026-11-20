@@ -36,7 +36,7 @@ export default function AppearanceSettings({
               >
                 <ThemePreview
                   theme={option.value}
-                  className="aspect-video w-full overflow-hidden rounded-lg"
+                  className="aspect-video w-full overflow-hidden rounded-md"
                 />
               </button>
               <span className="mt-2 text-xs text-neutral-700 dark:text-neutral-300">

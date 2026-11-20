@@ -56,7 +56,7 @@ export default function TaskTitle({
           <IdIcon className="size-4" />
         </button>
 
-        <span className="flex items-center rounded-lg font-medium gap-1.5 cursor-pointer p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800">
+        <span className="flex items-center rounded-md font-medium gap-1.5 cursor-pointer p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800">
           <TaskListIcon className="size-4" />
           {subtasksCount} {subtasksCount === 1 ? "subtarea" : "subtareas"}
         </span>
@@ -75,7 +75,7 @@ export default function TaskTitle({
       ) : (
         <h1
           onClick={() => task.permissions.edit && setEditing(true)}
-          className="cursor-pointer rounded-lg px-2 py-0.5 text-xl font-medium text-neutral-900 hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-800"
+          className="cursor-pointer rounded-md px-2 py-0.5 text-xl font-medium text-neutral-900 hover:bg-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-800"
         >
           {task.name}
         </h1>

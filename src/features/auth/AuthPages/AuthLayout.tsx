@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import gmLogo from "../../../assets/gm-logo.png";
 import gmLogoSmall from "../../../assets/gm-logo-small.png";
 
 interface AuthLayoutProps {
@@ -14,7 +13,7 @@ export default function AuthLayout({
   children,
 }: AuthLayoutProps) {
   return (
-    <main className="min-h-screen bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+    <main className="min-h-screen bg-neutral-50 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
       <div className="mx-auto grid min-h-screen w-full max-w-sm content-center gap-2 px-6 py-12">
         <img
           className="hidden h-7 w-auto max-w-10 object-contain object-left dark:block"

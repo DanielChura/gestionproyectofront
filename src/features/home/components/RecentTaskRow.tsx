@@ -5,7 +5,7 @@ const priorityLabels: Record<number, { label: string; color: string }> = {
   1: { label: "Urgente", color: "text-red-500 bg-red-50 dark:bg-red-950/40" },
   2: {
     label: "Alta",
-    color: "text-amber-500 bg-amber-50 dark:bg-amber-950/40",
+    color: "text-yellow-500 bg-yellow-50 dark:bg-yellow-950/40",
   },
   3: { label: "Normal", color: "text-sky-500 bg-sky-50 dark:bg-sky-950/40" },
   4: {
@@ -25,7 +25,7 @@ export default function RecentTaskRow({ task }: { task: Task }) {
           <span
             className={`grid size-4 place-items-center rounded border ${
               isDone
-                ? "border-emerald-600 bg-emerald-600 text-white"
+                ? "border-emerald-600 bg-emerald-600 text-neutral-100"
                 : "border-neutral-300 dark:border-neutral-700"
             }`}
           >

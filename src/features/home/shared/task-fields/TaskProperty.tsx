@@ -84,7 +84,7 @@ export default function TaskProperty(props: Props) {
             {...triggerProps}
             className={
               triggerClassName ??
-              `inline-flex min-w-0 cursor-pointer items-center gap-1.5 rounded-lg border border-transparent px-2 py-1.5 text-xs text-neutral-800 hover:border-neutral-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 disabled:cursor-default dark:text-neutral-200 dark:hover:border-neutral-600 dark:focus-visible:outline-neutral-300 ${cell ? "w-full" : "max-w-full"} ${compact ? "justify-center" : ""}`
+              `inline-flex min-w-0 cursor-pointer items-center gap-1.5 rounded-md border border-transparent px-2 py-1.5 text-xs text-neutral-800 hover:border-neutral-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 disabled:cursor-default dark:text-neutral-200 dark:hover:border-neutral-600 dark:focus-visible:outline-neutral-300 ${cell ? "w-full" : "max-w-full"} ${compact ? "justify-center" : ""}`
             }
             disabled={disabled}
             aria-label={item.label}
@@ -117,7 +117,7 @@ export default function TaskProperty(props: Props) {
         role="dialog"
         aria-label={label}
         data-return-focus={id}
-        className="fixed inset-auto m-0 w-72 max-w-[calc(100vw-16px)] overflow-y-auto overscroll-contain rounded-lg border border-neutral-200 bg-white p-3 text-xs text-neutral-800 backdrop:bg-transparent dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 [&_input:not([type=checkbox]):not([type=radio])]:w-full [&_input:not([type=checkbox]):not([type=radio])]:rounded-lg [&_input]:border-neutral-300 [&_input:not([type=checkbox]):not([type=radio])]:px-2 [&_input:not([type=checkbox]):not([type=radio])]:py-1.5 [&_select]:w-full [&_select]:rounded-lg [&_select]:border [&_select]:border-neutral-200 [&_select]:px-2 [&_select]:py-1.5 dark:[&_input]:bg-neutral-900 dark:[&_select]:bg-neutral-900 [&_label]:text-xs"
+        className="fixed inset-auto m-0 w-72 max-w-[calc(100vw-16px)] overflow-y-auto overscroll-contain rounded-md border border-neutral-200 bg-white p-3 text-xs text-neutral-800 backdrop:bg-transparent dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 [&_input:not([type=checkbox]):not([type=radio])]:w-full [&_input:not([type=checkbox]):not([type=radio])]:rounded-md [&_input]:border-neutral-300 [&_input:not([type=checkbox]):not([type=radio])]:px-2 [&_input:not([type=checkbox]):not([type=radio])]:py-1.5 [&_select]:w-full [&_select]:rounded-md [&_select]:border [&_select]:border-neutral-200 [&_select]:px-2 [&_select]:py-1.5 dark:[&_input]:bg-neutral-900 dark:[&_select]:bg-neutral-900 [&_label]:text-xs"
         onToggle={(event) => setOpen(event.newState === "open")}
         onKeyDown={(event) => {
           if (event.key === "Escape") {

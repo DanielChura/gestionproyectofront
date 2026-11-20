@@ -50,6 +50,7 @@ export function useTeamDetail(teamId: number) {
   };
 
   return {
+    isLoading: teamQuery.isLoading || membersQuery.isLoading,
     team: teamQuery.data ?? null,
     members: membersQuery.data ?? [],
     removing: removeMutation.isPending,

@@ -117,7 +117,7 @@ export default function ProjectKpis({ summary }: Props) {
       <article
         className={`flex flex-col justify-between rounded-xl border p-3 ${
           overdueCount > 0
-            ? "border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-950/20"
+            ? "border-yellow-200 bg-yellow-50/50 dark:border-yellow-900/50 dark:bg-yellow-950/20"
             : "border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900"
         }`}
       >
@@ -128,12 +128,12 @@ export default function ProjectKpis({ summary }: Props) {
           <div
             className={`flex items-center gap-1.5 text-xl  ${
               overdueCount > 0
-                ? "text-amber-800 dark:text-amber-300"
+                ? "text-yellow-800 dark:text-yellow-300"
                 : "text-neutral-800 dark:text-neutral-100"
             }`}
           >
             {overdueCount > 0 ? (
-              <AlertIcon className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+              <AlertIcon className="size-4 shrink-0 text-yellow-600 dark:text-yellow-400" />
             ) : (
               <CheckIcon className="size-4 shrink-0 text-green-600 dark:text-green-400" />
             )}
@@ -144,13 +144,13 @@ export default function ProjectKpis({ summary }: Props) {
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800">
             <div
-              className={`h-full ${overdueCount > 0 ? "bg-amber-500" : "bg-green-500"}`}
+              className={`h-full ${overdueCount > 0 ? "bg-yellow-500" : "bg-green-500"}`}
               style={{ width: `${onTimePercent}%` }}
             />
           </div>
         </div>
         <p
-          className={`text-xs ${overdueCount > 0 ? " text-amber-700 dark:text-amber-400" : "text-neutral-500"}`}
+          className={`text-xs ${overdueCount > 0 ? " text-yellow-700 dark:text-yellow-400" : "text-neutral-500"}`}
         >
           {overdueCount > 0
             ? `${onTimePercent}% a tiempo`

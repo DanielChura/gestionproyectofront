@@ -2,13 +2,14 @@ import { useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router";
 import PlusIcon from "../../shared/icons/PlusIcon";
 import Button from "../../shared/components/Button/Button";
+import SectionHeader from "../layout/SectionHeader/SectionHeader";
 import WorkerForm from "./WorkerForm/WorkerForm";
 import TeamForm from "../organizations/Teams/TeamForm/TeamForm";
 import type { TeamFormState } from "../organizations/Teams/TeamForm/useTeamForm";
 import TeamMembersModal from "../organizations/Teams/TeamMembersModal";
 import { usePeople } from "./usePeople";
-import WorkersGrid from "./WorkersGrid";
-import TeamsGrid from "./TeamsGrid";
+import TeamsList from "./TeamsList";
+import WorkersList from "./WorkersList";
 import type { Worker } from "../../core/interfaces/worker.interface";
 
 const emptyTeam: TeamFormState = { area: "", name: "", active: false };
@@ -61,34 +62,28 @@ export default function TeamsPage({ canManage = false }: TeamsPageProps) {
       id="main-content"
       className="min-h-full text-neutral-800 dark:text-neutral-100"
     >
-      <header className="-mx-4 -mt-4 mb-3 border-b border-neutral-200 dark:border-neutral-800">
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <h1 className="m-0 text-sm  text-neutral-800 dark:text-neutral-100">
-            {isTeams ? "Todos los equipos" : "Todos los trabajadores"}
-          </h1>
-          <span
-            title={canManage ? undefined : "Solo administradores"}
-            className="inline-flex"
+      <SectionHeader
+        title={isTeams ? "Todos los equipos" : "Todos los trabajadores"}
+        action={
+          <Button
+            type="button"
+            size="sm"
+            disabled={!canManage}
+            onClick={handleOpenCreate}
           >
-            <Button
-              type="button"
-              disabled={!canManage}
-              onClick={handleOpenCreate}
-              className="inline-flex items-center gap-1.5"
-            >
-              <PlusIcon className="size-4" />
-              {isTeams ? "Nuevo equipo" : "Nuevo trabajador"}
-            </Button>
-          </span>
-        </div>
-      </header>
+            <PlusIcon className="size-4" />
+            {isTeams ? "Nuevo equipo" : "Nuevo trabajador"}
+          </Button>
+        }
+      />
 
       {isTeams ? (
-        <TeamsGrid
+        <TeamsList
           teams={people.visibleTeams}
           total={people.teams.length}
           areas={people.areas}
           filters={people.teamFilters}
+          isLoading={people.isLoading}
           onFilters={people.setTeamFilters}
           actions={{
             canManage,
@@ -97,11 +92,12 @@ export default function TeamsPage({ canManage = false }: TeamsPageProps) {
           }}
         />
       ) : (
-        <WorkersGrid
+        <WorkersList
           workers={people.visibleWorkers}
           total={people.workers.length}
           areas={people.areas}
           filters={people.workerFilters}
+          isLoading={people.isLoading}
           onFilters={people.setWorkerFilters}
           actions={{
             canManage,

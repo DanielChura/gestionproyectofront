@@ -8,8 +8,6 @@ interface GanttActions {
   rename: (id: number) => void;
   canRename: (id: number) => boolean;
   createRoot: () => void;
-  moving?: number;
-  receiver?: number;
 }
 export const TaskActions = createContext<GanttActions>({
   rename() {},

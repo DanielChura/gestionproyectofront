@@ -65,7 +65,7 @@ export default function TaskBoardColumn({
         {state ? (
           <span
             style={{ backgroundColor: color }}
-            className="inline-flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-white"
+            className="inline-flex min-w-0 items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-neutral-100"
           >
             {createElement(getIcon(themeIcon(state.tema?.icono)), {
               className: "size-3.5 shrink-0",
@@ -116,7 +116,7 @@ export default function TaskBoardColumn({
               view.onAction("create", 0, { stateCode: state.code })
             }
             style={{ color }}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium hover:bg-current/15 dark:hover:bg-current/15"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium hover:bg-current/15 dark:hover:bg-current/15"
           >
             <PlusIcon className="size-4" />
             <span>Añadir tarea</span>

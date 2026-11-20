@@ -103,7 +103,7 @@ export default function TaskBoardCard({
         {children.length > 0 && (
           <button
             type="button"
-            className="inline-flex w-full cursor-pointer items-center gap-1.5 rounded-lg px-1.5 py-1 text-sm font-medium text-neutral-500 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+            className="inline-flex w-full cursor-pointer items-center gap-1.5 rounded-md px-1.5 py-1 text-sm font-medium text-neutral-500 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
             onPointerDown={stop}
             onClick={(e) => {
               e.stopPropagation();

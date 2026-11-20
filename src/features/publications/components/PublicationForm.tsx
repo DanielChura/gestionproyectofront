@@ -61,7 +61,7 @@ function initialDraft(publication?: Publication): PublicationDraft {
 }
 
 const textareaClass =
-  "w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-1.5 text-xs text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-600 dark:placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none resize-y";
+  "w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-1.5 text-xs text-neutral-800 dark:text-neutral-100 placeholder:text-neutral-600 dark:placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none resize-y";
 
 export default function PublicationForm({
   publication,
@@ -184,7 +184,7 @@ export default function PublicationForm({
           <label className="text-xs text-neutral-800 dark:text-neutral-100">
             Proyecto
           </label>
-          <div className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-800 dark:text-neutral-100">
+          <div className="rounded-md border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-800 dark:text-neutral-100">
             {publication.project.name}
           </div>
         </div>
@@ -314,7 +314,7 @@ export default function PublicationForm({
           onChange={(e) => updateField("closingDate", e.target.value)}
         />
       </div>
-      <fieldset className="col-span-2 grid gap-2 border border-neutral-200 dark:border-neutral-800 p-3 rounded-lg">
+      <fieldset className="col-span-2 grid gap-2 border border-neutral-200 dark:border-neutral-800 p-3 rounded-md">
         <legend className="text-xs text-neutral-600 dark:text-neutral-400">
           Requisitos
         </legend>
@@ -365,7 +365,7 @@ export default function PublicationForm({
                   requirements: c.requirements.filter((_, p) => p !== i),
                 }))
               }
-              className="rounded-lg p-1.5 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 cursor-pointer"
+              className="rounded-md p-1.5 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 cursor-pointer"
             >
               <TrashIcon className="size-4" />
             </button>
@@ -378,7 +378,7 @@ export default function PublicationForm({
             draft.requirements.length >= 50 ||
             draft.requirements.length >= catalogs.specialties.length
           }
-          className="inline-flex w-fit items-center gap-1 rounded-lg bg-white dark:bg-neutral-900 px-2.5 py-1 text-xs text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+          className="inline-flex w-fit items-center gap-1 rounded-md bg-white dark:bg-neutral-900 px-2.5 py-1 text-xs text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
         >
           <PlusIcon className="size-4" /> Agregar
         </button>

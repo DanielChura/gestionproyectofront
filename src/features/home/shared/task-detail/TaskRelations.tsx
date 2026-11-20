@@ -22,7 +22,7 @@ const labels: Record<RelationKind, string> = {
   custom: "Nueva relación personalizada",
 };
 const button =
-  "cursor-pointer rounded-lg px-3 py-2 text-left text-xs text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:bg-neutral-900";
+  "cursor-pointer rounded-md px-3 py-2 text-left text-xs text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:bg-neutral-900";
 
 function RelationPicker({
   target,
@@ -327,7 +327,7 @@ export default function TaskRelations({
         value=""
         disabled={!task.permissions.relations}
         content={
-          <span className="flex min-w-0 max-w-full! items-center gap-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 px-3 py-2 text-sm text-neutral-800 dark:text-neutral-100">
+          <span className="flex min-w-0 max-w-full! items-center gap-2 rounded-md bg-neutral-100 dark:bg-neutral-800 px-3 py-2 text-sm text-neutral-800 dark:text-neutral-100">
             <RelationIcon className="size-4" />
             <span className="truncate">
               Relacionar elementos o añadir dependencias
@@ -396,7 +396,7 @@ export default function TaskRelations({
             </span>
             <button
               type="button"
-              className="min-w-0 flex-1 cursor-pointer break-words rounded-lg px-1 py-1 text-left text-neutral-800 dark:text-neutral-100 hover:underline"
+              className="min-w-0 flex-1 cursor-pointer break-words rounded-md px-1 py-1 text-left text-neutral-800 dark:text-neutral-100 hover:underline"
               onClick={() =>
                 onNavigate({
                   projectId: target.projectId,

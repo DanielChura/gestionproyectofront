@@ -17,6 +17,7 @@ import {
   stateCategories,
 } from "../utils/stateGroups";
 import { taskAssignees } from "../utils/taskAssignees";
+import { initialColor } from "../../../utils/initialColor";
 import PriorityOptions from "./task-fields/PriorityOptions";
 import { priorityTones } from "../../../shared/priorityTones";
 import { isBeforeTaskCreation, taskCreationDay } from "./task-fields/taskDates";
@@ -40,16 +41,16 @@ import Calendar from "./task-fields/Calendar";
 
 const styles = {
   editor:
-    "grid gap-2.5 [&_fieldset]:min-w-0 [&_fieldset]:m-0 [&_fieldset]:p-0 [&_fieldset]:[border:0] [&_textarea]:w-full [&_textarea]:p-2 [&_textarea]:border [&_textarea]:border-neutral-200 [&_textarea]:rounded-lg [&_textarea]:resize-y",
+    "grid gap-2.5 [&_fieldset]:min-w-0 [&_fieldset]:m-0 [&_fieldset]:p-0 [&_fieldset]:[border:0] [&_textarea]:w-full [&_textarea]:p-2 [&_textarea]:border [&_textarea]:border-neutral-200 [&_textarea]:rounded-md [&_textarea]:resize-y",
   options:
     "max-h-60 overflow-y-auto [&_h3]:mt-3 [&_h3]:mx-1.5 [&_h3]:mb-[5px] [&_h3]:text-neutral-600 [&_h3]:text-[0.75rem] [&_h3]:",
   option:
-    "flex items-center gap-2 w-full min-h-9 my-0.5 mx-0 py-[7px] px-2 [border:0] rounded-lg   text-neutral-800 dark:text-neutral-100 dark:aria-pressed:bg-neutral-800 text-left text-[0.8125rem] cursor-pointer aria-pressed:bg-neutral-100 aria-pressed:[@media(pointer:coarse)]:min-h-11",
+    "flex items-center gap-2 w-full min-h-9 my-0.5 mx-0 py-[7px] px-2 [border:0] rounded-md   text-neutral-800 dark:text-neutral-100 dark:aria-pressed:bg-neutral-800 text-left text-[0.8125rem] cursor-pointer aria-pressed:bg-neutral-100 aria-pressed:[@media(pointer:coarse)]:min-h-11",
   check: "ml-auto",
   priority:
     "inline-flex min-w-0 max-w-full items-center gap-1.5 text-neutral-700 dark:text-neutral-300",
   editorActions:
-    "flex justify-end gap-2 pt-2.5 border-t border-neutral-200 [&_button]:min-h-[34px] [&_button]:py-1.5 [&_button]:px-3 [&_button]:text-[0.8125rem] [&_button]:rounded-lg [&_button]:cursor-pointer [&_button:not(.primary-button)]:  [&_button:not(.primary-button)]:text-neutral-800 dark:[&_button:not(.primary-button)]:text-neutral-200 [&_button:not(.primary-button)]:border [&_button:not(.primary-button)]:border-neutral-200",
+    "flex justify-end gap-2 pt-2.5 border-t border-neutral-200 [&_button]:min-h-[34px] [&_button]:py-1.5 [&_button]:px-3 [&_button]:text-[0.8125rem] [&_button]:rounded-md [&_button]:cursor-pointer [&_button:not(.primary-button)]:  [&_button:not(.primary-button)]:text-neutral-800 dark:[&_button:not(.primary-button)]:text-neutral-200 [&_button:not(.primary-button)]:border [&_button:not(.primary-button)]:border-neutral-200",
   error:
     "m-0 text-red-700 dark:text-red-400 text-[0.75rem] [overflow-wrap:anywhere]",
 };
@@ -156,7 +157,7 @@ export function StateBadge({
   return (
     <span
       data-state={code}
-      className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-lg px-2 py-1 text-xs  text-white"
+      className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs  text-neutral-100"
       style={{ backgroundColor: themeColor(tema?.color ?? color) ?? "#737373" }}
     >
       <StateIcon
@@ -178,13 +179,18 @@ export function PriorityLabel({
   priority?: number | null;
   name: string;
 }) {
+  const tone = priority ? priorityTones[priority] : undefined;
   return (
     <span className={styles.priority} data-priority={priority}>
       <FlagIcon
-        className={`size-4 shrink-0 ${priorityTones[priority ?? 0] ?? "text-neutral-500"}`}
-        fill
+        className={`size-4 shrink-0 ${tone?.text ?? "text-neutral-400"}`}
+        fill={false}
       />
-      <span className="truncate">{name}</span>
+      {tone ? (
+        <span className="truncate">{tone.texto}</span>
+      ) : (
+        <span className="truncate">{name}</span>
+      )}
     </span>
   );
 }
@@ -403,7 +409,7 @@ function Editor({
         <button
           type="button"
           ref={saveButton}
-          className="primary-button bg-neutral-800  text-white hover:bg-neutral-700"
+          className="primary-button bg-neutral-800  text-neutral-100 hover:bg-neutral-700"
           disabled={
             busy ||
             calendarEdit.blocked ||
@@ -486,18 +492,32 @@ export default function TaskCell(props: TaskCellProps) {
           : null}
       </span>
     ) : field === "labels" ? (
-      <span className="flex items-center gap-1.5">
-        <HashIcon className="size-4" />
-        {props.appearance === "detail" && (
-          <span>
-            {task.labels.length
-              ? "Editar etiquetas"
-              : permitted
-                ? "Añadir etiquetas"
-                : "Sin etiquetas"}
-          </span>
-        )}
-      </span>
+      task.labels.length > 0 ? (
+        <span className="flex flex-wrap items-center gap-1">
+          {task.labels.slice(0, 3).map((label) => (
+            <span
+              key={label.id}
+              className={`rounded px-1.5 py-0.5 text-xs lowercase text-neutral-100 ${initialColor(label.name)}`}
+            >
+              {label.name}
+            </span>
+          ))}
+          {task.labels.length > 3 && (
+            <span className="text-xs text-neutral-700 dark:text-neutral-300">
+              +{task.labels.length - 3}
+            </span>
+          )}
+        </span>
+      ) : (
+        <span className="flex items-center gap-1.5">
+          <HashIcon className="size-4" />
+          {props.appearance === "detail" && (
+            <span>
+              {permitted ? "Añadir etiquetas" : "Sin etiquetas"}
+            </span>
+          )}
+        </span>
+      )
     ) : field === "priority" ? (
       <PriorityLabel priority={task.priority} name={value} />
     ) : (

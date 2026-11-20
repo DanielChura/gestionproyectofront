@@ -35,11 +35,11 @@ export default function TeamMembersPanel({
   );
 
   return (
-    <section aria-label="Integrantes">
+    <section>
       <div className="flex flex-wrap items-center gap-2 pb-4">
         <h2 className="m-0 mr-auto text-sm text-neutral-800 dark:text-neutral-100">
           Integrantes{" "}
-          <span className=" text-neutral-500 dark:text-neutral-400">
+          <span className="text-neutral-500 dark:text-neutral-400">
             ({visible.length})
           </span>
         </h2>
@@ -49,7 +49,6 @@ export default function TeamMembersPanel({
             type="search"
             value={search}
             placeholder="Buscar por nombre"
-            aria-label="Buscar integrantes"
             style="small"
             onChange={(event) => setSearch(event.target.value)}
             className="pl-8"
@@ -57,7 +56,6 @@ export default function TeamMembersPanel({
         </div>
         <Select
           value={status}
-          aria-label="Filtrar por estado"
           style="small"
           onChange={(event) => setStatus(event.target.value)}
         >

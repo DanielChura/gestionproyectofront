@@ -30,7 +30,7 @@ class GanttBoundary extends Component<TaskGanttProps, BoundaryState> {
               this.props.onRetry();
               this.setState({ failed: false, View: lazy(load) });
             }}
-            className="cursor-pointer rounded-lg border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-neutral-700 dark:hover:bg-neutral-800"
+            className="cursor-pointer rounded-md border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-neutral-700 dark:hover:bg-neutral-800"
           >
             Reintentar Gantt
           </button>
@@ -77,7 +77,7 @@ export default function TaskGanttEntry(props: TaskGanttProps) {
           <button
             type="button"
             onClick={props.onRetry}
-            className="cursor-pointer rounded-lg border border-neutral-200 px-3 py-1.5 text-neutral-800 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800"
+            className="cursor-pointer rounded-md border border-neutral-200 px-3 py-1.5 text-neutral-800 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800"
           >
             Reintentar tareas
           </button>

@@ -76,7 +76,7 @@ export default function Tooltip({
             ref={tip}
             id={id}
             role="tooltip"
-            className={`fixed z-100 max-w-full break-words rounded-lg border border-neutral-200 bg-neutral-800 px-2 py-1 text-xs text-neutral-100 dark:border-neutral-700 dark:bg-neutral-100 dark:text-neutral-900${portalTarget === "dialog" ? " pointer-events-none w-max max-w-88!" : ""}`}
+            className={`fixed z-100 max-w-full break-words rounded-md border border-neutral-200 bg-neutral-800 px-2 py-1 text-xs text-neutral-100 dark:border-neutral-700 dark:bg-neutral-100 dark:text-neutral-900${portalTarget === "dialog" ? " pointer-events-none w-max max-w-88!" : ""}`}
           >
             {label}
           </span>,

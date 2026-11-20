@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-
 import InvitationModal from "./InvitationModal/InvitationModal";
 import { useAccounts } from "./useAccounts";
 import PlusIcon from "../../../shared/icons/PlusIcon";
@@ -11,11 +10,15 @@ import StackIcon from "../../../shared/icons/StackIcon";
 import AdminIcon from "../../../shared/icons/AdminIcon";
 import ActivityIcon from "../../../shared/icons/ActivityIcon";
 import DotsIcon from "../../../shared/icons/DotsIcon";
+import SendIcon from "../../../shared/icons/SendIcon";
+import KeyIcon from "../../../shared/icons/KeyIcon";
 import Button from "../../../shared/components/Button/Button";
-import SecondaryButton from "../../../shared/components/Button/SecondaryButton";
+import SectionHeader from "../../layout/SectionHeader/SectionHeader";
+import Table, { type TableColumn } from "../../../shared/components/Table/Table";
 import Input from "../../../shared/components/Input/Input";
 import Select from "../../../shared/components/Select/Select";
 import { roleLabel } from "../../auth/roles";
+import type { Account } from "../../../core/interfaces/auth.interface";
 
 export default function AccountsPage() {
   const [searchInput, setSearchInput] = useState("");
@@ -24,11 +27,18 @@ export default function AccountsPage() {
   const [appliedActive, setAppliedActive] = useState<boolean | undefined>(
     undefined,
   );
-  const { accounts, areas, busy, resendInvitation, unlockAccount, reload } =
-    useAccounts({
-      search: appliedSearch || undefined,
-      active: appliedActive,
-    });
+  const {
+    accounts,
+    areas,
+    busy,
+    resendInvitation,
+    unlockAccount,
+    reload,
+    isLoading,
+  } = useAccounts({
+    search: appliedSearch || undefined,
+    active: appliedActive,
+  });
   const [inviting, setInviting] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const hasFilters = appliedSearch !== "" || appliedActive !== undefined;
@@ -61,37 +71,120 @@ export default function AccountsPage() {
     setAppliedActive(undefined);
   };
 
+  const columns: TableColumn<Account>[] = [
+    {
+      key: "name",
+      header: "Cuenta",
+      icon: UserIcon,
+      render: (account) => (
+        <span className="flex items-center min-w-0 line-clamp-1">
+          {account.name}
+        </span>
+      ),
+    },
+    {
+      key: "email",
+      header: "Correo",
+      icon: AtIcon,
+      render: (account) => (
+        <span className="flex items-center min-w-0 line-clamp-1">
+          {account.email}
+        </span>
+      ),
+    },
+    {
+      key: "areas",
+      header: "Áreas",
+      icon: StackIcon,
+      render: (account) => (
+        <span className="flex items-center min-w-0 line-clamp-1">
+          {account.all_areas
+            ? "Todas las áreas activas"
+            : account.areas.map((area: { id: number; name: string }) => area.name).join(", ") ||
+              "Sin áreas activas"}
+        </span>
+      ),
+    },
+    {
+      key: "role",
+      header: "Rol",
+      icon: AdminIcon,
+      render: (account) => (
+        <span className="flex items-center min-w-0 line-clamp-1">
+          {roleLabel(account.role)}
+        </span>
+      ),
+    },
+    {
+      key: "active",
+      header: "Estado",
+      icon: ActivityIcon,
+      render: (account) => (
+        <span
+          className={`flex items-center min-w-0 line-clamp-1 ${
+            account.active ? "text-emerald-500" : "text-amber-500"
+          }`}
+        >
+          {account.active ? "Activa" : "Pendiente"}
+        </span>
+      ),
+    },
+    {
+      key: "actions",
+      header: "Acciones",
+      icon: DotsIcon,
+      cellClassName: "w-24",
+      render: (account) => (
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            disabled={busy || account.active}
+            onClick={() => resendInvitation(account.id)}
+            title="Reenviar invitación"
+            className="rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 disabled:opacity-40 disabled:hover:bg-transparent dark:text-neutral-300 dark:hover:bg-neutral-800"
+          >
+            <SendIcon className="size-4" />
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => unlockAccount(account.id)}
+            title="Desbloquear"
+            className="rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 disabled:opacity-40 disabled:hover:bg-transparent dark:text-neutral-300 dark:hover:bg-neutral-800"
+          >
+            <KeyIcon className="size-4" />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <main
       className="min-h-full text-neutral-800 dark:text-neutral-100"
       id="main-content"
     >
-      <header className="flex flex-wrap items-end justify-between gap-4 mb-8">
-        <div className="max-w-2xl">
-          <h1 className="m-0 text-lg  text-neutral-800 dark:text-neutral-100">
-            Cuentas y accesos
-          </h1>
-          <p className="m-0 mt-0.5 text-sm text-neutral-600 dark:text-neutral-400">
-            Registra trabajadores, asigna sus áreas y gestiona el acceso al
-            sistema.
-          </p>
-        </div>
-        <Button
-          type="button"
-          onClick={() => setInviting(true)}
-          className="inline-flex items-center gap-1.5"
-        >
-          <PlusIcon className="size-4" /> Registrar e invitar
-        </Button>
-      </header>
+      <SectionHeader
+        title="Cuentas y accesos"
+        action={
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => setInviting(true)}
+            className="inline-flex items-center gap-1.5"
+          >
+            <PlusIcon className="size-4" /> Registrar e invitar
+          </Button>
+        }
+      />
 
       <form
         onSubmit={applyFilters}
         className="flex flex-wrap items-center gap-2 mb-6"
       >
-        <h2 className="m-0 mr-auto text-sm  text-neutral-800 dark:text-neutral-100">
+        <h2 className="m-0 mr-auto text-sm text-neutral-800 dark:text-neutral-100">
           Cuentas{" "}
-          <span className=" text-neutral-600 dark:text-neutral-400">
+          <span className="text-neutral-600 dark:text-neutral-400">
             ({accounts.length})
           </span>
         </h2>
@@ -102,14 +195,12 @@ export default function AccountsPage() {
             value={searchInput}
             maxLength={100}
             placeholder="Buscar por nombre o correo"
-            aria-label="Buscar cuentas"
             onChange={(e) => setSearchInput(e.target.value)}
             className="!pl-8"
           />
         </div>
         <Select
           value={activeInput}
-          aria-label="Filtrar por estado"
           onChange={(e) => setActiveInput(e.target.value)}
         >
           <option value="">Todas</option>
@@ -118,125 +209,29 @@ export default function AccountsPage() {
         </Select>
         <Button type="submit">Buscar cuenta</Button>
         {hasFilters && (
-          <SecondaryButton
+          <Button
+            variant="secondary"
             type="button"
             onClick={clearFilters}
             className="px-2 py-1.5"
           >
             Limpiar
-          </SecondaryButton>
+          </Button>
         )}
       </form>
 
-      <section className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 overflow-hidden rounded-xl">
-        <div className="w-full overflow-x-auto">
-          <table className="w-full border-collapse text-xs text-neutral-600 dark:text-neutral-400 text-left">
-            <thead className="border-b border-neutral-200 dark:border-neutral-800  text-neutral-700 dark:text-neutral-300">
-              <tr>
-                <th scope="col" className="p-3">
-                  <span className="inline-flex items-center gap-1.5">
-                    <UserIcon className="size-4" /> Cuenta
-                  </span>
-                </th>
-                <th scope="col" className="p-3">
-                  <span className="inline-flex items-center gap-1.5">
-                    <AtIcon className="size-4" /> Correo
-                  </span>
-                </th>
-                <th scope="col" className="p-3">
-                  <span className="inline-flex items-center gap-1.5">
-                    <StackIcon className="size-4" /> Áreas
-                  </span>
-                </th>
-                <th scope="col" className="p-3">
-                  <span className="inline-flex items-center gap-1.5">
-                    <AdminIcon className="size-4" /> Rol
-                  </span>
-                </th>
-                <th scope="col" className="p-3">
-                  <span className="inline-flex items-center gap-1.5">
-                    <ActivityIcon className="size-4" /> Estado
-                  </span>
-                </th>
-                <th scope="col" className="p-3">
-                  <span className="inline-flex items-center gap-1.5">
-                    <DotsIcon className="size-4" /> Acciones
-                  </span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {accounts.map((account) => (
-                <tr
-                  key={account.id}
-                  className="border-b border-neutral-200 dark:border-neutral-800 last:border-b-0 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                >
-                  <td className="px-3 py-2.5">
-                    <span className="flex items-center min-w-0 line-clamp-1">
-                      {account.name}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2.5">
-                    <span className="flex items-center min-w-0 line-clamp-1">
-                      {account.email}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2.5">
-                    <span className="flex items-center min-w-0 line-clamp-1">
-                      {account.all_areas
-                        ? "Todas las áreas activas"
-                        : account.areas.map((area) => area.name).join(", ") ||
-                          "Sin áreas activas"}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2.5">
-                    <span className="flex items-center min-w-0 line-clamp-1">
-                      {roleLabel(account.role)}
-                    </span>
-                  </td>
-                  <td
-                    className={`px-3 py-2.5  ${account.active ? "text-green-500" : "text-yellow-400"}`}
-                  >
-                    <span className="flex items-center min-w-0 line-clamp-1">
-                      {account.active ? "Activa" : "Pendiente"}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2.5">
-                    <div className="flex flex-wrap items-center gap-1">
-                      <SecondaryButton
-                        type="button"
-                        disabled={busy || account.active}
-                        onClick={() => resendInvitation(account.id)}
-                        className="px-2 py-1.5 whitespace-nowrap"
-                      >
-                        Reenviar invitación
-                      </SecondaryButton>
-                      <SecondaryButton
-                        type="button"
-                        disabled={busy}
-                        onClick={() => unlockAccount(account.id)}
-                        className="px-2 py-1.5 whitespace-nowrap"
-                      >
-                        Desbloquear
-                      </SecondaryButton>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {accounts.length === 0 && (
-          <p
-            role="status"
-            className="m-0 px-3 py-8 text-xs text-neutral-600 dark:text-neutral-400 text-center"
-          >
-            {hasFilters
-              ? "Sin cuentas para los filtros aplicados."
-              : "No hay cuentas registradas."}
-          </p>
-        )}
-      </section>
+      <Table
+        columns={columns}
+        data={accounts}
+        keyExtractor={(account) => account.id}
+        isLoading={isLoading}
+        skeletonRows={8}
+        emptyMessage={
+          hasFilters
+            ? "Sin cuentas para los filtros aplicados."
+            : "No hay cuentas registradas."
+        }
+      />
 
       {inviting && (
         <InvitationModal

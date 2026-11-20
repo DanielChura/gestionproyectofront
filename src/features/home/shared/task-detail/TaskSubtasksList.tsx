@@ -71,7 +71,7 @@ export default function TaskSubtasksList({
                 key={item.id}
                 type="button"
                 onClick={() => onNavigate({ projectId, taskId: item.id })}
-                className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg py-2 pl-4 pr-2 text-left text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
+                className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-md py-2 pl-4 pr-2 text-left text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
               >
                 <span className="flex min-w-0 flex-1 items-center gap-2.5">
                   <span
@@ -96,7 +96,7 @@ export default function TaskSubtasksList({
 
                   {item.state_name && (
                     <span
-                      className="flex items-center gap-1.5 rounded px-2 py-0.5 text-xs text-white"
+                      className="flex items-center gap-1.5 rounded px-2 py-0.5 text-xs text-neutral-100"
                       style={{ backgroundColor: color }}
                     >
                       <StateIcon className="size-3.5 shrink-0" fill />
@@ -124,7 +124,7 @@ export default function TaskSubtasksList({
               <button
                 type="button"
                 onClick={() => setAdding(true)}
-                className="flex cursor-pointer items-center gap-2 rounded-lg py-1.5 pl-4 pr-2 text-xs text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                className="flex cursor-pointer items-center gap-2 rounded-md py-1.5 pl-4 pr-2 text-xs text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
               >
                 <PlusIcon className="size-3.5" />
                 <span>Añadir subtarea</span>

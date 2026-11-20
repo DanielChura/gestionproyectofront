@@ -134,7 +134,7 @@ export default function BoardView({
                 type="button"
                 aria-label="Crear nueva tarea"
                 onClick={() => setAction({ kind: "create" })}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-neutral-900 px-2.5 py-1 text-xs font-medium text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-neutral-900 px-2.5 py-1 text-xs font-medium text-neutral-100 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
               >
                 <PlusIcon className="size-4" />
                 Agregar tarea

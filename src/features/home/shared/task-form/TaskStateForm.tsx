@@ -51,7 +51,7 @@ export default function TaskStateForm({
       onSubmit={submit}
       actions={
         <button
-          className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
+          className="inline-flex cursor-pointer items-center justify-center rounded-md bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700"
           disabled={busy || !target}
           type="submit"
         >
@@ -72,7 +72,7 @@ export default function TaskStateForm({
           disabled={fixedTarget}
           value={target}
           onChange={(event) => setTarget(event.target.value)}
-          className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+          className="rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
         >
           <option value="">Selecciona una transición</option>
           {task.transitions.map((item) => (

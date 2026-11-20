@@ -1,6 +1,5 @@
 import GanttVerticalNavigation from "./GanttVerticalNavigation";
 import { TaskActions } from "./ganttActionsContext";
-import GanttNotice from "./GanttNotice";
 import GanttDependencyCreate from "./GanttDependencyCreate";
 import { bindGanttBarLayout } from "./ganttBarLayout";
 import { toGanttWindow } from "./ganttCalendar";
@@ -10,10 +9,8 @@ import GanttRangeDialog from "./GanttRangeDialog";
 import GanttDependencyUndo from "./GanttDependencyUndo";
 import type { RemovedGanttLink } from "./GanttDependencyUndo";
 import { useGanttPan } from "./useGanttPan";
-import { useGanttTreeMove } from "./useGanttTreeMove";
 import EditIcon from "../../../../shared/icons/EditIcon";
 import PlusIcon from "../../../../shared/icons/PlusIcon";
-import type { PointerEvent as ReactPointerEvent } from "react";
 import {
   createContext,
   useCallback,
@@ -98,9 +95,6 @@ function TaskName({ row }: CellProps) {
     );
   return (
     <div
-      data-gantt-tree-id={task.id}
-      data-tree-origin={actions.moving === task.id || undefined}
-      data-tree-receiver={actions.receiver === task.id || undefined}
       className="gm-gantt-tree-row flex w-full min-w-0 items-center gap-1 pr-16"
       style={{
         paddingInlineStart:
@@ -128,7 +122,6 @@ function TaskName({ row }: CellProps) {
             }
             aria-expanded={task.open}
             disabled={actions.filtered}
-            onPointerDown={(event) => event.stopPropagation()}
             onMouseDown={(event) => {
               event.preventDefault();
               event.stopPropagation();
@@ -480,20 +473,15 @@ export default function TaskGantt(props: TaskGanttProps) {
     controls.manualNavigation,
     controls.navigation,
   );
-  const { byId, movement, pointer } = useGanttTreeMove(
-    props,
-    controls.api,
-    canvasRef,
-    filtered,
-    controls.projection.visible,
+  const byId = useMemo(
+    () => new Map(props.tasks.map((task) => [task.id, task])),
+    [props.tasks],
   );
   const actions = {
     openTask: onOpenTask,
     toggleBranch,
     filtered,
     createRoot: () => setDialog({}),
-    moving: movement.dragging?.id,
-    receiver: movement.drop?.receiver,
     createChild: (id: number) => setDialog({ parent: byId.get(id) }),
     rename: (id: number) => setDialog({ task: byId.get(id) }),
     canCreateChild: (id: number) =>
@@ -501,22 +489,6 @@ export default function TaskGantt(props: TaskGanttProps) {
     canRename: (id: number) =>
       !props.actionsDisabled && Boolean(byId.get(id)?.permissions.edit),
   };
-  function rowDown(event: ReactPointerEvent<HTMLDivElement>) {
-    if (
-      !(event.target instanceof Element) ||
-      event.target.closest(".gm-gantt-row-actions")
-    )
-      return;
-    const node = event.target.closest<HTMLElement>("[data-gantt-tree-id]");
-    const task = node ? byId.get(Number(node.dataset.ganttTreeId)) : undefined;
-    if (task)
-      pointer.onPointerDown(
-        event,
-        task,
-        !props.actionsDisabled && movement.permitted(task, task.state_code),
-        node?.closest<HTMLElement>(".wx-row") ?? node ?? undefined,
-      );
-  }
   return (
     <>
       <GanttCalendarContext.Provider value={calendar.snapshot}>
@@ -603,12 +575,9 @@ export default function TaskGantt(props: TaskGanttProps) {
                         if (!panDown(event) && !protectedView)
                           calendar.onPointerDownCapture(event);
                       }}
-                      onPointerDown={rowDown}
-                      onClickCapture={pointer.onClickCapture}
-                      onDragStartCapture={pointer.onDragStart}
                     >
                       <div
-                        className="gm-gantt-header-tools absolute z-10 rounded-lg bg-white dark:bg-neutral-900"
+                        className="gm-gantt-header-tools absolute z-10 rounded-md bg-white dark:bg-neutral-900"
                         style={{
                           left: boundaryWidth - 34,
                           top: Math.max(0, (scales.length * 28 - 28) / 2),
@@ -725,30 +694,6 @@ export default function TaskGantt(props: TaskGanttProps) {
                     setCreatingLink(false);
                   }}
                 />
-              )}
-              {movement.drop && (
-                <div
-                  className="gm-gantt-tree-insertion"
-                  style={{
-                    left: movement.drop.left,
-                    top: movement.drop.top,
-                    width: movement.drop.width,
-                  }}
-                  aria-hidden="true"
-                />
-              )}
-              {movement.error && (
-                <GanttNotice label="Orden de tareas" key={movement.error}>
-                  {movement.error}
-                  {movement.error && (
-                    <button
-                      type="button"
-                      onClick={() => void movement.refresh()}
-                    >
-                      Consultar tareas
-                    </button>
-                  )}
-                </GanttNotice>
               )}
               {dialog && (
                 <GanttTaskNameDialog

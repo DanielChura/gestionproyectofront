@@ -119,9 +119,9 @@ export default function TaskProperties({
               placeholder="Buscar estado…"
               value={stateSearch}
               onChange={(event) => setStateSearch(event.target.value)}
-              className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+              className="w-full rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
             />
-            <div className="mt-2 max-h-60 overflow-y-auto rounded-lg border border-neutral-200 dark:border-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-800">
+            <div className="mt-2 max-h-60 overflow-y-auto rounded-md border border-neutral-200 dark:border-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-800">
               {groups.map(
                 (group: { label: string; states: ProjectTaskState[] }) => (
                   <section key={group.label} aria-label={group.label}>

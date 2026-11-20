@@ -4,10 +4,10 @@ import { ApiError, errorText } from "../../../../core/api/httpClient";
 import { createInvitation } from "../../../../core/services/authService";
 import type { SessionArea } from "../../../../core/interfaces/auth.interface";
 import { useToast } from "../../../../hooks/useToast";
+import Button from "../../../../shared/components/Button/Button";
 import Form from "../../../../shared/components/Form/Form";
 import Input from "../../../../shared/components/Input/Input";
 import Select from "../../../../shared/components/Select/Select";
-import SecondaryButton from "../../../../shared/components/Button/SecondaryButton";
 import { accountRoles } from "../../../auth/roles";
 import { GMAIL_PATTERN, GMAIL_TITLE } from "../../../../utils/gmail";
 
@@ -199,7 +199,7 @@ export default function InvitationModal({
               </Select>
             </div>
             {index > 0 && (
-              <SecondaryButton
+              <Button variant="secondary"
                 type="button"
                 className="px-2.5 py-1 text-xs shrink-0"
                 onClick={() =>
@@ -209,7 +209,7 @@ export default function InvitationModal({
                 }
               >
                 Retirar
-              </SecondaryButton>
+              </Button>
             )}
           </div>
         </div>
@@ -222,13 +222,13 @@ export default function InvitationModal({
       )}
       {canAdd && (
         <div className="col-span-2">
-          <SecondaryButton
+          <Button variant="secondary"
             type="button"
             onClick={addArea}
             className="px-2.5 py-1 text-xs"
           >
             Agregar área
-          </SecondaryButton>
+          </Button>
         </div>
       )}
       {areas.length === 0 && (

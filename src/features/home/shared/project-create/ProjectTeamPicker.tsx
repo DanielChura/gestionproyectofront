@@ -20,7 +20,7 @@ export default function ProjectTeamPicker({
       <div
         role="group"
         aria-label="Equipos elegibles"
-        className="grid gap-2 rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
+        className="grid gap-2 rounded-md border border-neutral-200 p-3 dark:border-neutral-700"
       >
         {teams.data?.map((item) => (
           <div

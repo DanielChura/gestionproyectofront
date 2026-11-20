@@ -4,7 +4,7 @@ import { scheduleLabel } from "../utils/taskSchedule";
 import { formatTaskDate } from "../utils/taskHierarchy";
 
 const button =
-  "cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700";
+  "cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700";
 
 export type CalendarFeedbackModel = Pick<
   ReturnType<typeof useTaskCalendarEdit>,

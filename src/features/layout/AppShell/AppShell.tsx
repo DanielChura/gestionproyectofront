@@ -2,8 +2,8 @@ import { useState, useMemo } from "react";
 import { useLocation, matchPath } from "react-router";
 import { appModules } from "../../../routes";
 import type { SessionUser } from "../../../core/interfaces/auth.interface";
-import AppSidebar from "../Sidebar/AppSidebar/AppSidebar";
-import SectionMenu from "../Sidebar/SectionMenu/SectionMenu";
+import Sidebar from "../Sidebar/Sidebar";
+import SectionNav from "../Sidebar/SectionNav/SectionNav";
 import SidebarHighlights from "../Sidebar/Highlights/SidebarHighlights";
 import AppRoutes from "./AppRoutes";
 import { GlobalLoading } from "../../../shared/states/GlobalLoading/GlobalLoading";
@@ -31,7 +31,7 @@ export default function AppShell({ user, onLogout }: AppShellProps) {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-white p-2 text-neutral-900 dark:bg-neutral-950/50 dark:text-neutral-100 gap-2">
-      <AppSidebar
+      <Sidebar
         modules={appModules}
         activePath={activeModule.path}
         user={user}
@@ -39,10 +39,10 @@ export default function AppShell({ user, onLogout }: AppShellProps) {
         onSectionSelect={() => setMenuOpen(true)}
       />
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-md border border-neutral-200 dark:border-neutral-800">
         <div className="flex min-h-0 min-w-0 flex-1">
           {menuOpen && activeModule.subRoutes.length > 0 && (
-            <SectionMenu
+            <SectionNav
               activeModule={activeModule}
               pathname={pathname}
               canManage={canViewAdmin}

@@ -63,7 +63,7 @@ export default function TaskGanttFields({
         value={search}
         onChange={(event) => setSearch(event.target.value)}
         placeholder="Buscar campos de tarea…"
-        className="min-w-0 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs placeholder:text-neutral-600 focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-neutral-700 dark:bg-neutral-900 dark:placeholder:text-neutral-300"
+        className="min-w-0 rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs placeholder:text-neutral-600 focus-visible:outline-2 focus-visible:outline-offset-2 dark:border-neutral-700 dark:bg-neutral-900 dark:placeholder:text-neutral-300"
       />
       <div className="grid gap-1 overflow-y-auto overscroll-contain">
         {fields.map((field) => (

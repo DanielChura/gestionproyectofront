@@ -9,8 +9,13 @@ export default function SidebarHighlightsSkeleton() {
       highlightColor="var(--skeleton-highlight)"
     >
       {SKELETON_WIDTHS.map((width, index) => (
-        <li key={index} className="shrink-0">
-          <Skeleton inline width={width} height={30} borderRadius={8} />
+        <li key={index} className="flex shrink-0 items-center">
+          <Skeleton
+            width={width}
+            height={28}
+            borderRadius={6}
+            containerClassName="flex"
+          />
         </li>
       ))}
     </SkeletonTheme>

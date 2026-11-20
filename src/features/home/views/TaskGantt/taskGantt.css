@@ -450,30 +450,6 @@
   padding-left: 0 !important;
 }
 
-.gm-task-gantt .gm-gantt-tree-row {
-  cursor: grab;
-}
-
-.gm-gantt-tree-row[data-tree-origin] {
-  opacity: 0.55;
-}
-
-.gm-gantt-tree-row[data-tree-receiver] {
-  background: var(--color-neutral-100);
-}
-
-.dark .gm-gantt-tree-row[data-tree-receiver] {
-  background: var(--color-neutral-800);
-}
-
-.gm-gantt-tree-insertion {
-  position: fixed;
-  height: 2px;
-  background: var(--color-sky-600);
-  pointer-events: none;
-  z-index: 60;
-}
-
 .gm-task-gantt .wx-bar .wx-link {
   display: none !important;
 }
@@ -591,102 +567,6 @@
 .gm-gantt-controls [popover]:has(.gm-gantt-filter-panel) {
   width: 15rem;
   padding: 0.625rem;
-}
-
-/* Opt-in to the shared task detail only. List/form and other dialogs stay unchanged. */
-
-@media (max-width: 767px) {
-}
-
-.gm-task-list .gm-task-row[data-drag-enabled="true"] {
-  cursor: grab;
-  user-select: none;
-}
-
-.gm-task-list[data-moving="true"] {
-  user-select: none;
-  cursor: not-allowed;
-}
-
-.gm-task-list[data-moving="true"][data-drop-valid="true"] {
-  cursor: grabbing;
-}
-
-.gm-task-list[data-moving="true"] * {
-  cursor: inherit;
-}
-
-.gm-task-list .gm-task-row[data-dragging="true"] {
-  opacity: 0.55;
-  background: var(--color-neutral-100);
-}
-
-.gm-task-preview {
-  position: fixed;
-  inset: 0 auto auto 0;
-  z-index: 90;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 0.72;
-  background: white;
-  user-select: none;
-  will-change: transform;
-}
-
-body:has(.gm-task-list[data-moving="true"]) > [role="tooltip"] {
-  visibility: hidden;
-}
-
-.gm-task-list .gm-row-labels {
-  opacity: 0;
-}
-
-.gm-task-list .gm-task-row:hover .gm-row-labels,
-.gm-task-list .gm-task-row:focus-within .gm-row-labels,
-.gm-task-list .gm-task-row:has(:popover-open) .gm-row-labels {
-  opacity: 1;
-}
-
-.gm-task-list [data-property-appearance="list"] > div > span > button {
-  background: transparent;
-  border-color: transparent;
-}
-
-.gm-task-preview [data-preview-control] {
-  cursor: inherit;
-}
-
-.gm-task-list
-  [data-property-appearance="list"]
-  > div
-  > span
-  > button:is(:hover:enabled, :focus-visible, [aria-expanded="true"]) {
-  background: white;
-  border-color: var(--color-neutral-300);
-}
-
-.gm-task-list .gm-task-insertion {
-  position: absolute;
-  height: 2px;
-  background: #1678bd;
-  pointer-events: none;
-  z-index: 20;
-  transform: translateY(-1px);
-}
-
-.gm-task-list .gm-group-heading > button {
-  position: sticky;
-  left: 0;
-}
-
-@media (hover: none), (pointer: coarse) {
-  .gm-task-list .gm-row-labels {
-    opacity: 1;
-  }
-}
-
-.dark .gm-task-preview {
-  background: var(--color-neutral-900);
 }
 
 .gm-gantt-project-progress {

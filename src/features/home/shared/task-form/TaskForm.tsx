@@ -131,7 +131,7 @@ export default function TaskForm({
                 id="task-name"
                 name="name"
                 data-initial-focus
-                className="w-full rounded-lg border border-neutral-200 bg-transparent px-2 py-1.5 text-lg font-medium text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none aria-invalid:border-red-600 dark:border-neutral-700 dark:text-neutral-100"
+                className="w-full rounded-md border border-neutral-200 bg-transparent px-2 py-1.5 text-lg font-medium text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none aria-invalid:border-red-600 dark:border-neutral-700 dark:text-neutral-100"
                 required
                 maxLength={180}
                 value={name}
@@ -157,7 +157,7 @@ export default function TaskForm({
                 rows={3}
                 maxLength={10000}
                 value={description}
-                className="w-full resize-y rounded-lg border border-neutral-200 px-2 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none aria-invalid:border-red-600 dark:border-neutral-700 dark:text-neutral-100"
+                className="w-full resize-y rounded-md border border-neutral-200 px-2 py-2 text-xs text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none aria-invalid:border-red-600 dark:border-neutral-700 dark:text-neutral-100"
                 aria-invalid={Boolean(fieldErrors["task-description"])}
                 aria-describedby={
                   fieldErrors["task-description"]
@@ -194,7 +194,7 @@ export default function TaskForm({
                   aria-describedby={
                     fieldErrors["task-reason"] ? "task-reason-error" : undefined
                   }
-                  className="rounded-lg border border-neutral-200 bg-transparent px-3 py-1.5 text-xs focus:border-neutral-400 focus:outline-none dark:border-neutral-700"
+                  className="rounded-md border border-neutral-200 bg-transparent px-3 py-1.5 text-xs focus:border-neutral-400 focus:outline-none dark:border-neutral-700"
                 />
                 {fieldError("task-reason")}
               </div>
@@ -265,7 +265,7 @@ export default function TaskForm({
               {uncertainCreation && onCheckCreation && (
                 <button
                   type="button"
-                  className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                  className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
                   disabled={checking}
                   onClick={() => {
                     void handleCheckCreation();
@@ -276,7 +276,7 @@ export default function TaskForm({
               )}
               <button
                 type="button"
-                className="cursor-pointer rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 disabled={busy}
                 onClick={onClose}
               >
@@ -284,7 +284,7 @@ export default function TaskForm({
               </button>
               <button
                 type="submit"
-                className="cursor-pointer rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+                className="cursor-pointer rounded-md bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
                 disabled={busy || uncertainCreation}
               >
                 {busy

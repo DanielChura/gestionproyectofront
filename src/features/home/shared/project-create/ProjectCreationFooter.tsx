@@ -35,7 +35,7 @@ export default function ProjectCreationFooter({
             type="button"
             disabled={editor.busy || editor.ambiguous}
             onClick={() => editor.setStep(1)}
-            className="cursor-pointer rounded-lg border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+            className="cursor-pointer rounded-md border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
           >
             Volver
           </button>

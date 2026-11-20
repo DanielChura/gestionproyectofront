@@ -80,7 +80,7 @@ export default function TaskDetailModal({ model }: { model: TaskDetailModel }) {
               {model.gantt && task.permissions.edit && (
                 <button
                   type="button"
-                  className="cursor-pointer rounded-lg px-3 py-1.5 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  className="cursor-pointer rounded-md px-3 py-1.5 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800"
                   onClick={model.onEdit}
                 >
                   Editar datos
@@ -109,7 +109,7 @@ export default function TaskDetailModal({ model }: { model: TaskDetailModel }) {
                 }
                 onBlur={handleDescriptionBlur}
                 placeholder="Añadir una descripción..."
-                className="w-full resize-none rounded-lg border border-neutral-200 bg-transparent p-2.5 text-xs text-neutral-800 placeholder-neutral-400 outline-none focus:border-neutral-400 dark:border-neutral-800 dark:text-neutral-200 dark:placeholder-neutral-500"
+                className="w-full resize-none rounded-md border border-neutral-200 bg-transparent p-2.5 text-xs text-neutral-800 placeholder-neutral-400 outline-none focus:border-neutral-400 dark:border-neutral-800 dark:text-neutral-200 dark:placeholder-neutral-500"
               />
               {model.childrenError && (
                 <p role="alert">

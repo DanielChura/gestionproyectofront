@@ -21,7 +21,7 @@ export default function ProjectAreaOptions({
             key={item.id}
             type="button"
             aria-pressed={selected[0] === item.id}
-            className="flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-left hover:bg-neutral-100 aria-pressed:bg-neutral-100 dark:hover:bg-neutral-800 dark:aria-pressed:bg-neutral-800"
+            className="flex cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-1.5 text-left hover:bg-neutral-100 aria-pressed:bg-neutral-100 dark:hover:bg-neutral-800 dark:aria-pressed:bg-neutral-800"
             onClick={() => {
               if (selected[0] !== item.id) onChange([item.id]);
               close();
@@ -42,7 +42,7 @@ export default function ProjectAreaOptions({
       {!!selected.length && (
         <button
           type="button"
-          className="cursor-pointer justify-self-end rounded-lg border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+          className="cursor-pointer justify-self-end rounded-md border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
           onClick={() => {
             onChange([]);
             close();

@@ -31,7 +31,7 @@ export default function ProjectParticipants({
           id="project-mode"
           tabIndex={-1}
           aria-invalid={!!fields.mode}
-          className="grid min-w-0 content-start gap-2.5 rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
+          className="grid min-w-0 content-start gap-2.5 rounded-md border border-neutral-200 p-3 dark:border-neutral-700"
         >
           <legend className="px-1 font-medium">Modalidad</legend>
           <label className="flex cursor-pointer items-start gap-2">

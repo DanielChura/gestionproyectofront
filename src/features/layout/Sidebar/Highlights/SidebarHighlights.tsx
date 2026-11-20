@@ -19,7 +19,7 @@ export default function SidebarHighlights() {
 
   return (
     <footer className="flex items-center gap-2 border-t border-neutral-200 bg-neutral-50 p-1.5 text-xs font-medium text-neutral-600 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-400">
-      <span className="flex shrink-0 items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+      <span className="flex shrink-0 items-center gap-1.5 rounded-md  bg-white px-2 py-1.5 dark:bg-neutral-900">
         <FlagIcon className="size-4 shrink-0" />
         {tasks.length} {tasks.length === 1 ? "Prioridad" : "Prioridades"}
       </span>
@@ -36,7 +36,7 @@ export default function SidebarHighlights() {
                 <Link
                   to={`${projectPath(projectId)}?tarea=${id}`}
                   title={state_name}
-                  className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2 py-1.5 hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                  className="flex cursor-pointer items-center gap-1.5 rounded-md  bg-white px-2 py-1.5 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                 >
                   <span
                     style={{ color: state_tema?.color ?? "#525252" }}

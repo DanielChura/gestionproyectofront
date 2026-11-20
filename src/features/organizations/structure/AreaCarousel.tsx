@@ -43,7 +43,7 @@ export default function AreaCarousel({
           <button
             type="button"
             onClick={onNewArea}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-300 cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-300 cursor-pointer"
           >
             <PlusIcon className="size-4" />
             <span>Crear área</span>
@@ -51,7 +51,7 @@ export default function AreaCarousel({
           <button
             type="button"
             onClick={() => scroll("left")}
-            className="p-1.5 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-400 cursor-pointer"
+            className="p-1.5 rounded-md border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-400 cursor-pointer"
             title="Desplazar a la izquierda"
           >
             <ChevronIcon className="size-4 rotate-90" />
@@ -59,7 +59,7 @@ export default function AreaCarousel({
           <button
             type="button"
             onClick={() => scroll("right")}
-            className="p-1.5 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-400 cursor-pointer"
+            className="p-1.5 rounded-md border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-400 cursor-pointer"
             title="Desplazar a la derecha"
           >
             <ChevronIcon className="size-4 -rotate-90" />

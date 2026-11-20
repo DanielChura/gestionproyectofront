@@ -100,7 +100,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
                 id="profile-specialty"
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
-                className="w-full bg-white border border-neutral-200 text-neutral-800 px-3 py-1.5 text-sm rounded-lg focus:border-neutral-400 focus:outline-none cursor-pointer"
+                className="w-full bg-white border border-neutral-200 text-neutral-800 px-3 py-1.5 text-sm rounded-md focus:border-neutral-400 focus:outline-none cursor-pointer"
               >
                 <option value="">Selecciona una especialidad</option>
                 {catalog.map((item) => (
@@ -120,7 +120,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
             <footer className="flex items-center justify-end gap-2 pt-1">
               <button
                 type="button"
-                className="bg-white border border-neutral-200 text-neutral-800 hover:bg-neutral-100 px-3 py-1.5 text-xs rounded-lg cursor-pointer"
+                className="bg-white border border-neutral-200 text-neutral-800 hover:bg-neutral-100 px-3 py-1.5 text-xs rounded-md cursor-pointer"
                 onClick={onClose}
               >
                 Cancelar
@@ -128,7 +128,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
               <button
                 type="submit"
                 disabled={saving || !selectedId}
-                className="bg-neutral-800 text-neutral-100 hover:bg-neutral-700 px-3 py-1.5 text-xs rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-neutral-800 text-neutral-100 hover:bg-neutral-700 px-3 py-1.5 text-xs rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? "Guardando…" : "Agregar"}
               </button>

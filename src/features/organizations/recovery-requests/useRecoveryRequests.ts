@@ -17,7 +17,7 @@ export function useRecoveryRequests(filters: RecoveryRequestFilters = {}) {
   const { addToast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: requests = [] } = useQuery<RecoveryRequest[]>({
+  const { data: requests = [], isLoading } = useQuery<RecoveryRequest[]>({
     queryKey: ["recovery-requests"],
     queryFn: listRecoveryRequests,
   });
@@ -52,6 +52,7 @@ export function useRecoveryRequests(filters: RecoveryRequestFilters = {}) {
   }, [requests, search]);
 
   return {
+    isLoading,
     requests: visibleRequests,
     busy: resetMutation.isPending,
     issueReset: resetMutation.mutateAsync,

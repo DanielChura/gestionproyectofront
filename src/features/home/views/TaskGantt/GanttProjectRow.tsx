@@ -62,7 +62,7 @@ export default function GanttProjectRow({
         <GanttIconButton label="Siguiente" onClick={() => controls.page(1)}>
           <ChevronIcon className="size-4 -rotate-90" />
         </GanttIconButton>
-        <div className="flex shrink-0 items-center rounded-lg border border-neutral-200 dark:border-neutral-700">
+        <div className="flex shrink-0 items-center rounded-md border border-neutral-200 dark:border-neutral-700">
           <GanttIconButton
             label="Acercar cronograma"
             disabled={controls.viewport.zoomLevel === 9}
