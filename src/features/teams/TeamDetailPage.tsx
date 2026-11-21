@@ -33,7 +33,7 @@ export default function TeamDetailPage({
       className="min-h-full text-neutral-800 dark:text-neutral-100"
     >
       <header className="-mx-4 -mt-4 mb-3 border-b border-neutral-200 dark:border-neutral-800">
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-3">
           <div className="flex min-w-0 items-center gap-2.5">
             <Link
               to="/equipos"
@@ -82,7 +82,6 @@ export default function TeamDetailPage({
               type="button"
               disabled={!canManage}
               onClick={() => setAdding(true)}
-              className="inline-flex items-center gap-1.5"
             >
               <PlusIcon className="size-4" />
               Añadir integrante

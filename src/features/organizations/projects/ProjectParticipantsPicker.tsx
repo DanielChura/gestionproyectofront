@@ -69,7 +69,6 @@ export default function ProjectParticipantsPicker({ picker }: Props) {
 
       {isWorkers && (
         <Input
-          style="small"
           placeholder="Buscar persona por nombre..."
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}

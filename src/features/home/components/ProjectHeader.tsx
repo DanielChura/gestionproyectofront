@@ -46,7 +46,7 @@ export default function ProjectHeader({
   return (
     <SectionHeader
       title={
-        <nav className="min-w-0 text-sm font-normal">
+        <nav className="min-w-0 text-sm">
           <ol className="flex min-w-0 items-center gap-1.5 sm:gap-2">
             <li className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
               <BuildingIcon className="size-4 shrink-0" />
@@ -62,23 +62,13 @@ export default function ProjectHeader({
                 {project.name}
               </Link>
             </li>
-            <li
-              aria-current="page"
-              className="flex shrink-0 items-center gap-1 font-medium text-neutral-800 dark:text-neutral-200"
-            >
+            <li className="flex shrink-0 items-center gap-1 text-neutral-800 dark:text-neutral-200">
               <ChevronDownIcon className="size-4 shrink-0 -rotate-90 text-neutral-400" />
               <span>{currentView}</span>
             </li>
             <li className="shrink-0">
               <button
                 type="button"
-                aria-label={
-                  project.is_favorite
-                    ? "Quitar proyecto de favoritos"
-                    : "Añadir proyecto a favoritos"
-                }
-                aria-pressed={project.is_favorite}
-                aria-busy={pending}
                 disabled={pending}
                 onClick={onToggleFavorite}
                 className={`rounded-md p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 ${
@@ -93,8 +83,8 @@ export default function ProjectHeader({
       }
       action={
         onShare && (
-          <Button type="button" size="sm" onClick={onShare}>
-            <TeamsIcon className="size-3.5" />
+          <Button type="button" onClick={onShare}>
+            <TeamsIcon className="size-4" />
             <span>Compartir</span>
           </Button>
         )

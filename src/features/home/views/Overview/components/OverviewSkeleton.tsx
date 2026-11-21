@@ -8,8 +8,8 @@ export default function OverviewSkeleton() {
       baseColor="var(--skeleton-base)"
       highlightColor="var(--skeleton-highlight)"
     >
-      <div className="flex flex-col gap-3.5">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="flex flex-col gap-4.5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ROWS.map((card) => (
             <div
               key={card}
@@ -24,7 +24,7 @@ export default function OverviewSkeleton() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-4.5 lg:grid-cols-12">
           <div className="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900 lg:col-span-8">
             <Skeleton width={140} height={14} />
             <div className="mt-3">

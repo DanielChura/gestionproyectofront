@@ -246,7 +246,7 @@ export default function ProjectChartsSection({ charts, totalTasks }: Props) {
 
   return (
     <section
-      className="grid grid-cols-1 gap-3.5 lg:grid-cols-12"
+      className="grid grid-cols-1 gap-4.5 lg:grid-cols-12"
       aria-label="Evolución y estados"
     >
       {/* Gráfico de Líneas */}

@@ -10,12 +10,12 @@ export default function TaskTable({
   return (
     <table className="w-full table-fixed border-collapse text-xs text-neutral-800 dark:text-neutral-100">
       <colgroup>
-        <col style={{ width: "35%" }} />
-        <col style={{ width: "13%" }} />
-        <col style={{ width: "13%" }} />
-        <col style={{ width: "13%" }} />
-        <col style={{ width: "13%" }} />
-        <col style={{ width: "13%" }} />
+        <col style={{ width: "40%" }} />
+        <col style={{ width: "12%" }} />
+        <col style={{ width: "12%" }} />
+        <col style={{ width: "12%" }} />
+        <col style={{ width: "12%" }} />
+        <col style={{ width: "12%" }} />
       </colgroup>
       <thead className="border-b border-neutral-200 dark:border-neutral-800 text-left text-neutral-400 dark:text-neutral-500">
         <tr>

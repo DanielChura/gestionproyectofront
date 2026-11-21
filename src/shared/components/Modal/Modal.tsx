@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
+import XIcon from "../../icons/XIcon";
 
 interface ModalProps {
   title: string;
@@ -102,7 +103,7 @@ export default function Modal({
           if (!busy) onClose();
         }}
       >
-        <header className="sticky top-0 z-20 flex shrink-0 items-center justify-between gap-4 border-b border-neutral-200 bg-white px-6 py-3 dark:border-neutral-900 dark:bg-neutral-950">
+        <header className="sticky top-0 z-20 flex shrink-0 items-center justify-between gap-4 border-b border-neutral-200 bg-white px-6 py-3 dark:border-neutral-800 dark:bg-neutral-900">
           <h2
             id={titleId}
             className="m-0 break-words text-sm  text-neutral-800 dark:text-neutral-100"
@@ -110,13 +111,13 @@ export default function Modal({
             {title}
           </h2>
           <button
-            className="flex size-7 items-center justify-center rounded-full bg-neutral-100 text-sm  text-neutral-700 hover:bg-neutral-200 cursor-pointer disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:bg-neutral-900"
+            className="flex size-7 items-center justify-center rounded-full bg-neutral-100 text-sm  text-neutral-700 hover:bg-neutral-200 cursor-pointer disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
             type="button"
             aria-label="Cerrar modal"
             disabled={busy}
             onClick={onClose}
           >
-            ✕
+            <XIcon className="size-4" />
           </button>
         </header>
         {children}

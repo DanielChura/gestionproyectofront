@@ -108,7 +108,7 @@ export default function TaskForm({
     >
       <form
         ref={formRef}
-        className="flex min-h-0 flex-col text-neutral-800 dark:text-neutral-100 dark:bg-neutral-950"
+        className="flex min-h-0 flex-col text-neutral-800 dark:text-neutral-100"
         noValidate
         autoComplete="off"
         aria-busy={busy}
@@ -260,7 +260,7 @@ export default function TaskForm({
           </fieldset>
         </div>
         <footer className="shrink-0 border-t border-neutral-200 bg-white px-6 py-3 max-sm:px-4 dark:border-neutral-800 dark:bg-neutral-950">
-          <div className="flex items-center justify-end gap-3 max-sm:flex-wrap">
+          <div className="flex items-center justify-end gap-4 max-sm:flex-wrap">
             <div className="flex shrink-0 items-center gap-2 max-sm:ml-auto">
               {uncertainCreation && onCheckCreation && (
                 <button

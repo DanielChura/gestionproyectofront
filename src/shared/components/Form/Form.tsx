@@ -24,9 +24,9 @@ export default function Form({
   return (
     <div className="bg-modal">
       <div
-        className={`w-full ${
+        className={`w-full border border-neutral-800 ${
           size === "lg" ? "max-w-2xl" : "max-w-lg"
-        } max-h-[90vh] overflow-y-auto bg-white dark:bg-neutral-950 rounded-xl`}
+        } max-h-[90vh] overflow-y-auto bg-white dark:bg-neutral-900 rounded-xl`}
       >
         <header className="flex items-center justify-between px-5 py-4 border-b border-neutral-200 dark:border-neutral-800 mb-2">
           <h3 className="m-0 text-sm text-neutral-800 dark:text-neutral-100 font-medium">
@@ -44,14 +44,10 @@ export default function Form({
         <form className="grid grid-cols-2 gap-4 px-5 py-3" onSubmit={onSubmit}>
           {children}
           <footer className="col-span-2 -mx-5 mt-3 flex items-center justify-end gap-2 border-t border-neutral-200 px-5 pt-3 dark:border-neutral-800">
-            <Button variant="secondary"
-              type="button"
-              className="text-sm!"
-              onClick={onClose}
-            >
+            <Button variant="secondary" type="button" onClick={onClose}>
               Cancelar
             </Button>
-            <Button type="submit" className="text-sm!" disabled={submitting}>
+            <Button type="submit" disabled={submitting}>
               {submitting ? "Guardando…" : submitLabel}
             </Button>
           </footer>

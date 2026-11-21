@@ -34,10 +34,10 @@ export default function TaskStateCell({ view }: { view: TaskFieldView }) {
               backgroundColor: tone ?? "#525252",
               color: "#fff",
             }}
-            className="inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-xs font-medium"
+            className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium"
           >
             <Icon className="size-3.5" fill />
-            <span className="truncate">{task.state_name}</span>
+            <span className="truncate uppercase">{task.state_name}</span>
           </span>
         </button>
 

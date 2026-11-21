@@ -14,7 +14,7 @@ export default function TeamDetailSkeleton() {
         enableAnimation={false}
       >
         <div className="-mx-4 -mt-4 mb-3 border-b border-neutral-200 dark:border-neutral-800">
-          <div className="flex items-center gap-3 px-4 py-3">
+          <div className="flex items-center gap-4 px-4 py-3">
             <Skeleton width={28} height={28} borderRadius={8} />
             <Skeleton width={32} height={32} borderRadius={6} />
             <Skeleton width={160} height={16} />

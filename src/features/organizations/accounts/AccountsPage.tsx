@@ -167,12 +167,7 @@ export default function AccountsPage() {
       <SectionHeader
         title="Cuentas y accesos"
         action={
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => setInviting(true)}
-            className="inline-flex items-center gap-1.5"
-          >
+          <Button type="button" onClick={() => setInviting(true)}>
             <PlusIcon className="size-4" /> Registrar e invitar
           </Button>
         }

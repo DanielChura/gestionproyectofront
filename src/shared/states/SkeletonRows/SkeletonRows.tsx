@@ -14,7 +14,7 @@ export default function SkeletonRows({ count = 8 }: { count?: number }) {
         {Array.from({ length: count }, (_, row) => (
           <div
             key={row}
-            className="flex items-center gap-3 border-b border-neutral-200 px-3 py-2 last:border-b-0 dark:border-neutral-800"
+            className="flex items-center gap-4 border-b border-neutral-200 px-3 py-2 last:border-b-0 dark:border-neutral-800"
           >
             <Skeleton width={16} height={12} />
             <Skeleton width={160} height={12} />

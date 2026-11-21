@@ -11,7 +11,7 @@ export default function SectionHeader({
 }) {
   return (
     <header className="-mx-4 -mt-4 mb-3 border-b border-neutral-200 dark:border-neutral-800">
-      <div className="flex min-w-0 items-center justify-between gap-3 px-4 py-2.5">
+      <div className="flex min-w-0 items-center justify-between gap-4 px-4 py-2.5">
         <div className="min-w-0 text-sm text-neutral-800 dark:text-neutral-100 font-medium">
           {title}
         </div>

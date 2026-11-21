@@ -61,7 +61,7 @@ export default function TaskBoardColumn({
       }}
       className={`flex max-h-full w-70 shrink-0 flex-col gap-2 rounded-xl p-2 ${isOver ? "ring-2 ring-inset ring-neutral-400" : ""}`}
     >
-      <header className="flex min-w-0 shrink-0 items-center gap-3 px-1 py-1.5">
+      <header className="flex min-w-0 shrink-0 items-center gap-4 px-1 py-1.5">
         {state ? (
           <span
             style={{ backgroundColor: color }}

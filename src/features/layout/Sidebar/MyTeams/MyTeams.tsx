@@ -5,7 +5,6 @@ export default function MyTeams() {
   return (
     <div className="mx-2 rounded-md border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
       <EmptyState
-        style="small"
         iconName="teams"
         message="Cuando te añadan a un equipo, lo verás aquí."
       />

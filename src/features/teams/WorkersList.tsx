@@ -43,7 +43,6 @@ export default function WorkersList({
             type="search"
             value={filters.search}
             placeholder="Buscar personas"
-            style="small"
             className="pl-8"
             onChange={(e) => onFilters({ ...filters, search: e.target.value })}
           />
@@ -51,7 +50,6 @@ export default function WorkersList({
 
         <Select
           value={filters.status}
-          style="small"
           onChange={(e) => onFilters({ ...filters, status: e.target.value })}
         >
           <option value="">Estado</option>
@@ -61,7 +59,6 @@ export default function WorkersList({
 
         <Select
           value={filters.area}
-          style="small"
           onChange={(e) => onFilters({ ...filters, area: e.target.value })}
         >
           <option value="">Área</option>
@@ -74,7 +71,6 @@ export default function WorkersList({
 
         <Select
           value={filters.sort}
-          style="small"
           onChange={(e) =>
             onFilters({
               ...filters,

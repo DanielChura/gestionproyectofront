@@ -28,7 +28,7 @@ export default function RecentTasksView({
 }: RecentTasksViewProps) {
   return (
     <div className="flex flex-col gap-4">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 pb-3 dark:border-neutral-800">
+      <header className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200 pb-3 dark:border-neutral-800">
         <div>
           <h1 className="m-0 text-lg  text-neutral-900 dark:text-neutral-100">
             Últimas tareas
@@ -52,12 +52,8 @@ export default function RecentTasksView({
               ))}
             </select>
           )}
-          <Button
-            type="button"
-            onClick={onCreateTask}
-            className="inline-flex items-center gap-1.5"
-          >
-            <PlusIcon className="size-3.5" />
+          <Button type="button" onClick={onCreateTask}>
+            <PlusIcon className="size-4" />
             Nueva tarea
           </Button>
         </div>

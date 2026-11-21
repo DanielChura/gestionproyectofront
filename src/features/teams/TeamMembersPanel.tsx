@@ -49,14 +49,12 @@ export default function TeamMembersPanel({
             type="search"
             value={search}
             placeholder="Buscar por nombre"
-            style="small"
             onChange={(event) => setSearch(event.target.value)}
             className="pl-8"
           />
         </div>
         <Select
           value={status}
-          style="small"
           onChange={(event) => setStatus(event.target.value)}
         >
           <option value="">Estado</option>

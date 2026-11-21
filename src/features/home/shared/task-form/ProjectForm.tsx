@@ -39,14 +39,14 @@ export default function ProjectForm({
 
   return (
     <form
-      className={`grid min-w-0 gap-3 p-5 text-neutral-800 max-sm:p-4 dark:text-neutral-100 ${compact ? "gap-4" : ""}`}
+      className={`grid min-w-0 gap-4 p-5 text-neutral-800 max-sm:p-4 dark:text-neutral-100 ${compact ? "gap-4" : ""}`}
       noValidate={manualValidation}
       autoComplete="off"
       aria-busy={busy}
       onSubmit={onSubmit}
     >
       <fieldset
-        className="m-0 grid min-w-0 gap-3 border-0 p-0"
+        className="m-0 grid min-w-0 gap-4 border-0 p-0"
         disabled={busy || readOnly}
       >
         {children}

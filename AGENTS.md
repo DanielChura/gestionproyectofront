@@ -19,7 +19,7 @@
 - Fondo: `bg-white` solo en casos puntuales (paneles/modales sobre superficie gris). Prohibido `bg-dark`; usar la variante `dark:bg-*` equivalente de la paleta neutral. Respeta siempre el sistema de diseño.
 - Tablas: encabezados (`thead th`) siempre `font-weight: 400`, definido en la base de `src/index.css`; no añadir `font-medium` a `<th>`.
 - Botones de icono: contenedor con radio y padding (`p-1.5`); el hover colorea el contenedor (`hover:bg-*`), nunca solo el icono.
-- Densidad (sin `h-*`/`min-h-*` en controles): controles `px-3 py-1.5 text-sm font-medium rounded-md` (Input/Select `style="small"`: `text-xs` y padding apretado); filas `px-3 py-2 text-xs`; tags `px-2 py-0.5 text-xs font-medium rounded`; nav `px-3 py-2.5 text-sm font-medium rounded-md gap-3`.
+- Densidad (sin `h-*`/`min-h-*` en controles): controles `px-3 py-1.5 text-sm font-medium rounded-md` (Input/Select `style="small"`: `text-xs` y padding apretado); filas `px-3 py-2 text-xs`; tags `px-2 py-0.5 text-xs font-medium rounded`; nav `px-3 py-2.5 text-sm font-medium rounded-md gap-4`.
 - Reutilizar `shared/` (`Button`, `Input`, `Form`, `Modal`, `Toast`, `icons`) antes de escribir controles o estilos. `button` y `[role="button"]` ya tienen `cursor-pointer` por la base de `src/index.css`; no repetir la clase.
 - Un único `Button`: `variant="primary"` (por defecto) o `"secondary"`, y `size="base"` (por defecto) o `"sm"`. `size` solo cambia padding/layout; los colores dependen solo del `variant`. En headers de sección usar `size="sm"`.
 - className cortas y estáticas; heredar del contenedor; sin constantes de estilos ni interpolación compleja. Dark mode con variantes `dark:` equivalentes; sin hojas CSS alternativas.

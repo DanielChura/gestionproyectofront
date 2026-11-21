@@ -32,7 +32,7 @@ export default function OverviewView({
       {isLoading ? (
         <OverviewSkeleton />
       ) : data ? (
-        <div className="flex flex-col gap-3.5">
+        <div className="flex flex-col gap-4.5">
           <ProjectKpis summary={data.summary} />
 
           <ProjectChartsSection

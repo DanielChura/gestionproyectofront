@@ -35,7 +35,7 @@ export default function TaskGanttFields({
       role="dialog"
       data-overlay={overlay || undefined}
       aria-labelledby="gantt-fields-title"
-      className="gm-gantt-fields flex min-w-0 flex-col gap-3 border-l border-neutral-200 bg-white p-3 text-xs text-neutral-800 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
+      className="gm-gantt-fields flex min-w-0 flex-col gap-4 border-l border-neutral-200 bg-white p-3 text-xs text-neutral-800 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
       onKeyDown={(event) => {
         if (event.key === "Escape") {
           event.preventDefault();
@@ -78,7 +78,7 @@ export default function TaskGanttFields({
             disabled={field.id === "text"}
             className={
               ganttControl +
-              " flex items-center justify-between gap-3 text-left"
+              " flex items-center justify-between gap-4 text-left"
             }
             onClick={() => layout.toggle(field.id)}
           >

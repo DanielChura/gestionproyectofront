@@ -104,7 +104,7 @@ export default function GanttTaskNameDialog({
       busy={working}
     >
       <form
-        className="grid gap-3 p-4 text-xs"
+        className="grid gap-4 p-4 text-xs"
         onSubmit={(event) => {
           event.preventDefault();
           void submit();

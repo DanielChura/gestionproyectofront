@@ -16,7 +16,7 @@ export default function StructureSkeleton() {
             <Skeleton width={120} height={16} />
             <Skeleton width={110} height={28} borderRadius={6} />
           </div>
-          <div className="flex gap-3 overflow-hidden pb-2">
+          <div className="flex gap-4 overflow-hidden pb-2">
             {CARDS.map((card) => (
               <div
                 key={card}

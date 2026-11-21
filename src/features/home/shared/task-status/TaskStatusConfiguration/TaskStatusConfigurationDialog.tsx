@@ -670,7 +670,7 @@ export default function TaskStatusConfiguration({
               No tienes permiso para configurar este proyecto.
             </p>
           )}
-          <div className="flex flex-wrap items-center justify-end gap-3">
+          <div className="flex flex-wrap items-center justify-end gap-4">
             {!draft && (
               <button
                 type="button"

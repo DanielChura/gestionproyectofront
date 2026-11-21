@@ -17,7 +17,7 @@ export default function GanttCalendarProposal({
   return (
     <section
       aria-label={"Calendario de " + operation.name}
-      className="grid gap-3 p-3 text-xs"
+      className="grid gap-4 p-3 text-xs"
       aria-busy={operation.status === "pending"}
     >
       <p className="m-0">

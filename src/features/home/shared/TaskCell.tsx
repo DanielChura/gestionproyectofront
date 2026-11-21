@@ -512,9 +512,7 @@ export default function TaskCell(props: TaskCellProps) {
         <span className="flex items-center gap-1.5">
           <HashIcon className="size-4" />
           {props.appearance === "detail" && (
-            <span>
-              {permitted ? "Añadir etiquetas" : "Sin etiquetas"}
-            </span>
+            <span>{permitted ? "Añadir etiquetas" : "Sin etiquetas"}</span>
           )}
         </span>
       )

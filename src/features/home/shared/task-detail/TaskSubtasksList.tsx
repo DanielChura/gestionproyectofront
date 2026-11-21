@@ -71,7 +71,7 @@ export default function TaskSubtasksList({
                 key={item.id}
                 type="button"
                 onClick={() => onNavigate({ projectId, taskId: item.id })}
-                className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-md py-2 pl-4 pr-2 text-left text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
+                className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-md py-2 pl-4 pr-2 text-left text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
               >
                 <span className="flex min-w-0 flex-1 items-center gap-2.5">
                   <span
@@ -86,7 +86,7 @@ export default function TaskSubtasksList({
                   </span>
                 </span>
 
-                <span className="flex shrink-0 items-center gap-3">
+                <span className="flex shrink-0 items-center gap-4">
                   <span className="flex items-center gap-1.5">
                     <FlagIcon className={`size-3.5 shrink-0 ${tone}`} fill />
                     <span className="text-neutral-500 dark:text-neutral-400">

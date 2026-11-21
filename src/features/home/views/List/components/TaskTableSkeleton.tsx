@@ -18,7 +18,7 @@ export default function TaskTableSkeleton() {
           {ROWS.map((row) => (
             <div
               key={row}
-              className="flex items-center gap-3 border-b border-neutral-200 px-3 py-2 dark:border-neutral-800"
+              className="flex items-center gap-4 border-b border-neutral-200 px-3 py-2 dark:border-neutral-800"
             >
               <Skeleton width={16} height={16} />
               <Skeleton width={240} height={16} className="flex-1" />

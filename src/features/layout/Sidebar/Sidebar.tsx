@@ -23,7 +23,7 @@ export default function Sidebar({
   const canManage = user?.permissions.manage_accounts ?? false;
 
   return (
-    <aside className="flex w-15 shrink-0 flex-col items-center gap-2 rounded-md bg-neutral-950 dark:bg-neutral-900 p-2 max-md:w-full max-md:flex-row max-md:justify-between">
+    <aside className="flex w-15 shrink-0 flex-col items-center gap-2 rounded-lg bg-neutral-950 dark:bg-neutral-900 p-2 max-md:w-full max-md:flex-row max-md:justify-between">
       <Link
         to="/"
         onClick={onSectionSelect}

@@ -7,7 +7,7 @@ export default function ProjectPermissions({
   const { draft, fields, update } = editor;
   return (
     <div className="grid gap-1.5 border-y border-neutral-200 py-3 dark:border-neutral-700">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-4">
         <span className="font-medium">Permiso de Trabajador</span>
         <button
           id="project-permission"

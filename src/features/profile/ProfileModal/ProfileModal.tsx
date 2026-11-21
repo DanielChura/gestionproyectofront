@@ -66,7 +66,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
             No se pudieron cargar tus especialidades.
           </p>
         ) : (
-          <form onSubmit={handleAdd} className="grid gap-3 p-4">
+          <form onSubmit={handleAdd} className="grid gap-4 p-4">
             {specialties.length > 0 && (
               <ul className="m-0 p-0 list-none flex flex-wrap gap-1.5">
                 {specialties.map((item) => (

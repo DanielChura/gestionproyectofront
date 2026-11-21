@@ -32,7 +32,6 @@ export default function AreaProjectsToolbar({
           type="search"
           value={search}
           placeholder="Buscar proyectos..."
-          style="small"
           className="!pl-8"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onSearchChange(e.target.value)
@@ -42,7 +41,6 @@ export default function AreaProjectsToolbar({
 
       <Select
         value={modeFilter}
-        style="small"
         aria-label="Filtrar por modo"
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
           onModeFilterChange(e.target.value)
@@ -55,7 +53,6 @@ export default function AreaProjectsToolbar({
 
       <Select
         value={sort}
-        style="small"
         aria-label="Ordenar proyectos"
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
           onSortChange(e.target.value as ProjectSort)

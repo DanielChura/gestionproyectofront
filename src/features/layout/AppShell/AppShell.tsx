@@ -39,7 +39,7 @@ export default function AppShell({ user, onLogout }: AppShellProps) {
         onSectionSelect={() => setMenuOpen(true)}
       />
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-md border border-neutral-200 dark:border-neutral-800">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800">
         <div className="flex min-h-0 min-w-0 flex-1">
           {menuOpen && activeModule.subRoutes.length > 0 && (
             <SectionNav

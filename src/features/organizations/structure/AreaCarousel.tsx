@@ -69,7 +69,7 @@ export default function AreaCarousel({
 
       <div
         ref={scrollRef}
-        className="flex items-center gap-3 overflow-x-auto pb-2 scroll-smooth"
+        className="flex items-center gap-4 overflow-x-auto pb-2 scroll-smooth"
       >
         <AllAreasCard
           isSelected={selectedAreaId === null}

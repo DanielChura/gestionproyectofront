@@ -67,7 +67,6 @@ export default function TeamsPage({ canManage = false }: TeamsPageProps) {
         action={
           <Button
             type="button"
-            size="sm"
             disabled={!canManage}
             onClick={handleOpenCreate}
           >

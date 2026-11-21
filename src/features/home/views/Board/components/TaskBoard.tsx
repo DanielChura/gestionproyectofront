@@ -181,7 +181,7 @@ export default function TaskBoard({
         <div
           ref={boardRef}
           onWheel={handleBoardWheel}
-          className="flex min-h-0 flex-1 items-start gap-3 overflow-x-scroll"
+          className="flex min-h-0 flex-1 items-start gap-4 overflow-x-scroll"
         >
           {groups.map((group) => {
             const state = group.stateCode

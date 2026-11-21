@@ -36,13 +36,12 @@ export default function ProjectMemberRoles({
         {participants.map((participant) => (
           <li
             key={participant.id}
-            className="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-xs"
+            className="flex items-center justify-between gap-4 rounded-md px-3 py-2 text-xs"
           >
             <span className="min-w-0 flex-1 truncate">{participant.name}</span>
             {canManage ? (
               <div className="w-36 shrink-0">
                 <Select
-                  style="small"
                   value={participant.role}
                   aria-label={`Rol de ${participant.name}`}
                   onChange={(event) =>

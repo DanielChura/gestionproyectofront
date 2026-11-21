@@ -76,13 +76,13 @@ export default function TaskNameCell({
             {task.labels.slice(0, 2).map((label) => (
               <span
                 key={label.id}
-                className={`max-w-20 truncate rounded px-1.5 py-0.5 text-xs lowercase text-neutral-100 ${initialColor(label.name)}`}
+                className={`max-w-20 truncate rounded-full px-1.5 py-0.5 text-[11px] lowercase text-neutral-100 ${initialColor(label.name)}/50`}
               >
                 {label.name}
               </span>
             ))}
             {task.labels.length > 2 && (
-              <span className="whitespace-nowrap text-xs text-neutral-500 dark:text-neutral-400">
+              <span className="whitespace-nowrap text-[11px] text-neutral-500 dark:text-neutral-400">
                 +{task.labels.length - 2}
               </span>
             )}

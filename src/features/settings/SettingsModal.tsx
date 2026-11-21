@@ -1,7 +1,10 @@
+import { useState } from "react";
 import Modal from "../../shared/components/Modal/Modal";
-import AppearanceSettings from "./AppearanceSettings";
-import ProfileSettings from "./ProfileSettings";
-import SpecialtiesSettings from "./SpecialtiesSettings";
+import SettingsNav from "./SettingsNav";
+import type { SettingsSectionId } from "./SettingsNav";
+import ProfileSection from "./ProfileSection";
+import AppearanceSection from "./AppearanceSection";
+import SpecialtiesSection from "./SpecialtiesSection";
 import { useSettings } from "./useSettings";
 
 interface SettingsModalProps {
@@ -9,14 +12,28 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ onClose }: SettingsModalProps) {
+  const [activeSection, setActiveSection] =
+    useState<SettingsSectionId>("profile");
   const settings = useSettings();
 
   return (
     <Modal title="Ajustes" wide onClose={onClose}>
-      <div className="divide-y divide-neutral-200 px-6 dark:divide-neutral-800">
-        <ProfileSettings settings={settings} />
-        <AppearanceSettings settings={settings} />
-        <SpecialtiesSettings settings={settings} />
+      <div className="flex flex-col md:flex-row min-h-[420px]">
+        <SettingsNav
+          activeSection={activeSection}
+          onSelect={setActiveSection}
+        />
+        <div className="flex-1 px-6 py-2 overflow-y-auto">
+          {activeSection === "profile" && (
+            <ProfileSection settings={settings} />
+          )}
+          {activeSection === "appearance" && (
+            <AppearanceSection settings={settings} />
+          )}
+          {activeSection === "specialties" && (
+            <SpecialtiesSection settings={settings} />
+          )}
+        </div>
       </div>
     </Modal>
   );

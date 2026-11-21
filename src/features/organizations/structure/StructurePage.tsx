@@ -42,7 +42,6 @@ export default function StructurePage() {
         action={
           <Button
             type="button"
-            size="sm"
             onClick={() => navigate("/organizaciones/estructura?modal=proyecto")}
           >
             <PlusIcon className="size-4" />

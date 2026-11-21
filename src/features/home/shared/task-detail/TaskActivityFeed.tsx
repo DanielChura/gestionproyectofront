@@ -38,7 +38,7 @@ export default function TaskActivityFeed({
             {activities.map((item) => (
               <li
                 key={item.id}
-                className="flex items-baseline justify-between gap-3"
+                className="flex items-baseline justify-between gap-4"
               >
                 <span className="min-w-0">
                   {item.actor_name} {activityText(item)}

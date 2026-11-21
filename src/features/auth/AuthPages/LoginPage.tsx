@@ -35,7 +35,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-        <Button type="submit" disabled={busy} className="w-full py-2 text-sm">
+        <Button type="submit" disabled={busy} className="w-full">
           {busy ? "Ingresando…" : "Ingresar"}
         </Button>
       </form>

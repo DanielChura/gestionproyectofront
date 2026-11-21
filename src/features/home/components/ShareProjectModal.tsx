@@ -113,7 +113,6 @@ export default function ShareProjectModal({
       {isWorkers && (
         <div className="col-span-2">
           <Input
-            style="small"
             placeholder="Buscar por nombre..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}

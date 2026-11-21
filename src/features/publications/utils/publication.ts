@@ -12,13 +12,6 @@ export const PUBLICATION_STATE_LABELS: Record<PublicationStateCode, string> = {
   CANCELADA: "Cancelada",
 };
 
-export const PUBLICATION_STATE_TEXT: Record<PublicationStateCode, string> = {
-  BORRADOR: "text-yellow-600",
-  ABIERTA: "text-emerald-600",
-  CERRADA: "text-neutral-500",
-  CANCELADA: "text-red-600",
-};
-
 export const PUBLICATION_STATE_HINTS: Record<PublicationStateCode, string> = {
   BORRADOR: "Solo administradores pueden ver este borrador.",
   ABIERTA: "Visible para los trabajadores de las áreas del proyecto.",
@@ -75,7 +68,7 @@ export function addDaysIso(iso: string, days: number): string {
   if (!date) return "";
   date.setDate(date.getDate() + days);
   return [
-    String(date.getFullYear()).padStart(4, "0"),
+    // String(date.getFullYear()).padStart(4, "0"),
     String(date.getMonth() + 1).padStart(2, "0"),
     String(date.getDate()).padStart(2, "0"),
   ].join("-");
@@ -100,7 +93,7 @@ function readIsoDate(iso: string): Date | null {
 export function formatPublicationDate(iso: string): string {
   const date = readIsoDate(iso);
   if (!date) return "—";
-  return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+  return `${date.getDate()} ${MONTHS[date.getMonth()]}.`;
 }
 
 export function formatPublicationDateShort(iso: string): string {
@@ -140,7 +133,6 @@ export function closingHint(iso: string, today = isoToday()): string {
 export interface PublicationFeedback {
   label: string;
   text: string;
-  border: string;
 }
 
 export function publicationFeedback(
@@ -150,20 +142,17 @@ export function publicationFeedback(
   if (publication.state === "BORRADOR")
     return {
       label: "Sin publicar",
-      text: "text-yellow-600",
-      border: "border-yellow-200 hover:border-yellow-300",
+      text: "text-yellow-600 dark:text-yellow-400",
     };
   if (publication.state === "CANCELADA")
     return {
       label: "Proceso cancelado",
-      text: "text-red-600",
-      border: "border-red-200 hover:border-red-300",
+      text: "text-red-600 dark:text-red-400",
     };
   if (publication.state === "CERRADA")
     return {
       label: "Proceso cerrado",
-      text: "text-neutral-500",
-      border: "border-neutral-200 hover:border-neutral-300",
+      text: "text-neutral-500 dark:text-neutral-400",
     };
 
   if (publication.available_vacancies < 2)
@@ -172,30 +161,26 @@ export function publicationFeedback(
         publication.available_vacancies <= 0
           ? "Cupos completos"
           : "Últimas vacantes",
-      text: "text-sky-600",
-      border: "border-sky-200 hover:border-sky-300",
+      text: "text-sky-600 dark:text-sky-400",
     };
 
   const closing = daysUntil(publication.closing_date, today);
   if (closing >= 0 && closing <= 3)
     return {
       label: "Cierra pronto",
-      text: "text-yellow-600",
-      border: "border-yellow-200 hover:border-yellow-300",
+      text: "text-yellow-600 dark:text-yellow-400",
     };
 
   const opening = daysUntil(publication.opening_date, today);
   if (opening >= -3 && opening <= 0)
     return {
       label: "Recién publicado",
-      text: "text-emerald-600",
-      border: "border-emerald-200 hover:border-emerald-300",
+      text: "text-emerald-600 dark:text-emerald-400",
     };
 
   return {
     label: "Vacantes disponibles",
-    text: "text-emerald-600",
-    border: "border-emerald-200 hover:border-emerald-300",
+    text: "text-emerald-600 dark:text-emerald-400",
   };
 }
 

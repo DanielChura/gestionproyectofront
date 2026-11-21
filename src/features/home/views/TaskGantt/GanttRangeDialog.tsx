@@ -91,7 +91,7 @@ export default function GanttRangeDialog({
   return (
     <Modal compact title="Definir fechas" onClose={onClose} busy={busy}>
       <form
-        className="gm-gantt-range grid gap-3 p-4 text-xs"
+        className="gm-gantt-range grid gap-4 p-4 text-xs"
         onSubmit={(event) => {
           event.preventDefault();
           void save();
