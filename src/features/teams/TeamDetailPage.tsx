@@ -9,6 +9,7 @@ import ChevronDownIcon from "../../shared/icons/ChevronIcon";
 import Avatar from "../../shared/Avatar";
 import TeamMembersModal from "../organizations/Teams/TeamMembersModal";
 import { useTeamDetail } from "../organizations/Teams/useTeamDetail";
+import { useAuth } from "../../hooks/useAuth";
 import TeamMembersPanel from "./TeamMembersPanel";
 import TeamDetailSkeleton from "./TeamDetailSkeleton";
 
@@ -17,8 +18,10 @@ interface TeamDetailPageProps {
 }
 
 export default function TeamDetailPage({
-  canManage = false,
+  canManage: propCanManage,
 }: TeamDetailPageProps) {
+  const { isAdmin } = useAuth();
+  const canManage = propCanManage ?? isAdmin;
   const { teamId } = useParams();
   const [adding, setAdding] = useState(false);
   const { team, members, removing, refetch, removeMember, isLoading } =

@@ -8,7 +8,11 @@ const InvitationModal = lazy(
     import("../../../organizations/accounts/InvitationModal/InvitationModal"),
 );
 
-export default function InviteButton() {
+interface InviteButtonProps {
+  canManage?: boolean;
+}
+
+export default function InviteButton({ canManage = false }: InviteButtonProps) {
   const [open, setOpen] = useState(false);
   const { data: areas = [], refetch } = useActiveAreas();
   const queryClient = useQueryClient();
@@ -17,17 +21,22 @@ export default function InviteButton() {
     <>
       <button
         type="button"
+        disabled={!canManage}
+        title={!canManage ? "Solo los administradores pueden invitar nuevos usuarios" : undefined}
         onClick={() => {
+          if (!canManage) return;
           void refetch();
           setOpen(true);
         }}
-        className="sidebar-item"
+        className={`sidebar-item ${
+          !canManage ? "cursor-not-allowed opacity-30" : ""
+        }`}
       >
         <UserPlusIcon className="size-5" />
         <span className="max-w-full min-w-0">Invitar</span>
       </button>
 
-      {open && (
+      {open && canManage && (
         <Suspense fallback={null}>
           <InvitationModal
             areas={areas}

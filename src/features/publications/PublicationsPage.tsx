@@ -6,14 +6,18 @@ import SectionHeader from "../layout/SectionHeader/SectionHeader";
 import PublicationDetail from "./components/PublicationDetail";
 import PublicationForm from "./components/PublicationForm";
 import PublicationList from "./components/PublicationList";
+import PublicationSkeleton from "./components/PublicationSkeleton";
 import PublicationsFilters from "./components/PublicationsFilters";
+import { useAuth } from "../../hooks/useAuth";
 import { usePublicationsPage } from "./hooks/usePublicationsPage";
 
 export default function PublicationsPage({
-  canManage = false,
+  canManage: propCanManage,
 }: {
   canManage?: boolean;
 }) {
+  const { isAdmin } = useAuth();
+  const canManage = propCanManage ?? isAdmin;
   const page = usePublicationsPage(canManage);
   const hasFilters = Boolean(
     page.filters.search ||
@@ -33,6 +37,7 @@ export default function PublicationsPage({
           <Button
             type="button"
             disabled={!canManage || !page.catalogs}
+            title={!canManage ? "Solo los administradores pueden crear publicaciones" : undefined}
             onClick={() => page.setForm({})}
           >
             <PlusIcon className="size-4" />
@@ -48,7 +53,9 @@ export default function PublicationsPage({
         onChange={page.setFilters}
       />
       <section aria-label="Publicaciones" aria-busy={page.loading}>
-        {page.loading ? null : page.error && page.data.length === 0 ? (
+        {page.loading ? (
+          <PublicationSkeleton />
+        ) : page.error && page.data.length === 0 ? (
           <EmptyState
             iconName="projects"
             message="No se pudieron cargar las publicaciones."

@@ -68,7 +68,7 @@ export default function Sidebar({
             </Link>
           );
         })}
-        {canManage && <InviteButton />}
+        <InviteButton canManage={canManage} />
       </nav>
 
       {user && (

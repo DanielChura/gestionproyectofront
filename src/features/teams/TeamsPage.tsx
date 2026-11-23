@@ -7,6 +7,7 @@ import WorkerForm from "./WorkerForm/WorkerForm";
 import TeamForm from "../organizations/Teams/TeamForm/TeamForm";
 import type { TeamFormState } from "../organizations/Teams/TeamForm/useTeamForm";
 import TeamMembersModal from "../organizations/Teams/TeamMembersModal";
+import { useAuth } from "../../hooks/useAuth";
 import { usePeople } from "./usePeople";
 import TeamsList from "./TeamsList";
 import WorkersList from "./WorkersList";
@@ -31,7 +32,9 @@ interface TeamsPageProps {
   canManage?: boolean;
 }
 
-export default function TeamsPage({ canManage = false }: TeamsPageProps) {
+export default function TeamsPage({ canManage: propCanManage }: TeamsPageProps) {
+  const { isAdmin } = useAuth();
+  const canManage = propCanManage ?? isAdmin;
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const isTeams = pathname === "/equipos" || pathname === "/equipos/todos";
@@ -68,6 +71,7 @@ export default function TeamsPage({ canManage = false }: TeamsPageProps) {
           <Button
             type="button"
             disabled={!canManage}
+            title={!canManage ? "Solo los administradores pueden realizar esta acción" : undefined}
             onClick={handleOpenCreate}
           >
             <PlusIcon className="size-4" />

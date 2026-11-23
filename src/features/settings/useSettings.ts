@@ -55,21 +55,17 @@ export function useSettings() {
   useEffect(() => {
     if (
       !loadErrorNotified.current &&
-      (profileQuery.error || specialtiesQuery.error || catalogQuery.error)
+      profileQuery.error &&
+      !profileQuery.data
     ) {
       loadErrorNotified.current = true;
       addToast({
         icon: "error",
-        title: "No se pudo cargar la información",
+        title: "No se pudo cargar el perfil",
         message: "Revisa tu conexión e inténtalo de nuevo.",
       });
     }
-  }, [
-    profileQuery.error,
-    specialtiesQuery.error,
-    catalogQuery.error,
-    addToast,
-  ]);
+  }, [profileQuery.error, profileQuery.data, addToast]);
 
   const profile = profileQuery.data ?? null;
   const specialties = specialtiesQuery.data ?? [];

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
+import EmptyState from "../../shared/states/EmptyState/EmptyState";
 import { useProject } from "./hooks/useProject";
 import ProjectHeader from "./components/ProjectHeader";
 import ShareProjectModal from "./components/ShareProjectModal";
@@ -50,7 +51,27 @@ export default function HomePage() {
     };
   }, [initialTaskId, navigate, pathname, search, project?.id, projectId]);
 
-  if (!project) return null;
+  if (!project) {
+    return (
+      <main
+        id="main-content"
+        className="flex min-h-full flex-1 items-center justify-center p-6 text-sm text-neutral-500 dark:text-neutral-400"
+      >
+        <div className="flex max-w-md flex-col items-center text-center">
+          <EmptyState
+            iconName="projects"
+            message="No tienes acceso a este proyecto o aún no formas parte de él. Puedes revisar las ofertas en Publicaciones o solicitar acceso a un administrador."
+          />
+          <Link
+            to="/publicaciones"
+            className="mt-3 inline-flex items-center rounded-md bg-neutral-900 px-3 py-1.5 text-xs font-medium text-neutral-100 hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+          >
+            Ver publicaciones
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <ProjectTaskWorkspace key={project.id} projectId={project.id}>
