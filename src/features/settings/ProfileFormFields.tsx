@@ -6,11 +6,16 @@ interface ProfileFormFieldsProps {
   settings: SettingsController;
 }
 
-export default function ProfileFormFields({ settings }: ProfileFormFieldsProps) {
+export default function ProfileFormFields({
+  settings,
+}: ProfileFormFieldsProps) {
   return (
     <>
       <div className="grid gap-1">
-        <label htmlFor="settings-first-name" className="text-xs text-neutral-600 dark:text-neutral-400">
+        <label
+          htmlFor="settings-first-name"
+          className="text-xs text-neutral-600 dark:text-neutral-400"
+        >
           Nombre
         </label>
         <Input
@@ -24,7 +29,10 @@ export default function ProfileFormFields({ settings }: ProfileFormFieldsProps) 
       </div>
 
       <div className="grid gap-1">
-        <label htmlFor="settings-last-name" className="text-xs text-neutral-600 dark:text-neutral-400">
+        <label
+          htmlFor="settings-last-name"
+          className="text-xs text-neutral-600 dark:text-neutral-400"
+        >
           Apellidos
         </label>
         <Input
@@ -37,7 +45,10 @@ export default function ProfileFormFields({ settings }: ProfileFormFieldsProps) 
       </div>
 
       <div className="grid gap-1 sm:col-span-2">
-        <label htmlFor="settings-email" className="text-xs text-neutral-600 dark:text-neutral-400">
+        <label
+          htmlFor="settings-email"
+          className="text-xs text-neutral-600 dark:text-neutral-400"
+        >
           Correo electrónico
         </label>
         <Input
@@ -54,7 +65,10 @@ export default function ProfileFormFields({ settings }: ProfileFormFieldsProps) 
       </div>
 
       <div className="grid gap-1 sm:col-span-2">
-        <label htmlFor="settings-password" className="text-xs text-neutral-600 dark:text-neutral-400">
+        <label
+          htmlFor="settings-password"
+          className="text-xs text-neutral-600 dark:text-neutral-400"
+        >
           Contraseña
         </label>
         <Input

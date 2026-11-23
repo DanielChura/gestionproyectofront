@@ -9,7 +9,11 @@ import type {
 import type { PublicationDraft } from "../utils/publication";
 import { publicationErrorText } from "../../../core/services/publicationService";
 import { useToast } from "../../../hooks/useToast";
-import { addDaysIso, isoToday, validatePublicationDraft } from "../utils/publication";
+import {
+  addDaysIso,
+  isoToday,
+  validatePublicationDraft,
+} from "../utils/publication";
 
 function initialDraft(publication?: Publication): PublicationDraft {
   if (!publication)
@@ -42,7 +46,9 @@ export function usePublicationForm(
   publication: Publication | undefined,
   specialties: { id: number }[],
   levels: number[],
-  onSubmit: (payload: PublicationCreateData | PublicationUpdateData) => Promise<void>,
+  onSubmit: (
+    payload: PublicationCreateData | PublicationUpdateData,
+  ) => Promise<void>,
   onClose: () => void,
 ) {
   const [draft, setDraft] = useState<PublicationDraft>(() =>
@@ -61,7 +67,10 @@ export function usePublicationForm(
     setDraft((current) => ({ ...current, [field]: value }));
   }
 
-  function updateRequirement(index: number, changes: Partial<PublicationDraft["requirements"][number]>) {
+  function updateRequirement(
+    index: number,
+    changes: Partial<PublicationDraft["requirements"][number]>,
+  ) {
     setDraft((current) => ({
       ...current,
       requirements: current.requirements.map((item, position) =>
@@ -86,7 +95,9 @@ export function usePublicationForm(
   function removeRequirement(index: number) {
     setDraft((current) => ({
       ...current,
-      requirements: current.requirements.filter((_, position) => position !== index),
+      requirements: current.requirements.filter(
+        (_, position) => position !== index,
+      ),
     }));
   }
 

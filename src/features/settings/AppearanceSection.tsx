@@ -16,10 +16,7 @@ export default function AppearanceSection({
       description="Personaliza el tema visual y los colores de la interfaz."
     >
       <div className="grid gap-6">
-        <ThemeSelector
-          theme={settings.theme}
-          onChange={settings.setTheme}
-        />
+        <ThemeSelector theme={settings.theme} onChange={settings.setTheme} />
         <div className="border-t border-neutral-200 dark:border-neutral-800 pt-5">
           <AccentColorPicker
             currentAccent={settings.accent}

@@ -7,6 +7,7 @@ import {
   unlockAccount,
 } from "../../../core/services/authService";
 import {
+  ApiError,
   checkSession,
   errorText,
   sessionVersion,
@@ -46,15 +47,16 @@ export function useAccounts(filters: AccountFilters = {}) {
     data: accounts = [],
     refetch: refetchAccounts,
     isLoading: accountsLoading,
-  } = useQuery<Account[]>(
-    {
-      queryKey: ["accounts"],
-      queryFn: listAccounts,
-    },
-  );
+  } = useQuery<Account[]>({
+    queryKey: ["accounts"],
+    queryFn: listAccounts,
+  });
 
-  const { data: areas = [], refetch: refetchAreas, isLoading: areasLoading } =
-    useActiveAreas();
+  const {
+    data: areas = [],
+    refetch: refetchAreas,
+    isLoading: areasLoading,
+  } = useActiveAreas();
 
   const resendMutation = useMutation({
     mutationFn: (accountId: number) => resendInvitation(accountId),
@@ -62,14 +64,15 @@ export function useAccounts(filters: AccountFilters = {}) {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       addToast({
         icon: "success",
-        title: "Invitación reenviada",
+        title: "Invitación enviada",
         message: result.detail,
       });
     },
     onError: (failure) => {
+      const inProgress = failure instanceof ApiError && failure.status === 409;
       addToast({
-        icon: "error",
-        title: "No se pudo reenviar",
+        icon: inProgress ? "alert" : "error",
+        title: inProgress ? "Envío en curso" : "No se pudo reenviar",
         message: errorText(failure),
       });
     },
@@ -115,8 +118,10 @@ export function useAccounts(filters: AccountFilters = {}) {
     accounts: visibleAccounts,
     areas,
     busy: resendMutation.isPending || unlockMutation.isPending,
-    resendInvitation: resendMutation.mutateAsync,
-    unlockAccount: unlockMutation.mutateAsync,
+    resendingId: resendMutation.isPending ? resendMutation.variables : undefined,
+    unlockingId: unlockMutation.isPending ? unlockMutation.variables : undefined,
+    resendInvitation: resendMutation.mutate,
+    unlockAccount: unlockMutation.mutate,
     reload,
   };
 }

@@ -59,7 +59,10 @@ export default function TaskAssigneeCell({ view }: { view: TaskFieldView }) {
               )}
             </span>
           ) : (
-            <UserIcon className="size-4 shrink-0 text-neutral-400" fill={false} />
+            <UserIcon
+              className="size-4 shrink-0 text-neutral-400"
+              fill={false}
+            />
           )}
         </button>
         {open && (

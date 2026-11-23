@@ -11,7 +11,10 @@ export default function RecentTasksSkeleton() {
     >
       <ul className="m-0 flex list-none flex-col gap-1 p-0" aria-busy="true">
         {ROWS.map((row) => (
-          <li key={row} className="flex items-center gap-2 rounded-lg px-2 py-1.5">
+          <li
+            key={row}
+            className="flex items-center gap-2 rounded-lg px-2 py-1.5"
+          >
             <Skeleton width={16} height={16} />
             <Skeleton width={120} height={12} />
           </li>

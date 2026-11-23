@@ -15,11 +15,18 @@ export default function PublicationsPage({
   canManage?: boolean;
 }) {
   const page = usePublicationsPage(canManage);
-  const hasFilters = Boolean(page.filters.search || page.filters.project_id || page.filters.state !== "ABIERTA");
+  const hasFilters = Boolean(
+    page.filters.search ||
+    page.filters.project_id ||
+    page.filters.state !== "ABIERTA",
+  );
   const selected = page.selected;
 
   return (
-    <main id="main-content" className="min-h-full text-neutral-800 dark:text-neutral-100">
+    <main
+      id="main-content"
+      className="min-h-full text-neutral-800 dark:text-neutral-100"
+    >
       <SectionHeader
         title="Publicaciones"
         action={
@@ -42,12 +49,18 @@ export default function PublicationsPage({
       />
       <section aria-label="Publicaciones" aria-busy={page.loading}>
         {page.loading ? null : page.error && page.data.length === 0 ? (
-          <EmptyState iconName="projects" message="No se pudieron cargar las publicaciones." />
+          <EmptyState
+            iconName="projects"
+            message="No se pudieron cargar las publicaciones."
+          />
         ) : page.data.length === 0 ? (
           hasFilters ? (
             <EmptyFilters />
           ) : (
-            <EmptyState iconName="projects" message="No hay publicaciones abiertas." />
+            <EmptyState
+              iconName="projects"
+              message="No hay publicaciones abiertas."
+            />
           )
         ) : (
           <PublicationList

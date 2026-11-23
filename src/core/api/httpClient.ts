@@ -128,10 +128,7 @@ function invalidateReads(): void {
   pendingReads.clear();
 }
 
-function sharedRead<T>(
-  scope: string,
-  load: () => Promise<T>,
-): Promise<T> {
+function sharedRead<T>(scope: string, load: () => Promise<T>): Promise<T> {
   const key = JSON.stringify([sessionEpoch, scope]);
   const existing = pendingReads.get(key);
   if (existing) return existing as Promise<T>;
@@ -149,9 +146,7 @@ const bareClient = axios.create({
 
 async function prepareCsrf(): Promise<void> {
   try {
-    const { data } = await bareClient.get<{ csrf_token: string }>(
-      "auth/csrf/",
-    );
+    const { data } = await bareClient.get<{ csrf_token: string }>("auth/csrf/");
     csrfToken = data.csrf_token;
   } catch (failure) {
     throw normalizeError(failure);

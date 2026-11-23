@@ -64,7 +64,12 @@ export function useSettings() {
         message: "Revisa tu conexión e inténtalo de nuevo.",
       });
     }
-  }, [profileQuery.error, specialtiesQuery.error, catalogQuery.error, addToast]);
+  }, [
+    profileQuery.error,
+    specialtiesQuery.error,
+    catalogQuery.error,
+    addToast,
+  ]);
 
   const profile = profileQuery.data ?? null;
   const specialties = specialtiesQuery.data ?? [];
@@ -79,8 +84,7 @@ export function useSettings() {
     : nameParts.slice(1).join(" ");
   const currentEmail = emailTouched ? email : (profile?.email ?? "");
   const currentName =
-    `${currentFirstName} ${currentLastName}`.trim() ||
-    (profile?.name ?? "");
+    `${currentFirstName} ${currentLastName}`.trim() || (profile?.name ?? "");
 
   const saveMutation = useMutation({
     mutationFn: (payload: ProfilePayload) => updateSessionProfile(payload),
@@ -179,8 +183,7 @@ export function useSettings() {
     loading: specialtiesQuery.isLoading || catalogQuery.isLoading,
     specialties,
     catalog,
-    saving:
-      addSpecialtyMutation.isPending || removeSpecialtyMutation.isPending,
+    saving: addSpecialtyMutation.isPending || removeSpecialtyMutation.isPending,
     selectedSpecialty,
     setSelectedSpecialty,
     addSpecialty: () => {

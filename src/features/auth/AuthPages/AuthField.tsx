@@ -2,17 +2,15 @@ import { useId } from "react";
 import type { InputHTMLAttributes } from "react";
 import Input from "../../../shared/components/Input/Input";
 
-interface AuthFieldProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "style"> {
+interface AuthFieldProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "id" | "style"
+> {
   label: string;
   hint?: string;
 }
 
-export default function AuthField({
-  label,
-  hint,
-  ...props
-}: AuthFieldProps) {
+export default function AuthField({ label, hint, ...props }: AuthFieldProps) {
   const id = useId();
   const hintId = `${id}-hint`;
 
@@ -24,11 +22,7 @@ export default function AuthField({
       >
         {label}
       </label>
-      <Input
-        id={id}
-        aria-describedby={hint ? hintId : undefined}
-        {...props}
-      />
+      <Input id={id} aria-describedby={hint ? hintId : undefined} {...props} />
       {hint && (
         <p
           className="m-0 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400"

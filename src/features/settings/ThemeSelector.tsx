@@ -12,10 +12,7 @@ interface ThemeSelectorProps {
   onChange: (theme: Theme) => void;
 }
 
-export default function ThemeSelector({
-  theme,
-  onChange,
-}: ThemeSelectorProps) {
+export default function ThemeSelector({ theme, onChange }: ThemeSelectorProps) {
   return (
     <div className="grid gap-2">
       <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200">

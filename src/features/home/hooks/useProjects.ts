@@ -3,14 +3,22 @@ import type { ProjectSummary } from "../../../core/interfaces/project.interface"
 import { getProjects } from "../../../core/services/projectService";
 import { useAuth } from "../../../hooks/useAuth";
 import { useToast } from "../../../hooks/useToast";
-import { checkSession, errorText, sessionVersion } from "../../../core/api/httpClient";
+import {
+  checkSession,
+  errorText,
+  sessionVersion,
+} from "../../../core/api/httpClient";
 
 export function useProjects() {
   const { addToast } = useToast();
   const { isAuthenticated } = useAuth();
   const epoch = sessionVersion();
 
-  const { data: projects = [], refetch, isLoading } = useQuery<ProjectSummary[]>({
+  const {
+    data: projects = [],
+    refetch,
+    isLoading,
+  } = useQuery<ProjectSummary[]>({
     queryKey: ["projects"],
     enabled: isAuthenticated,
     queryFn: async () => {

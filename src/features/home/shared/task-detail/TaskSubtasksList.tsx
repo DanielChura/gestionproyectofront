@@ -48,7 +48,7 @@ export default function TaskSubtasksList({
           <span>Subtareas</span>
         </button>
 
-        <span className="text-neutral-400 dark:text-neutral-500">
+        <span className="text-neutral-500 dark:text-neutral-400">
           {pending} sin resolver
         </span>
       </div>
@@ -124,7 +124,7 @@ export default function TaskSubtasksList({
               <button
                 type="button"
                 onClick={() => setAdding(true)}
-                className="flex cursor-pointer items-center gap-2 rounded-md py-1.5 pl-4 pr-2 text-xs text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                className="flex cursor-pointer items-center gap-2 rounded-md py-1.5 pl-4 pr-2 text-xs text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:text-neutral-400"
               >
                 <PlusIcon className="size-3.5" />
                 <span>Añadir subtarea</span>

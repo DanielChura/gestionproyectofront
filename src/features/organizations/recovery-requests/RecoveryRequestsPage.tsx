@@ -8,7 +8,9 @@ import SearchIcon from "../../../shared/icons/SearchIcon";
 import SendIcon from "../../../shared/icons/SendIcon";
 import Input from "../../../shared/components/Input/Input";
 import SectionHeader from "../../layout/SectionHeader/SectionHeader";
-import Table, { type TableColumn } from "../../../shared/components/Table/Table";
+import Table, {
+  type TableColumn,
+} from "../../../shared/components/Table/Table";
 import type { RecoveryRequest } from "../../../core/interfaces/auth.interface";
 
 export default function RecoveryRequestsPage() {

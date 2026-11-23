@@ -38,7 +38,10 @@ export default function PublicationMetaFields({
             {publication.project.name}
           </span>
         ) : (
-          <Select value={projectId} onChange={(event) => onProject(event.target.value)}>
+          <Select
+            value={projectId}
+            onChange={(event) => onProject(event.target.value)}
+          >
             <option value="">Selecciona un proyecto</option>
             {catalogs.projects.map((project) => (
               <option key={project.id} value={project.id}>
@@ -54,7 +57,9 @@ export default function PublicationMetaFields({
         </span>
         <Select
           value={state}
-          onChange={(event) => onState(event.target.value as PublicationStateCode)}
+          onChange={(event) =>
+            onState(event.target.value as PublicationStateCode)
+          }
         >
           {states.map((item) => (
             <option key={item} value={item}>

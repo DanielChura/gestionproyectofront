@@ -138,10 +138,7 @@ function AppContent() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/activar" element={<PasswordPage mode="activate" />} />
-          <Route
-            path="/restablecer"
-            element={<PasswordPage mode="reset" />}
-          />
+          <Route path="/restablecer" element={<PasswordPage mode="reset" />} />
           <Route path="/recuperar" element={<RecoveryPage />} />
           <Route
             path="/*"

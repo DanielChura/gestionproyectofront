@@ -12,13 +12,35 @@ import ActivityIcon from "../../../shared/icons/ActivityIcon";
 import DotsIcon from "../../../shared/icons/DotsIcon";
 import SendIcon from "../../../shared/icons/SendIcon";
 import KeyIcon from "../../../shared/icons/KeyIcon";
+import HourglassIcon from "../../../shared/icons/HourglassIcon";
 import Button from "../../../shared/components/Button/Button";
 import SectionHeader from "../../layout/SectionHeader/SectionHeader";
-import Table, { type TableColumn } from "../../../shared/components/Table/Table";
+import Table, {
+  type TableColumn,
+} from "../../../shared/components/Table/Table";
 import Input from "../../../shared/components/Input/Input";
 import Select from "../../../shared/components/Select/Select";
 import { roleLabel } from "../../auth/roles";
 import type { Account } from "../../../core/interfaces/auth.interface";
+
+function emailStatus(account: Account): { text: string; className: string } | null {
+  if (account.active) return null;
+  if (account.delivery_status === "accepted")
+    return {
+      text: "Correo enviado",
+      className: "text-neutral-500 dark:text-neutral-400",
+    };
+  if (account.delivery_status === "failed")
+    return { text: "Correo rechazado", className: "text-red-600 dark:text-red-400" };
+  if (account.delivery_status === "unknown")
+    return { text: "Correo sin confirmar", className: "text-amber-600 dark:text-amber-400" };
+  if (account.delivery_status === "sending")
+    return { text: "Enviando correo", className: "text-blue-600 dark:text-blue-400" };
+  return {
+    text: "Sin correo enviado",
+    className: "text-neutral-500 dark:text-neutral-400",
+  };
+}
 
 export default function AccountsPage() {
   const [searchInput, setSearchInput] = useState("");
@@ -31,6 +53,8 @@ export default function AccountsPage() {
     accounts,
     areas,
     busy,
+    resendingId,
+    unlockingId,
     resendInvitation,
     unlockAccount,
     reload,
@@ -100,8 +124,9 @@ export default function AccountsPage() {
         <span className="flex items-center min-w-0 line-clamp-1">
           {account.all_areas
             ? "Todas las áreas activas"
-            : account.areas.map((area: { id: number; name: string }) => area.name).join(", ") ||
-              "Sin áreas activas"}
+            : account.areas
+                .map((area: { id: number; name: string }) => area.name)
+                .join(", ") || "Sin áreas activas"}
         </span>
       ),
     },
@@ -119,15 +144,25 @@ export default function AccountsPage() {
       key: "active",
       header: "Estado",
       icon: ActivityIcon,
-      render: (account) => (
-        <span
-          className={`flex items-center min-w-0 line-clamp-1 ${
-            account.active ? "text-emerald-500" : "text-amber-500"
-          }`}
-        >
-          {account.active ? "Activa" : "Pendiente"}
-        </span>
-      ),
+      render: (account) => {
+        const email = emailStatus(account);
+        return (
+          <span className="flex min-w-0 flex-col gap-0.5">
+            <span
+              className={`line-clamp-1 ${
+                account.active ? "text-emerald-500" : "text-amber-500"
+              }`}
+            >
+              {account.active ? "Activa" : "Pendiente"}
+            </span>
+            {email && (
+              <span className={`line-clamp-1 ${email.className}`}>
+                {email.text}
+              </span>
+            )}
+          </span>
+        );
+      },
     },
     {
       key: "actions",
@@ -139,20 +174,30 @@ export default function AccountsPage() {
           <button
             type="button"
             disabled={busy || account.active}
+            aria-busy={resendingId === account.id ? "true" : undefined}
+            aria-label="Reenviar invitación"
             onClick={() => resendInvitation(account.id)}
-            title="Reenviar invitación"
             className="rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 disabled:opacity-40 disabled:hover:bg-transparent dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
-            <SendIcon className="size-4" />
+            {resendingId === account.id ? (
+              <HourglassIcon className="size-4" />
+            ) : (
+              <SendIcon className="size-4" />
+            )}
           </button>
           <button
             type="button"
             disabled={busy}
+            aria-busy={unlockingId === account.id ? "true" : undefined}
+            aria-label="Desbloquear cuenta"
             onClick={() => unlockAccount(account.id)}
-            title="Desbloquear"
             className="rounded-md p-1.5 text-neutral-600 hover:bg-neutral-100 disabled:opacity-40 disabled:hover:bg-transparent dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
-            <KeyIcon className="size-4" />
+            {unlockingId === account.id ? (
+              <HourglassIcon className="size-4" />
+            ) : (
+              <KeyIcon className="size-4" />
+            )}
           </button>
         </div>
       ),

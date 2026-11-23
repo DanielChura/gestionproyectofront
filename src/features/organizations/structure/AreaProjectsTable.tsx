@@ -6,7 +6,9 @@ import ActivityIcon from "../../../shared/icons/ActivityIcon";
 import DotsIcon from "../../../shared/icons/DotsIcon";
 import EyeIcon from "../../../shared/icons/EyeIcon";
 import EditIcon from "../../../shared/icons/EditIcon";
-import Table, { type TableColumn } from "../../../shared/components/Table/Table";
+import Table, {
+  type TableColumn,
+} from "../../../shared/components/Table/Table";
 import type { ProjectSummary } from "../../../core/interfaces/project.interface";
 
 interface AreaProjectsTableProps {

@@ -178,9 +178,7 @@ export const authService = {
   isAdmin(): boolean {
     const user = getSessionUser();
     if (!user) return false;
-    return (
-      user.role === "admin" || Boolean(user.permissions?.manage_accounts)
-    );
+    return user.role === "admin" || Boolean(user.permissions?.manage_accounts);
   },
 
   hasPermission(permission: keyof SessionUser["permissions"]): boolean {

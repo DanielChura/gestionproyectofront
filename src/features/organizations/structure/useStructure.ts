@@ -42,8 +42,9 @@ export function useStructure() {
     select: (data) => (Array.isArray(data) ? data : []),
   });
 
-  const { data: projects = [], isLoading: projectsLoading } =
-    useQuery<ProjectSummary[]>({
+  const { data: projects = [], isLoading: projectsLoading } = useQuery<
+    ProjectSummary[]
+  >({
     queryKey: ["projects"],
     queryFn: getProjects,
     select: (data) => (Array.isArray(data) ? data : []),

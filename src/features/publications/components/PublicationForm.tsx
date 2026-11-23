@@ -58,14 +58,18 @@ export default function PublicationForm({
         onField={form.updateField}
       />
       <label className="col-span-2 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">Descripción</span>
+        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+          Descripción
+        </span>
         <Textarea
           name="description"
           rows={3}
           maxLength={10000}
           value={form.draft.description}
           placeholder="Descripción"
-          onChange={(event) => form.updateField("description", event.target.value)}
+          onChange={(event) =>
+            form.updateField("description", event.target.value)
+          }
         />
       </label>
       <RequirementFields
@@ -75,7 +79,10 @@ export default function PublicationForm({
         onChange={form.updateRequirement}
         onAdd={form.addRequirement}
         onRemove={form.removeRequirement}
-        canAdd={form.draft.requirements.length < Math.min(50, catalogs.specialties.length)}
+        canAdd={
+          form.draft.requirements.length <
+          Math.min(50, catalogs.specialties.length)
+        }
       />
     </Form>
   );

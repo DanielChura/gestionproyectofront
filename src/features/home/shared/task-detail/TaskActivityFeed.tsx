@@ -24,13 +24,13 @@ export default function TaskActivityFeed({
     <aside className="flex h-full flex-col border-l border-neutral-200 dark:border-neutral-800">
       <div className="flex h-11 shrink-0 items-center justify-between border-b border-neutral-200 px-4 text-xs dark:border-neutral-800">
         <span className="font-medium">Actividad</span>
-        <span className="text-neutral-300 dark:text-neutral-500">
+        <span className="text-neutral-500 dark:text-neutral-400">
           {activities.length}{" "}
           {activities.length === 1 ? "registro" : "registros"}
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col overflow-y-auto p-4 text-[11px] text-neutral-500 dark:text-neutral-400">
+      <div className="flex flex-1 flex-col overflow-y-auto p-4 text-xs text-neutral-500 dark:text-neutral-400">
         {activities.length === 0 ? (
           <p className="m-auto text-center">No hay actividad registrada</p>
         ) : (

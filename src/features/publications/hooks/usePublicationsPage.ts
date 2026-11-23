@@ -63,7 +63,8 @@ export function usePublicationsPage(canManage: boolean) {
       addToast({
         icon: "error",
         title: "No se pudo postular",
-        message: failure instanceof Error ? failure.message : "Intenta de nuevo.",
+        message:
+          failure instanceof Error ? failure.message : "Intenta de nuevo.",
       });
     }
   }

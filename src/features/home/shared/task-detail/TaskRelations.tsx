@@ -22,7 +22,7 @@ const labels: Record<RelationKind, string> = {
   custom: "Nueva relación personalizada",
 };
 const button =
-  "cursor-pointer rounded-md px-3 py-2 text-left text-xs text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:bg-neutral-900";
+  "cursor-pointer rounded-md px-3 py-2 text-left text-xs text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800";
 
 function RelationPicker({
   target,
@@ -106,12 +106,12 @@ function RelationPicker({
       <h3 className="m-0 text-xs font-medium text-neutral-600 dark:text-neutral-300">
         Tareas recientes
       </h3>
-      <p className="m-0 text-[10px] text-neutral-600 dark:text-neutral-300">
+      <p className="m-0 text-xs text-neutral-600 dark:text-neutral-300">
         Más recientes primero. Selecciona una tarea para crear el vínculo.
       </p>
       {picker.searching && <p role="status">Cargando tareas…</p>}
       {(error || picker.results.error) && (
-        <p role="alert" className="m-0 text-xs text-red-700">
+        <p role="alert" className="m-0 text-xs text-red-700 dark:text-red-400">
           {error || picker.results.error}{" "}
           <button
             type="button"
@@ -370,7 +370,7 @@ export default function TaskRelations({
         </p>
       )}
       {(error || mutation.error) && (
-        <p role="alert" className="text-xs text-red-700">
+        <p role="alert" className="text-xs text-red-700 dark:text-red-400">
           {error || mutation.error}{" "}
           <button
             type="button"
@@ -422,7 +422,7 @@ export default function TaskRelations({
                   <button
                     type="button"
                     disabled={mutation.busy || mutation.uncertain}
-                    className={`${button} text-red-700`}
+                    className={`${button} text-red-700 dark:text-red-400`}
                     onClick={() => {
                       void mutation.unlink(relation).then((saved) => {
                         if (saved) setRemoving(null);

@@ -29,11 +29,7 @@ export default function RecoveryPage() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
-          <Button
-            type="submit"
-            disabled={busy}
-            className="w-full py-2 text-sm"
-          >
+          <Button type="submit" disabled={busy} className="w-full py-2 text-sm">
             {busy ? "Enviando…" : "Solicitar revisión"}
           </Button>
         </form>

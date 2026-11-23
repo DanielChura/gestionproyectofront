@@ -18,7 +18,10 @@ export default function ProfileSection({ settings }: ProfileSectionProps) {
       {settings.profileLoading ? (
         <ProfileFormSkeleton />
       ) : (
-        <form onSubmit={settings.saveProfile} className="grid gap-3.5 sm:grid-cols-2">
+        <form
+          onSubmit={settings.saveProfile}
+          className="grid gap-3.5 sm:grid-cols-2"
+        >
           <div className="flex items-center gap-3 sm:col-span-2">
             {settings.profile && (
               <Avatar

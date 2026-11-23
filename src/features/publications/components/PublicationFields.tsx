@@ -18,7 +18,9 @@ export default function PublicationFields({
   return (
     <>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">Título</span>
+        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+          Título
+        </span>
         <Input
           name="title"
           type="text"
@@ -29,7 +31,9 @@ export default function PublicationFields({
         />
       </label>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">Vacantes</span>
+        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+          Vacantes
+        </span>
         <Input
           name="vacancies"
           type="number"
@@ -40,7 +44,9 @@ export default function PublicationFields({
         />
       </label>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">Horas semanales</span>
+        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+          Horas semanales
+        </span>
         <Input
           name="weeklyHours"
           type="number"
@@ -52,7 +58,9 @@ export default function PublicationFields({
         />
       </label>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">Fecha de apertura</span>
+        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+          Fecha de apertura
+        </span>
         <Input
           name="openingDate"
           type="date"
@@ -61,7 +69,9 @@ export default function PublicationFields({
         />
       </label>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">Fecha de cierre</span>
+        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+          Fecha de cierre
+        </span>
         <Input
           name="closingDate"
           type="date"

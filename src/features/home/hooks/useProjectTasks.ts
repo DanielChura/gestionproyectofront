@@ -56,4 +56,3 @@ export function useProjectTasks(projectId: number) {
     acceptTask,
   };
 }
-

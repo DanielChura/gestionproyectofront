@@ -9,7 +9,10 @@ export default function TaskStartDateCell({ view }: { view: TaskFieldView }) {
     <td className="h-12 p-1">
       <div className="group relative flex h-full w-full items-center">
         <div className="flex h-full w-full items-center gap-1.5 rounded-md border border-transparent px-2 text-xs text-neutral-700 group-hover:border-neutral-300 dark:text-neutral-300 dark:group-hover:border-neutral-700">
-          <CalendarIcon className="size-4 shrink-0 text-neutral-400" fill={false} />
+          <CalendarIcon
+            className="size-4 shrink-0 text-neutral-400"
+            fill={false}
+          />
           {task.start_date && (
             <span className="truncate">{formatTaskDate(task.start_date)}</span>
           )}

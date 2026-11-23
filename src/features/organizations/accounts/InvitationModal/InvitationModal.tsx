@@ -62,14 +62,6 @@ export default function InvitationModal({
     const key = nextKey.current++;
     setSelections((current) => [...current, { key, value: "" }]);
   }
-  function clearForm() {
-    setFirstNames("");
-    setLastNames("");
-    setEmail("");
-    setSelections([{ key: 0, value: "" }]);
-    setAllAreas(false);
-    setRole("TRABAJADOR");
-  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -81,28 +73,40 @@ export default function InvitationModal({
         email,
         role,
         all_areas: allAreas,
-        area_ids: allAreas
-          ? []
-          : selections.map((item) => Number(item.value)),
+        area_ids: allAreas ? [] : selections.map((item) => Number(item.value)),
       });
       addToast({
         icon: "success",
-        title: "Invitación registrada",
+        title: "Invitación enviada",
         message: result.detail,
       });
       onClose();
     } catch (failure) {
-      if (
+      const accountExists =
         failure instanceof ApiError &&
         failure.status === 503 &&
-        failure.payload?.account_id
-      )
-        clearForm();
-      addToast({
-        icon: "error",
-        title: "No se pudo registrar",
-        message: errorText(failure),
-      });
+        Boolean(failure.payload?.account_id);
+      if (accountExists) {
+        addToast({
+          icon: "alert",
+          title: "Cuenta registrada, correo pendiente",
+          message: errorText(failure),
+        });
+        onClose();
+      } else if (failure instanceof ApiError && failure.status === 409) {
+        addToast({
+          icon: "alert",
+          title: "Envío en curso",
+          message: errorText(failure),
+        });
+        onClose();
+      } else {
+        addToast({
+          icon: "error",
+          title: "No se pudo registrar",
+          message: errorText(failure),
+        });
+      }
     } finally {
       await onUpdate();
       setBusy(false);
@@ -199,7 +203,8 @@ export default function InvitationModal({
               </Select>
             </div>
             {index > 0 && (
-              <Button variant="secondary"
+              <Button
+                variant="secondary"
                 type="button"
                 className="px-2.5 py-1 text-xs shrink-0"
                 onClick={() =>
@@ -222,7 +227,8 @@ export default function InvitationModal({
       )}
       {canAdd && (
         <div className="col-span-2">
-          <Button variant="secondary"
+          <Button
+            variant="secondary"
             type="button"
             onClick={addArea}
             className="px-2.5 py-1 text-xs"
