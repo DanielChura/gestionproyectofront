@@ -16,6 +16,9 @@ export default function TeamsNav({
   pathname,
   canManage,
 }: TeamsNavProps) {
+  const teamIdMatch = pathname.match(/^\/equipos\/(\d+)/);
+  const activeTeamId = teamIdMatch ? Number(teamIdMatch[1]) : undefined;
+
   return (
     <>
       <div className="mb-1 flex flex-col gap-1">
@@ -35,7 +38,7 @@ export default function TeamsNav({
       <NavLinks items={items} pathname={pathname} />
 
       <NavGroup title="Mis equipos">
-        <MyTeams />
+        <MyTeams activeTeamId={activeTeamId} />
       </NavGroup>
     </>
   );

@@ -18,15 +18,14 @@ export const PublicationsPage = lazy(
 );
 const TeamsPage = lazy(() => import("./features/teams/TeamsPage"));
 const TeamDetailPage = lazy(() => import("./features/teams/TeamDetailPage"));
-const StructurePage = lazy(
-  () => import("./features/organizations/structure/StructurePage"),
+const AreaProjectsPage = lazy(
+  () => import("./features/organization/AreaProjects/AreaProjectsPage"),
 );
 const AccountsPage = lazy(
-  () => import("./features/organizations/accounts/AccountsPage"),
+  () => import("./features/organization/accounts/AccountsPage"),
 );
 const RecoveryRequestsPage = lazy(
-  () =>
-    import("./features/organizations/recovery-requests/RecoveryRequestsPage"),
+  () => import("./features/organization/RecoveryRequests/RecoveryRequestsPage"),
 );
 
 export interface SubRoute {
@@ -117,19 +116,19 @@ export const appModules: NavModule[] = [
         title: "Crear proyecto",
         path: "/organizaciones/estructura?modal=proyecto",
         Icon: PlusIcon,
-        Component: StructurePage,
+        Component: AreaProjectsPage,
       },
       {
         title: "Crear especialidad",
         path: "/organizaciones/estructura?modal=especialidad",
         Icon: FileIcon,
-        Component: StructurePage,
+        Component: AreaProjectsPage,
       },
       {
         title: "Áreas y proyectos",
         path: "/organizaciones/estructura",
         Icon: FolderIcon,
-        Component: StructurePage,
+        Component: AreaProjectsPage,
       },
       {
         title: "Cuentas y accesos",
@@ -147,21 +146,21 @@ export const appModules: NavModule[] = [
         title: "Organización",
         path: "/organizaciones",
         Icon: BuildingIcon,
-        Component: StructurePage,
+        Component: AreaProjectsPage,
         hidden: true,
       },
       {
         title: "Áreas",
         path: "/organizaciones/areas",
         Icon: FolderIcon,
-        Component: StructurePage,
+        Component: AreaProjectsPage,
         hidden: true,
       },
       {
         title: "Especialidades",
         path: "/organizaciones/especialidades",
         Icon: FileIcon,
-        Component: StructurePage,
+        Component: AreaProjectsPage,
         hidden: true,
       },
     ],

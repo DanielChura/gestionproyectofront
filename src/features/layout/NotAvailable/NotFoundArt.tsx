@@ -12,12 +12,12 @@ export default function NotFoundArt() {
       viewBox="0 0 520 260"
       fill="none"
       aria-hidden="true"
-      className="h-auto w-full text-neutral-800 dark:text-neutral-100"
+      className="h-auto w-full text-neutral-700 dark:text-neutral-100"
     >
       <g
         fill="currentColor"
         opacity="0.8"
-        className="text-neutral-200 dark:text-neutral-800"
+        className="text-neutral-200 dark:text-neutral-700"
       >
         {gridDots.map((dot) => (
           <circle key={`${dot.x}-${dot.y}`} cx={dot.x} cy={dot.y} r="1.2" />

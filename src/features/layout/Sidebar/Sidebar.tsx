@@ -23,14 +23,14 @@ export default function Sidebar({
   const canManage = user?.permissions.manage_accounts ?? false;
 
   return (
-    <aside className="flex w-15 shrink-0 flex-col items-center gap-2 rounded-lg bg-neutral-950 dark:bg-neutral-900 p-2 max-md:w-full max-md:flex-row max-md:justify-between">
+    <aside className="flex w-15 shrink-0 flex-col items-center gap-2 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-950 dark:bg-neutral-900 p-2 max-md:w-full max-md:flex-row max-md:justify-between">
       <Link
         to="/"
         onClick={onSectionSelect}
         className="flex size-9 shrink-0 cursor-pointer items-center justify-center"
         aria-label="Ir al inicio"
       >
-        <img src={gmLogoSmall} alt="" className="h-7 w-auto" />
+        <img src={gmLogoSmall} alt="" className="h-6 w-auto" />
       </Link>
 
       <nav className="flex w-full min-h-0 flex-1 flex-col items-center gap-1 overflow-y-auto overflow-x-hidden pt-1 max-md:flex-row max-md:justify-center max-md:overflow-visible max-md:pt-0">

@@ -21,9 +21,11 @@ export default function TaskActivityFeed({
   activities,
 }: TaskActivityFeedProps) {
   return (
-    <aside className="flex h-full flex-col border-l border-neutral-200 dark:border-neutral-800">
+    <aside className="flex h-full flex-col">
       <div className="flex h-11 shrink-0 items-center justify-between border-b border-neutral-200 px-4 text-xs dark:border-neutral-800">
-        <span className="font-medium">Actividad</span>
+        <span className="font-medium text-neutral-800 dark:text-neutral-200">
+          Actividad
+        </span>
         <span className="text-neutral-500 dark:text-neutral-400">
           {activities.length}{" "}
           {activities.length === 1 ? "registro" : "registros"}
@@ -40,10 +42,15 @@ export default function TaskActivityFeed({
                 key={item.id}
                 className="flex items-baseline justify-between gap-4"
               >
-                <span className="min-w-0">
-                  {item.actor_name} {activityText(item)}
+                <span className="min-w-0 text-neutral-700 dark:text-neutral-300">
+                  <strong className="font-medium text-neutral-800 dark:text-neutral-200">
+                    {item.actor_name}
+                  </strong>{" "}
+                  {activityText(item)}
                 </span>
-                <time className="shrink-0">{formatDate(item.created_at)}</time>
+                <time className="shrink-0 text-neutral-400 dark:text-neutral-500">
+                  {formatDate(item.created_at)}
+                </time>
               </li>
             ))}
           </ul>

@@ -19,7 +19,7 @@ export default function GanttTaskDetails({
       onClose={() => view.setAction(null)}
       busy={view.busy}
     >
-      <div className="grid gap-4 p-4 text-xs text-neutral-800 dark:text-neutral-200">
+      <div className="grid gap-4 p-4 text-xs text-neutral-700 dark:text-neutral-200">
         <p className="m-0 whitespace-pre-wrap">
           {task.description || "Sin descripción"}
         </p>

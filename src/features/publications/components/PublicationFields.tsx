@@ -18,7 +18,7 @@ export default function PublicationFields({
   return (
     <>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+        <span className="text-xs text-neutral-700 dark:text-neutral-100">
           Título
         </span>
         <Input
@@ -31,7 +31,7 @@ export default function PublicationFields({
         />
       </label>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+        <span className="text-xs text-neutral-700 dark:text-neutral-100">
           Vacantes
         </span>
         <Input
@@ -44,7 +44,7 @@ export default function PublicationFields({
         />
       </label>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+        <span className="text-xs text-neutral-700 dark:text-neutral-100">
           Horas semanales
         </span>
         <Input
@@ -58,7 +58,7 @@ export default function PublicationFields({
         />
       </label>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+        <span className="text-xs text-neutral-700 dark:text-neutral-100">
           Fecha de apertura
         </span>
         <Input
@@ -69,7 +69,7 @@ export default function PublicationFields({
         />
       </label>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+        <span className="text-xs text-neutral-700 dark:text-neutral-100">
           Fecha de cierre
         </span>
         <Input

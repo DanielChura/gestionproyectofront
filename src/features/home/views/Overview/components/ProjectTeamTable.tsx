@@ -17,7 +17,7 @@ export default function ProjectTeamTable({ people }: Props) {
       aria-label="Rendimiento del equipo"
     >
       <div className="flex items-center justify-between p-4 pb-3">
-        <h2 className="text-xs  text-neutral-800 dark:text-neutral-100">
+        <h2 className="text-xs  text-neutral-700 dark:text-neutral-100">
           Rendimiento del equipo
         </h2>
       </div>
@@ -73,12 +73,12 @@ export default function ProjectTeamTable({ people }: Props) {
                           name={person.name}
                           className="size-6 rounded-full text-xs"
                         />
-                        <p className="truncate  text-neutral-800 dark:text-neutral-200">
+                        <p className="truncate  text-neutral-700 dark:text-neutral-200">
                           {person.name}
                         </p>
                       </div>
                     </td>
-                    <td className="px-4 py-2.5 text-left  tabular-nums text-neutral-800 dark:text-neutral-200">
+                    <td className="px-4 py-2.5 text-left  tabular-nums text-neutral-700 dark:text-neutral-200">
                       {person.total}
                     </td>
                     <td className="px-4 py-2.5 text-left  tabular-nums text-green-600 dark:text-green-400">

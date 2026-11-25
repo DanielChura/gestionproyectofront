@@ -62,7 +62,7 @@ export default function ProjectHeader({
                 {project.name}
               </Link>
             </li>
-            <li className="flex shrink-0 items-center gap-1 text-neutral-800 dark:text-neutral-200">
+            <li className="flex shrink-0 items-center gap-1 text-neutral-700 dark:text-neutral-200">
               <ChevronDownIcon className="size-4 shrink-0 -rotate-90 text-neutral-400" />
               <span>{currentView}</span>
             </li>
@@ -83,7 +83,7 @@ export default function ProjectHeader({
       }
       action={
         onShare && (
-          <Button type="button" onClick={onShare}>
+          <Button type="button" onClick={onShare} variant="secondary">
             <TeamsIcon className="size-4" />
             <span>Compartir</span>
           </Button>
@@ -97,8 +97,8 @@ export default function ProjectHeader({
             to={`?vista=${id}`}
             className={`flex items-center gap-1.5 border-b-2 pb-2 font-medium ${
               viewKey === id
-                ? "border-neutral-800 text-neutral-800 dark:border-neutral-100 dark:text-neutral-100"
-                : "border-transparent text-neutral-600 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100"
+                ? "border-neutral-800 text-neutral-700 dark:border-neutral-100 dark:text-neutral-100"
+                : "border-transparent text-neutral-600 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-100"
             }`}
           >
             <span className={`rounded p-0.5 text-neutral-100 ${color}`}>

@@ -58,7 +58,7 @@ export default function PublicationForm({
         onField={form.updateField}
       />
       <label className="col-span-2 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+        <span className="text-xs text-neutral-700 dark:text-neutral-100">
           Descripción
         </span>
         <Textarea

@@ -5,7 +5,7 @@ import Avatar from "../../../shared/Avatar";
 import type { SessionUser } from "../../../core/interfaces/auth.interface";
 import { roleLabel } from "../../auth/roles";
 
-const SettingsModal = lazy(() => import("../../settings/SettingsModal"));
+const SettingsModal = lazy(() => import("../../SettingsModal/SettingsModal"));
 
 interface ProfileMenuProps {
   user: SessionUser;
@@ -17,7 +17,7 @@ function ProfileMenu({ user, onLogout, isCollapsed }: ProfileMenuProps) {
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const item =
-    "w-full flex items-center gap-2 px-3 py-2 text-xs text-neutral-800 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer text-left";
+    "w-full flex items-center gap-2 px-3 py-2 text-xs text-neutral-700 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md cursor-pointer text-left";
 
   return (
     <div
@@ -42,7 +42,7 @@ function ProfileMenu({ user, onLogout, isCollapsed }: ProfileMenuProps) {
         />
         {!isCollapsed && (
           <div className="flex flex-1 flex-col items-start min-w-0 text-left">
-            <span className="line-clamp-1 text-sm text-neutral-800 dark:text-neutral-100 leading-tight">
+            <span className="line-clamp-1 text-sm text-neutral-700 dark:text-neutral-100 leading-tight">
               {user.name}
             </span>
             <span className="line-clamp-1 text-xs text-neutral-600 dark:text-neutral-400 leading-tight mt-0.5">

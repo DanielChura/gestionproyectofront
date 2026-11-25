@@ -5,7 +5,7 @@ export default function TeamDetailSkeleton() {
   return (
     <main
       id="main-content"
-      className="min-h-full text-neutral-800 dark:text-neutral-100"
+      className="min-h-full text-neutral-700 dark:text-neutral-100"
       aria-busy="true"
     >
       <SkeletonTheme

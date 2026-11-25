@@ -37,7 +37,7 @@ export default function TeamMembersPanel({
   return (
     <section>
       <div className="flex flex-wrap items-center gap-2 pb-4">
-        <h2 className="m-0 mr-auto text-sm text-neutral-800 dark:text-neutral-100">
+        <h2 className="m-0 mr-auto text-sm text-neutral-700 dark:text-neutral-100">
           Integrantes{" "}
           <span className="text-neutral-500 dark:text-neutral-400">
             ({visible.length})

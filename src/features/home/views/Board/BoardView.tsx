@@ -137,7 +137,7 @@ export default function BoardView({
                 className="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-neutral-900 px-2.5 py-1 text-xs font-medium text-neutral-100 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
               >
                 <PlusIcon className="size-4" />
-                Agregar tarea
+                Tarea
               </button>
             )}
           </div>

@@ -40,7 +40,7 @@ export default function TaskSubtasksList({
         <button
           type="button"
           onClick={() => setExpanded((prev) => !prev)}
-          className="flex cursor-pointer items-center gap-1.5 font-medium text-neutral-700 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-neutral-100"
+          className="flex cursor-pointer items-center gap-1.5 font-medium text-neutral-700 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100"
         >
           <ChevronIcon
             className={`size-3.5 text-neutral-400 ${expanded ? "" : "-rotate-90"}`}
@@ -81,7 +81,7 @@ export default function TaskSubtasksList({
                   >
                     <StateIcon className="size-4" fill />
                   </span>
-                  <span className="truncate text-neutral-800 dark:text-neutral-200">
+                  <span className="truncate text-neutral-700 dark:text-neutral-200">
                     {item.name}
                   </span>
                 </span>

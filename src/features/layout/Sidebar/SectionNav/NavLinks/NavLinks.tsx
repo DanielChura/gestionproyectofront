@@ -20,7 +20,7 @@ export default function NavLinks({ items, pathname }: NavLinksProps) {
               aria-current={active ? "page" : undefined}
               className={`badge ${
                 active
-                  ? "bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100"
+                  ? "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
                   : ""
               }`}
             >

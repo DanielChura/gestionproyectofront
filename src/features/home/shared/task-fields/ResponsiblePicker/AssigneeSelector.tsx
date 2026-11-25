@@ -51,7 +51,7 @@ export default function AssigneeSelector({
               "flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs " +
               (selected
                 ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100"
-                : "text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800")
+                : "text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800")
             }
             onClick={() => toggle(person.id)}
           >

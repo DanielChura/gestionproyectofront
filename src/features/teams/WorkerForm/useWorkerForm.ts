@@ -10,6 +10,7 @@ export interface WorkerFormState {
   email: string;
   code: string;
   area: string;
+  all_areas: boolean;
   weekly_hours: string;
   active: boolean;
 }
@@ -21,6 +22,7 @@ export function useWorkerForm(worker: Worker) {
     email: worker.email,
     code: worker.code,
     area: worker.area != null ? String(worker.area) : "",
+    all_areas: worker.all_areas,
     weekly_hours: worker.weekly_hours,
     active: worker.active,
   });
@@ -37,7 +39,8 @@ export function useWorkerForm(worker: Worker) {
     first_names: formData.first_names,
     last_names: formData.last_names,
     email: formData.email,
-    area: formData.area ? Number(formData.area) : null,
+    area: formData.all_areas ? null : formData.area ? Number(formData.area) : null,
+    all_areas: formData.all_areas,
     weekly_hours: formData.weekly_hours,
     active: formData.active,
   });

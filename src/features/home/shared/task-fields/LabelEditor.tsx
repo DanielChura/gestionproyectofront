@@ -28,7 +28,7 @@ export default function LabelEditor({
 
   return (
     <fieldset className="m-0 grid min-w-0 gap-2 border-0 p-0">
-      <legend className="mb-1 text-xs  text-neutral-800 dark:text-neutral-100">
+      <legend className="mb-1 text-xs  text-neutral-700 dark:text-neutral-100">
         {title}
       </legend>
       <label
@@ -45,7 +45,7 @@ export default function LabelEditor({
         placeholder="Buscar especialidades…"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        className="w-full rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+        className="w-full rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
       />
       <div
         className="max-h-48 overflow-y-auto rounded-md border border-neutral-200 dark:border-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-800"
@@ -80,7 +80,7 @@ export default function LabelEditor({
               type="button"
               aria-pressed={selected}
               disabled={!selected && labels.length >= 50}
-              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-xs text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:cursor-default disabled:opacity-50"
+              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:cursor-default disabled:opacity-50"
               onClick={() =>
                 onChange(
                   selected

@@ -33,7 +33,7 @@ function ToastItem({
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       onClose(toast.id);
-    }, 6000);
+    }, 10000);
 
     return () => {
       clearTimeout(timeoutId);
@@ -43,23 +43,24 @@ function ToastItem({
   return (
     <div
       role="status"
-      className="bg-white border border-neutral-200 dark:bg-neutral-950 dark:border-neutral-800 shadow-md rounded-xl p-3"
+      className="bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 shadow-md rounded-xl p-3"
     >
       <div className="flex items-center gap-2">
         <Icon className={`size-4 ${color}`} fill={true} />
-        <p className="m-0 flex-1 text-xs font-medium text-neutral-800 dark:text-neutral-400">
+        <p className="m-0 flex-1 text-xs font-medium text-neutral-700 dark:text-neutral-300">
           {toast.title}
         </p>
         <button
           type="button"
-          aria-label="Cerrar notificación"
           onClick={() => onClose(toast.id)}
-          className="text-neutral-600 cursor-pointer"
+          className="text-neutral-500 dark:text-neutral-400 cursor-pointer"
         >
           <XIcon className="size-4" />
         </button>
       </div>
-      <p className="m-0 mt-2 pl-6 text-xs text-neutral-500">{toast.message}</p>
+      <p className="m-0 mt-2 pl-6 text-xs text-neutral-500 dark:text-neutral-400">
+        {toast.message}
+      </p>
     </div>
   );
 }
@@ -70,7 +71,7 @@ export function Toast() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] flex w-80 flex-col gap-2">
+    <div className="fixed bottom-6 right-6 z-9999 flex w-80 flex-col gap-2">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onClose={removeToast} />
       ))}

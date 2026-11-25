@@ -80,6 +80,10 @@ export async function updateSessionProfile(payload: {
   last_names?: string;
   email?: string;
   password?: string;
+  weekly_hours?: string;
+  area_id?: number | null;
+  all_areas?: boolean;
+  areas?: number[];
 }): Promise<SessionProfile> {
   const { data } = await httpClient.patch<SessionProfile>("auth/me/", payload);
   return data;

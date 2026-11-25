@@ -63,8 +63,7 @@
   }
 
   h1,
-  h2,
-  h3 {
+  h2 {
     @apply text-neutral-800 font-medium;
   }
 
@@ -75,7 +74,7 @@
 
 @layer components {
   .bg-modal {
-    @apply fixed inset-0 z-50 grid place-items-center bg-black/10 dark:bg-black/60 backdrop-blur-sm;
+    @apply fixed inset-0 z-50 grid place-items-center bg-black/50;
   }
 
   .badge {
@@ -83,7 +82,7 @@
   }
 
   .sidebar-item {
-    @apply flex w-full min-w-0 cursor-pointer flex-col items-center justify-center gap-1 rounded-md px-1 py-2 text-[10px] font-medium text-neutral-400 hover:bg-neutral-800 hover:text-neutral-100 max-md:w-auto max-md:flex-row max-md:gap-2 max-md:px-3;
+    @apply flex w-full min-w-0 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-[10px] text-neutral-400 hover:bg-neutral-800 hover:text-neutral-100 max-md:w-auto max-md:flex-row max-md:gap-2 max-md:px-3;
   }
 }
 

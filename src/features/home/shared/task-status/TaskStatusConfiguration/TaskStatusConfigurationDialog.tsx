@@ -151,7 +151,7 @@ export default function TaskStatusConfiguration({
       statusComposer
     >
       <div
-        className="flex min-h-0 flex-1 flex-col text-xs text-neutral-800 dark:text-neutral-100"
+        className="flex min-h-0 flex-1 flex-col text-xs text-neutral-700 dark:text-neutral-100"
         onKeyDown={(event) => {
           if (event.key !== "Escape") return;
           const details =
@@ -213,7 +213,7 @@ export default function TaskStatusConfiguration({
                   aria-expanded={templateOpen}
                   aria-controls={`${id}-templates`}
                   onClick={() => setTemplateOpen(!templateOpen)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-left text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                  className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-left text-xs  text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                 >
                   <span id={`${id}-selected-template`} className="truncate">
                     {editor.selected?.name ?? "Personalizado"}
@@ -235,7 +235,7 @@ export default function TaskStatusConfiguration({
                       placeholder="Buscar…"
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
-                      className="w-full rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+                      className="w-full rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
                     />
                     <div className="my-1 max-h-72 overflow-y-auto divide-y divide-neutral-100 dark:divide-neutral-800">
                       {editor.templates
@@ -278,7 +278,7 @@ export default function TaskStatusConfiguration({
                     </div>
                     <button
                       type="button"
-                      className="flex w-full cursor-pointer items-center gap-2 border-t border-neutral-200 px-3 py-2 text-left text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                      className="flex w-full cursor-pointer items-center gap-2 border-t border-neutral-200 px-3 py-2 text-left text-xs  text-neutral-700 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800"
                       onClick={() => {
                         if (editor.select(null)) {
                           setTemplateOpen(false);
@@ -309,7 +309,7 @@ export default function TaskStatusConfiguration({
                         <span className="group relative inline-flex">
                           <button
                             type="button"
-                            className="inline-flex cursor-pointer items-center justify-center rounded-md p-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+                            className="inline-flex cursor-pointer items-center justify-center rounded-md p-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
                             aria-label={`Información: ${category.label}`}
                             aria-describedby={`${id}-${category.value}-help`}
                             onFocus={() => setDismissedHelp(null)}
@@ -330,7 +330,7 @@ export default function TaskStatusConfiguration({
                             id={`${id}-${category.value}-help`}
                             role="tooltip"
                             hidden={dismissedHelp === category.value}
-                            className="invisible absolute left-0 top-full z-10 w-48 rounded-md border border-neutral-200 bg-white p-2 text-xs  text-neutral-800 group-hover:visible group-focus-within:visible dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
+                            className="invisible absolute left-0 top-full z-10 w-48 rounded-md border border-neutral-200 bg-white p-2 text-xs  text-neutral-700 group-hover:visible group-focus-within:visible dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
                           >
                             {category.help}
                           </span>
@@ -339,7 +339,7 @@ export default function TaskStatusConfiguration({
                       <button
                         id={`${id}-add-${category.value}`}
                         type="button"
-                        className="inline-flex cursor-pointer items-center justify-center rounded-md p-1 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+                        className="inline-flex cursor-pointer items-center justify-center rounded-md p-1 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
                         aria-label={`Añadir estado a ${category.label}`}
                         aria-describedby={
                           editor.categoryErrors[category.value]
@@ -521,7 +521,7 @@ export default function TaskStatusConfiguration({
                           >
                             <summary
                               aria-label={`Opciones de ${state.name || "nuevo estado"}`}
-                              className="inline-flex cursor-pointer items-center justify-center rounded p-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800 list-none dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+                              className="inline-flex cursor-pointer items-center justify-center rounded p-1 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-700 list-none dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
                             >
                               <span aria-hidden="true">
                                 <DotsIcon className="size-4 rotate-90" />
@@ -533,7 +533,7 @@ export default function TaskStatusConfiguration({
                             >
                               <button
                                 type="button"
-                                className="flex w-full cursor-pointer items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                                className="flex w-full cursor-pointer items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
                                 onClick={(event) =>
                                   menuAction(event, () =>
                                     setEditing({
@@ -546,7 +546,7 @@ export default function TaskStatusConfiguration({
                                 <SettingsIcon className="size-4" />
                                 Cambiar nombre
                               </button>
-                              <label className="flex cursor-pointer items-center justify-between gap-2 rounded px-2.5 py-1.5 text-xs text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800">
+                              <label className="flex cursor-pointer items-center justify-between gap-2 rounded px-2.5 py-1.5 text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800">
                                 Tema
                                 <select
                                   aria-label={`Tema de ${state.name}`}
@@ -567,7 +567,7 @@ export default function TaskStatusConfiguration({
                                 </select>
                               </label>
                               {draft && (
-                                <label className="grid gap-1 px-2.5 py-1.5 text-xs text-neutral-800 dark:text-neutral-200">
+                                <label className="grid gap-1 px-2.5 py-1.5 text-xs text-neutral-700 dark:text-neutral-200">
                                   Categoría
                                   <select
                                     aria-label={`Categoría de ${state.name}`}
@@ -594,7 +594,7 @@ export default function TaskStatusConfiguration({
                               <button
                                 type="button"
                                 disabled={index === 0}
-                                className="flex w-full cursor-pointer items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-40"
+                                className="flex w-full cursor-pointer items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-40"
                                 onClick={(event) =>
                                   menuAction(event, () => move(state.code, -1))
                                 }
@@ -604,7 +604,7 @@ export default function TaskStatusConfiguration({
                               <button
                                 type="button"
                                 disabled={index === states.length - 1}
-                                className="flex w-full cursor-pointer items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-40"
+                                className="flex w-full cursor-pointer items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-40"
                                 onClick={(event) =>
                                   menuAction(event, () => move(state.code, 1))
                                 }
@@ -657,7 +657,7 @@ export default function TaskStatusConfiguration({
               </p>
               <button
                 type="button"
-                className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                 disabled={editor.busy}
                 onClick={editor.retry}
               >
@@ -675,7 +675,7 @@ export default function TaskStatusConfiguration({
               <button
                 type="button"
                 disabled={editor.loading || editor.busy || !allowed}
-                className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-700 hover:bg-neutral-100 disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                 onClick={() => setSavingName("")}
               >
                 Guardar como plantilla
@@ -688,7 +688,7 @@ export default function TaskStatusConfiguration({
                 </p>
                 <button
                   type="button"
-                  className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                  className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                   onClick={editor.close}
                 >
                   Cancelar
@@ -698,7 +698,7 @@ export default function TaskStatusConfiguration({
             <button
               type="button"
               disabled={editor.loading || editor.busy || !allowed}
-              className="cursor-pointer rounded-md bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+              className="cursor-pointer rounded-md bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-700 dark:hover:bg-neutral-200"
               onClick={() => {
                 void editor.apply();
               }}
@@ -747,7 +747,7 @@ export default function TaskStatusConfiguration({
                 placeholder="Escribe un nombre…"
                 value={savingName}
                 onChange={(event) => setSavingName(event.target.value)}
-                className="w-full rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+                className="w-full rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
                 disabled={editor.busy}
               />
               {editor.error && (
@@ -764,7 +764,7 @@ export default function TaskStatusConfiguration({
                 <button
                   type="button"
                   disabled={editor.busy}
-                  className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                  className="cursor-pointer rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs  text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800"
                   onClick={() => setSavingName(null)}
                 >
                   Cancelar
@@ -772,7 +772,7 @@ export default function TaskStatusConfiguration({
                 <button
                   type="submit"
                   disabled={editor.busy || !savingName.trim()}
-                  className="cursor-pointer rounded-md bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-800 dark:hover:bg-neutral-200"
+                  className="cursor-pointer rounded-md bg-neutral-800 px-3 py-1.5 text-xs  text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-700 dark:hover:bg-neutral-200"
                 >
                   Guardar
                 </button>

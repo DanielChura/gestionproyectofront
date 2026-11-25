@@ -31,7 +31,7 @@ export default function TaskSearchFilter({
           placeholder="Buscar tareas…"
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className="w-48 rounded-md border border-neutral-200 bg-white py-1.5 pl-8 pr-3 text-xs text-neutral-800 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500"
+          className="w-48 rounded-md border border-neutral-200 bg-white py-1.5 pl-8 pr-3 text-xs text-neutral-700 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:placeholder:text-neutral-500"
         />
       </div>
     );
@@ -61,7 +61,7 @@ export default function TaskSearchFilter({
             placeholder="Buscar tareas…"
             value={value}
             onChange={(event) => onChange(event.target.value)}
-            className="min-w-0 flex-1 bg-transparent text-xs text-neutral-800 outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-500"
+            className="min-w-0 flex-1 bg-transparent text-xs text-neutral-700 outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-500"
           />
           {value && (
             <button

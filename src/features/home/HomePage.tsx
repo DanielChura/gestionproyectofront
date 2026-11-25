@@ -75,7 +75,7 @@ export default function HomePage() {
 
   return (
     <ProjectTaskWorkspace key={project.id} projectId={project.id}>
-      <main className="flex h-full min-h-0 flex-1 flex-col text-neutral-800 dark:text-neutral-100">
+      <main className="flex h-full min-h-0 flex-1 flex-col text-neutral-700 dark:text-neutral-100">
         <ProjectHeader
           project={project}
           viewKey={viewKey}

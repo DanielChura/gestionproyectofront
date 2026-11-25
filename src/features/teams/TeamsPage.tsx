@@ -4,9 +4,9 @@ import PlusIcon from "../../shared/icons/PlusIcon";
 import Button from "../../shared/components/Button/Button";
 import SectionHeader from "../layout/SectionHeader/SectionHeader";
 import WorkerForm from "./WorkerForm/WorkerForm";
-import TeamForm from "../organizations/Teams/TeamForm/TeamForm";
-import type { TeamFormState } from "../organizations/Teams/TeamForm/useTeamForm";
-import TeamMembersModal from "../organizations/Teams/TeamMembersModal";
+import TeamForm from "../organization/teams/TeamForm/TeamForm";
+import type { TeamFormState } from "../organization/teams/TeamForm/useTeamForm";
+import TeamMembersModal from "../organization/teams/TeamMembersModal";
 import { useAuth } from "../../hooks/useAuth";
 import { usePeople } from "./usePeople";
 import TeamsList from "./TeamsList";
@@ -32,7 +32,9 @@ interface TeamsPageProps {
   canManage?: boolean;
 }
 
-export default function TeamsPage({ canManage: propCanManage }: TeamsPageProps) {
+export default function TeamsPage({
+  canManage: propCanManage,
+}: TeamsPageProps) {
   const { isAdmin } = useAuth();
   const canManage = propCanManage ?? isAdmin;
   const { pathname } = useLocation();
@@ -63,7 +65,7 @@ export default function TeamsPage({ canManage: propCanManage }: TeamsPageProps) 
   return (
     <main
       id="main-content"
-      className="min-h-full text-neutral-800 dark:text-neutral-100"
+      className="min-h-full text-neutral-700 dark:text-neutral-100"
     >
       <SectionHeader
         title={isTeams ? "Todos los equipos" : "Todos los trabajadores"}
@@ -71,7 +73,11 @@ export default function TeamsPage({ canManage: propCanManage }: TeamsPageProps) 
           <Button
             type="button"
             disabled={!canManage}
-            title={!canManage ? "Solo los administradores pueden realizar esta acción" : undefined}
+            title={
+              !canManage
+                ? "Solo los administradores pueden realizar esta acción"
+                : undefined
+            }
             onClick={handleOpenCreate}
           >
             <PlusIcon className="size-4" />

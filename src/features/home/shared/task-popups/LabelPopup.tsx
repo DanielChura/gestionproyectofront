@@ -30,14 +30,18 @@ export default function LabelPopup({
         title="Etiquetas"
         disabled={!task.permissions.edit}
         onClick={() => setOpen(!open)}
-        className="inline-flex min-w-0 cursor-pointer items-center gap-1 rounded-md border border-neutral-200 p-1 text-xs hover:bg-neutral-100 disabled:cursor-default disabled:opacity-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
+        className="inline-flex min-w-0 cursor-pointer items-center gap-1.5 rounded-md border border-neutral-200 px-2 py-1 text-xs hover:bg-neutral-100 disabled:cursor-default disabled:opacity-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
       >
-        <HashIcon className="size-4" />
-        {labels[0] && (
-          <span className="truncate">
+        <HashIcon className="size-4 text-neutral-400 shrink-0" />
+        {labels[0] ? (
+          <span className="truncate max-w-40 text-neutral-700 dark:text-neutral-200">
             {labels.length > 1
               ? `${labels[0].name} +${labels.length - 1}`
               : labels[0].name}
+          </span>
+        ) : (
+          <span className="text-neutral-500 dark:text-neutral-400">
+            Sin etiquetas
           </span>
         )}
       </button>
@@ -45,7 +49,7 @@ export default function LabelPopup({
       {open && (
         <div
           ref={panel}
-          className="fixed z-50 w-72 max-w-full overflow-y-auto rounded-md border border-neutral-200 bg-white p-2 text-xs text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
+          className="fixed z-50 w-72 max-w-full overflow-y-auto rounded-md border border-neutral-200 bg-white p-2 text-xs text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
         >
           <LabelEditor
             title="Etiquetas de la tarea"

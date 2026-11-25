@@ -18,7 +18,7 @@ export default function PublicationDetailBody({
   return (
     <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5 max-sm:px-4">
       <p className={`m-0 text-xs ${feedback.text}`}>{feedback.label}</p>
-      <h3 className="mt-1 text-lg text-neutral-800 dark:text-neutral-100">
+      <h3 className="mt-1 text-lg text-neutral-700 dark:text-neutral-100">
         {publication.title}
       </h3>
       <p className="mt-0.5 truncate text-xs text-neutral-500 dark:text-neutral-400">
@@ -61,7 +61,7 @@ export default function PublicationDetailBody({
               key={requirement.specialty_id}
               className="inline-flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400"
             >
-              <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-100">
+              <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-100">
                 {requirement.specialty_name}
               </span>
               {LEVEL_LABELS[requirement.minimum_level] ??

@@ -46,8 +46,8 @@ export default function TaskGroupLabel({
             key={token.id}
             className={
               mode === "labels"
-                ? "max-w-48 truncate rounded-md px-2 py-0.5 text-xs text-neutral-800 dark:text-neutral-100"
-                : "max-w-56 truncate text-xs text-neutral-800 dark:text-neutral-100"
+                ? "max-w-48 truncate rounded-md px-2 py-0.5 text-xs text-neutral-700 dark:text-neutral-100"
+                : "max-w-56 truncate text-xs text-neutral-700 dark:text-neutral-100"
             }
           >
             {token.name}
@@ -67,7 +67,7 @@ export default function TaskGroupLabel({
       className={
         group.key === "due_date:overdue"
           ? "text-xs text-red-700 dark:text-red-400"
-          : "text-xs text-neutral-800 dark:text-neutral-100"
+          : "text-xs text-neutral-700 dark:text-neutral-100"
       }
     >
       {group.name}

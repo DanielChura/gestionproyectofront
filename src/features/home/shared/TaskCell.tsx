@@ -17,7 +17,7 @@ import {
   stateCategories,
 } from "../utils/stateGroups";
 import { taskAssignees } from "../utils/taskAssignees";
-import { initialColor } from "../../../utils/initialColor";
+import { tagColor } from "../../../utils/tagColor";
 import PriorityOptions from "./task-fields/PriorityOptions";
 import { priorityTones } from "../../../shared/priorityTones";
 import { isBeforeTaskCreation, taskCreationDay } from "./task-fields/taskDates";
@@ -45,12 +45,12 @@ const styles = {
   options:
     "max-h-60 overflow-y-auto [&_h3]:mt-3 [&_h3]:mx-1.5 [&_h3]:mb-[5px] [&_h3]:text-neutral-600 [&_h3]:text-[0.75rem] [&_h3]:",
   option:
-    "flex items-center gap-2 w-full min-h-9 my-0.5 mx-0 py-[7px] px-2 [border:0] rounded-md   text-neutral-800 dark:text-neutral-100 dark:aria-pressed:bg-neutral-800 text-left text-[0.8125rem] cursor-pointer aria-pressed:bg-neutral-100 aria-pressed:[@media(pointer:coarse)]:min-h-11",
+    "flex items-center gap-2 w-full min-h-9 my-0.5 mx-0 py-[7px] px-2 [border:0] rounded-md   text-neutral-700 dark:text-neutral-100 dark:aria-pressed:bg-neutral-800 text-left text-[0.8125rem] cursor-pointer aria-pressed:bg-neutral-100 aria-pressed:[@media(pointer:coarse)]:min-h-11",
   check: "ml-auto",
   priority:
     "inline-flex min-w-0 max-w-full items-center gap-1.5 text-neutral-700 dark:text-neutral-300",
   editorActions:
-    "flex justify-end gap-2 pt-2.5 border-t border-neutral-200 [&_button]:min-h-[34px] [&_button]:py-1.5 [&_button]:px-3 [&_button]:text-[0.8125rem] [&_button]:rounded-md [&_button]:cursor-pointer [&_button:not(.primary-button)]:  [&_button:not(.primary-button)]:text-neutral-800 dark:[&_button:not(.primary-button)]:text-neutral-200 [&_button:not(.primary-button)]:border [&_button:not(.primary-button)]:border-neutral-200",
+    "flex justify-end gap-2 pt-2.5 border-t border-neutral-200 [&_button]:min-h-[34px] [&_button]:py-1.5 [&_button]:px-3 [&_button]:text-[0.8125rem] [&_button]:rounded-md [&_button]:cursor-pointer [&_button:not(.primary-button)]:  [&_button:not(.primary-button)]:text-neutral-700 dark:[&_button:not(.primary-button)]:text-neutral-200 [&_button:not(.primary-button)]:border [&_button:not(.primary-button)]:border-neutral-200",
   error:
     "m-0 text-red-700 dark:text-red-400 text-[0.75rem] [overflow-wrap:anywhere]",
 };
@@ -497,7 +497,7 @@ export default function TaskCell(props: TaskCellProps) {
           {task.labels.slice(0, 3).map((label) => (
             <span
               key={label.id}
-              className={`rounded px-1.5 py-0.5 text-xs lowercase text-neutral-100 ${initialColor(label.name)}`}
+              className={`rounded px-1.5 py-0.5 text-xs font-medium lowercase ${tagColor(label.name)}`}
             >
               {label.name}
             </span>

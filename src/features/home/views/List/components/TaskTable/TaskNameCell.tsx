@@ -1,7 +1,7 @@
 import { themeColor } from "../../../../utils/themePresentation";
 import ChevronDownIcon from "../../../../../../shared/icons/ChevronIcon";
 import { getIcon } from "../../../../../../shared/icons/icon-catalog";
-import { initialColor } from "../../../../../../utils/initialColor";
+import { tagColor } from "../../../../../../utils/tagColor";
 import type { TaskRowModel } from "./types";
 
 export default function TaskNameCell({
@@ -33,9 +33,7 @@ export default function TaskNameCell({
         {childCount > 0 ? (
           <button
             type="button"
-            className="inline-flex size-5 shrink-0 items-center justify-center text-neutral-500 hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300"
-            aria-label={`${open ? "Contraer" : "Expandir"} subtareas de ${task.name}`}
-            aria-expanded={open}
+            className="inline-flex size-5 shrink-0 items-center justify-center text-neutral-500 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300"
             disabled={searching}
             onClick={onToggle}
           >
@@ -63,7 +61,7 @@ export default function TaskNameCell({
           <div className="flex min-w-0 items-center gap-1.5">
             <button
               type="button"
-              className="truncate text-left text-sm font-medium text-neutral-800 dark:text-neutral-100"
+              className="truncate text-left text-sm font-medium text-neutral-700 dark:text-neutral-100"
               onClick={onOpen}
             >
               {task.name}
@@ -76,7 +74,7 @@ export default function TaskNameCell({
             {task.labels.slice(0, 2).map((label) => (
               <span
                 key={label.id}
-                className={`max-w-20 truncate rounded-full px-1.5 py-0.5 text-[11px] lowercase text-neutral-100 ${initialColor(label.name)}/50`}
+                className={`max-w-20 truncate rounded px-1.5 py-0.5 text-xs font-medium lowercase ${tagColor(label.name)}`}
               >
                 {label.name}
               </span>

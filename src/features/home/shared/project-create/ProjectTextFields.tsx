@@ -50,7 +50,7 @@ export default function ProjectTextFields({
             fields.description ? "project-description-error" : undefined
           }
           onChange={(event) => update({ description: event.target.value })}
-          className="w-full min-w-0 resize-y rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+          className="w-full min-w-0 resize-y rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
         />
         {fields.description && (
           <p

@@ -1,10 +1,11 @@
 import type { ComponentType, ReactNode } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import type { IconProps } from "../../icons/types";
 
 export interface TableColumn<T> {
   key: string;
   header: ReactNode;
-  icon?: ComponentType<{ className?: string }>;
+  icon?: ComponentType<IconProps>;
   headerClassName?: string;
   cellClassName?: string;
   skeletonWidth?: string | number;
@@ -29,7 +30,7 @@ export default function Table<T>({
   emptyMessage = "No hay registros disponibles.",
 }: TableProps<T>) {
   return (
-    <section className="overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <section className="overflow-hidden rounded-md border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
       <div className="w-full overflow-x-auto">
         <table
           className="w-full border-collapse text-left text-xs text-neutral-600 dark:text-neutral-400"
@@ -44,7 +45,7 @@ export default function Table<T>({
                   className={`p-3 ${col.headerClassName ?? ""}`}
                 >
                   <span className="inline-flex items-center gap-1.5">
-                    {col.icon && <col.icon className="size-4" />}
+                    {col.icon && <col.icon className="size-4" fill={false} />}
                     {col.header}
                   </span>
                 </th>

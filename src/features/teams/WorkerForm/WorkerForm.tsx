@@ -11,7 +11,7 @@ import Select from "../../../shared/components/Select/Select";
 import { GMAIL_PATTERN, GMAIL_TITLE } from "../../../utils/gmail";
 
 interface TextField {
-  name: Exclude<keyof WorkerFormState, "active">;
+  name: Exclude<keyof WorkerFormState, "active" | "all_areas">;
   label: string;
   type: string;
   min?: string;
@@ -67,7 +67,7 @@ function WorkerForm({
           key={field.name}
           className={index == 2 ? `col-span-2` : `col-span-1` + `grid gap-1.5`}
         >
-          <label className="text-xs text-neutral-800 dark:text-neutral-100">
+          <label className="text-xs text-neutral-700 dark:text-neutral-100">
             {field.label}
           </label>
           <Input
@@ -84,8 +84,18 @@ function WorkerForm({
           />
         </div>
       ))}
+      <label className="col-span-2 flex items-center gap-2 text-xs text-neutral-700 dark:text-neutral-100 cursor-pointer">
+        <input
+          name="all_areas"
+          type="checkbox"
+          checked={formData.all_areas}
+          onChange={(e) => updateField("all_areas", e.target.checked)}
+          className="accent-neutral-800 dark:accent-neutral-100 cursor-pointer"
+        />
+        <span>Acceso a todas las áreas</span>
+      </label>
       <div className="col-span-1 grid gap-1.5">
-        <label className="text-xs text-neutral-800 dark:text-neutral-100">
+        <label className="text-xs text-neutral-700 dark:text-neutral-100">
           Área
         </label>
         <Select
@@ -93,6 +103,7 @@ function WorkerForm({
           name="area"
           value={formData.area}
           onChange={(e) => updateField("area", e.target.value)}
+          disabled={formData.all_areas}
         >
           <option value="">Sin área</option>
           {areas.map((area) => (
@@ -102,7 +113,7 @@ function WorkerForm({
           ))}
         </Select>
       </div>
-      <label className="col-span-2 flex items-center gap-2 text-xs text-neutral-800 dark:text-neutral-100 cursor-pointer">
+      <label className="col-span-2 flex items-center gap-2 text-xs text-neutral-700 dark:text-neutral-100 cursor-pointer">
         <input
           name="active"
           type="checkbox"

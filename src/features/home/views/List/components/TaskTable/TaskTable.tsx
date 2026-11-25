@@ -8,7 +8,7 @@ export default function TaskTable({
   children: ReactNode;
 }) {
   return (
-    <table className="w-full table-fixed border-collapse text-xs text-neutral-800 dark:text-neutral-100">
+    <table className="w-full table-fixed border-collapse text-xs text-neutral-700 dark:text-neutral-100">
       <colgroup>
         <col style={{ width: "40%" }} />
         <col style={{ width: "12%" }} />

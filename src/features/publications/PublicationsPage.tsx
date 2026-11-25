@@ -29,7 +29,7 @@ export default function PublicationsPage({
   return (
     <main
       id="main-content"
-      className="min-h-full text-neutral-800 dark:text-neutral-100"
+      className="min-h-full text-neutral-700 dark:text-neutral-100"
     >
       <SectionHeader
         title="Publicaciones"
@@ -37,7 +37,11 @@ export default function PublicationsPage({
           <Button
             type="button"
             disabled={!canManage || !page.catalogs}
-            title={!canManage ? "Solo los administradores pueden crear publicaciones" : undefined}
+            title={
+              !canManage
+                ? "Solo los administradores pueden crear publicaciones"
+                : undefined
+            }
             onClick={() => page.setForm({})}
           >
             <PlusIcon className="size-4" />

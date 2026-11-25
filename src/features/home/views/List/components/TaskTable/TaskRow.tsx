@@ -32,17 +32,7 @@ export default function TaskRow({
   return (
     <tr
       data-task-id={task.id}
-      className="group/row h-12 border-b border-neutral-200 hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-900"
-      onClick={(e) => {
-        if (
-          e.target instanceof Element &&
-          !e.target.closest(
-            "button, input, textarea, select, a, summary, [contenteditable=true]",
-          )
-        ) {
-          actions.onOpen();
-        }
-      }}
+      className="group/row h-12 border-b border-neutral-200 dark:border-neutral-800 cursor-pointer"
     >
       <TaskNameCell
         row={row}

@@ -46,12 +46,12 @@ function ProfileModal({ onClose }: ProfileModalProps) {
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg">
         <header className="flex items-center justify-between px-4 py-3 border-b border-neutral-200">
-          <h3 className="m-0 text-sm text-neutral-800">Mis especialidades</h3>
+          <h3 className="m-0 text-sm text-neutral-700">Mis especialidades</h3>
           <button
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-800 rounded-full cursor-pointer inline-flex items-center justify-center"
+            className="p-1.5 text-neutral-700 hover:bg-neutral-200 hover:text-neutral-700 rounded-full cursor-pointer inline-flex items-center justify-center"
           >
             <XIcon className="size-4" />
           </button>
@@ -80,7 +80,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
                       disabled={saving}
                       onClick={() => handleDrop(item.id, item.name)}
                       aria-label={`Quitar ${item.name}`}
-                      className="text-neutral-100 hover:text-neutral-100 cursor-pointer disabled:opacity-50 leading-none inline-flex items-center"
+                      className="text-neutral-100 hover:text-neutral-100 cursor-pointer disabled:cursor-not-allowed leading-none inline-flex items-center"
                     >
                       <XIcon className="size-3" />
                     </button>
@@ -92,7 +92,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
             <div className="grid gap-1.5">
               <label
                 htmlFor="profile-specialty"
-                className="text-sm text-neutral-800"
+                className="text-sm text-neutral-700"
               >
                 Añadir especialidad
               </label>
@@ -100,7 +100,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
                 id="profile-specialty"
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
-                className="w-full bg-white border border-neutral-200 text-neutral-800 px-3 py-1.5 text-sm rounded-md focus:border-neutral-400 focus:outline-none cursor-pointer"
+                className="w-full bg-white border border-neutral-200 text-neutral-700 px-3 py-1.5 text-sm rounded-md focus:border-neutral-400 focus:outline-none cursor-pointer"
               >
                 <option value="">Selecciona una especialidad</option>
                 {catalog.map((item) => (
@@ -120,7 +120,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
             <footer className="flex items-center justify-end gap-2 pt-1">
               <button
                 type="button"
-                className="bg-white border border-neutral-200 text-neutral-800 hover:bg-neutral-100 px-3 py-1.5 text-xs rounded-md cursor-pointer"
+                className="bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-100 px-3 py-1.5 text-xs rounded-md cursor-pointer"
                 onClick={onClose}
               >
                 Cancelar
@@ -128,7 +128,7 @@ function ProfileModal({ onClose }: ProfileModalProps) {
               <button
                 type="submit"
                 disabled={saving || !selectedId}
-                className="bg-neutral-800 text-neutral-100 hover:bg-neutral-700 px-3 py-1.5 text-xs rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-neutral-800 text-neutral-100 hover:bg-neutral-700 px-3 py-1.5 text-xs rounded-md cursor-pointer disabled:cursor-not-allowed"
               >
                 {saving ? "Guardando…" : "Agregar"}
               </button>

@@ -7,8 +7,8 @@ import BuildingIcon from "../../shared/icons/BuildingIcon";
 import UserIcon from "../../shared/icons/UserIcon";
 import ChevronDownIcon from "../../shared/icons/ChevronIcon";
 import Avatar from "../../shared/Avatar";
-import TeamMembersModal from "../organizations/Teams/TeamMembersModal";
-import { useTeamDetail } from "../organizations/Teams/useTeamDetail";
+import TeamMembersModal from "../organization/teams/TeamMembersModal";
+import { useTeamDetail } from "../organization/teams/useTeamDetail";
 import { useAuth } from "../../hooks/useAuth";
 import TeamMembersPanel from "./TeamMembersPanel";
 import TeamDetailSkeleton from "./TeamDetailSkeleton";
@@ -33,7 +33,7 @@ export default function TeamDetailPage({
   return (
     <main
       id="main-content"
-      className="min-h-full text-neutral-800 dark:text-neutral-100"
+      className="min-h-full text-neutral-700 dark:text-neutral-100"
     >
       <header className="-mx-4 -mt-4 mb-3 border-b border-neutral-200 dark:border-neutral-800">
         <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-3">
@@ -49,7 +49,7 @@ export default function TeamDetailPage({
             <Avatar name={team.name} className="size-8 rounded-md text-xs" />
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="m-0 truncate text-sm  text-neutral-800 dark:text-neutral-100">
+                <h1 className="m-0 truncate text-sm  text-neutral-700 dark:text-neutral-100">
                   {team.name}
                 </h1>
                 <span

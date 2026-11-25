@@ -86,6 +86,11 @@ export async function listTeams(): Promise<Team[]> {
   return data;
 }
 
+export async function listMyTeams(): Promise<Team[]> {
+  const { data } = await httpClient.get<Team[]>("teams/mine/");
+  return data;
+}
+
 export async function getTeamById(id: number): Promise<Team> {
   const { data } = await httpClient.get<Team>(`teams/teams/${id}/`);
   return data;

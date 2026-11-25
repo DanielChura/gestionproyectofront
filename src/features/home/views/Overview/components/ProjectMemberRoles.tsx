@@ -28,7 +28,7 @@ export default function ProjectMemberRoles({
       className="rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
       aria-label="Equipo del proyecto"
     >
-      <h2 className="m-0 mb-3 text-xs text-neutral-800 dark:text-neutral-100">
+      <h2 className="m-0 mb-3 text-xs text-neutral-700 dark:text-neutral-100">
         Equipo del proyecto
       </h2>
 

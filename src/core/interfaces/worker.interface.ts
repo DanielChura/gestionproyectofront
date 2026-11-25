@@ -22,6 +22,7 @@ export interface WorkerUpdateData {
   last_names: string;
   email: string;
   area: number | null;
+  all_areas: boolean;
   weekly_hours: string;
   active: boolean;
 }

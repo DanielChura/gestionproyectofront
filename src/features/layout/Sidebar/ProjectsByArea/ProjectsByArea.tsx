@@ -4,6 +4,7 @@ import ChevronDownIcon from "../../../../shared/icons/ChevronIcon";
 import ProjectLink from "./ProjectLink";
 import ProjectsByAreaSkeleton from "./ProjectsByAreaSkeleton";
 import { useProjectsByArea } from "./useProjectsByArea";
+import NavEmptyState from "../../../../shared/states/NavEmptyState/NavEmptyState";
 
 interface ProjectsByAreaProps {
   currentPath: string;
@@ -15,9 +16,17 @@ export default function ProjectsByArea({ currentPath }: ProjectsByAreaProps) {
 
   if (isLoading) return <ProjectsByAreaSkeleton />;
 
-  if (!grouped) {
-    if (projects.length === 0) return null;
+  if (projects.length === 0) {
+    return (
+      <NavEmptyState
+        iconName="projects"
+        title="Cuando te asignen a un proyecto, lo verás aquí."
+        color="#8b5cf6"
+      />
+    );
+  }
 
+  if (!grouped) {
     return (
       <ul className="m-0 flex list-none flex-col gap-1 p-0">
         {projects.map((project) => (
@@ -29,7 +38,15 @@ export default function ProjectsByArea({ currentPath }: ProjectsByAreaProps) {
     );
   }
 
-  if (groups.length === 0) return null;
+  if (groups.length === 0) {
+    return (
+      <NavEmptyState
+        iconName="projects"
+        title="Cuando te asignen a un proyecto, lo verás aquí."
+        color="#8b5cf6"
+      />
+    );
+  }
 
   return (
     <ul className="m-0 flex list-none flex-col gap-1 p-0">
@@ -62,12 +79,6 @@ export default function ProjectsByArea({ currentPath }: ProjectsByAreaProps) {
 
             {expanded && (
               <ul className="m-0 ml-4 mt-1 flex list-none flex-col gap-1 p-0">
-                {area.projects.length === 0 && (
-                  <li className="px-3 py-1 text-xs text-neutral-400 dark:text-neutral-500">
-                    Sin proyectos
-                  </li>
-                )}
-
                 {area.projects.map((project) => (
                   <li key={project.id} className="min-w-0">
                     <ProjectLink project={project} currentPath={currentPath} />

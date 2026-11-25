@@ -29,7 +29,6 @@ export default function PublicationSkeleton({
               </div>
               <div className="mt-1.5 flex flex-col gap-1">
                 <Skeleton width="90%" height={16} />
-                <Skeleton width="65%" height={16} />
               </div>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 <Skeleton width={56} height={20} borderRadius={4} />
@@ -37,7 +36,7 @@ export default function PublicationSkeleton({
               </div>
             </div>
 
-            <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-neutral-200/60 pt-3 dark:border-neutral-800/60">
+            <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-3 dark:border-neutral-800/60">
               <div className="flex items-center gap-2">
                 <Skeleton width={44} height={12} />
                 <Skeleton width={54} height={12} />

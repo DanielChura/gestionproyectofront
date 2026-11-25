@@ -61,7 +61,7 @@ export default function GanttDependencyUndo({
     <aside
       aria-label="Dependencia retirada"
       role="status"
-      className="gm-gantt-undo pointer-events-none grid [&_button]:pointer-events-auto max-w-[calc(100vw-32px)] gap-2 rounded-md border border-neutral-300 bg-white p-3 text-xs text-neutral-800 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
+      className="gm-gantt-undo pointer-events-none grid [&_button]:pointer-events-auto max-w-[calc(100vw-32px)] gap-2 rounded-md border border-neutral-300 bg-white p-3 text-xs text-neutral-700 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
     >
       <div className="flex items-center justify-between gap-4">
         <span>Se ha eliminado la dependencia.</span>

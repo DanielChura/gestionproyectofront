@@ -62,7 +62,9 @@ export default function TeamCard({
 
       <div className="flex flex-col gap-4 p-4 text-neutral-600 dark:text-neutral-200">
         <div className="flex items-center justify-between gap-2">
-          <p className="m-0 max-w-50 truncate text-xs">{team.name}</p>
+          <p className="m-0 max-w-50 truncate text-xs font-medium">
+            {team.name}
+          </p>
           <span
             title={team.active ? "Activo" : "Inactivo"}
             className={`size-2 shrink-0 rounded-full ${

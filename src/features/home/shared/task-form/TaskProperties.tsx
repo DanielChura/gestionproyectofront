@@ -119,7 +119,7 @@ export default function TaskProperties({
               placeholder="Buscar estado…"
               value={stateSearch}
               onChange={(event) => setStateSearch(event.target.value)}
-              className="w-full rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+              className="w-full rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700 placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
             />
             <div className="mt-2 max-h-60 overflow-y-auto rounded-md border border-neutral-200 dark:border-neutral-800 divide-y divide-neutral-100 dark:divide-neutral-800">
               {groups.map(
@@ -135,7 +135,7 @@ export default function TaskProperties({
                         <button
                           key={state.code}
                           type="button"
-                          className="flex w-full cursor-pointer items-center justify-between px-3 py-2 text-xs text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-50"
+                          className="flex w-full cursor-pointer items-center justify-between px-3 py-2 text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-50"
                           aria-pressed={selectedState === state.code}
                           disabled={Boolean(task) || !canAssign}
                           onClick={() => {

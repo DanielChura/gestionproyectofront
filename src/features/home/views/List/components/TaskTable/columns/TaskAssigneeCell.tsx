@@ -49,7 +49,7 @@ export default function TaskAssigneeCell({ view }: { view: TaskFieldView }) {
                   <Avatar
                     key={person.id}
                     name={person.name}
-                    className="size-6 rounded-full text-[10px]"
+                    className="size-5 rounded-full text-[8px]"
                   />
                 ))}
               {people.length > 3 && (

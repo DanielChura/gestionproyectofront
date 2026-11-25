@@ -56,7 +56,7 @@ export default function PublishModal({
           onChange={(e) => setContent(e.target.value)}
           placeholder="Escribe el mensaje o actualización para el equipo..."
           rows={3}
-          className="w-full rounded-md border border-neutral-200 p-2.5 text-xs text-neutral-800 placeholder-neutral-400 focus:outline-none dark:border-neutral-800 dark:text-neutral-100"
+          className="w-full rounded-md border border-neutral-200 p-2.5 text-xs text-neutral-700 placeholder-neutral-400 focus:outline-none dark:border-neutral-800 dark:text-neutral-100"
         />
       </div>
     </Form>

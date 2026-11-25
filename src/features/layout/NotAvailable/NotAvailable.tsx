@@ -27,7 +27,7 @@ function NotAvailable() {
           <button
             type="button"
             onClick={() => window.history.back()}
-            className="px-4 py-2 rounded-full border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 text-xs  hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
+            className="px-4 py-2 rounded-full border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-200 text-xs  hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
           >
             Regresar
           </button>

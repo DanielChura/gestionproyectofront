@@ -80,7 +80,7 @@ export default function TaskBoardCard({
           draggable ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"
         } ${overlay ? "w-70" : ""}`}
       >
-        <div className="px-1 py-1 text-sm font-medium text-neutral-800 dark:text-neutral-100 line-clamp-2">
+        <div className="px-1 py-1 text-sm font-medium text-neutral-700 dark:text-neutral-100 line-clamp-2">
           {task.name}
         </div>
 

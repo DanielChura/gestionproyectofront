@@ -68,7 +68,7 @@ export default function ProjectKpis({ summary }: Props) {
           Avance global
         </h3>
         <div className="my-2">
-          <div className="flex items-center gap-1.5 text-xl  text-neutral-800 dark:text-neutral-100">
+          <div className="flex items-center gap-1.5 text-xl  text-neutral-700 dark:text-neutral-100">
             <ActivityIcon className="size-4 shrink-0 text-green-600 dark:text-green-400" />
             {completionPercent}%
             <small className="text-xs  text-neutral-500">
@@ -93,7 +93,7 @@ export default function ProjectKpis({ summary }: Props) {
           Tareas activas
         </h3>
         <div className="my-2">
-          <div className="flex items-center gap-1.5 text-xl  text-neutral-800 dark:text-neutral-100">
+          <div className="flex items-center gap-1.5 text-xl  text-neutral-700 dark:text-neutral-100">
             <ClockIcon className="size-4 shrink-0 text-blue-600 dark:text-blue-400" />
             {summary.in_progress_tasks}
             <small className="text-xs  text-neutral-500">
@@ -129,7 +129,7 @@ export default function ProjectKpis({ summary }: Props) {
             className={`flex items-center gap-1.5 text-xl  ${
               overdueCount > 0
                 ? "text-yellow-800 dark:text-yellow-300"
-                : "text-neutral-800 dark:text-neutral-100"
+                : "text-neutral-700 dark:text-neutral-100"
             }`}
           >
             {overdueCount > 0 ? (
@@ -164,7 +164,7 @@ export default function ProjectKpis({ summary }: Props) {
           Esfuerzo estimado
         </h3>
         <div className="my-2">
-          <div className="flex items-center gap-1.5 text-xl  text-neutral-800 dark:text-neutral-100">
+          <div className="flex items-center gap-1.5 text-xl  text-neutral-700 dark:text-neutral-100">
             <HourglassIcon className="size-4 shrink-0 text-blue-600 dark:text-blue-400" />
             {formatMinutes(summary.estimated_minutes_completed)}
             <small className="text-xs  text-neutral-500">

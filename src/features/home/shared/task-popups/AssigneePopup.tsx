@@ -10,10 +10,12 @@ export default function AssigneePopup({
   project,
   task,
   onPatch,
+  showName = false,
 }: {
   project: Project;
   task: Task;
   onPatch: (task: Task, data: Partial<EditTaskPayload>) => Promise<void>;
+  showName?: boolean;
 }) {
   const { panel, trigger, open, setOpen } = usePopup();
   const people = taskAssignees(task);
@@ -39,25 +41,38 @@ export default function AssigneePopup({
         title={title}
         disabled={disabled}
         onClick={() => setOpen(!open)}
-        className="inline-flex min-w-0 cursor-pointer items-center gap-1 rounded-md border border-neutral-200 p-1 text-xs hover:bg-neutral-100 disabled:cursor-default disabled:opacity-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
+        className="inline-flex min-w-0 cursor-pointer items-center gap-1.5 rounded-md border border-neutral-200 px-2 py-1 text-xs hover:bg-neutral-100 disabled:cursor-default disabled:opacity-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
       >
         {hasAssignees ? (
           <>
             <Avatar
               name={people[0].name}
-              className="size-5 rounded-full text-[10px]"
+              className="size-4 rounded-full text-[10px]"
             />
-            {people.length > 1 && <span>+{people.length - 1}</span>}
+            {showName ? (
+              <span className="truncate max-w-40 text-neutral-700 dark:text-neutral-200">
+                {people.map((p) => p.name).join(", ")}
+              </span>
+            ) : (
+              people.length > 1 && <span>+{people.length - 1}</span>
+            )}
           </>
         ) : (
-          <UserIcon className="size-4 text-neutral-200 dark:text-neutral-400" />
+          <>
+            <UserIcon className="size-4 text-neutral-400" />
+            {showName && (
+              <span className="text-neutral-500 dark:text-neutral-400">
+                Sin asignar
+              </span>
+            )}
+          </>
         )}
       </button>
 
       {open && (
         <div
           ref={panel}
-          className="fixed z-50 w-72 max-w-full overflow-y-auto rounded-md border border-neutral-200 bg-white p-2 text-xs text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
+          className="fixed z-50 w-72 max-w-full overflow-y-auto rounded-md border border-neutral-200 bg-white p-2 text-xs text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
         >
           <AssigneeSelector
             project={project}

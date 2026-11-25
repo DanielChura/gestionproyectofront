@@ -56,7 +56,7 @@ export default function Modal({
     <div className="bg-modal">
       <dialog
         ref={dialog}
-        className={`m-auto max-h-dvh w-11/12 overflow-y-auto overscroll-contain rounded-xl border border-neutral-200 bg-white p-0 text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 ${sizeClasses}`}
+        className={`m-auto max-h-dvh w-11/12 overflow-y-auto overscroll-contain rounded-xl border border-neutral-200 bg-white p-0 text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 ${sizeClasses}`}
         aria-labelledby={titleId}
         onKeyDown={(event) => {
           if (
@@ -106,7 +106,7 @@ export default function Modal({
         <header className="sticky top-0 z-20 flex shrink-0 items-center justify-between gap-4 border-b border-neutral-200 bg-white px-6 py-3 dark:border-neutral-800 dark:bg-neutral-900">
           <h2
             id={titleId}
-            className="m-0 break-words text-sm  text-neutral-800 dark:text-neutral-100"
+            className="m-0 break-words text-sm  text-neutral-700 dark:text-neutral-100"
           >
             {title}
           </h2>

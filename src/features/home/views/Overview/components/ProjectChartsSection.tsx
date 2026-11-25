@@ -252,7 +252,7 @@ export default function ProjectChartsSection({ charts, totalTasks }: Props) {
       {/* Gráfico de Líneas */}
       <div className="flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900 lg:col-span-8">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xs  text-neutral-800 dark:text-neutral-100">
+          <h2 className="text-xs  text-neutral-700 dark:text-neutral-100">
             Velocidad de entrega
           </h2>
           <div className="flex items-center gap-1 text-xs text-neutral-500">
@@ -270,7 +270,7 @@ export default function ProjectChartsSection({ charts, totalTasks }: Props) {
       {/* Gráfico de Pastel / Dona */}
       <div className="flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900 lg:col-span-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xs  text-neutral-800 dark:text-neutral-100">
+          <h2 className="text-xs  text-neutral-700 dark:text-neutral-100">
             Distribución de estados
           </h2>
           <div className="rounded-md bg-neutral-100 px-2 py-0.5 text-xs  text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">

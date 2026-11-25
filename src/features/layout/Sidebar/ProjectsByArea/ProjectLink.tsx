@@ -21,7 +21,7 @@ export default function ProjectLink({
       aria-current={active ? "page" : undefined}
       title={project.name}
       className={`badge min-w-0 ${
-        active ? "text-neutral-800 dark:text-neutral-100" : ""
+        active ? "text-neutral-700 dark:text-neutral-100" : ""
       }`}
     >
       <ProjectsIcon className="size-4 shrink-0" fill={active} />

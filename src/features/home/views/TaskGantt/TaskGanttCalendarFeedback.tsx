@@ -19,7 +19,7 @@ export default function TaskGanttCalendarFeedback({
   return (
     <section
       aria-label="Operaciones de calendario"
-      className="flex flex-wrap gap-2 text-xs text-neutral-800 dark:text-neutral-200"
+      className="flex flex-wrap gap-2 text-xs text-neutral-700 dark:text-neutral-200"
     >
       {error && (
         <GanttNotice

@@ -39,7 +39,7 @@ export default function StatePopup({
         title="Estado"
         disabled={!task.permissions.state || task.transitions.length === 0}
         onClick={() => setOpen(!open)}
-        className="inline-flex min-w-0 cursor-pointer items-center gap-1 rounded-md border border-neutral-200 p-1 text-xs hover:bg-neutral-100 disabled:cursor-default disabled:opacity-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
+        className="inline-flex min-w-0 cursor-pointer items-center gap-1.5 rounded-md border border-neutral-200 px-2 py-1 text-xs hover:bg-neutral-100 disabled:cursor-default disabled:opacity-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
       >
         <span
           className="inline-flex shrink-0"
@@ -47,13 +47,17 @@ export default function StatePopup({
         >
           <Icon className="size-4" fill />
         </span>
-        {state && <span className="truncate">{state.name}</span>}
+        {state && (
+          <span className="truncate text-neutral-700 dark:text-neutral-200">
+            {state.name}
+          </span>
+        )}
       </button>
 
       {open && (
         <div
           ref={panel}
-          className="fixed z-50 w-72 max-w-full overflow-y-auto rounded-md border border-neutral-200 bg-white p-2 text-xs text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
+          className="fixed z-50 w-72 max-w-full overflow-y-auto rounded-md border border-neutral-200 bg-white p-2 text-xs text-neutral-700 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200"
         >
           {task.transitions.length === 0 ? (
             <p className="m-0 p-2 text-neutral-500">

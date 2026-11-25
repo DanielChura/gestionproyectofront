@@ -56,6 +56,66 @@ export async function updateTask(
   return data;
 }
 
+export async function updateTaskTitle(
+  projectId: number,
+  taskId: number,
+  name: string,
+): Promise<Task> {
+  const { data } = await httpClient.patch<Task>(
+    `projects/${projectId}/tasks/${taskId}/title/`,
+    { name },
+  );
+  return data;
+}
+
+export async function updateTaskDescription(
+  projectId: number,
+  taskId: number,
+  description: string,
+): Promise<Task> {
+  const { data } = await httpClient.patch<Task>(
+    `projects/${projectId}/tasks/${taskId}/description/`,
+    { description },
+  );
+  return data;
+}
+
+export async function updateTaskState(
+  projectId: number,
+  taskId: number,
+  payload: TaskStatePayload,
+): Promise<Task> {
+  const { data } = await httpClient.patch<Task>(
+    `projects/${projectId}/tasks/${taskId}/state/`,
+    payload,
+  );
+  return data;
+}
+
+export async function updateTaskAssignees(
+  projectId: number,
+  taskId: number,
+  payload: { responsible_id?: number | null; responsible_ids?: number[] },
+): Promise<Task> {
+  const { data } = await httpClient.patch<Task>(
+    `projects/${projectId}/tasks/${taskId}/assignees/`,
+    payload,
+  );
+  return data;
+}
+
+export async function updateTaskDates(
+  projectId: number,
+  taskId: number,
+  payload: { start_date?: string | null; due_date?: string | null },
+): Promise<Task> {
+  const { data } = await httpClient.patch<Task>(
+    `projects/${projectId}/tasks/${taskId}/dates/`,
+    payload,
+  );
+  return data;
+}
+
 export async function changeTaskState(
   projectId: number,
   taskId: number,

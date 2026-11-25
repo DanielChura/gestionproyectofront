@@ -15,8 +15,14 @@ export interface SessionUser {
 export interface SessionProfile {
   id: number;
   name: string;
+  first_names?: string;
+  last_names?: string;
   email: string;
   role: string;
+  weekly_hours?: string;
+  area_id?: number | null;
+  all_areas?: boolean;
+  areas?: SessionArea[];
 }
 
 export interface Account {
@@ -35,6 +41,7 @@ export interface RecoveryRequest {
   name: string;
   email: string;
   requested_at: string;
+  resolved_at?: string | null;
 }
 
 export interface DetailResult {

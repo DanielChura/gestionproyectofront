@@ -90,7 +90,7 @@ function TaskName({ row }: CellProps) {
           actions.createRoot();
         }}
       >
-        + Agregar tarea
+        + Tarea
       </button>
     );
   return (
@@ -152,7 +152,7 @@ function TaskName({ row }: CellProps) {
         }}
         title={task.text}
         aria-label={"Abrir tarea " + task.text}
-        className="min-w-0 flex-1 cursor-pointer truncate rounded px-1 py-1 text-left text-xs text-neutral-800 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-1 dark:text-neutral-200 dark:hover:bg-neutral-800"
+        className="min-w-0 flex-1 cursor-pointer truncate rounded px-1 py-1 text-left text-xs text-neutral-700 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-1 dark:text-neutral-200 dark:hover:bg-neutral-800"
       >
         <span className="block truncate">{task.text}</span>
         {task.gmContext && (
@@ -496,7 +496,7 @@ export default function TaskGantt(props: TaskGanttProps) {
           <TaskActions.Provider value={actions}>
             <FieldsActions.Provider value={fieldsActions}>
               <div className="sr-only">
-                <h2 className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                <h2 className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
                   Ventana de tareas
                 </h2>
                 <p className="m-0 text-xs text-neutral-600 dark:text-neutral-300">
@@ -522,7 +522,7 @@ export default function TaskGantt(props: TaskGanttProps) {
                 !props.loading && (
                   <p
                     role="status"
-                    className="py-3 text-xs text-neutral-800 dark:text-neutral-200"
+                    className="py-3 text-xs text-neutral-700 dark:text-neutral-200"
                   >
                     No hay tareas que coincidan con los filtros.
                   </p>

@@ -17,7 +17,7 @@ export default function PublicationList({
   onApply,
 }: PublicationListProps) {
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {publications.map((publication) => (
         <article
           key={publication.id}
@@ -30,19 +30,19 @@ export default function PublicationList({
           >
             <Avatar
               name={publication.project.name}
-              className="size-8 rounded-full"
+              className="size-9 rounded-lg"
             />
-            <p className="mt-2 truncate text-xs text-neutral-600 dark:text-neutral-400">
+            <p className="mt-3   truncate text-xs text-neutral-600 dark:text-neutral-400">
               {publication.project.name}
             </p>
-            <h3 className="mt-0.5 line-clamp-2 text-base text-neutral-800 dark:text-neutral-100">
+            <h3 className="mt-0.5 line-clamp-2 text-base text-neutral-700 dark:text-neutral-100">
               {publication.title}
             </h3>
             <div className="mt-2 flex flex-wrap gap-2">
               {publication.requirements.map((requirement) => (
                 <span
                   key={requirement.specialty_id}
-                  className="rounded bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
+                  className="rounded bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
                 >
                   {requirement.specialty_name}
                 </span>

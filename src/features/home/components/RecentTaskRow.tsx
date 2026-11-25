@@ -32,7 +32,7 @@ export default function RecentTaskRow({ task }: { task: Task }) {
             {isDone && <CheckIcon className="size-3" />}
           </span>
           <span
-            className={`truncate  ${isDone ? "line-through text-neutral-400" : "text-neutral-800 dark:text-neutral-200"}`}
+            className={`truncate  ${isDone ? "line-through text-neutral-400" : "text-neutral-700 dark:text-neutral-200"}`}
           >
             {task.name}
           </span>

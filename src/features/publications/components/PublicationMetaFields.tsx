@@ -30,11 +30,11 @@ export default function PublicationMetaFields({
   return (
     <>
       <label className="col-span-2 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+        <span className="text-xs text-neutral-700 dark:text-neutral-100">
           Proyecto
         </span>
         {publication ? (
-          <span className="rounded-md border border-neutral-200 px-3 py-1.5 text-xs text-neutral-800 dark:border-neutral-800 dark:text-neutral-100">
+          <span className="rounded-md border border-neutral-200 px-3 py-1.5 text-xs text-neutral-700 dark:border-neutral-800 dark:text-neutral-100">
             {publication.project.name}
           </span>
         ) : (
@@ -52,7 +52,7 @@ export default function PublicationMetaFields({
         )}
       </label>
       <label className="col-span-1 grid gap-1.5">
-        <span className="text-xs text-neutral-800 dark:text-neutral-100">
+        <span className="text-xs text-neutral-700 dark:text-neutral-100">
           Estado
         </span>
         <Select
