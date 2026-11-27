@@ -17,7 +17,6 @@ export type TaskDetailModel = ReturnType<typeof useTaskDetail> & {
   catalogs: ProjectCatalogs;
   onNavigate: (target: TaskIdentity) => void;
   onClose: () => void;
-  onEdit: () => void;
 };
 
 export default function TaskDetailModal({ model }: { model: TaskDetailModel }) {
@@ -76,16 +75,6 @@ export default function TaskDetailModal({ model }: { model: TaskDetailModel }) {
             key={target.taskId}
             className="flex-3 min-w-0 space-y-4 overflow-y-auto p-6"
           >
-            {model.gantt && task.permissions.edit && (
-              <button
-                type="button"
-                className="cursor-pointer rounded-md px-3 py-1.5 text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
-                onClick={model.onEdit}
-              >
-                Editar datos
-              </button>
-            )}
-
             <TaskTitle
               task={task}
               subtasksCount={subtasksSummary.total}

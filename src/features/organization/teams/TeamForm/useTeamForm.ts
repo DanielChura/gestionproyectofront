@@ -16,8 +16,8 @@ export function useTeamForm(initial: TeamFormState) {
 
   const toWriteData = (): TeamWriteData => ({
     area: Number(formData.area),
-    name: formData.name,
-    active: formData.active,
+    name: formData.name.trim(),
+    active: initial.active ?? true,
   });
 
   return { formData, updateField, toWriteData };

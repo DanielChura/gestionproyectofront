@@ -1,7 +1,6 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { SessionUser } from "./core/interfaces/auth.interface";
 import { errorText } from "./core/api/httpClient";
 import {
   clearAccess,
@@ -11,8 +10,11 @@ import {
 } from "./core/services/authService";
 import { LoadingProvider } from "./context/LoadingContext";
 import { ToastProvider } from "./context/ToastContext";
+import { useAuth } from "./hooks/useAuth";
 import { useLoading } from "./hooks/useLoading";
 import { useToast } from "./hooks/useToast";
+import { useTheme } from "./hooks/useTheme";
+import { useAccentColor } from "./hooks/useAccentColor";
 import AppShell from "./features/layout/AppShell/AppShell";
 import { Toast } from "./shared/components/Toast/Toast";
 
@@ -35,29 +37,6 @@ const queryClient = new QueryClient({
   },
 });
 
-const SESSION_USER_KEY = "gm-session-user";
-
-function savedSessionUser(): SessionUser | null {
-  try {
-    const value = sessionStorage.getItem(SESSION_USER_KEY);
-    return value ? (JSON.parse(value) as SessionUser) : null;
-  } catch {
-    return null;
-  }
-}
-
-function saveSessionUser(user: SessionUser | null): void {
-  try {
-    if (user) {
-      sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify(user));
-    } else {
-      sessionStorage.removeItem(SESSION_USER_KEY);
-    }
-  } catch {
-    // sessionStorage can be unavailable in restricted browser modes.
-  }
-}
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -71,57 +50,24 @@ function App() {
 }
 
 function AppContent() {
+  useTheme();
+  useAccentColor();
   const { hideLoading, isLoading } = useLoading();
   const { addToast } = useToast();
-
-  const [user, setUser] = useState<SessionUser | null>(savedSessionUser);
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    saveSessionUser(user);
-  }, [user]);
-
-  useEffect(() => {
-    let mounted = true;
-    refreshSession()
-      .then((sessionUser) => {
-        if (mounted) setUser(sessionUser);
-      })
-      .catch(() => {
-        if (mounted) {
-          clearAccess();
-          setUser(null);
-        }
-      })
-      .finally(() => {
-        if (mounted) hideLoading();
-      });
-    return () => {
-      mounted = false;
-    };
+    refreshSession().catch(clearAccess).finally(hideLoading);
   }, [hideLoading]);
 
   useEffect(() => {
-    const expire = () => {
-      queryClient.clear();
-      setUser(null);
-    };
-    const update = (event: Event) => {
-      if (event instanceof CustomEvent) setUser(event.detail as SessionUser);
-    };
-    window.addEventListener("gm-session-expired", expire);
-    window.addEventListener("gm-session-updated", update);
-    return () => {
-      window.removeEventListener("gm-session-expired", expire);
-      window.removeEventListener("gm-session-updated", update);
-    };
-  }, []);
+    if (!user) queryClient.clear();
+  }, [user]);
 
   async function signOut() {
     try {
       await logout();
-      queryClient.clear();
-      setUser(null);
       navigate("/", { replace: true });
     } catch (failure) {
       addToast({
@@ -150,7 +96,7 @@ function AppContent() {
                   onLogout={signOut}
                 />
               ) : (
-                <LoginPage onLogin={setUser} />
+                <LoginPage />
               )
             }
           />

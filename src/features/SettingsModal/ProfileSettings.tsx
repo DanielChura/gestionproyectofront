@@ -24,119 +24,124 @@ export default function ProfileSettings({ settings }: ProfileSettingsProps) {
 
   return (
     <section className="py-5">
-      <h3 className="m-0 text-sm text-neutral-900 dark:text-neutral-100">
-        Perfil
+      <h3 className="m-0 mb-4 text-sm font-medium text-neutral-800 dark:text-neutral-100">
+        Información del perfil
       </h3>
-      <div className="mt-3 divide-y divide-neutral-200 dark:divide-neutral-800">
-        <div className="flex items-center justify-between gap-4 py-3">
-          <div>
-            <p className="m-0 text-xs font-medium text-neutral-700 dark:text-neutral-200">
-              Foto de perfil
-            </p>
-            <p className="m-0 mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-              PNG, JPEG o WebP, hasta 10 MB
-            </p>
+
+      <div className="divide-y divide-neutral-200 dark:divide-neutral-800">
+        <div className="flex items-center justify-between gap-6 py-3">
+          <span className="min-w-0 flex-1 text-xs font-medium text-neutral-700 dark:text-neutral-200">
+            Fotografía de perfil
+          </span>
+          <div className="w-64 shrink-0 flex items-center">
+            <Avatar
+              name={settings.currentName}
+              className="size-9 select-none rounded-full text-xs"
+            />
           </div>
-          <Avatar
-            name={settings.currentName}
-            className="size-10 select-none rounded-full text-xs"
-          />
         </div>
 
-        <div className="flex items-center justify-between gap-4 py-3">
-          <span className="text-xs font-medium text-neutral-700 dark:text-neutral-200">
-            Nombre
+        <div className="flex items-center justify-between gap-6 py-3">
+          <span className="min-w-0 flex-1 text-xs font-medium text-neutral-700 dark:text-neutral-200">
+            Nombre completo
           </span>
-          <Input
-            className="max-w-[220px]"
-            autoComplete="given-name"
-            maxLength={100}
-            required
-            value={settings.firstName}
-            onChange={(e) => settings.updateFirstName(e.target.value)}
-            onBlur={() => void settings.saveFirstName()}
-            onKeyDown={enterBlur}
-          />
+          <div className="w-64 shrink-0">
+            <Input
+              autoComplete="given-name"
+              maxLength={100}
+              required
+              value={settings.firstName}
+              onChange={(e) => settings.updateFirstName(e.target.value)}
+              onBlur={() => void settings.saveFirstName()}
+              onKeyDown={enterBlur}
+            />
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 py-3">
-          <span className="text-xs font-medium text-neutral-700 dark:text-neutral-200">
-            Apellidos
+        <div className="flex items-center justify-between gap-6 py-3">
+          <span className="min-w-0 flex-1 text-xs font-medium text-neutral-700 dark:text-neutral-200">
+            Apellidos completos
           </span>
-          <Input
-            className="max-w-[220px]"
-            autoComplete="family-name"
-            maxLength={120}
-            value={settings.lastName}
-            onChange={(e) => settings.updateLastName(e.target.value)}
-            onBlur={() => void settings.saveLastName()}
-            onKeyDown={enterBlur}
-          />
+          <div className="w-64 shrink-0">
+            <Input
+              autoComplete="family-name"
+              maxLength={120}
+              value={settings.lastName}
+              onChange={(e) => settings.updateLastName(e.target.value)}
+              onBlur={() => void settings.saveLastName()}
+              onKeyDown={enterBlur}
+            />
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 py-3">
-          <span className="text-xs font-medium text-neutral-700 dark:text-neutral-200">
-            Correo electrónico
+        <div className="flex items-center justify-between gap-6 py-3">
+          <span className="min-w-0 flex-1 text-xs font-medium text-neutral-700 dark:text-neutral-200">
+            Dirección de correo electrónico
           </span>
-          <Input
-            className="max-w-[220px]"
-            type="email"
-            autoComplete="email"
-            maxLength={254}
-            required
-            value={settings.email}
-            onChange={(e) => settings.updateEmail(e.target.value)}
-            onBlur={() => void settings.saveEmail()}
-            onKeyDown={enterBlur}
-          />
+          <div className="w-64 shrink-0">
+            <Input
+              type="email"
+              autoComplete="email"
+              maxLength={254}
+              required
+              value={settings.email}
+              onChange={(e) => settings.updateEmail(e.target.value)}
+              onBlur={() => void settings.saveEmail()}
+              onKeyDown={enterBlur}
+            />
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 py-3">
-          <span className="text-xs font-medium text-neutral-700 dark:text-neutral-200">
-            ID de la organización
+        <div className="flex items-center justify-between gap-6 py-3">
+          <span className="min-w-0 flex-1 text-xs font-medium text-neutral-700 dark:text-neutral-200">
+            Identificador de usuario
           </span>
-          <button
-            type="button"
-            onClick={handleCopyId}
-            aria-label={copied ? "Copiado" : "Copiar ID"}
-            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-          >
-            <IdIcon className="size-4" />
-            {copied ? "Copiado" : settings.profile?.id ?? "—"}
-          </button>
+          <div className="w-64 shrink-0 flex items-center">
+            <button
+              type="button"
+              onClick={handleCopyId}
+              aria-label={copied ? "Copiado" : "Copiar ID"}
+              className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+            >
+              <IdIcon className="size-4" />
+              <span>{copied ? "Copiado" : settings.profile?.id ?? "—"}</span>
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 py-3">
-          <span className="text-xs font-medium text-neutral-700 dark:text-neutral-200">
-            Horas por semana
+        <div className="flex items-center justify-between gap-6 py-3">
+          <span className="min-w-0 flex-1 text-xs font-medium text-neutral-700 dark:text-neutral-200">
+            Jornada laboral semanal
           </span>
-          <Input
-            className="max-w-[220px]"
-            type="number"
-            min="0.01"
-            max="168"
-            step="0.5"
-            value={settings.weeklyHours}
-            onChange={(e) => settings.updateWeeklyHours(e.target.value)}
-            onBlur={() => void settings.saveWeeklyHours()}
-            onKeyDown={enterBlur}
-          />
+          <div className="w-64 shrink-0">
+            <Input
+              type="number"
+              min="0.01"
+              max="168"
+              step="0.5"
+              value={settings.weeklyHours}
+              onChange={(e) => settings.updateWeeklyHours(e.target.value)}
+              onBlur={() => void settings.saveWeeklyHours()}
+              onKeyDown={enterBlur}
+            />
+          </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 py-3">
-          <span className="text-xs font-medium text-neutral-700 dark:text-neutral-200">
-            Contraseña
+        <div className="flex items-center justify-between gap-6 py-3">
+          <span className="min-w-0 flex-1 text-xs font-medium text-neutral-700 dark:text-neutral-200">
+            Contraseña de acceso
           </span>
-          <Input
-            className="max-w-[220px]"
-            type="password"
-            autoComplete="new-password"
-            placeholder="Nueva contraseña"
-            value={settings.password}
-            onChange={(e) => settings.setPassword(e.target.value)}
-            onBlur={() => void settings.savePassword()}
-            onKeyDown={enterBlur}
-          />
+          <div className="w-64 shrink-0">
+            <Input
+              type="password"
+              autoComplete="new-password"
+              placeholder="Nueva contraseña"
+              value={settings.password}
+              onChange={(e) => settings.setPassword(e.target.value)}
+              onBlur={() => void settings.savePassword()}
+              onKeyDown={enterBlur}
+            />
+          </div>
         </div>
       </div>
     </section>

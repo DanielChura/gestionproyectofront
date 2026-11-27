@@ -23,7 +23,7 @@ export default function Sidebar({
   const canManage = user?.permissions.manage_accounts ?? false;
 
   return (
-    <aside className="flex w-15 shrink-0 flex-col items-center gap-2 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-950 dark:bg-neutral-900 p-2 max-md:w-full max-md:flex-row max-md:justify-between">
+    <aside className="sidebar-solid flex w-14 shrink-0 flex-col items-center gap-2 rounded-xl p-2 max-md:w-full max-md:flex-row max-md:justify-between">
       <Link
         to="/"
         onClick={onSectionSelect}
@@ -33,22 +33,35 @@ export default function Sidebar({
         <img src={gmLogoSmall} alt="" className="h-6 w-auto" />
       </Link>
 
-      <nav className="flex w-full min-h-0 flex-1 flex-col items-center gap-1 overflow-y-auto overflow-x-hidden pt-1 max-md:flex-row max-md:justify-center max-md:overflow-visible max-md:pt-0">
+      <nav className="flex w-full min-h-0 flex-1 flex-col items-center gap-1 pt-1 max-md:flex-row max-md:justify-center max-md:pt-0 overflow-hidden">
         {modules.map((module) => {
           const Icon = module.Icon;
           const active = activePath === module.path;
           const disabled = !!module.requiresAdmin && !canManage;
 
+          const content = (
+            <>
+              <span
+                className={`flex items-center justify-center rounded-md p-1.5 ${
+                  active ? "bg-white/15" : "group-hover:bg-white/10"
+                }`}
+              >
+                <Icon className="size-5 shrink-0" fill={active} />
+              </span>
+
+              <span className={active ? "font-medium" : ""}>
+                {module.label}
+              </span>
+            </>
+          );
+
           if (disabled) {
             return (
               <span
                 key={module.path}
-                className="sidebar-item cursor-not-allowed opacity-30"
+                className="sidebar-item cursor-not-allowed"
               >
-                <Icon className="size-5 shrink-0" fill={false} />
-                <span className="max-w-full min-w-0 truncate">
-                  {module.label}
-                </span>
+                {content}
               </span>
             );
           }
@@ -59,15 +72,13 @@ export default function Sidebar({
               to={module.path}
               onClick={onSectionSelect}
               aria-current={active ? "page" : undefined}
-              className={`sidebar-item ${
-                active ? "bg-neutral-800 text-neutral-100" : ""
-              }`}
+              className="sidebar-item group"
             >
-              <Icon className="size-5 shrink-0" fill={false} />
-              <span className="max-w-full min-w-0 ">{module.label}</span>
+              {content}
             </Link>
           );
         })}
+
         <InviteButton canManage={canManage} />
       </nav>
 

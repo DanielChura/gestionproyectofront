@@ -28,12 +28,14 @@ export default function InviteButton({ canManage = false }: InviteButtonProps) {
           void refetch();
           setOpen(true);
         }}
-        className={`sidebar-item ${
+        className={`sidebar-item group ${
           !canManage ? "cursor-not-allowed opacity-30" : ""
         }`}
       >
-        <UserPlusIcon className="size-5" />
-        <span className="max-w-full min-w-0">Invitar</span>
+        <span className="flex items-center justify-center rounded-md p-1.5 group-hover:bg-white/10">
+          <UserPlusIcon className="size-5" />
+        </span>
+        <span>Invitar</span>
       </button>
 
       {open && canManage && (

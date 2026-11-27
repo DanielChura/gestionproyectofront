@@ -35,25 +35,17 @@ export function useTaskMutations({
   const sync = useTaskSync();
 
   const saveTask = useCallback(
-    async (
-      data: TaskFormPayload,
-      actionKind: "create" | "edit" | "child",
-      taskId?: number,
-    ) => {
+    async (data: TaskFormPayload) => {
       setBusy(true);
       setError("");
       try {
-        let saved: Task;
-        if (actionKind === "edit" && taskId && !("state_code" in data)) {
-          saved = await apiUpdateTask(projectId, taskId, data);
-        } else if (
-          (actionKind === "create" || actionKind === "child") &&
-          "state_code" in data
-        ) {
-          saved = await apiCreateTask(projectId, data as CreateTaskPayload);
-        } else {
+        if (!("state_code" in data)) {
           throw new Error("Acción no disponible.");
         }
+        const saved: Task = await apiCreateTask(
+          projectId,
+          data as CreateTaskPayload,
+        );
         onTaskSaved(saved);
         addToast({
           icon: "success",

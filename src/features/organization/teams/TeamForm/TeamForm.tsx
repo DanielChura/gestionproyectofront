@@ -44,7 +44,7 @@ function TeamForm({
     >
       <div className="col-span-2 grid gap-1.5">
         <label className="text-xs text-neutral-800 dark:text-neutral-100">
-          Nombre
+          Nombre del equipo
         </label>
         <Input
           id="team-name"
@@ -52,12 +52,14 @@ function TeamForm({
           type="text"
           value={formData.name}
           onChange={(e) => updateField("name", e.target.value)}
+          placeholder="Ej. Desarrollo Frontend"
           required
         />
       </div>
+
       <div className="col-span-2 grid gap-1.5">
         <label className="text-xs text-neutral-800 dark:text-neutral-100">
-          Área
+          Área de adscripción
         </label>
         <Select
           id="team-area"
@@ -66,7 +68,7 @@ function TeamForm({
           onChange={(e) => updateField("area", e.target.value)}
           required
         >
-          <option value="">Seleccionar área</option>
+          <option value="">Seleccionar área...</option>
           {areas.map((area) => (
             <option key={area.id} value={area.id}>
               {area.name}
@@ -74,16 +76,6 @@ function TeamForm({
           ))}
         </Select>
       </div>
-      <label className="col-span-2 flex items-center gap-2 text-xs text-neutral-800 dark:text-neutral-100 cursor-pointer">
-        <input
-          name="active"
-          type="checkbox"
-          checked={formData.active}
-          onChange={(e) => updateField("active", e.target.checked)}
-          className="accent-neutral-800 dark:accent-neutral-100 cursor-pointer"
-        />
-        <span>Activo</span>
-      </label>
     </Form>
   );
 }

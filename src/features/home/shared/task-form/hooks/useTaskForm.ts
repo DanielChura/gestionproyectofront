@@ -1,59 +1,38 @@
-import { useLayoutEffect, useRef, useState, type FormEvent } from "react";
-import { errorText } from "../../../../core/api/httpClient";
-import { useToast } from "../../../../hooks/useToast";
-import type { FieldErrors } from "../../utils/formErrors";
-import { labelSelection } from "../../utils/labelSelection";
-import { taskAssignees } from "../../utils/taskAssignees";
+import { useRef, useState, type FormEvent } from "react";
+import { errorText } from "../../../../../core/api/httpClient";
+import { useToast } from "../../../../../hooks/useToast";
+import { labelSelection } from "../../../utils/labelSelection";
 import type {
-  EditTaskPayload,
+  CreateTaskPayload,
   Label,
   Project,
   ProjectTaskConfiguration,
   Task,
-  TaskFormPayload,
-} from "../../../../core/interfaces/task.interface";
-import type { ProjectCatalogs } from "../../../../core/interfaces/project.interface";
-import { taskCreationStart } from "../task-fields/taskDates";
+} from "../../../../../core/interfaces/task.interface";
+import type { ProjectCatalogs } from "../../../../../core/interfaces/project.interface";
+import { taskCreationStart } from "../../task-fields/taskDates";
 
 interface UseTaskFormParams {
   project: Project;
   catalogs: ProjectCatalogs;
-  task?: Task;
   parent?: Task;
   initialState?: string;
-  onSubmit: (data: TaskFormPayload) => Promise<void>;
+  onSubmit: (data: CreateTaskPayload) => Promise<void>;
   onConfigured: (configuration: ProjectTaskConfiguration) => void;
   onCheckCreation?: () => Promise<unknown>;
 }
-const taskFields: Record<string, string> = {
-  schedule: "task-schedule",
-  reason: "task-reason",
-  name: "task-name",
-  description: "task-description",
-  state_code: "task-initial-state",
-  due_date: "task-due",
-  start_date: "task-start",
-  specialty_ids: "task-labels",
-  retained_label_ids: "task-labels",
-  priority: "task-priority",
-  responsible_id: "task-responsible",
-  responsible_ids: "task-responsible",
-  labels: "task-labels",
-  requirement_ids: "task-labels",
-};
 
 export function useTaskForm({
   project,
   catalogs,
-  task,
   parent,
   initialState,
   onSubmit,
   onConfigured,
   onCheckCreation,
 }: UseTaskFormParams) {
-  const [name, setName] = useState(task?.name ?? "");
-  const [description, setDescription] = useState(task?.description ?? "");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [stateCode, setStateCode] = useState(
     initialState ??
       project.task_states.states.find(
@@ -63,70 +42,36 @@ export function useTaskForm({
       )?.code ??
       "PENDIENTE",
   );
-  const [priority, setPriority] = useState<number | null>(
-    task ? task.priority : 3,
-  );
+  const [priority, setPriority] = useState<number | null>(3);
   const creationMin = taskCreationStart(project.start_date, parent?.start_date);
   const [dueDate, setDueDate] = useState(() => {
-    const value = task
-      ? (task.due_date ?? "")
-      : (parent?.due_date ?? project.end_date ?? "");
-    return !task && value && value < creationMin ? "" : value;
+    const value = parent?.due_date ?? project.end_date ?? "";
+    return value && value < creationMin ? "" : value;
   });
-  const [startDate, setStartDate] = useState(task?.start_date ?? creationMin);
-  const [responsible, setResponsible] = useState<number[]>(
-    task ? taskAssignees(task).map((person) => person.id) : [],
-  );
-  const [labels, setLabels] = useState<Label[]>(task?.labels ?? []);
+  const [startDate, setStartDate] = useState(creationMin);
+  const [responsible, setResponsible] = useState<number[]>([]);
+  const [labels, setLabels] = useState<Label[]>([]);
+  const [reason, setReason] = useState("");
   const [configuring, setConfiguring] = useState(false);
-  const [busy, setBusy] = useState(false);
   const [uncertainCreation, setUncertainCreation] = useState(false);
-  const [checking, setChecking] = useState(false);
-  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const submitting = useRef(false);
+  const checking = useRef(false);
   const { addToast } = useToast();
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const formRef = useRef<HTMLFormElement>(null);
-  const pendingFocus = useRef(false),
-    submitting = useRef(false);
-  const canAssign =
-    project.permissions.assign_tasks && (!task || task.permissions.assign);
+  const canAssign = project.permissions.assign_tasks;
   const canConfigure =
     project.permissions.manage && project.task_states.can_configure;
   const lastDate = parent?.due_date ?? project.end_date;
 
-  useLayoutEffect(() => {
-    if (busy || !pendingFocus.current) return;
-    pendingFocus.current = false;
-    const invalid = formRef.current?.querySelector<HTMLElement>(
-      '[aria-invalid="true"]:not(:disabled)',
-    );
-    (
-      invalid ??
-      formRef.current?.querySelector<HTMLElement>("[data-general-error]")
-    )?.focus();
-  }, [fieldErrors, error, busy]);
-
-  function clearError(id: string) {
-    setFieldErrors((current) =>
-      Object.fromEntries(
-        Object.entries(current).filter(([field]) => field !== id),
-      ),
-    );
-  }
-
-  const [reason, setReason] = useState("");
-
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submitting.current || uncertainCreation) return;
-    pendingFocus.current = true;
-    setError("");
-    const invalid: FieldErrors = {};
+    const invalid: Record<string, string> = {};
     if (!name.trim()) invalid["task-name"] = "Indica el nombre de la tarea.";
-    if (!task && startDate && startDate < creationMin) {
+    if (startDate && startDate < creationMin) {
       invalid["task-start"] = "Las tareas nuevas deben iniciar hoy o después.";
     }
-    if (!task && dueDate && dueDate < creationMin) {
+    if (dueDate && dueDate < creationMin) {
       invalid["task-due"] =
         "La fecha límite de una tarea nueva no puede preceder a hoy.";
     }
@@ -152,55 +97,38 @@ export function useTaskForm({
       invalid["task-priority"] = "Selecciona una prioridad del catálogo.";
     }
     if (
-      !task &&
       ["BLOQUEADA", "CANCELADA"].includes(stateCode) &&
       !reason.trim()
     ) {
       invalid["task-reason"] = "Indica un motivo para este estado.";
     }
     if (Object.keys(invalid).length > 0) {
-      setFieldErrors(invalid);
-      return;
-    }
-    if (
-      !task &&
-      ["BLOQUEADA", "CANCELADA"].includes(stateCode) &&
-      !reason.trim()
-    ) {
       addToast({
         icon: "alert",
-        title: "Validación",
-        message: "Indica un motivo para este estado.",
+        title: "Revisa el formulario",
+        message: Object.values(invalid).join(" · "),
       });
       return;
     }
 
-    const data: EditTaskPayload = {
+    const payload: CreateTaskPayload = {
       name: name.trim(),
+      description: description.trim(),
       priority,
       due_date: dueDate || null,
       start_date: startDate,
       ...labelSelection(labels),
+      state_code: stateCode,
+      reason: reason.trim(),
+      parent_id: parent?.id ?? null,
+      ...(canAssign && responsible.length > 0
+        ? { responsible_ids: responsible.map(Number) }
+        : {}),
     };
-    if (!task || project.permissions.manage) {
-      data.description = description.trim();
-    }
-    if (canAssign && responsible.length > 0) {
-      data.responsible_ids = responsible.map(Number);
-    }
     setBusy(true);
     submitting.current = true;
     try {
-      await onSubmit(
-        task
-          ? data
-          : {
-              ...data,
-              state_code: stateCode,
-              reason: reason.trim(),
-              parent_id: parent?.id ?? null,
-            },
-      );
+      await onSubmit(payload);
     } catch (failure) {
       const status = (failure as { status?: number } | null)?.status;
       if (status === 503 || status === 0 || status === undefined) {
@@ -231,12 +159,12 @@ export function useTaskForm({
   }
 
   async function handleCheckCreation() {
-    if (!onCheckCreation || checking) return;
-    setChecking(true);
+    if (!onCheckCreation || checking.current) return;
+    checking.current = true;
     try {
       await onCheckCreation();
     } finally {
-      setChecking(false);
+      checking.current = false;
     }
   }
 
@@ -261,17 +189,11 @@ export function useTaskForm({
     setLabels,
     configuring,
     setConfiguring,
-    busy,
     uncertainCreation,
-    checking,
-    error,
-    fieldErrors,
-    formRef,
+    busy,
     canAssign,
     canConfigure,
-    lastDate,
     creationMin,
-    clearError,
     submit,
     configured,
     handleCheckCreation,

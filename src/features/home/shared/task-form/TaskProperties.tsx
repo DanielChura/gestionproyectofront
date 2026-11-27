@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { FieldErrors } from "../../utils/formErrors";
 import { groupTaskStates } from "../../utils/stateGroups";
 import type {
   Label,
@@ -16,7 +15,6 @@ import CheckIcon from "../../../../shared/icons/CheckIcon";
 import SettingsIcon from "../../../../shared/icons/SettingsIcon";
 import CalendarIcon from "../../../../shared/icons/CalendarIcon";
 import StatusIcon from "../../../../shared/icons/StatusIcon";
-import { taskAssignees } from "../../utils/taskAssignees";
 import Calendar from "../task-fields/Calendar";
 import TaskDateValue from "../task-fields/TaskDateValue";
 import { formatTaskDate } from "../../utils/taskHierarchy";
@@ -26,7 +24,6 @@ interface TaskPropertiesProps {
   hideCalendar?: boolean;
   project: Project;
   catalogs: ProjectCatalogs;
-  task?: Task;
   parent?: Task;
   stateCode: string;
   responsible: number[];
@@ -36,7 +33,6 @@ interface TaskPropertiesProps {
   onStartDate: (value: string) => void;
   priority: number | null;
   labels: Label[];
-  errors: FieldErrors;
   onState: (value: string) => void;
   onResponsible: (value: number[]) => void;
   onDate: (value: string) => void;
@@ -49,14 +45,12 @@ export default function TaskProperties({
   hideCalendar = false,
   project,
   catalogs,
-  task,
   parent,
   stateCode,
   responsible,
   dueDate,
   priority,
   labels,
-  errors,
   onState,
   onResponsible,
   onDate,
@@ -68,14 +62,12 @@ export default function TaskProperties({
   creationMin,
 }: TaskPropertiesProps) {
   const [stateSearch, setStateSearch] = useState("");
-  const canAssign =
-    project.permissions.assign_tasks && (!task || task.permissions.assign);
+  const canAssign = project.permissions.assign_tasks;
   const canConfigure =
     project.permissions.manage && project.task_states.can_configure;
-  const selectedState = task?.state_code ?? stateCode;
+  const selectedState = stateCode;
   const states = project.task_states.states.filter(
     (state) =>
-      task ||
       canAssign ||
       state.category === "not_started" ||
       (!state.category && state.code === "PENDIENTE"),
@@ -89,7 +81,6 @@ export default function TaskProperties({
   );
   const stateName =
     states.find((state) => state.code === selectedState)?.name ??
-    task?.state_name ??
     selectedState;
 
   return (
@@ -99,10 +90,9 @@ export default function TaskProperties({
     >
       <TaskProperty
         id="task-initial-state"
-        label={task ? "Estado actual" : "Estado inicial"}
+        label="Estado inicial"
         value={stateName}
         icon={StatusIcon}
-        error={errors["task-initial-state"]}
       >
         {(close) => (
           <>
@@ -137,7 +127,7 @@ export default function TaskProperties({
                           type="button"
                           className="flex w-full cursor-pointer items-center justify-between px-3 py-2 text-xs text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-50"
                           aria-pressed={selectedState === state.code}
-                          disabled={Boolean(task) || !canAssign}
+                          disabled={!canAssign}
                           onClick={() => {
                             onState(state.code);
                             close();
@@ -170,11 +160,9 @@ export default function TaskProperties({
                 </p>
               )}
             </div>
-            {(task || !canAssign) && (
+            {!canAssign && (
               <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-                {task
-                  ? "Cambia el estado desde las acciones autorizadas de la tarea."
-                  : "Las tareas nuevas se crean pendientes."}
+                Las tareas nuevas se crean pendientes.
               </p>
             )}
             {canConfigure && (
@@ -199,7 +187,6 @@ export default function TaskProperties({
           label="Fecha de inicio"
           value={formatTaskDate(startDate)}
           icon={CalendarIcon}
-          error={errors["task-start"]}
           content={
             <>
               <CalendarIcon className="size-4" />
@@ -233,15 +220,7 @@ export default function TaskProperties({
         dueDate={dueDate}
         priority={priority}
         labels={labels}
-        errors={errors}
         canAssign={canAssign}
-        readOnlyResponsible={
-          task
-            ? taskAssignees(task)
-                .map((person) => person.name)
-                .join(", ") || "Sin persona asignada"
-            : "Tú"
-        }
         min={startDate || parent?.start_date || project.start_date || undefined}
         max={parent?.due_date ?? project.end_date ?? undefined}
         onResponsible={onResponsible}

@@ -46,7 +46,7 @@ export default function Form({
             <XIcon className="size-4" />
           </button>
         </header>
-        <div className="grid grid-cols-2 gap-4 px-5 py-3">{children}</div>
+        <div className="grid grid-cols-2 gap-4 px-5 py-4">{children}</div>
         <footer className="flex items-center justify-end gap-2 border-t border-neutral-200 bg-neutral-100 px-5 py-3 dark:border-neutral-800 dark:bg-neutral-950/50">
           <Button variant="secondary" type="button" onClick={onClose}>
             Cancelar

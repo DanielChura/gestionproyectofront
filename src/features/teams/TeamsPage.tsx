@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useSearchParams } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import PlusIcon from "../../shared/icons/PlusIcon";
 import Button from "../../shared/components/Button/Button";
 import SectionHeader from "../layout/SectionHeader/SectionHeader";
@@ -11,22 +12,13 @@ import { useAuth } from "../../hooks/useAuth";
 import { usePeople } from "./usePeople";
 import TeamsList from "./TeamsList";
 import WorkersList from "./WorkersList";
-import type { Worker } from "../../core/interfaces/worker.interface";
+
+const InvitationModal = lazy(
+  () =>
+    import("../organization/accounts/InvitationModal/InvitationModal"),
+);
 
 const emptyTeam: TeamFormState = { area: "", name: "", active: false };
-
-const emptyWorker: Worker = {
-  id: 0,
-  area: null,
-  code: "",
-  first_names: "",
-  last_names: "",
-  email: "",
-  weekly_hours: "40.00",
-  active: true,
-  all_areas: false,
-  specialties: [],
-};
 
 interface TeamsPageProps {
   canManage?: boolean;
@@ -39,6 +31,8 @@ export default function TeamsPage({
   const canManage = propCanManage ?? isAdmin;
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const queryClient = useQueryClient();
+  const [invitingWorker, setInvitingWorker] = useState(false);
   const isTeams = pathname === "/equipos" || pathname === "/equipos/todos";
   const people = usePeople();
   const { setCreatingTeam } = people;
@@ -54,19 +48,13 @@ export default function TeamsPage({
   const handleOpenCreate = () => {
     if (isTeams) {
       setCreatingTeam(true);
-      return;
+    } else {
+      setInvitingWorker(true);
     }
-    people.setEditingWorker({
-      ...emptyWorker,
-      area: people.areas[0]?.id ?? null,
-    });
   };
 
   return (
-    <main
-      id="main-content"
-      className="min-h-full text-neutral-700 dark:text-neutral-100"
-    >
+    <main className="min-h-full text-neutral-700 dark:text-neutral-100">
       <SectionHeader
         title={isTeams ? "Todos los equipos" : "Todos los trabajadores"}
         action={
@@ -81,7 +69,7 @@ export default function TeamsPage({
             onClick={handleOpenCreate}
           >
             <PlusIcon className="size-4" />
-            {isTeams ? "Nuevo equipo" : "Nuevo trabajador"}
+            {isTeams ? "Nuevo equipo" : "Invitar trabajador"}
           </Button>
         }
       />
@@ -157,6 +145,19 @@ export default function TeamsPage({
           onClose={() => people.setMemberTeam(null)}
           onChanged={people.refreshTeams}
         />
+      )}
+
+      {invitingWorker && (
+        <Suspense fallback={null}>
+          <InvitationModal
+            areas={people.areas}
+            onClose={() => setInvitingWorker(false)}
+            onUpdate={() => {
+              void queryClient.invalidateQueries({ queryKey: ["workers"] });
+              void queryClient.invalidateQueries({ queryKey: ["accounts"] });
+            }}
+          />
+        </Suspense>
       )}
     </main>
   );

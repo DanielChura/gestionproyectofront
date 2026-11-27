@@ -25,7 +25,7 @@ export default function SectionNav({
   return (
     <aside className="flex h-full min-h-0 w-full shrink-0 flex-col border-r border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 md:w-60">
       <header className="flex items-center justify-between gap-2 px-4 py-3">
-        <h2 className="m-0 text-sm font-medium text-neutral-700 dark:text-neutral-100">
+        <h2 className="m-0 text-base font-medium text-neutral-700 dark:text-neutral-100">
           {activeModule.label}
         </h2>
         <button

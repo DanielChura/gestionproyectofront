@@ -23,7 +23,6 @@ export function usePasswordReset(mode: PasswordMode) {
   const [confirmation, setConfirmation] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
   const [token] = useState(() =>
     new URLSearchParams(location.hash.slice(1)).get("token"),
   );
@@ -40,9 +39,11 @@ export function usePasswordReset(mode: PasswordMode) {
       })
       .catch((failure) => {
         if (mounted) {
-          const text = errorText(failure);
-          setError(text);
-          addToast({ icon: "error", title: "Enlace no válido", message: text });
+          addToast({
+            icon: "error",
+            title: "Enlace no válido",
+            message: errorText(failure),
+          });
         }
       })
       .finally(() => {
@@ -55,18 +56,23 @@ export function usePasswordReset(mode: PasswordMode) {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!token) return;
+    if (!token) {
+      addToast({
+        icon: "error",
+        title: "Enlace no válido",
+        message: "El enlace no contiene un token válido.",
+      });
+      return;
+    }
     if (password.length < 12 || password !== confirmation) {
       const text =
         password.length < 12
           ? "La contraseña debe tener al menos 12 caracteres"
           : "Las contraseñas no coinciden";
-      setError(text);
       addToast({ icon: "error", title: "Revisa la contraseña", message: text });
       return;
     }
     setBusy(true);
-    setError("");
     try {
       const payload: PasswordPayload = {
         token,
@@ -80,9 +86,11 @@ export function usePasswordReset(mode: PasswordMode) {
       setConfirmation("");
       navigate(location.pathname, { replace: true });
     } catch (failure) {
-      const text = errorText(failure);
-      setError(text);
-      addToast({ icon: "error", title: "No se pudo guardar", message: text });
+      addToast({
+        icon: "error",
+        title: "No se pudo guardar",
+        message: errorText(failure),
+      });
     } finally {
       setBusy(false);
     }
@@ -97,7 +105,6 @@ export function usePasswordReset(mode: PasswordMode) {
     setConfirmation,
     busy,
     message,
-    error,
     details,
     loading,
     submit,

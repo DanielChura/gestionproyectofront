@@ -1,9 +1,5 @@
 import axios from "axios";
-import type {
-  AxiosRequestConfig,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from "axios";
+import type { AxiosRequestConfig } from "axios";
 import type {
   AuthSessionPayload,
   SessionUser,
@@ -12,10 +8,14 @@ import type {
 declare module "axios" {
   export interface AxiosRequestConfig {
     gmPublic?: boolean;
+    gmEpoch?: number;
+    gmRetried?: boolean;
+    gmAccess?: string | null;
   }
 }
 
 const apiBase = import.meta.env.DEV ? "" : import.meta.env.VITE_API_URL;
+const READ_METHODS = ["get", "head", "options"];
 
 let accessToken: string | null = null;
 let renewal: Promise<SessionUser> | null = null;
@@ -23,7 +23,6 @@ let csrfToken = "";
 let sessionEpoch = 0;
 let principal = "";
 let currentUser: SessionUser | null = null;
-
 const userListeners = new Set<(user: SessionUser | null) => void>();
 const pendingReads = new Map<string, Promise<unknown>>();
 
@@ -36,6 +35,10 @@ export function errorText(failure: unknown): string {
   return failure instanceof Error
     ? failure.message
     : "No se pudo completar la solicitud";
+}
+
+function isRead(method?: string): boolean {
+  return READ_METHODS.includes(method ?? "get");
 }
 
 function normalizeError(failure: unknown): unknown {
@@ -52,7 +55,11 @@ function normalizeError(failure: unknown): unknown {
       : undefined;
   const detail =
     payload?.detail ??
-    (payload && Object.values(payload)[0]) ??
+    payload?.message ??
+    payload?.error ??
+    (payload
+      ? Object.values(payload).find((value) => typeof value === "string")
+      : undefined) ??
     failure.message ??
     "No se pudo completar la solicitud";
   const error = new ApiError(
@@ -63,22 +70,10 @@ function normalizeError(failure: unknown): unknown {
   return error;
 }
 
-function isForbidden(failure: unknown): boolean {
-  if (failure instanceof ApiError) return failure.status === 403;
-  return axios.isAxiosError(failure) && failure.response?.status === 403;
-}
-
 function csrfCookie(): string {
-  if (csrfToken) {
-    return csrfToken;
-  }
-
+  if (csrfToken) return csrfToken;
   const match = document.cookie.match(/(?:^|; )csrftoken=([^;]*)/);
   return match?.[1] ? decodeURIComponent(match[1]) : "";
-}
-
-function getCsrfToken(): string {
-  return csrfCookie();
 }
 
 export function sessionKey(user: SessionUser): string {
@@ -90,21 +85,16 @@ export function sessionKey(user: SessionUser): string {
     user.permissions,
   ]);
 }
-
 export function sessionVersion(): number {
   return sessionEpoch;
 }
-
 export function checkSession(epoch: number): void {
-  if (epoch !== sessionEpoch) {
+  if (epoch !== sessionEpoch)
     throw new Error("La sesión cambió. Vuelve a cargar la información.");
-  }
 }
-
 export function getSessionUser(): SessionUser | null {
   return currentUser;
 }
-
 export function subscribeSession(
   listener: (user: SessionUser | null) => void,
 ): () => void {
@@ -117,44 +107,26 @@ export function subscribeSession(
 function publishUser(user: SessionUser | null): void {
   currentUser = user;
   userListeners.forEach((listener) => listener(user));
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(
-      new CustomEvent("gm-session-updated", { detail: user }),
-    );
-  }
 }
 
-function invalidateReads(): void {
-  pendingReads.clear();
-}
-
-function sharedRead<T>(scope: string, load: () => Promise<T>): Promise<T> {
-  const key = JSON.stringify([sessionEpoch, scope]);
+function sharedRead<T>(key: string, load: () => Promise<T>): Promise<T> {
   const existing = pendingReads.get(key);
   if (existing) return existing as Promise<T>;
-  const operation = load().finally(() => {
-    if (pendingReads.get(key) === operation) pendingReads.delete(key);
-  });
+  const operation = load().finally(() => pendingReads.delete(key));
   pendingReads.set(key, operation);
   return operation;
 }
 
-const bareClient = axios.create({
-  baseURL: `${apiBase}/api/`,
-  withCredentials: true,
-});
-
 async function prepareCsrf(): Promise<void> {
   try {
-    const { data } = await bareClient.get<{ csrf_token: string }>("auth/csrf/");
+    const { data } = await httpClient.get<{ csrf_token: string }>(
+      "auth/csrf/",
+      { gmPublic: true },
+    );
     csrfToken = data.csrf_token;
   } catch (failure) {
     throw normalizeError(failure);
   }
-}
-
-async function ensureCsrf(): Promise<void> {
-  if (!csrfCookie()) await prepareCsrf();
 }
 
 export function startSession(
@@ -162,12 +134,10 @@ export function startSession(
   user: SessionUser,
 ): SessionUser {
   const nextPrincipal = sessionKey(user);
-
   if (principal && principal !== nextPrincipal) {
     sessionEpoch += 1;
-    invalidateReads();
+    pendingReads.clear();
   }
-
   principal = nextPrincipal;
   accessToken = access;
   publishUser(user);
@@ -178,67 +148,48 @@ export function clearAccess(): void {
   accessToken = null;
   principal = "";
   sessionEpoch += 1;
-  invalidateReads();
+  pendingReads.clear();
   renewal = null;
   publishUser(null);
 }
 
 function expireSession(epoch: number): void {
-  if (epoch !== sessionEpoch) return;
-  clearAccess();
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new Event("gm-session-expired"));
-  }
+  if (epoch === sessionEpoch) clearAccess();
 }
 
-function getAccessToken(): string | null {
-  return accessToken;
+function postRefresh(): Promise<AuthSessionPayload> {
+  return httpClient
+    .post<AuthSessionPayload>("auth/refresh/", undefined, { gmPublic: true })
+    .then((response) => response.data);
 }
 
 export function refreshSession(): Promise<SessionUser> {
-  if (!renewal) {
-    const epoch = sessionEpoch;
-
-    const operation = (async () => {
-      await ensureCsrf();
-      checkSession(epoch);
-
+  if (renewal) return renewal;
+  const epoch = sessionEpoch;
+  const operation = (async () => {
+    try {
       let payload: AuthSessionPayload;
-
       try {
-        payload = (
-          await httpClient.post<AuthSessionPayload>(
-            "auth/refresh/",
-            undefined,
-            { gmPublic: true },
-          )
-        ).data;
+        payload = await postRefresh();
       } catch (failure) {
-        if (!isForbidden(failure)) throw failure;
+        // El token CSRF pudo caducar: se renueva y se reintenta una vez.
+        if (!(failure instanceof ApiError) || failure.status !== 403)
+          throw failure;
         csrfToken = "";
         await prepareCsrf();
         checkSession(epoch);
-        payload = (
-          await httpClient.post<AuthSessionPayload>(
-            "auth/refresh/",
-            undefined,
-            { gmPublic: true },
-          )
-        ).data;
+        payload = await postRefresh();
       }
-
       checkSession(epoch);
       return startSession(payload.access ?? null, payload.user);
-    })().finally(() => {
-      if (renewal === operation) {
-        renewal = null;
-      }
-    });
-
-    renewal = operation;
-  }
-
-  return renewal;
+    } catch (failure) {
+      throw normalizeError(failure);
+    }
+  })().finally(() => {
+    if (renewal === operation) renewal = null;
+  });
+  renewal = operation;
+  return operation;
 }
 
 async function renew(epoch: number): Promise<void> {
@@ -247,7 +198,7 @@ async function renew(epoch: number): Promise<void> {
     checkSession(epoch);
   } catch (failure) {
     expireSession(epoch);
-    throw failure;
+    throw normalizeError(failure);
   }
 }
 
@@ -258,108 +209,67 @@ export const httpClient = axios.create({
   xsrfHeaderName: "X-CSRFToken",
 });
 
-interface SessionConfig extends InternalAxiosRequestConfig {
-  gmEpoch?: number;
-  gmRetried?: boolean;
-  gmAccess?: string | null;
-  gmPublic?: boolean;
-}
-
-httpClient.interceptors.request.use(async (original) => {
-  const config = original as SessionConfig;
-
+httpClient.interceptors.request.use(async (config) => {
   if (config.gmPublic) {
-    if (!["get", "head", "options"].includes(config.method ?? "get")) {
-      await ensureCsrf();
-      config.headers.set("X-CSRFToken", getCsrfToken());
+    if (!isRead(config.method)) {
+      if (!csrfCookie()) await prepareCsrf();
+      config.headers.set("X-CSRFToken", csrfCookie());
     }
     return config;
   }
 
-  const epoch = config.gmEpoch ?? sessionVersion();
+  const epoch = config.gmEpoch ?? sessionEpoch;
   config.gmEpoch = epoch;
   checkSession(epoch);
-
-  if (!getAccessToken()) await renew(epoch);
+  if (!accessToken) await renew(epoch);
   checkSession(epoch);
 
-  const token = getAccessToken();
+  const token = accessToken;
   if (!token) {
     expireSession(epoch);
     throw new ApiError("No se pudo obtener un token de sesión válido.");
   }
-
   config.gmAccess = token;
   config.headers.set("Authorization", `Bearer ${token}`);
-
-  if (
-    !["get", "head", "options"].includes(config.method ?? "get") &&
-    getCsrfToken()
-  )
-    config.headers.set("X-CSRFToken", getCsrfToken());
-
+  if (!isRead(config.method) && csrfCookie())
+    config.headers.set("X-CSRFToken", csrfCookie());
   return config;
 });
 
 httpClient.interceptors.response.use(
   (response) => {
-    const config = response.config as SessionConfig;
+    const { config } = response;
     if (config.gmPublic) return response;
     checkSession(config.gmEpoch!);
-    if (!["get", "head", "options"].includes(config.method ?? "get"))
-      invalidateReads();
+    if (!isRead(config.method)) pendingReads.clear();
     return response;
   },
   async (failure: unknown) => {
     if (!axios.isAxiosError(failure) || !failure.config)
       throw normalizeError(failure);
-
-    const config = failure.config as SessionConfig;
-    if (config.gmPublic) throw normalizeError(failure);
+    const config = failure.config;
+    if (config.gmPublic || config.gmEpoch === undefined)
+      throw normalizeError(failure);
 
     const epoch = config.gmEpoch;
-    if (epoch === undefined) throw normalizeError(failure);
-
     checkSession(epoch);
-
     if (failure.response?.status === 401) {
-      if (config.gmRetried) {
-        expireSession(epoch);
-      } else {
+      if (config.gmRetried) expireSession(epoch);
+      else {
         config.gmRetried = true;
-        if (!getAccessToken() || getAccessToken() === config.gmAccess)
-          await renew(epoch);
+        if (!accessToken || accessToken === config.gmAccess) await renew(epoch);
         checkSession(epoch);
         return httpClient.request(config);
       }
     }
-
     throw normalizeError(failure);
   },
 );
 
-const request: typeof httpClient.request = httpClient.request.bind(httpClient);
-httpClient.request = function requestSession<
-  T = unknown,
-  R = AxiosResponse<T>,
-  D = unknown,
-  P = unknown,
->(config: AxiosRequestConfig<D, P>) {
-  const scoped = {
-    ...config,
-    gmEpoch: (config as SessionConfig).gmEpoch ?? sessionVersion(),
-  };
-  return request<T, R, D, P>(scoped);
-};
-
-const get: typeof httpClient.get = httpClient.get.bind(httpClient);
-httpClient.get = function getShared<
-  T = unknown,
-  R = AxiosResponse<T>,
-  D = unknown,
-  P = unknown,
->(url: string, config?: AxiosRequestConfig<D, P>) {
-  const scoped = { ...config, gmEpoch: sessionVersion() };
-  if (config && Object.keys(config).length) return get<T, R, D, P>(url, scoped);
-  return sharedRead(`axios:${url}`, () => get<T, R, D, P>(url, scoped));
-};
+const axiosGet = httpClient.get.bind(httpClient);
+httpClient.get = ((url: string, config?: AxiosRequestConfig) => {
+  const scoped = { ...config, gmEpoch: sessionEpoch };
+  if (config?.signal) return axiosGet(url, scoped);
+  const key = JSON.stringify([sessionEpoch, url, config?.params ?? null]);
+  return sharedRead(key, () => axiosGet(url, scoped));
+}) as typeof httpClient.get;

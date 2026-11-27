@@ -1,6 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
 import TaskDetailController from "../task-detail/TaskDetailController";
-import TaskEditDialog from "./TaskEditDialog";
 import type { Task } from "../../types";
 import type { ReactNode } from "react";
 import type { TaskDialogController } from "../../types";
@@ -51,24 +50,12 @@ export default function TaskDialog({
         onUpdated={onUpdated}
       />
     );
-  if (action.kind === "edit" && activeTask)
-    return (
-      <TaskEditDialog
-        key={project.id + ":" + activeTask.id}
-        controller={controller}
-        task={activeTask}
-        onUpdated={onUpdated}
-        onClose={close}
-      />
-    );
-
   if (action.kind === "create" || action.kind === "child")
     return (
       <TaskForm
         key={project.id + ":" + (activeTask?.id ?? "new")}
         project={project}
         catalogs={catalogs}
-        task={undefined}
         parent={action.kind === "child" ? activeTask : undefined}
         initialState={action.kind === "create" ? action.stateCode : undefined}
         onSubmit={saveTask}

@@ -298,8 +298,7 @@ export interface TaskStatePayload {
   reason?: string;
 }
 
-export type TaskActionKind =
-  "edit" | "state" | "child" | "dependencies" | "detail";
+export type TaskActionKind = "state" | "child" | "dependencies" | "detail";
 
 export type TaskAction =
   | { kind: "create"; stateCode?: string }

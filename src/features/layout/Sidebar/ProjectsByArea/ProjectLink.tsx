@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import ProjectsIcon from "../../../../shared/icons/ProjectsIcon";
 import { projectPath } from "../../../../routes";
 import type { ProjectSummary } from "../../../../core/interfaces/project.interface";
+import ListIcon from "../../../../shared/icons/ListIcon";
 
 interface ProjectLinkProps {
   project: ProjectSummary;
@@ -24,7 +25,7 @@ export default function ProjectLink({
         active ? "text-neutral-700 dark:text-neutral-100" : ""
       }`}
     >
-      <ProjectsIcon className="size-4 shrink-0" fill={active} />
+      <ListIcon className="size-4 shrink-0" fill={active} />
       <span className="min-w-0 flex-1 truncate">{project.name}</span>
     </Link>
   );

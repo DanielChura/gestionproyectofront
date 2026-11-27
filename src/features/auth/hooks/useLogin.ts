@@ -1,11 +1,10 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import type { SessionUser } from "../../../core/interfaces/auth.interface";
 import { errorText } from "../../../core/api/httpClient";
 import { login } from "../../../core/services/authService";
 import { useToast } from "../../../hooks/useToast";
 
-export function useLogin(onLogin: (user: SessionUser) => void) {
+export function useLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -15,8 +14,7 @@ export function useLogin(onLogin: (user: SessionUser) => void) {
     event.preventDefault();
     setBusy(true);
     try {
-      const sessionUser = await login(email, password);
-      onLogin(sessionUser);
+      await login(email, password);
     } catch (failure) {
       addToast({
         icon: "error",

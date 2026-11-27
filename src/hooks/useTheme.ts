@@ -17,6 +17,12 @@ function apply(theme: Theme) {
   document.documentElement.classList.toggle("dark", dark);
 }
 
+if (typeof window !== "undefined") {
+  try {
+    apply(storedTheme());
+  } catch {}
+}
+
 export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(storedTheme);
 

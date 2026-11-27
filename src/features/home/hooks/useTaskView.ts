@@ -54,19 +54,12 @@ export function useTaskView(
 
   const saveTask = useCallback(
     async (data: TaskFormPayload) => {
-      if (!action) return;
-      const activeTask =
-        action.kind !== "create"
-          ? tasks.find((task) => task.id === action.taskId)
-          : undefined;
-      await executeSaveTask(
-        data,
-        action.kind as "create" | "edit" | "child",
-        activeTask?.id,
-      );
+      if (!action || (action.kind !== "create" && action.kind !== "child"))
+        return;
+      await executeSaveTask(data);
       setAction(null);
     },
-    [action, tasks, executeSaveTask],
+    [action, executeSaveTask],
   );
 
   const patchTask = useCallback(

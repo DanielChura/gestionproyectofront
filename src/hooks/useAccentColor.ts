@@ -1,28 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
-
-export interface AccentOption {
-  id: string;
-  name: string;
-  hex: string;
-}
-
-export const ACCENT_OPTIONS: AccentOption[] = [
-  { id: "sky", name: "Azul cielo", hex: "#0284c7" },
-  { id: "indigo", name: "Índigo", hex: "#4f46e5" },
-  { id: "purple", name: "Púrpura", hex: "#7c3aed" },
-  { id: "emerald", name: "Esmeralda", hex: "#10b981" },
-  { id: "amber", name: "Ámbar", hex: "#f59e0b" },
-  { id: "rose", name: "Rosa", hex: "#f43f5e" },
-  { id: "neutral", name: "Neutro", hex: "#525252" },
-];
+import { ACCENT_OPTIONS } from "../shared/constants/accent";
+export type { AccentOption } from "../shared/constants/accent";
+export { ACCENT_OPTIONS };
 
 const STORAGE_KEY = "accent_color";
-const DEFAULT_ACCENT = "sky";
+const DEFAULT_ACCENT = "default";
 
 function applyAccent(id: string) {
-  const match = ACCENT_OPTIONS.find((c) => c.id === id) ?? ACCENT_OPTIONS[0];
-  document.documentElement.style.setProperty("--accent-color", match.hex);
-  document.documentElement.setAttribute("data-accent", match.id);
+  const match =
+    ACCENT_OPTIONS.find((c) => c.id === id) ?? ACCENT_OPTIONS[0];
+  const root = document.documentElement;
+  root.setAttribute("data-accent", match.id);
+  root.style.setProperty("--accent-sidebar-bg-light", match.sidebarBg.light);
+  root.style.setProperty("--accent-sidebar-bg-dark", match.sidebarBg.dark);
+
+  if (match.id === "default" || !match.btnBg) {
+    root.style.removeProperty("--accent-btn-bg");
+    root.style.removeProperty("--accent-btn-hover");
+    root.style.removeProperty("--accent-btn-text");
+  } else {
+    root.style.setProperty("--accent-btn-bg", match.btnBg);
+    root.style.setProperty("--accent-btn-hover", match.btnHover ?? match.btnBg);
+    root.style.setProperty("--accent-btn-text", "#f5f5f5");
+  }
 }
 
 if (typeof window !== "undefined") {
@@ -34,7 +34,13 @@ if (typeof window !== "undefined") {
 
 export function useAccentColor() {
   const [accent, setAccentState] = useState<string>(() => {
-    return localStorage.getItem(STORAGE_KEY) ?? DEFAULT_ACCENT;
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored && ACCENT_OPTIONS.some((c) => c.id === stored)) {
+        return stored;
+      }
+    } catch {}
+    return DEFAULT_ACCENT;
   });
 
   useEffect(() => {
@@ -42,7 +48,9 @@ export function useAccentColor() {
   }, [accent]);
 
   const setAccent = useCallback((id: string) => {
-    localStorage.setItem(STORAGE_KEY, id);
+    try {
+      localStorage.setItem(STORAGE_KEY, id);
+    } catch {}
     setAccentState(id);
     applyAccent(id);
   }, []);

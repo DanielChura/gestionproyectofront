@@ -107,7 +107,7 @@ export const appModules: NavModule[] = [
     ],
   },
   {
-    label: "Organización",
+    label: "Organiz.",
     Icon: BuildingIcon,
     path: "/organizaciones/estructura",
     requiresAdmin: true,

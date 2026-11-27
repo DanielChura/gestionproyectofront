@@ -310,7 +310,7 @@ export default function ListView({
 
             return (
               <section
-                className="relative mb-8"
+                className="relative mb-4"
                 key={group.key}
                 data-group-key={group.key}
               >
@@ -396,7 +396,7 @@ export default function ListView({
                     canCreateGroup && (
                       <button
                         id={`${listId}-${encodeURIComponent(group.key)}-create`}
-                        className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-100"
+                        className="flex w-full cursor-pointer items-center gap-2 py-1.5 pl-8 text-left text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-100"
                         type="button"
                         onClick={() => {
                           if (!pendingQuickTask.current)

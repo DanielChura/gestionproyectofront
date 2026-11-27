@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router";
 import EmptyState from "../../shared/states/EmptyState/EmptyState";
 import { useProject } from "./hooks/useProject";
 import ProjectHeader from "./components/ProjectHeader";
-import ShareProjectModal from "./components/ShareProjectModal";
+import ShareProjectModal from "./components/ShareProjectModal/ShareProjectModal";
 import ProjectTaskWorkspace from "./components/ProjectTaskWorkspace";
 import ListView from "./views/List/ListView";
 import BoardView from "./views/Board/BoardView";

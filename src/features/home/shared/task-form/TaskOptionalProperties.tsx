@@ -30,7 +30,7 @@ export default function TaskOptionalProperties({
   onDate,
   onPriority,
   onLabels,
-  errors,
+  errors = {},
   compact = false,
   min,
   max,
@@ -48,7 +48,7 @@ export default function TaskOptionalProperties({
   onDate: (value: string) => void;
   onPriority: (value: number | null) => void;
   onLabels: (value: Label[]) => void;
-  errors: FieldErrors;
+  errors?: FieldErrors;
   compact?: boolean;
   min?: string;
   max?: string;
